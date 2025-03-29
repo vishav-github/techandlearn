@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            background: #f4f4f4;
+        }
+
+        /* Menu Button for Mobile */
+        .menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            max-height: 100vh;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+        }
+
+        .sidebar img {
+            width: 100px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            text-align: center;
+            width: 100%;
+            background: #34495e;
+        }
+
+        .sidebar a:hover {
+            background: #1abc9c;
+        }
+
+        .content {
+            flex: 1;
+            padding: 0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+
+        /* Responsive Sidebar */
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                width: 60%;
+                max-width: 250px;
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100%;
+                background: #2c3e50;
+                padding-top: 50px;
+                z-index: 999;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menu Button for Mobile -->
+    <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+    <div class="sidebar">
+        <a href="akali_poola_singhji.html" target="contentFrame">
+            <img src="images/techandlearnlogo.jpeg" alt="Support Logo">
+        </a>
+        <input type="text" id="searchBar" placeholder="Search..." onkeyup="filterLinks()">
+        <div id="menuLinks">
+            <a href="block_ip.html" target="contentFrame">Block IP</a>
+            <a href="bonus_payment.html" target="contentFrame">Bonus Payment</a>
+            <a href="spss_export.html" target="contentFrame">SPSS Export</a>
+            <a href="attacment_type.html" target="contentFrame">Attachment Type</a>
+            <a href="authenticationgmail.html" target="contentFrame">Authentication Gmail</a>
+            <a href="updatesample.html" target="contentFrame">Update Sample</a>
+            <a href="customexport.html" target="contentFrame">Custom Export</a>
+            <a href="importreview.html" target="contentFrame">Import Review</a>
+            <a href="aboutme.html" target="contentFrame">About Me</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <iframe name="contentFrame" src="akali_poola_singhji.html"></iframe>
+    </div>
+
+    <script>
+    function toggleSidebar() {
+        document.querySelector(".sidebar").classList.toggle("show");
+    }
+
+    function filterLinks() {
+        let input = document.getElementById("searchBar").value.toLowerCase();
+        let links = document.querySelectorAll("#menuLinks a");
+
+        links.forEach(link => {
+            if (link.innerText.toLowerCase().includes(input)) {
+                link.style.display = "block";
+            } else {
+                link.style.display = "none";
+            }
+        });
+    }
+
+    // Close the sidebar when a menu link is clicked (on mobile)
+    document.querySelectorAll("#menuLinks a").forEach(link => {
+        link.addEventListener("click", function() {
+            if (window.innerWidth <= 768) { // Only close on small screens
+                document.querySelector(".sidebar").classList.remove("show");
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>
