@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Sample Column Titles & Custom Export Auto FTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f4f4f4;
+            text-align: left;
+        }
+        .content {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        img {
+            width: 100%;
+            max-width: 600px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Update Sample Column Titles when Using Auto Import</h1>
+        <p>Steps for changing column titles of a sample survey and updating Auto Import.</p>
+
+        <h2>Step 1: Edit Sample Titles</h2>
+        <p>Go to <b>Management > Sample</b>, find the sample that needs updates, and click <b>"Edit Sample Titles"</b> to change the column titles as required.</p>
+        <img src="https://imgur.com/yxw73Dd.png" alt="Edit Sample Titles">
+
+        <h2>Step 2: Update Auto Import Settings</h2>
+        <p>Once column titles are changed, the system clears all selected columns for auto import. Re-select them by going to:</p>
+        <p><b>Management > Sample > Sample Auto Import Profile</b></p>
+        <img src="https://imgur.com/YudyI6L.png" alt="Auto Import Profile">
+
+        <p>Click the profile's time to edit.</p>
+        <img src="https://imgur.com/Ybj0X22.png" alt="Edit Profile Time">
+
+        <p>At <b>General > Import Columns</b>, select the columns you will use for import.</p>
+        <img src="https://imgur.com/ov6lIua.png" alt="Select Import Columns">
+
+        <h2>Step 3: Run Auto Import</h2>
+        <p>The system will automatically import files from the FTP folder. If you want to run the import immediately after updating column titles, click <b>"Run Now"</b> at:</p>
+        <p><b>Management > Sample > Sample Auto Import Profile</b></p>
+        <img src="https://imgur.com/09JewRn.png" alt="Run Now Option">
+
+
+        <h1>Custom Export Auto FTP</h1>
+        <p>Settings for automatic export frequency and execution.</p>
+
+        <h2>How Often Should Auto Export Run?</h2>
+        <p>Export frequency: <b>Every 1 hour</b></p>
+        <p>Time for Auto Export: <b>13:00</b></p>
+        <p>This means auto export will run every hour starting from 13:00.</p>
+        <p>If set to 24 hours, the export will run the next day.</p>
+
+        <h2>Export Configuration</h2>
+        <ul>
+            <li><b>Export each review only once</b></li>
+            <li><b>Automatic export</b></li>
+            <li><b>Send exported file to an Email address</b></li>
+            <li><b>FTP Server:</b> FTP1_Jser</li>
+            <li><b>FTP User:</b> sttp_user</li>
+            <li><b>FTP Password:</b> bliss123</li>
+            <li><b>FTP Path:</b> /sftp_user/</li>
+        </ul>
+
+        <h2>Run Now Option</h2>
+        <p>This option resets the last processed time to <b>0</b>.</p>
+
+        <h2>Last Received Status</h2>
+        <p><b>2023-04-21 12:32:04:</b> Sent export file to <i>vishav_singh@checker-soft.com</i></p>
+        <p><b>Connection Status:</b> Successful</p>
+    </div>
+</body>
+</html>

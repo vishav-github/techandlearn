@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attachment Type</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p, li {
+            font-size: 18px;
+            color: #666;
+            text-align: left;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Attachment Type</h1>
+        <p>When resizing images for attachment, the reduction in file size while keeping the same dimensions is due to compression and quality settings.</p>
+        <h2>Why Does File Size Reduce?</h2>
+        <ul>
+            <li><strong>Compression During Saving:</strong> JPEG compression removes some image data to reduce size.</li>
+            <li><strong>Default Quality Setting:</strong> The function uses a default quality setting (usually around 75) to optimize file size.</li>
+            <li><strong>No Resizing in WxH:</strong> The image retains its dimensions but is recompressed to a smaller file size.</li>
+        </ul>
+        <h2>Code Example for Resizing in PHP</h2>
+        <pre>
+imagejpeg($resizedImage, 'resized.jpg', 75); // Default quality
+        </pre>
+        <p>This method ensures quality preservation while reducing file size.</p>
+        
+    </div>
+</body>
+</html>

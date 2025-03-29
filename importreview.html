@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Review Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f4f4f4;
+            text-align: left;
+        }
+        .content {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        img {
+            width: 100%;
+            max-width: 600px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Import Review Data</h1>
+        <p>1. Fill the object code here in questionnaire:</p>
+        <img src="C:\Papa checker work/importreview.png" alt="Questionnaire Screenshot">
+
+        <p>2. Apply the import profile structure like this that should match with Excel columns:</p>
+        <img src="C:\Papa checker work/importreview2.png" alt="Import Profile Structure Screenshot">
+
+        <p>3. Use short codes in Excel as well that match with your import profile:</p>
+        <img src="C:\Papa checker work/importreview3.png" alt="Short Code in Excel Screenshot">
+
+        <h2>Import Reviews with Sample</h2>
+        <p>Maybe some of you are already aware of this functionality, but this is what I investigated today. Last time, we couldn't figure out how to import historical data and link all imported reviews with relevant sample records.</p>
+
+        <p>I would like to share with you the feasibility to import reviews with sample details. In this way, imported reviews will be linked with sample records. The steps are:</p>
+
+        <ul>
+            <li>Import an empty sample just to create a column structure.</li>
+            <li>Create a survey and link it with the sample.</li>
+            <li>Create an import profile, edit profile data, and then link it with the survey at the bottom.</li>
+            <li>After editing profile data, open it again, and you will see the sample columns at the bottom of the page.</li>
+            <li>Define the sample column names as we do for questions.</li>
+            <li>Use the same Excel file for reviews and sample records.</li>
+        </ul>
+
+        <p><strong>See attached Excel file</strong> that contains reviews and sample details.</p>
+        <p><strong>See imported reviews</strong> that are linked with samples.</p>
+
+        <h2>Import Profile</h2>
+        <p>Check the import profile: <a href="https://eu.checker-soft.com/testing/import-profile-edit.php?ProfileID=126&msg=Changes%20saved!" target="_blank">View Import Profile</a></p>
+    </div>
+</body>
+</html>
