@@ -1,0 +1,701 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checker Partner Network Workflow</title>
+    <style>
+        /* Basic Styling - Replace with your actual CSS framework (Bootstrap, Tailwind, etc.) */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; }
+        .navbar { background-color: #0e3759; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; padding: 0 15px; }
+        .navbar .dropdown { position: relative; display: inline-block; }
+        .navbar .dropdown-content { display: none; position: absolute; background-color: #0e3759; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; }
+        .navbar .dropdown-content a { color: white; padding: 12px 16px; text-decoration: none; display: block; text-align: left; }
+        .navbar .dropdown-content a:hover { background-color: #f4c430; color: #0e3759; }
+        .navbar .dropdown:hover .dropdown-content { display: block; }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #0e3759; }
+        .tabs { display: flex; border-bottom: 1px solid #ddd; margin-bottom: 20px; }
+        .tabs button { background-color: #f0f0f0; border: none; padding: 10px 20px; cursor: pointer; font-size: 16px; border-radius: 5px 5px 0 0; margin-right: 5px; }
+        .tabs button.active { background-color: #f4c430; color: #0e3759; border-bottom: 2px solid #0e3759; }
+        .tab-content { padding: 20px 0; }
+
+        .header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .search-bar input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .filters select, .filters input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; }
+        .btn { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn-primary { background-color: #0e3759; color: white; }
+        .btn-secondary { background-color: #ccc; color: #333; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-info { background-color: #17a2b8; color: white; }
+        .btn-warning { background-color: #ffc107; color: #333; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        .status-badge { padding: 5px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; }
+        .status-open { background-color: #d4edda; color: #28a745; } /* Green */
+        .status-closed { background-color: #e2e3e5; color: #6c757d; } /* Grey */
+        .status-agreed { background-color: #d4edda; color: #28a745; } /* Green */
+        .status-ongoing { background-color: #d1ecf1; color: #17a2b8; } /* Blue */
+
+        form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        form input[type="text"], form textarea, form select { width: calc(100% - 22px); padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+        form textarea { min-height: 100px; resize: vertical; }
+        .form-actions { text-align: right; margin-top: 20px; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Communication Thread Styling */
+        .chat-container { border: 1px solid #eee; padding: 15px; border-radius: 5px; max-height: 400px; overflow-y: auto; margin-bottom: 15px; }
+        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; max-width: 80%; }
+        .message.originator { background-color: #e0f7fa; align-self: flex-start; text-align: left; } /* Light blue */
+        .message.implementer { background-color: #f0f0f0; align-self: flex-end; margin-left: auto; text-align: right; } /* Light grey */
+        .message-header { font-size: 0.8em; color: #777; margin-bottom: 5px; }
+        .message-content { font-size: 0.9em; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#home">Home</a>
+        <div class="dropdown">
+            <a href="#" class="dropbtn">Operations Panel</a>
+            <div class="dropdown-content">
+                <a href="#posts-list" onclick="showTab('posts-tab')">📊 Posts</a>
+                <a href="#agreed-deals" onclick="showTab('agreed-deals-tab')">🤝 Agreed Deals</a>
+                <a href="#partner-projects" onclick="showTab('partner-projects-tab')">⚙️ Partner Projects</a>
+            </div>
+        </div>
+        <a href="#settings">Settings</a>
+    </nav>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('posts-tab')">📊 Posts</button>
+            <button class="tab-button" onclick="showTab('agreed-deals-tab')">🤝 Agreed Deals</button>
+            <button class="tab-button" onclick="showTab('partner-projects-tab')">⚙️ Partner Projects</button>
+        </div>
+
+        <div id="posts-tab" class="tab-content active">
+            <h1>Project Posts</h1>
+            <div class="header-controls">
+                <button class="btn btn-primary" onclick="showPage('new-post-page')">+ Create New Post</button>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search by title, ID, keywords...">
+                </div>
+                <div class="filters">
+                    <select><option>Status (All)</option><option>Open</option><option>Closed</option></select>
+                    <select><option>Posted By (All)</option></select>
+                    <select><option>Country (All)</option></select>
+                    <select><option>Services Offered (All)</option></select>
+                    <input type="text" placeholder="Closing Date Range">
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Post ID</th>
+                        <th>Title</th>
+                        <th>Posted By</th>
+                        <th>Date Posted</th>
+                        <th>Criteria</th>
+                        <th>Replies</th>
+                        <th>Closing Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" onclick="showModal('repliesModal', 'Project Alpha')">P1001</a></td>
+                        <td>Market Research for New Product Launch</td>
+                        <td>Originator A</td>
+                        <td>15 Apr 2024</td>
+                        <td>US, UK | MS, CATI <span title="Full details: USA, United Kingdom | Mystery Shopping, Computer Assisted Telephone Interviewing">(hover)</span></td>
+                        <td><a href="#" onclick="showModal('repliesModal', 'Project Alpha')">5</a></td>
+                        <td>30 Apr 2024</td>
+                        <td><span class="status-badge status-open">Open</span></td>
+                        <td><button class="btn btn-info" onclick="showModal('repliesModal', 'Project Alpha')">View Replies</button></td>
+                    </tr>
+                    <tr>
+                        <td>P1002</td>
+                        <td>Retail Audit - Q2 2024</td>
+                        <td>Originator B</td>
+                        <td>01 May 2024</td>
+                        <td>IN | Retail Audit <span title="Full details: India | Retail Audit">(hover)</span></td>
+                        <td>0</td>
+                        <td>15 May 2024</td>
+                        <td><span class="status-badge status-closed">Closed</span></td>
+                        <td><button class="btn btn-primary">Reply</button> </td>
+                    </tr>
+                     <tr>
+                        <td>P1003</td>
+                        <td>Customer Satisfaction Survey</td>
+                        <td>Originator C</td>
+                        <td>10 Jun 2024</td>
+                        <td>CA | CAWI <span title="Full details: Canada | Computer Assisted Web Interviewing">(hover)</span></td>
+                        <td><a href="#" onclick="showPage('reply-details-view', 'P1003', 'Implementer X')">2</a></td>
+                        <td>25 Jun 2024</td>
+                        <td><span class="status-badge status-open">Open</span></td>
+                        <td><button class="btn btn-success" onclick="showPage('reply-details-view', 'P1003', 'Implementer X')">Continue Conversation</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button>&laquo; Previous</button>
+                <span>1</span>
+                <button>Next &raquo;</button>
+            </div>
+        </div>
+
+        <div id="new-post-page" class="tab-content" style="display:none;">
+            <h1>Create New Project Post</h1>
+            <form>
+                <h3>Project Details</h3>
+                <label for="post-title">Title:</label>
+                <input type="text" id="post-title" placeholder="e.g., Market Research for New Product Launch">
+
+                <label for="post-description">Description:</label>
+                <textarea id="post-description" placeholder="Provide detailed project requirements, scope, deliverables, etc. (CK Editor functionality implied)"></textarea>
+
+                <h3>Project Criteria</h3>
+                <label for="post-country">By Country:</label>
+                <select id="post-country" multiple placeholder="Select relevant country(s)">
+                    <option>USA</option><option>UK</option><option>India</option><option>Canada</option>
+                </select>
+
+                <label for="post-services">By Services Offered:</label>
+                <select id="post-services" multiple placeholder="Select required services">
+                    <option>MS</option><option>CAWI</option><option>CATI</option><option>Retail Audit</option>
+                </select>
+
+                <label for="post-closing-date">Closing Date:</label>
+                <input type="date" id="post-closing-date">
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-secondary" onclick="showTab('posts-tab')">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="agreed-deals-tab" class="tab-content" style="display:none;">
+            <h1>Agreed Partner Deals</h1>
+            <div class="header-controls">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search by ID, title, client...">
+                </div>
+                <div class="filters">
+                    <select><option>Posted By (All)</option></select>
+                    <select><option>Country (All)</option></select>
+                    <select><option>Services Offered (All)</option></select>
+                    <select><option>Status (All)</option><option>Agreed</option><option>Ongoing</option></select>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Deal ID</th>
+                        <th>Title</th>
+                        <th>Posted By</th>
+                        <th>Date Finalized</th>
+                        <th>Country</th>
+                        <th>Services Offered</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>D5001</td>
+                        <td>Market Research for New Product Launch</td>
+                        <td>Originator A</td>
+                        <td>05 May 2024</td>
+                        <td>US, UK</td>
+                        <td>MS, CATI</td>
+                        <td><span class="status-badge status-agreed">Agreed</span></td>
+                        <td>
+                            <button class="btn btn-info" onclick="showPage('reply-details-view', 'P1001', 'Implementer Y')">View Communication</button>
+                            <button class="btn btn-primary" onclick="showPage('new-partner-project-page', 'D5001')">Initiate Partner Project</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>D5002</td>
+                        <td>Customer Satisfaction Survey</td>
+                        <td>Originator C</td>
+                        <td>20 Jun 2024</td>
+                        <td>CA</td>
+                        <td>CAWI</td>
+                        <td><span class="status-badge status-agreed">Agreed</span></td>
+                        <td>
+                            <button class="btn btn-info" onclick="showPage('reply-details-view', 'P1003', 'Implementer X')">View Communication</button>
+                            <button class="btn btn-primary" onclick="showPage('new-partner-project-page', 'D5002')">Initiate Partner Project</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button>&laquo; Previous</button>
+                <span>1</span>
+                <button>Next &raquo;</button>
+            </div>
+        </div>
+
+        <div id="partner-projects-tab" class="tab-content" style="display:none;">
+            <h1>Partner Project Dashboard</h1>
+            <div class="header-controls">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="filters">
+                    <select><option>Client (All)</option></select>
+                    <select><option>QRE (All)</option></select>
+                    <select><option>Status (All)</option></select>
+                    <select><option>Partners (All)</option></select>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Deal ID</th>
+                        <th>Client Name</th>
+                        <th>QRE</th>
+                        <th># Orders</th>
+                        <th>Last Update Time</th>
+                        <th>Partners</th>
+                        <th>Update Sync Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#deal-details">PP101</a></td>
+                        <td>Global Brands Inc.</td>
+                        <td>Retail Audit Q2</td>
+                        <td><a href="#orders-status">250</a></td>
+                        <td>10 Jul 2024, 10:30 AM</td>
+                        <td>Implementer Y</td>
+                        <td><span class="status-badge status-ongoing">HM sent update</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="showModal('uploadModal')">Upload</button>
+                            <button class="btn btn-info" onclick="showModal('downloadModal', 'Implementer')">Download</button>
+                            <button class="btn btn-secondary" onclick="showPage('reply-details-view', 'PP101', 'Implementer Y')">View Communication</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#deal-details">PP102</a></td>
+                        <td>Tech Solutions Ltd.</td>
+                        <td>User Experience Survey</td>
+                        <td><a href="#orders-status">120</a></td>
+                        <td>08 Jul 2024, 02:15 PM</td>
+                        <td>Implementer X</td>
+                        <td><span class="status-badge status-agreed">AIJS downloaded</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="showModal('uploadModal')">Upload</button>
+                            <button class="btn btn-info" onclick="showModal('downloadModal', 'Implementer')">Download</button>
+                            <button class="btn btn-secondary" onclick="showPage('reply-details-view', 'PP102', 'Implementer X')">View Communication</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button>&laquo; Previous</button>
+                <span>1</span>
+                <button>Next &raquo;</button>
+            </div>
+        </div>
+
+        <div id="new-partner-project-page" class="tab-content" style="display:none;">
+            <h1>Assign New Partner Project</h1>
+            <form>
+                <h3>Project Assignment Details</h3>
+                <label for="assign-client">Client:</label>
+                <select id="assign-client" placeholder="Select a client">
+                    <option>Client A</option><option>Client B</option>
+                </select>
+
+                <label for="assign-country">Country, Region, City:</label>
+                <input type="text" id="assign-country" placeholder="Select country, region, city">
+
+                <label for="assign-characteristics">Characteristics:</label>
+                <select id="assign-characteristics" multiple placeholder="Select characteristics">
+                    <option>Char 1</option><option>Char 2</option>
+                </select>
+
+                <label for="assign-branches">Branches:</label>
+                <select id="assign-branches" multiple placeholder="Select branches">
+                    <option>Branch A</option><option>Branch B</option>
+                </select>
+
+                <label for="assign-qre">Questionnaire:</label>
+                <select id="assign-qre" multiple placeholder="Select questionnaire(s)">
+                    <option>QRE 1</option><option>QRE 2</option>
+                </select>
+
+                <label for="assign-project">Project:</label>
+                <select id="assign-project" multiple placeholder="Select associated internal project(s)">
+                    <option>Project X</option><option>Project Y</option>
+                </select>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" onclick="showPage('orders-list')">Show Available Orders</button>
+                    <button type="button" class="btn btn-secondary" onclick="showTab('agreed-deals-tab')">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="orders-list" class="tab-content" style="display:none;">
+            <h1>Orders for Partner Assignment</h1>
+            <div class="header-controls">
+                <div class="filters">
+                    <span>Client: Global Brands Inc. <button>x</button></span>
+                    <span>Country: US <button>x</button></span>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th>Order ID</th>
+                        <th>Client Name</th>
+                        <th>QRE Name</th>
+                        <th>Country, City, Branch</th>
+                        <th>Status</th>
+                        <th>...</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>ORD001</td>
+                        <td>Global Brands Inc.</td>
+                        <td>Retail Audit Q2</td>
+                        <td>US, New York, Main</td>
+                        <td>Ready for Assignment</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>ORD002</td>
+                        <td>Global Brands Inc.</td>
+                        <td>Retail Audit Q2</td>
+                        <td>US, Los Angeles, West</td>
+                        <td>Ready for Assignment</td>
+                        <td>...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-actions" style="justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center;">
+                    <label for="assign-partner" style="margin-right: 10px; margin-bottom: 0;">To Whom You Would Like to Send:</label>
+                    <select id="assign-partner" style="width: auto;">
+                        <option>Implementer Y (Agreed Deal D5001)</option>
+                        <option>Implementer X (Agreed Deal D5002)</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-secondary" onclick="showPage('new-partner-project-page')">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="reply-details-view" class="tab-content" style="display:none;">
+            <button class="btn btn-secondary" onclick="history.back()">Back</button>
+            <h1 id="conversation-title">Conversation: Project Alpha - with Implementer Y</h1>
+            <div class="context-bar" style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <strong>Post/Deal ID:</strong> <span id="context-id">P1001</span> |
+                <strong>Originator:</strong> <span id="context-originator">Originator A</span> |
+                <strong>Implementer:</strong> <span id="context-implementer">Implementer Y</span>
+            </div>
+
+            <div class="chat-container">
+                <div class="message originator">
+                    <div class="message-header">Originator A - 2024-04-16 10:00 AM</div>
+                    <div class="message-content">Hi Implementer Y, thanks for your interest in the "Market Research for New Product Launch" project. Could you provide a preliminary quote for the UK portion of the project?</div>
+                </div>
+                <div class="message implementer">
+                    <div class="message-header">Implementer Y - 2024-04-16 02:30 PM</div>
+                    <div class="message-content">Hello Originator A, absolutely! We've reviewed the scope for the UK. Our preliminary quote would be [amount]. We're happy to discuss the methodology in more detail.</div>
+                </div>
+                 <div class="message originator">
+                    <div class="message-header">Originator A - 2024-04-17 09:15 AM</div>
+                    <div class="message-content">Thanks for the quick response. The quote seems reasonable. Can you confirm your availability to start by [Date]?</div>
+                </div>
+            </div>
+
+            <button class="btn btn-success" style="margin-bottom: 15px;">Send Agreement</button>
+
+            <h3>Reply</h3>
+            <form>
+                <label for="reply-name">Name:</label>
+                <input type="text" id="reply-name" value="Originator A" readonly>
+
+                <label for="reply-email">Email:</label>
+                <input type="text" id="reply-email" value="originator.a@example.com" readonly>
+
+                <label for="reply-description">Message:</label>
+                <textarea id="reply-description"></textarea>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+
+    <div id="repliesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('repliesModal')">&times;</span>
+            <h2 id="repliesModalTitle">Replies for Post: [Post Title]</h2>
+            <div class="header-controls">
+                <div class="filters">
+                    <select><option>Reply Status (All)</option><option>Open</option><option>Closed</option><option>Agreed</option></select>
+                    <input type="text" placeholder="Date Range">
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reply ID</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>R001</td>
+                        <td>16 Apr 2024</td>
+                        <td>Implementer Y</td>
+                        <td>impl.y@example.com</td>
+                        <td><span class="status-badge status-agreed">Agreed</span></td>
+                        <td><button class="btn btn-info" onclick="showPage('reply-details-view', 'P1001', 'Implementer Y')">View Thread</button></td>
+                    </tr>
+                    <tr>
+                        <td>R002</td>
+                        <td>17 Apr 2024</td>
+                        <td>Implementer Z</td>
+                        <td>impl.z@example.com</td>
+                        <td><span class="status-badge status-open">Open</span></td>
+                        <td><button class="btn btn-info" onclick="showPage('reply-details-view', 'P1001', 'Implementer Z')">View Thread</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('uploadModal')">&times;</span>
+            <h2>Send Update for Deal: D5001 - Global Brands Inc.</h2>
+            <h3>Communication History</h3>
+            <div class="chat-container" style="max-height: 200px;">
+                <div class="message originator">
+                    <div class="message-header">HM - 2024-07-01 10:00 AM</div>
+                    <div class="message-content">Initial project brief sent.</div>
+                </div>
+                <div class="message implementer">
+                    <div class="message-header">AIJS - 2024-07-02 09:30 AM</div>
+                    <div class="message-content">Brief downloaded, commencing setup.</div>
+                </div>
+            </div>
+            <h3>New Update</h3>
+            <form>
+                <label for="upload-description">Description:</label>
+                <textarea id="upload-description" placeholder="Update client details, branches, questionnaire revisions, new payment flows, order modifications"></textarea>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('uploadModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="downloadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('downloadModal')">&times;</span>
+            <h2 id="downloadModalTitle">Get Updates for Deal: D5001 - Global Brands Inc.</h2>
+            <h3>Communication History</h3>
+            <div class="chat-container" style="max-height: 200px;">
+                 <div class="message originator">
+                    <div class="message-header">HM - 2024-07-01 10:00 AM</div>
+                    <div class="message-content">Initial project brief sent.</div>
+                </div>
+                <div class="message implementer">
+                    <div class="message-header">AIJS - 2024-07-02 09:30 AM</div>
+                    <div class="message-content">Brief downloaded, commencing setup.</div>
+                </div>
+            </div>
+
+            <div id="implementer-download-options">
+                <h3>Client Association</h3>
+                <label>
+                    <input type="radio" name="client-option" value="new" checked> Create a new client with downloaded data.
+                </label><br>
+                <label>
+                    <input type="radio" name="client-option" value="existing"> Select an existing client to associate with downloaded data.
+                </label>
+                <select style="width: 100%; padding: 8px; margin-top: 10px;">
+                    <option>Select existing client...</option>
+                    <option>Existing Client A</option>
+                    <option>Existing Client B</option>
+                </select>
+            </div>
+            <div id="originator-download-options" style="display: none;">
+                <p><strong>Downloading updates for existing client:</strong> Global Brands Inc.</p>
+            </div>
+
+            <p style="margin-top: 20px;"><strong>Download Scope Information:</strong> This download will include client data, branches, questionnaire updates, orders, and payment flows.</p>
+            <p style="color: red; font-weight: bold;">Note: In-progress reviews on your system will NOT be affected by this download.</p>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Download</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('downloadModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(function(tabContent) {
+                tabContent.style.display = 'none';
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(function(button) {
+                button.classList.remove('active');
+            });
+
+            // Show the selected tab content
+            document.getElementById(tabId).style.display = 'block';
+
+            // Activate the corresponding tab button
+            document.querySelector('.tab-button[onclick*="' + tabId + '"]').classList.add('active');
+
+            // Hide other pages if they were open
+            document.getElementById('new-post-page').style.display = 'none';
+            document.getElementById('new-partner-project-page').style.display = 'none';
+            document.getElementById('orders-list').style.display = 'none';
+            document.getElementById('reply-details-view').style.display = 'none';
+        }
+
+        function showPage(pageId, postId = '', implementerName = '', dealId = '') {
+            // Hide all tab contents and special pages
+            document.querySelectorAll('.tab-content').forEach(function(tabContent) {
+                tabContent.style.display = 'none';
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(function(button) {
+                button.classList.remove('active');
+            });
+
+            // Show the specific page
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.style.display = 'block';
+
+                // Specific logic for Reply Details View
+                if (pageId === 'reply-details-view') {
+                    document.getElementById('conversation-title').innerText = `Conversation: ${postId} - with ${implementerName}`;
+                    document.getElementById('context-id').innerText = postId;
+                    document.getElementById('context-originator').innerText = 'Originator A'; // Placeholder
+                    document.getElementById('context-implementer').innerText = implementerName; // Placeholder
+                }
+                // Specific logic for New Partner Project Page
+                if (pageId === 'new-partner-project-page' && dealId) {
+                    // You might want to pre-fill client/partner based on dealId here
+                    console.log(`Pre-filling new partner project form for Deal ID: ${dealId}`);
+                }
+            }
+        }
+
+
+        function showModal(modalId, context = '', role = 'Originator') {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'flex'; // Use flex to center
+
+                if (modalId === 'repliesModal') {
+                    document.getElementById('repliesModalTitle').innerText = `Replies for Post: ${context}`;
+                } else if (modalId === 'downloadModal') {
+                    // Contextual display for download modal
+                    document.getElementById('downloadModalTitle').innerText = `Get Updates for Deal: D5001 - Global Brands Inc.`; // Placeholder
+                    if (role === 'Implementer') {
+                        document.getElementById('implementer-download-options').style.display = 'block';
+                        document.getElementById('originator-download-options').style.display = 'none';
+                    } else { // Originator
+                        document.getElementById('implementer-download-options').style.display = 'none';
+                        document.getElementById('originator-download-options').style.display = 'block';
+                    }
+                }
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal if user clicks outside of it
+        window.onclick = function(event) {
+            document.querySelectorAll('.modal').forEach(function(modal) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Initial load - show the Posts tab
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('posts-tab');
+        });
+    </script>
+
+</body>
+</html>
