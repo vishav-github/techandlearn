@@ -1,79 +1,131 @@
-openapi: 3.0.0 # <--- Add this line to specify the OpenAPI version
+openapi: 3.0.0
 info:
-  title: Review API Documentation # <--- Add a title for your API
-  version: 1.0.0 # <--- Add a version for your API
-  description: API for managing and retrieving review data. # <--- Optional: Add a description
+  title: Checker-Soft API Documentation
+  version: 1.0.0
+  description: Central API endpoint for various operations across different client environments.
 
 servers:
-  - url: / # <--- Optional: Define the base URL for your API, adjust if needed
+  - url: https://eu.checker-soft.com/{env}/api_index.php
+    description: API Endpoint for Checker-Soft environments (all requests go here)
+    variables:
+      env:
+        enum:
+          - testing
+          - preprod
+          - production
+        default: testing
 
 paths:
-  /review/selectrecord:
-    post: # Assuming this is a POST request based on the example JSON structure
-      summary: Returns review data based on specified filters.
-      operationId: selectReviewRecord
+  /:
+    post:
+      summary: Performs a specific API action (e.g., Review.selectrecord or Review.getonceApproved).
+      description: This endpoint serves as a single entry point for all API operations. The specific action is determined by the 'controller' and 'action' fields within the JSON request body.
+      operationId: performApiAction
+
+      parameters:
+        - $ref: '#/components/parameters/app_id'
+        - $ref: '#/components/parameters/Key'
+
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              # Use oneOf to define different request body structures based on 'action'
+              oneOf:
+                - $ref: '#/components/schemas/ReviewSelectRecordRequest'
+                - $ref: '#/components/schemas/ReviewGetOnceApprovedRequest'
+              discriminator: # Tells Swagger UI how to distinguish between the schemas
+                propertyName: action # The field that determines which schema applies
+                mapping: # Map action values to their respective schemas
+                  selectrecord: '#/components/schemas/ReviewSelectRecordRequest'
+                  getonceApproved: '#/components/schemas/ReviewGetOnceApprovedRequest'
+            # Example for selectrecord
+            examples: # Use examples to show different types of requests
+              selectRecordExample:
+                summary: Example for Review.selectrecord
+                value:
+                  controller: Review
+                  action: selectrecord
+                  where:
+                    SetLink: 444
+                    ClientLink: 255
+              getOnceApprovedExample:
+                summary: Example for Review.getonceApproved
+                value:
+                  controller: Review
+                  action: getonceApproved
+                  where:
+                    FinishTime: "2025-03-13"
+                    CritStatusLink: 6
+
+          application/x-www-form-urlencoded: # For encrypted requests (same as before)
+            schema:
+              type: object
               properties:
-                controller:
+                iv:
                   type: string
-                  enum: [Review]
-                  description: The controller name.
-                action:
+                  format: byte
+                  description: The Initialization Vector (IV) used for AES-256-CBC encryption (base64 encoded).
+                  example: "c29tZUJhc2U2NEVuY29kZWRJVg=="
+                params_encrypted:
                   type: string
-                  enum: [selectrecord]
-                  description: The action to perform.
-                where:
-                  $ref: '#/components/schemas/ReviewFilter'
+                  format: byte
+                  description: |
+                    The **base64 encoded and encrypted** JSON payload.
+                    The original JSON (e.g., `{"controller": "Review", "action": "getonceApproved", "where": {"FinishTime": "2025-03-13", "CritStatusLink": 6}}`)
+                    is encrypted using AES-256-CBC.
+                    Encryption details:
+                    - **Algorithm:** aes-256-cbc
+                    - **Key:** A pre-shared encryption key known to both client and server.
+                    - **IV:** Randomly generated per request, base64 encoded, and provided in the 'iv' field.
+                    The client should generate the JSON payload, then encrypt it, then base64 encode the result.
+                  example: "c29tZUVuY3J5cHRlZERhdGFTdHJpbmdIZXJlLi4u"
               required:
-                - controller
-                - action
-                - where
-            example:
-              controller: Review
-              action: selectrecord
-              where:
-                SetLink: 444
-                ClientLink: 255
+                - iv
+                - params_encrypted
       responses:
         '200':
-          description: Successfully retrieved review data.
+          description: Successfully retrieved data.
           content:
             application/json:
               schema:
                 type: object
-                description: An object containing the review data such as result, branch ID, name, questions, sections, subsections etc.
-                # You might want to define a more detailed schema for the actual review data here
-                # For example:
-                # properties:
-                #   result:
-                #     type: string
-                #   branchId:
-                #     type: integer
-                #   name:
-                #     type: string
-                #   questions:
-                #     type: array
-                #     items:
-                #       type: object
-                #   sections:
-                #     type: array
-                #     items:
-                #       type: object
-                #   subsections:
-                #     type: array
-                #     items:
-                #       type: object
+                description: An object containing the review data depending on the action performed.
+                # You would ideally define separate response schemas here too using oneOf/discriminator
+                # or provide general examples.
+        '400':
+          description: Bad Request - Missing parameters, invalid data, or decryption error.
+        '401':
+          description: Unauthorized - Invalid app_id or Key.
+        '500':
+          description: Internal Server Error.
 
 components:
+  parameters:
+    app_id:
+      name: app_id
+      in: query
+      description: Unique application ID for client authentication.
+      required: true
+      schema:
+        type: string
+        example: "68_1047"
+    Key:
+      name: Key
+      in: query
+      description: API key for client authentication.
+      required: true
+      schema:
+        type: string
+        example: "18e336ac6c4423d946ba02a19c6a2632"
+
   schemas:
-    ReviewFilter:
+    # Definitive schema for the 'where' clause of 'Review.selectrecord'
+    ReviewSelectRecordWhere:
       type: object
-      description: An object defining filters for review fields.
+      description: Filters for Review.selectrecord action.
       properties:
         CritID:
           type: integer
@@ -122,7 +174,7 @@ components:
           format: date-time
           description: Time when the shopper finished the review.
         Result:
-          type: string # Or number, depending on the actual data type
+          type: string
           description: Result of the review.
         CritStatusLink:
           type: integer
@@ -132,7 +184,7 @@ components:
           enum: [0, 1]
           description: Set to 1 if QA adjusted review result, 0 otherwise.
         QaGrade:
-          type: string # Or number, depending on the actual data type
+          type: string
           description: Result adjusted by the QA.
         QaUserLink:
           type: integer
@@ -152,3 +204,59 @@ components:
         RemoveEmptyChapters:
           type: boolean
           description: If set to true, empty sections and subsections will be removed from the response.
+
+    # Definitive schema for the 'where' clause of 'Review.getonceApproved'
+    ReviewGetOnceApprovedWhere:
+      type: object
+      description: Filters for Review.getonceApproved action.
+      properties:
+        FinishTime:
+          type: string
+          format: date
+          description: Date when the review was finished.
+          example: "2025-03-13"
+        CritStatusLink:
+          type: integer
+          description: Status ID of the review.
+          example: 6
+      required:
+        - FinishTime
+        - CritStatusLink
+
+    # The full request body schema for Review.selectrecord
+    ReviewSelectRecordRequest:
+      type: object
+      properties:
+        controller:
+          type: string
+          enum: [Review]
+          default: Review
+        action:
+          type: string
+          enum: [selectrecord]
+          default: selectrecord
+        where:
+          $ref: '#/components/schemas/ReviewSelectRecordWhere' # Reference its specific 'where' schema
+      required:
+        - controller
+        - action
+        - where
+
+    # The full request body schema for Review.getonceApproved
+    ReviewGetOnceApprovedRequest:
+      type: object
+      properties:
+        controller:
+          type: string
+          enum: [Review]
+          default: Review
+        action:
+          type: string
+          enum: [getonceApproved]
+          default: getonceApproved
+        where:
+          $ref: '#/components/schemas/ReviewGetOnceApprovedWhere' # Reference its specific 'where' schema
+      required:
+        - controller
+        - action
+        - where
