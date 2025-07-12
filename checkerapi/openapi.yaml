@@ -1,0 +1,154 @@
+openapi: 3.0.0 # <--- Add this line to specify the OpenAPI version
+info:
+  title: Review API Documentation # <--- Add a title for your API
+  version: 1.0.0 # <--- Add a version for your API
+  description: API for managing and retrieving review data. # <--- Optional: Add a description
+
+servers:
+  - url: / # <--- Optional: Define the base URL for your API, adjust if needed
+
+paths:
+  /review/selectrecord:
+    post: # Assuming this is a POST request based on the example JSON structure
+      summary: Returns review data based on specified filters.
+      operationId: selectReviewRecord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                controller:
+                  type: string
+                  enum: [Review]
+                  description: The controller name.
+                action:
+                  type: string
+                  enum: [selectrecord]
+                  description: The action to perform.
+                where:
+                  $ref: '#/components/schemas/ReviewFilter'
+              required:
+                - controller
+                - action
+                - where
+            example:
+              controller: Review
+              action: selectrecord
+              where:
+                SetLink: 444
+                ClientLink: 255
+      responses:
+        '200':
+          description: Successfully retrieved review data.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the review data such as result, branch ID, name, questions, sections, subsections etc.
+                # You might want to define a more detailed schema for the actual review data here
+                # For example:
+                # properties:
+                #   result:
+                #     type: string
+                #   branchId:
+                #     type: integer
+                #   name:
+                #     type: string
+                #   questions:
+                #     type: array
+                #     items:
+                #       type: object
+                #   sections:
+                #     type: array
+                #     items:
+                #       type: object
+                #   subsections:
+                #     type: array
+                #     items:
+                #       type: object
+
+components:
+  schemas:
+    ReviewFilter:
+      type: object
+      description: An object defining filters for review fields.
+      properties:
+        CritID:
+          type: integer
+          description: ID of the review.
+        SetTypeLink:
+          type: integer
+          description: Type of questionnaire.
+        CritMode:
+          type: integer
+          description: Mode of the review.
+        CheckerLink:
+          type: integer
+          description: ID of the shopper.
+        ClientLink:
+          type: integer
+          description: ID of the client.
+        BranchLink:
+          type: integer
+          description: ID of the branch.
+        SetLink:
+          type: integer
+          description: ID of the questionnaire.
+        SetName:
+          type: string
+          description: Name of the questionnaire.
+        ISurveyLink:
+          type: integer
+          description: ID of the Internet survey.
+        WorkerLink:
+          type: integer
+          description: ID of the worker.
+        ActualStartTime:
+          type: string
+          format: date-time
+          description: Date when the shopper began the review.
+        StartTime:
+          type: string
+          format: date-time
+          description: Declared start time.
+        FinishTime:
+          type: string
+          format: date-time
+          description: Declared finish time (as date).
+        ActualFinishTime:
+          type: string
+          format: date-time
+          description: Time when the shopper finished the review.
+        Result:
+          type: string # Or number, depending on the actual data type
+          description: Result of the review.
+        CritStatusLink:
+          type: integer
+          description: Status of the review.
+        QaGradeAdjusted:
+          type: integer
+          enum: [0, 1]
+          description: Set to 1 if QA adjusted review result, 0 otherwise.
+        QaGrade:
+          type: string # Or number, depending on the actual data type
+          description: Result adjusted by the QA.
+        QaUserLink:
+          type: integer
+          description: ID of the QA user.
+        WasSentBack:
+          type: integer
+          enum: [0, 1]
+          description: Set to 1 if was sent back to shopper, 0 otherwise.
+        PanelistLink:
+          type: integer
+          description: ID of the panelist.
+        DataIDs:
+          type: array
+          items:
+            type: integer
+          description: An array of questionnaire object IDs, if set limits the questions returned to the IDs provided.
+        RemoveEmptyChapters:
+          type: boolean
+          description: If set to true, empty sections and subsections will be removed from the response.
