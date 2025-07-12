@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide: Self-Hosting Swagger UI for API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        code {
+            background-color: #e9e9e9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #333;
+            color: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap; /* Ensures long lines wrap */
+            word-wrap: break-word; /* Ensures long words break */
+        }
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: 1em;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        ol {
+            list-style-type: decimal;
+            margin-left: 20px;
+        }
+        .note {
+            background-color: #e0f7fa;
+            border-left: 5px solid #00BCD4;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .warning {
+            background-color: #ffebee;
+            border-left: 5px solid #F44336;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guide: Self-Hosting Swagger UI for API Documentation</h1>
+        <p>This guide provides step-by-step instructions on how to set up Swagger UI on your own web server to host your API documentation.</p>
+
+        <h2>Prerequisites</h2>
+        <ul>
+            <li><strong>Web Server:</strong> You need a web server (e.g., Apache, Nginx, IIS, Caddy) installed and configured on your platform.</li>
+            <li><strong>OpenAPI Specification (YAML/JSON):</strong> Your API definition in valid OpenAPI YAML or JSON format. Let's assume you've named it <code>openapi.yaml</code>.</li>
+        </ul>
+
+        <h2>Steps to Self-Host Swagger UI</h2>
+
+        <h3>Step 1: Download Swagger UI</h3>
+        <ol>
+            <li>
+                <strong>Go to the Swagger UI GitHub Releases page:</strong> <a href="https://github.com/swagger-api/swagger-ui/releases" target="_blank">https://github.com/swagger-api/swagger-ui/releases</a>
+            </li>
+            <li>
+                <strong>Download the latest stable release:</strong> Look for a release like "Swagger UI 5.x.x" and find the <code>swagger-ui-5.x.x.zip</code> (or similar) file under the "Assets" section.
+            </li>
+            <li>
+                <strong>Extract the contents:</strong> Unzip the downloaded file. Inside, you'll find a <code>dist</code> folder. This folder contains all the necessary HTML, CSS, and JavaScript files to run Swagger UI.
+            </li>
+        </ol>
+
+        <h3>Step 2: Prepare Your OpenAPI Specification</h3>
+        <ol>
+            <li>
+                <strong>Place your <code>openapi.yaml</code> file:</strong> Decide where you want to store your <code>openapi.yaml</code> file on your server. A common practice is to place it directly in the root of your Swagger UI deployment (e.g., <code>your-docs-folder/openapi.yaml</code>) or in a subfolder like <code>specs/</code>.
+            </li>
+        </ol>
+        <div class="note">
+            <p><strong>Example Placement:</strong> If your web server serves files from <code>/var/www/html/api-docs/</code>, then you might place your <code>openapi.yaml</code> directly into <code>/var/www/html/api-docs/openapi.yaml</code> or in <code>/var/www/html/api-docs/specs/openapi.yaml</code>.</p>
+        </div>
+
+        <h3>Step 3: Deploy Swagger UI Files to Your Web Server</h3>
+        <ol>
+            <li>
+                <strong>Choose a directory on your web server:</strong> Create a new directory where you want to host your API documentation.
+                <ul>
+                    <li><strong>Apache example:</strong> <code>/var/www/html/api-docs/</code> or <code>/var/www/your-domain/public_html/api-docs/</code>.</li>
+                    <li><strong>Nginx example:</strong> <code>/usr/share/nginx/html/api-docs/</code>.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Copy <code>dist</code> contents:</strong> Copy <strong>all</strong> the contents of the <code>dist</code> folder (from your Swagger UI download) into the directory you created on your web server.
+                <p>So, if your downloaded <code>dist</code> folder contained <code>index.html</code>, <code>swagger-ui.css</code>, <code>swagger-ui-bundle.js</code>, etc., these files should now be directly inside your web server's <code>api-docs/</code> directory.</p>
+            </li>
+        </ol>
+
+        <h3>Step 4: Configure Swagger UI to Load Your Spec (Important for newer versions)</h3>
+        <p>In modern Swagger UI versions (5.x.x+), the configuration is in <code>swagger-initializer.js</code>.</p>
+        <ol>
+            <li>
+                <strong>Open <code>swagger-initializer.js</code>:</strong> Navigate to your Swagger UI deployment directory (e.g., <code>api-docs/</code>) on your server and open the <code>swagger-initializer.js</code> file in a text editor.
+            </li>
+            <li>
+                <strong>Locate the <code>SwaggerUIBundle</code> configuration:</strong> Find the <code>window.onload</code> function containing the <code>SwaggerUIBundle</code> initialization. It will look similar to this:
+<pre><code>window.onload = function() {
+  // Begin Swagger UI call region
+  const ui = SwaggerUIBundle({
+    url: "https://petstore.swagger.io/v2/swagger.json", // This is the line to change!
+    dom_id: '#swagger-ui',
+    // ... other configuration options
+  });
+  // End Swagger UI call region
+};
+</code></pre>
+            </li>
+            <li>
+                <strong>Change the <code>url</code> parameter:</strong>
+                <ul>
+                    <li><strong>If <code>openapi.yaml</code> is in the same directory:</strong>
+                        Change <code>url: "https://petstore.swagger.io/v2/swagger.json"</code> to:
+                        <pre><code>url: "./openapi.yaml",</code></pre>
+                    </li>
+                    <li><strong>If <code>openapi.yaml</code> is in a subfolder (e.g., <code>specs/</code>):</strong>
+                        Change <code>url: "https://petstore.swagger.io/v2/swagger.json"</code> to:
+                        <pre><code>url: "./specs/openapi.yaml",</code></pre>
+                    </li>
+                    <li><strong>If your OpenAPI spec is served from a different URL (e.g., your actual API endpoint serves it):</strong>
+                        Provide the full absolute URL:
+                        <pre><code>url: "https://your-api.com/v1/openapi.json", // Example absolute URL</code></pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>Save <code>swagger-initializer.js</code>:</strong> Save the changes to the file.
+            </li>
+        </ol>
+
+        <h3>Step 5: Configure Your Web Server (Crucial for Public Access & Security)</h3>
+        <p>This step makes your documentation accessible and secure. You'll need root/administrator access to your server.</p>
+
+        <h4>For Apache (example):</h4>
+        <ol>
+            <li>
+                <strong>Create a Virtual Host (recommended):</strong> Create a new Apache configuration file (e.g., <code>/etc/apache2/sites-available/your-docs.conf</code>).
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName docs.your-domain.com # Change to your domain/subdomain
+    DocumentRoot /var/www/html/api-docs # Path where you copied Swagger UI files
+
+    &lt;Directory /var/www/html/api-docs&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog ${APACHE_LOG_DIR}/api-docs_error.log
+    CustomLog ${APACHE_LOG_DIR}/api-docs_access.log combined
+&lt;/VirtualHost&gt;
+</code></pre>
+            </li>
+            <li>
+                <strong>Enable the site (on Debian/Ubuntu):</strong>
+                <pre><code>sudo a2ensite your-docs.conf</code></pre>
+            </li>
+            <li>
+                <strong>Restart Apache:</strong>
+                <pre><code>sudo systemctl restart apache2</code></pre>
+                (or <code>sudo service apache2 restart</code>)
+            </li>
+        </ol>
+
+        <h4>For Nginx (example):</h4>
+        <ol>
+            <li>
+                <strong>Create a Server Block:</strong> Create a new Nginx configuration file (e.g., <code>/etc/nginx/sites-available/your-docs.conf</code>).
+<pre><code>server {
+    listen 80;
+    server_name docs.your-domain.com; # Change to your domain/subdomain
+    root /usr/share/nginx/html/api-docs; # Path where you copied Swagger UI files
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+</code></pre>
+            </li>
+            <li>
+                <strong>Create a symlink (if applicable):</strong>
+                <pre><code>sudo ln -s /etc/nginx/sites-available/your-docs.conf /etc/nginx/sites-enabled/</code></pre>
+            </li>
+            <li>
+                <strong>Test Nginx config:</strong>
+                <pre><code>sudo nginx -t</code></pre>
+            </li>
+            <li>
+                <strong>Restart Nginx:</strong>
+                <pre><code>sudo systemctl restart nginx</code></pre>
+                (or <code>sudo service nginx restart</code>)
+            </li>
+        </ol>
+
+        <h4>Important: Implement HTTPS for Public Access</h4>
+        <div class="warning">
+            <p><strong>NEVER expose public-facing documentation without HTTPS.</strong></p>
+        </div>
+        <ol>
+            <li>
+                <strong>Get an SSL Certificate:</strong> The easiest and free way is using <a href="https://letsencrypt.org/" target="_blank">Let's Encrypt</a> with <code>certbot</code>.
+                <ul>
+                    <li>Install <code>certbot</code> for your web server and OS (e.g., <code>sudo apt install certbot python3-certbot-apache</code> or <code>sudo apt install certbot python3-certbot-nginx</code>).</li>
+                    <li>Run <code>sudo certbot --apache</code> or <code>sudo certbot --nginx</code> and follow the prompts. It will handle certificate generation and web server configuration automatically, including redirects from HTTP to HTTPS.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Configure DNS:</strong> Ensure your domain/subdomain (e.g., <code>docs.your-domain.com</code>) points to the public IP address of your server where Swagger UI is hosted.
+            </li>
+        </ol>
+
+        <h3>Step 6: Access Your Documentation</h3>
+        <ol>
+            <li>
+                Open your web browser and navigate to the URL where you've deployed Swagger UI (e.g., <code>https://docs.your-domain.com/</code>).
+            </li>
+        </ol>
+        <p>You should now see your interactive API documentation rendered by Swagger UI, loading your <code>openapi.yaml</code> file!</p>
+
+        <h2>Workflow Tips</h2>
+        <ul>
+            <li><strong>Version Control:</strong> Store your <code>openapi.yaml</code> (and potentially customized Swagger UI files) in a Git repository.</li>
+            <li><strong>Automation:</strong> Consider CI/CD to automate deployment of your documentation for frequent API changes.</li>
+            <li><strong>Separate API and Docs:</strong> Host your documentation on a different subdomain or path than your actual API endpoints for better organization and security.</li>
+        </ul>
+    </div>
+</body>
+</html>
