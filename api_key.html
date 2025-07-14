@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key Generator</title>
+    <style>
+        /* CSS Styling (from style.css) */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .key-display-area {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 15px; /* Space between input and button */
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        #apikey {
+            flex-grow: 1; /* Allow input to take available space */
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #555;
+            background-color: #e9ecef;
+            cursor: text; /* Indicate it's a text field */
+            min-width: 250px; /* Ensure it doesn't get too small */
+        }
+
+        #generateKeyBtn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* Prevent button text from wrapping */
+        }
+
+        #generateKeyBtn:hover {
+            background-color: #0056b3;
+        }
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .info-text p {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Key Generator</h1>
+        <div class="key-display-area">
+            <input type="text" id="apikey" readonly placeholder="Click 'Generate' to get a new key">
+            <button id="generateKeyBtn">Generate API Key</button>
+        </div>
+        <div class="info-text">
+            <p>This generates a unique 32-character API key without special symbol.</p>
+            <p>For production use, ensure your key generation is cryptographically secure on the server-side.</p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Logic (from script.js)
+
+        // Function to produce a random 32-character key
+        // This is a simpler version, not a strict UUID v4, but good for an API key.
+        function generateApiKey() {
+            // Using a broad range of characters for complexity
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let apiKey = '';
+            const keyLength = 32;
+
+            for (let i = 0; i < keyLength; i++) {
+                apiKey += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return apiKey;
+        }
+
+        // Get the button and input field elements
+        const generateKeyBtn = document.getElementById('generateKeyBtn');
+        const apiKeyInput = document.getElementById('apikey');
+
+        // Add an event listener to the button
+        generateKeyBtn.addEventListener('click', function() {
+            // Generate a new key
+            const newKey = generateApiKey();
+            // Set the value of the input field
+            apiKeyInput.value = newKey;
+        });
+
+        // Optional: Automatically generate a key on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            apiKeyInput.value = generateApiKey();
+        });
+    </script>
+</body>
+</html>
