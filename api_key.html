@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Key Generator</title>
     <style>
-        /* CSS Styling (from style.css) */
+        /* CSS Styling */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -15,7 +15,7 @@
             background-color: #f4f7f6;
             margin: 0;
             padding: 20px;
-            box-sizing: border-box; /* Include padding in element's total width and height */
+            box-sizing: border-box;
         }
 
         .container {
@@ -36,23 +36,48 @@
 
         .key-display-area {
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            gap: 15px; /* Space between input and button */
+            /* Changed from flex-wrap to keep copy button aligned */
+            /* Removed gap to allow more control with padding/margins */
             justify-content: center;
             align-items: center;
             margin-bottom: 25px;
+            border: 1px solid #ddd; /* Border moved to container for input + copy button */
+            border-radius: 5px;
+            background-color: #e9ecef; /* Background for input + copy button */
         }
 
         #apikey {
-            flex-grow: 1; /* Allow input to take available space */
+            flex-grow: 1;
             padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: none; /* Removed individual border */
+            border-radius: 0; /* Removed individual border-radius */
             font-size: 1em;
             color: #555;
-            background-color: #e9ecef;
-            cursor: text; /* Indicate it's a text field */
-            min-width: 250px; /* Ensure it doesn't get too small */
+            background-color: transparent; /* Make background transparent to show parent */
+            cursor: text;
+            min-width: 200px; /* Adjusted min-width slightly */
+        }
+
+        .copy-btn {
+            padding: 12px 15px;
+            background-color: #f0f0f0;
+            color: #555;
+            border-left: 1px solid #ddd; /* Separator for copy button */
+            border-radius: 0 5px 5px 0; /* Round only right corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 0.9em; /* Slightly smaller text for "Copy" */
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .copy-btn.copied {
+            background-color: #28a745; /* Green for success */
+            color: white;
         }
 
         #generateKeyBtn {
@@ -64,7 +89,8 @@
             font-size: 1em;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            white-space: nowrap; /* Prevent button text from wrapping */
+            white-space: nowrap;
+            margin-top: 15px; /* Added margin for separation */
         }
 
         #generateKeyBtn:hover {
@@ -88,8 +114,9 @@
         <h1>API Key Generator</h1>
         <div class="key-display-area">
             <input type="text" id="apikey" readonly placeholder="Click 'Generate' to get a new key">
-            <button id="generateKeyBtn">Generate API Key</button>
+            <span class="copy-btn" id="copyKeyBtn">Copy</span>
         </div>
+        <button id="generateKeyBtn">Generate API Key</button>
         <div class="info-text">
             <p>This generates a unique 32-character API key without special symbol.</p>
             <p>For production use, ensure your key generation is cryptographically secure on the server-side.</p>
@@ -97,12 +124,10 @@
     </div>
 
     <script>
-        // JavaScript Logic (from script.js)
+        // JavaScript Logic
 
         // Function to produce a random 32-character key
-        // This is a simpler version, not a strict UUID v4, but good for an API key.
         function generateApiKey() {
-            // Using a broad range of characters for complexity
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let apiKey = '';
             const keyLength = 32;
@@ -113,19 +138,59 @@
             return apiKey;
         }
 
-        // Get the button and input field elements
+        // Get elements
         const generateKeyBtn = document.getElementById('generateKeyBtn');
         const apiKeyInput = document.getElementById('apikey');
+        const copyKeyBtn = document.getElementById('copyKeyBtn');
 
-        // Add an event listener to the button
+        // Event listener for Generate button
         generateKeyBtn.addEventListener('click', function() {
-            // Generate a new key
             const newKey = generateApiKey();
-            // Set the value of the input field
             apiKeyInput.value = newKey;
+            // Reset copy button state after generating new key
+            copyKeyBtn.textContent = 'Copy';
+            copyKeyBtn.classList.remove('copied');
         });
 
-        // Optional: Automatically generate a key on page load
+        // Event listener for Copy button
+        copyKeyBtn.addEventListener('click', function() {
+            // Select the text in the input field
+            apiKeyInput.select();
+            apiKeyInput.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text to clipboard using the modern Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(apiKeyInput.value)
+                    .then(() => {
+                        copyKeyBtn.textContent = 'Copied!';
+                        copyKeyBtn.classList.add('copied');
+                        setTimeout(() => {
+                            copyKeyBtn.textContent = 'Copy';
+                            copyKeyBtn.classList.remove('copied');
+                        }, 2000); // Change back to "Copy" after 2 seconds
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        alert('Failed to copy the key. Please copy it manually.');
+                    });
+            } else {
+                // Fallback for older browsers (deprecated, but useful)
+                try {
+                    document.execCommand('copy');
+                    copyKeyBtn.textContent = 'Copied!';
+                    copyKeyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyKeyBtn.textContent = 'Copy';
+                        copyKeyBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Fallback: Failed to copy text: ', err);
+                    alert('Failed to copy the key. Your browser does not support automatic copying. Please copy it manually.');
+                }
+            }
+        });
+
+        // Generate a key on page load
         document.addEventListener('DOMContentLoaded', function() {
             apiKeyInput.value = generateApiKey();
         });
