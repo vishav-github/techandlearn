@@ -1,9 +1,12 @@
-```yaml
 openapi: 3.0.3
 info:
   title: Checker API
-  description: |
-    Comprehensive API documentation for integrating with the Checker system. This API allows external systems to access and manage data within the Checker platform, facilitating seamless integration with third-party software. All requests use HTTP POST with a single endpoint and encrypted payloads.
+  description: >
+    Comprehensive API documentation for integrating with the Checker
+    system. This API allows external systems to access and manage data within
+    the Checker platform, facilitating seamless integration with third-party
+    software. All requests use HTTP POST with a single endpoint and encrypted
+    payloads.
   version: 1.0.0
 servers:
   - url: https://eu.checker-soft.com/testing
@@ -24,8 +27,12 @@ paths:
         - Request
         - Review
       summary: Centralized endpoint for all Checker API requests
-      description: |
-        All API interactions are performed via HTTP POST to this endpoint. Requests must include `app_id` and `enc_request` parameters. The `enc_request` is a JSON payload encrypted with AES-256-CBC, prepended with a random IV, Base64 encoded, and URL encoded. The secret encryption key is provided by Checker and must not be sent in requests.
+      description: >
+        All API interactions are performed via HTTP POST to this endpoint.
+        Requests must include `app_id` and `enc_request` parameters. The
+        `enc_request` is a JSON payload encrypted with AES-256-CBC, prepended
+        with a random IV, Base64 encoded, and URL encoded. The secret encryption
+        key is provided by Checker and must not be sent in requests.
       parameters:
         - name: app_id
           in: query
@@ -39,38 +46,44 @@ paths:
           required: true
           schema:
             type: string
-          description: |
+          description: >
             Encrypted and encoded request payload. Steps to construct:
+
             1. Create a JSON payload with `controller`, `action`, and other properties.
+
             2. Encrypt the JSON using AES-256-CBC with a secret key and random IV.
+
             3. Prepend the raw binary IV to the encrypted data.
+
             4. Base64 encode the combined string (IV + encrypted data).
+
             5. URL encode the Base64 string.
       requestBody:
-        description: The request body is not used directly; all data is passed via the `enc_request` query parameter.
+        description: The request body is not used directly; all data is passed via the
+          `enc_request` query parameter.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestPayload'
+              $ref: "#/components/schemas/RequestPayload"
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
           description: Error response (e.g., invalid parameters, authentication issues)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     RequestPayload:
@@ -103,7 +116,8 @@ components:
           example: true
         data:
           type: object
-          description: Specific data returned by the API action, varying by controller and action.
+          description: Specific data returned by the API action, varying by controller and
+            action.
           additionalProperties: true
         security_note:
           type: string
@@ -335,7 +349,6 @@ components:
         controller: Review
         action: getOnceApproved
         where:
-          LastUpdateStart: "2025-02-01 00:00:00"
-          LastUpdateEnd: "2025-06-14 23:59:59"
+          LastUpdateStart: 2025-02-01 00:00:00
+          LastUpdateEnd: 2025-06-14 23:59:59
           SetLink: 6456
-```
