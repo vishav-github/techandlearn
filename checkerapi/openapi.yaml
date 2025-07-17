@@ -1,0 +1,317 @@
+Checker_API_Documentation:
+- Checker API Documentation
+- This document provides comprehensive instructions for integrating with the Checker
+  API. It covers the API's structure, request and response formats, and includes a
+  detailed PHP example using modern encryption practices.
+- 1. Overview
+- The Checker API is designed to allow external systems to access and process various
+  data points within the Checker system. It facilitates seamless integration with
+  third-party software for data retrieval and management.
+- 2. Request
+- All interactions with the Checker API are performed using the HTTP POST method.
+- 'There is a single, centralized endpoint for all API requests:'
+- your_system_address/api_index.php
+- 'Each request sent to this endpoint must include two essential URL parameters:'
+- 'app_id: Your unique application identifier, which will be provided to you by Checker.'
+- 'enc_request: This parameter carries your encrypted and encoded request payload.'
+- 'Important Note on Security Keys:'
+- Your secret encryption key (provided by Checker) is crucial for encrypting your
+  requests, but it is NEVER sent as a URL parameter or directly exposed in your API
+  calls. It's used internally within your application's code to prepare the enc_request
+  payload.
+- 'The enc_request Parameter Construction Steps:'
+- 'The enc_request parameter is not raw JSON; it''s a specially prepared string. Follow
+  these steps to construct it:'
+- 'Prepare the JSON Payload:'
+- Begin by defining your request data as a standard JSON object. This object will
+  always contain controller and action fields, followed by any other properties required
+  for your specific request.
+- 'Core JSON Structure:'
+- JSON
+- '{'
+- '"controller": "Name of the API module (e.g., ''Review'')",'
+- '"action": "Specific operation within the module (e.g., ''selectrecord'')",'
+- // ... additional properties and data relevant to the chosen controller and action.
+- // These will be detailed in the 'Specific Requests' section.
+- '}'
+- 'Encrypt the JSON Payload (AES-256-CBC):'
+- The JSON payload must be encrypted using the AES-256-CBC symmetric encryption algorithm.
+- 'Encryption Key: You will use a unique, secret encryption key provided by Checker
+  for this process.'
+- 'Initialization Vector (IV): For each encryption operation, you must generate a
+  new, random Initialization Vector (IV). This IV is vital for the security of AES-256-CBC
+  and ensures that identical plaintext inputs produce different ciphertext outputs.'
+- 'Combine IV and Encrypted Data, then Base64 Encode:'
+- Once the JSON payload is encrypted, you must prepend the raw binary IV to the raw
+  binary encrypted data.
+- The resulting combined binary string (IV + Encrypted Data) is then base64 encoded.
+- 'URL Encode:'
+- Finally, the base64-encoded string is URL-encoded (using rawurlencode in PHP for
+  optimal compatibility) before being attached to the API URL as the enc_request parameter.
+- PHP Code Example (for constructing and sending a request)
+- This comprehensive PHP example demonstrates all the steps required to prepare, encrypt,
+  encode, and send an API request, ensuring it adheres to the specified encryption
+  and parameter requirements.
+- PHP
+- <?php
+- // ---------------------------------------------
+- '// Step 1: Prepare API Request Parameters'
+- // ---------------------------------------------
+- // Define your API request data as a PHP associative array.
+- // This structure will be automatically converted into the JSON payload.
+- $params = array(
+- '''controller'' => ''Review'', //Specifies the API controller (e.g., ''Review''
+  module)'
+- '''action'' => ''selectrecord'', //Specifies the action to perform (e.g., ''selectrecord''
+  within ''Review'')'
+- '''where'' => array(              //Filters or conditions for the request'
+- '''SetLink'' => ''1977'',     //Example filter: Questionnaire ID'
+- '''FinishTime'' => ''2024-03-03'' //Example filter: Review Finish date'
+- )
+- );
+- // Convert the PHP array into a JSON string.
+- // JSON_PRETTY_PRINT makes the output human-readable, but is not strictly required
+  for the API.
+- $params_json=json_encode ($params, JSON_PRETTY_PRINT);
+- 'echo "-JSON Payload to Encrypt-\n".$params_json."\n\n"; //Debugging output: Shows
+  the JSON string before encryption'
+- // ---------------------------------------------
+- '// Step 2: Encrypt the JSON Payload (AES-256-CBC)'
+- // ---------------------------------------------
+- //Get the required size (in bytes) for the Initialization Vector (IV) for 'aes-256-cbc'.
+- // For AES-256, the IV size is typically 16 bytes.
+- $iv_size = openssl_cipher_iv_length('aes-256-cbc');
+- //Generate a cryptographically secure, random IV.
+- //A new and unique IV MUST be generated for EVERY encryption operation for security.
+- $iv = openssl_random_pseudo_bytes($iv_size);
+- //Your secret encryption key provided by Checker.
+- '//SECURITY WARNING: In a production environment, NEVER hardcode this key directly
+  in your script.'
+- //It is critical to store and manage this key securely (e.g., using environment
+  variables,
+- //a secure configuration file, or a dedicated key management system).
+- $encryption_key = 'b2fg839certr469fbc3118e286d2ca4b'; // REPLACE WITH YOUR ACTUAL
+  ENCRYPTION KEY FROM CHECKER!
+- //Encrypt the JSON payload using openssl_encrypt.
+- //'aes-256-cbc' is the cipher method.
+- //OPENSSL_RAW_DATA ensures the output is raw binary, without default base64 encoding
+  or padding.
+- $params_encrypted = openssl_encrypt(
+- $params_json,          // The plaintext JSON data string to be encrypted
+- '''aes-256-cbc'',         // The specific cipher method to use'
+- $encryption_key,       // The secret encryption key
+- OPENSSL_RAW_DATA,      // Flag to return raw binary data
+- $iv                    // The generated Initialization Vector
+- );
+- '// Crucial Step: Concatenate the IV with the encrypted data, then base64 encode
+  the entire binary string.'
+- // The API server requires both the IV and the encrypted data to decrypt the request
+  correctly.
+- $params_encoded = base64_encode($iv . $params_encrypted);
+- 'echo "-Base64 Encoded (IV + Encrypted Data)-\n" . $params_encoded . "\n\n"; //
+  Debugging output: Shows the final base64 string'
+- // ---------------------------------------------
+- '// Step 3: Build the Complete API URL'
+- // ---------------------------------------------
+- // Your application ID provided by Checker.
+- $app_id = '30'; // REPLACE WITH YOUR ACTUAL app_id FROM CHECKER!
+- // Construct the full API URL.
+- // 'rawurlencode' is used for the 'enc_request' parameter to correctly encode any
+  special characters
+- // present in the base64 string for URL transmission.
+- $url = "https://ru.checker-soft.com/research/api_index.php?app_id=" . $app_id .
+  "&enc_request=" . rawurlencode($params_encoded);
+- 'echo "-Constructed API URL-\n" . $url . "\n\n";//Debugging output: Shows the full
+  URL for the API call'
+- '// Optional Debugging Feature:'
+- // Uncomment the 'die()' line below to halt script execution at this point.
+- // This allows you to inspect the constructed URL and confirm its structure before
+  the API request is sent.
+- // die ("Script halted after URL construction for inspection.");
+- // ---------------------------------------------
+- '// Step 4: Send the API Request via cURL'
+- // ---------------------------------------------
+- $ch = curl_init(); // Initialize a new cURL session
+- '//Configure cURL options:'
+- curl_setopt($ch, CURLOPT_URL, $url);             // Set the target API URL
+- curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the transfer as a string
+  instead of outputting it directly
+- curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); //ALWAYS set this to 'true' in production
+  to ensure secure communication and validate the server's identity.
+- $response = curl_exec($ch); //Execute the cURL request and capture the raw response
+- $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); //Get the HTTP status code (e.g.,
+  200, 400, 500)
+- $error = curl_error($ch); //Get any error message from cURL itself (if the request
+  failed at network level)
+- curl_close($ch); //Close the cURL session to free up resources
+- // ---------------------------------------------
+- '// Step 5: Handle the API Response'
+- // ---------------------------------------------
+- if ($http_code == 200) {
+- echo "✅ API Request Successful!\n";
+- echo "--- API Response Data ---\n" . $response . "\n";
+- '} else {'
+- echo "❌ API Request Failed!\n";
+- 'echo "HTTP Status Code: $http_code\n";'
+- 'echo "cURL Error (if any): $error\n";'
+- echo "Raw Response (if received from server):\n" . $response . "\n";
+- '}'
+- ?>
+- 3. Response
+- API responses are consistently provided in JSON format. The structure of the response
+  will vary depending on whether the request was successful or if an error occurred.
+- 'Unsuccessful Response Format:'
+- 'If the API request encounters an error (e.g., invalid parameters, authentication
+  issues, internal server errors), the response will follow this standard format:'
+- JSON
+- '{'
+- '"success": false,'
+- '"errormsg": "A clear, descriptive error message explaining the reason for the failure",'
+- '"security_note": "data secured"'
+- '}'
+- 'Successful Response Format:'
+- 'If the API request is processed successfully, the response will contain the requested
+  data within the data field:'
+- JSON
+- '{'
+- '"success": true,'
+- '"data": {'
+- // This object contains the specific data returned by the API action.
+- // Its structure will vary significantly based on the 'controller' and 'action'
+  that were performed.
+- '},'
+- '"security_note": "data secured"'
+- '}'
+- 4. Specific Requests
+- This section will detail all the specific API requests available. Each major section
+  title will correspond to a controller name that needs to be included in your request's
+  JSON payload. Subsections within these controllers will represent the action to
+  be called.
+- 'For example, if you find documentation for "4.1 Reviews" and a subsection "4.1.1.
+  selectrecord," it indicates that your JSON request payload should be structured
+  as follows:'
+- JSON
+- '{'
+- '"controller": "Review",'
+- '"action": "selectrecord",'
+- // ... any other specific data required for the 'selectrecord' action, as detailed
+  in its documentation.
+- '}'
+- 4. Specific Requests
+- This section details the specific API requests available, organized by controller
+  and action.
+- 4.1 Review
+- The Review controller is used to access and filter data related to reviews within
+  the system.
+- 4.1.1. selectrecord
+- Returns data of reviews based on the specified filters.
+- 'Description: This action allows you to retrieve review records by applying various
+  filtering criteria.'
+- 'Parameters:'
+- where (Object) An object defining filters for various review fields. You can combine
+  multiple fields to narrow down your search results.
+- 'CritID (Integer): The unique ID of the review.'
+- 'SetTypeLink (Integer): The type of questionnaire used for the review.'
+- 'CritMode (Integer): The mode of the review (e.g., 0 for online, 1 for offline).'
+- 'CheckerLink (Integer): The ID of the shopper (checker) who performed the review.'
+- 'ClientLink (Integer): The ID of the client associated with the review.'
+- 'BranchLink (Integer): The ID of the branch where the review took place.'
+- 'SetLink (Integer): The ID of the questionnaire itself.'
+- 'SetName (String): The name of the questionnaire.'
+- 'ISurveyLink (Integer): The ID of the Internet survey.'
+- 'WorkerLink (Integer): The ID of the worker.'
+- 'ActualStartTime (Date/Time String): The date and time when the shopper actually
+  began the review.'
+- 'StartTime (Date/Time String): The declared start time of the review.'
+- 'FinishTime (Date/Time String): The declared finish time of the review (as a date).'
+- 'ActualFinishTime (Date/Time String): The actual time when the shopper finished
+  the review.'
+- 'Result (String): The overall result of the review.'
+- 'CritStatusLink (Integer): The status of the review (e.g., 1 for pending, 6 for
+  approved).'
+- 'QaGradeAdjusted (Integer): Set to 1 if QA adjusted the review result, 0 otherwise.'
+- 'QaGrade (String): The result as adjusted by the QA.'
+- 'QaUserLink (Integer): The ID of the QA user who performed the adjustment.'
+- 'WasSentBack (Integer): Set to 1 if the review was sent back to the shopper, 0 otherwise.'
+- 'PanelistLink (Integer): The ID of the panelist.'
+- 'DataIDs (Array of Integers): An array of questionnaire object IDs. If provided,
+  this limits the questions returned in the response to only those matching the specified
+  IDs.'
+- 'RemoveEmptyChapters (Boolean): If set to true, any sections or subsections within
+  the response that contain no data will be removed.'
+- 'Return Values: An object containing the retrieved review data. This object can
+  include various details such as the review''s overall result, associated branchID,
+  name, and structured data like questions, sections, subsections, etc. The exact
+  content depends on the review''s structure.'
+- 'Example JSON Request:'
+- JSON
+- '// Example: Get all reviews for client ID 255 that were done with questionnaire
+  ID 444.'
+- '{'
+- '"controller": "Review",'
+- '"action": "selectrecord",'
+- '"where": {'
+- '"SetLink": 444,'
+- '"ClientLink": 255'
+- '}'
+- '}'
+- 4.1.2. getOnceApproved
+- Returns data for reviews that have been approved, based on the specified filter
+  criteria.
+- 'Description: This action is typically used to retrieve a batch of reviews that
+  have reached an approved status, often within a specific time frame or related to
+  certain projects/surveys.'
+- 'Parameters:'
+- 'where (Object) An object defining filters for review fields. The possible fields
+  are:'
+- 'CritID (Integer): The unique ID of the review.'
+- 'SetTypeLink (Integer): The type of questionnaire.'
+- 'CritMode (Integer): The mode of the review.'
+- 'CheckerLink (Integer): The ID of the shopper.'
+- 'ClientLink (Integer): The ID of the client.'
+- 'BranchLink (Integer): The ID of the branch.'
+- 'SetLink (Integer): The ID of the questionnaire.'
+- 'SetName (String): The name of the questionnaire.'
+- 'ISurveyLink (Integer): The ID of the Internet survey.'
+- 'WorkerLink (Integer): The ID of the worker.'
+- 'ActualStartTime (Date/Time String): The date when the shopper began the review.'
+- 'StartTime (Date/Time String): The declared start time.'
+- 'FinishTime (Date/Time String): The declared finish time (as a date).'
+- 'ActualFinishTime (Date/Time String): The time when the shopper finished the review.'
+- 'Result (String): The result of the review.'
+- 'CritStatusLink (Integer): The status of the review (e.g., 6 for approved).'
+- 'QaGradeAdjusted (Integer): Set to 1 if QA adjusted review result, 0 otherwise.'
+- 'QaGrade (String): The result adjusted by the QA.'
+- 'QaUserLink (Integer): The ID of the QA user.'
+- 'WasSentBack (Integer): Set to 1 if was sent back to shopper, 0 otherwise.'
+- 'PanelistLink (Integer): The ID of the panelist.'
+- 'FinishTimeStart (Date String): The beginning of the period for which reviews are
+  returned, in MySQL date format (YYYY-MM-DD).'
+- 'FinishTimeEnd (Date String): The end of the period for which reviews are returned,
+  in MySQL date format (YYYY-MM-DD).'
+- 'ProjectIDs (Array of Integers): An array of project IDs by which the reviews should
+  be filtered.'
+- 'SurveyIDs (Array of Integers): An array of survey IDs by which the reviews should
+  be filtered.'
+- 'LastUpdateStart (Date/Time String): The beginning of the period for which reviews
+  were last updated, in MySQL date/time format.'
+- 'LastUpdateEnd (Date/Time String): The end of the period for which reviews were
+  last updated, in MySQL date/time format.'
+- 'Return Values: An object containing the retrieved review data. This object can
+  include various details such as the review''s result, branchID, name, and structured
+  data like questions, sections, subsections, etc. The exact content depends on the
+  review''s structure.'
+- 'Example JSON Request:'
+- JSON
+- '// Example: Get all approved reviews updated between two date with a specific Questionnaire
+  ID.'
+- '{'
+- '"controller": "Review",'
+- '"action": "getOnceApproved",'
+- '"where": {'
+- '"LastUpdateStart":"2025-02-01 00:00:00",'
+- '"LastUpdateEnd":"2025-06-14 23:59:59",'
+- '"SetLink":6456'
+- '}'
+- '}'
+- '*******************************'
