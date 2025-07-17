@@ -19,7 +19,7 @@
   </style>
 </head>
 <body class="container mx-auto px-4 py-8">
-  <h1 class="text-center mb-6">Checker API Documentation</h1>
+  <h1 class="text-center mb-6">Checker API Documentation for Reviews</h1>
   <p class="text-lg mb-8">This document provides comprehensive instructions for integrating with the Checker API. It covers the API's structure, request and response formats, and includes a detailed PHP example using modern encryption practices.</p>
 
   <div class="toc">
@@ -49,7 +49,7 @@
   <section id="request">
     <h2>2. Request</h2>
     <p>All interactions with the Checker API are performed using the HTTP POST method. There is a single, centralized endpoint for all API requests:</p>
-    <p><code>https://eu.checker-soft.com/testing/api_index.php</code></p>
+    <p><code>https://your-system-link/api_index.php</code></p>
     <p>Each request sent to this endpoint must include two essential URL parameters:</p>
     <ul class="list-disc pl-6">
       <li><strong>app_id</strong>: Your unique application identifier, provided by Checker.</li>
@@ -108,7 +108,7 @@ echo "-Base64 Encoded (IV + Encrypted Data)-\n" . $params_encoded . "\n\n";
 
 // Step 3: Build the Complete API URL
 $app_id = '30'; // REPLACE WITH YOUR ACTUAL app_id FROM CHECKER!
-$url = "https://eu.checker-soft.com/testing/api_index.php?app_id=" . $app_id . "&enc_request=" . rawurlencode($params_encoded);
+$url = "https://your-system-link/api_index.php?app_id=" . $app_id . "&enc_request=" . rawurlencode($params_encoded);
 echo "-Constructed API URL-\n" . $url . "\n\n";
 
 // Step 4: Send the API Request via cURL
@@ -172,8 +172,8 @@ if ($http_code == 200) {
     <ul class="list-disc pl-6">
       <li><strong>where (Object)</strong>: Defines filters for review fields. Combine multiple fields to narrow results.</li>
       <ul class="list-circle pl-6">
-        <li><strong>CritID (Integer)</strong>: Unique ID of the review.</li>
-        <li><strong>SetTypeLink (Integer)</strong>: Type of questionnaire used for the review.</li>
+        <li><strong>CritID </strong>: (Integer) Unique ID of the review.</li>
+        <li><strong>SetTypeLink </strong>: (Integer) Type of questionnaire used for the review.</li>
         <li><strong>CritMode (Integer)</strong>: Mode of the review (0 for online, 1 for offline).</li>
         <li><strong>CheckerLink (Integer)</strong>: ID of the shopper who performed the review.</li>
         <li><strong>ClientLink (Integer)</strong>: ID of the client associated with the review.</li>
