@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checker API Documentation</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+    code { font-family: 'Courier New', Courier, monospace; }
+    h1 { font-size: 2.5rem; color: #1a202c; }
+    h2 { font-size: 1.75rem; color: #2d3748; margin-top: 2rem; }
+    h3 { font-size: 1.25rem; color: #4a5568; margin-top: 1.5rem; }
+    h4 { font-size: 1rem; color: #4a5568; margin-top: 1rem; font-weight: bold; }
+    .toc { background: #edf2f7; padding: 1rem; border-radius: 4px; margin-bottom: 2rem; }
+    .toc a { color: #2b6cb0; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body class="container mx-auto px-4 py-8">
+  <h1 class="text-center mb-6">Checker API Documentation</h1>
+  <p class="text-lg mb-8">This document provides comprehensive instructions for integrating with the Checker API. It covers the API's structure, request and response formats, and includes a detailed PHP example using modern encryption practices.</p>
+
+  <div class="toc">
+    <h3>Table of Contents</h3>
+    <ul class="list-disc pl-6">
+      <li><a href="#overview">1. Overview</a></li>
+      <li><a href="#request">2. Request</a></li>
+      <li><a href="#response">3. Response</a></li>
+      <li><a href="#specific-requests">4. Specific Requests</a>
+        <ul class="list-circle pl-6">
+          <li><a href="#review">4.1 Review</a>
+            <ul class="list-square pl-6">
+              <li><a href="#selectrecord">4.1.1 selectrecord</a></li>
+              <li><a href="#getOnceApproved">4.1.2 getOnceApproved</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <section id="overview">
+    <h2>1. Overview</h2>
+    <p>The Checker API is designed to allow external systems to access and process various data points within the Checker system. It facilitates seamless integration with third-party software for data retrieval and management.</p>
+  </section>
+
+  <section id="request">
+    <h2>2. Request</h2>
+    <p>All interactions with the Checker API are performed using the HTTP POST method. There is a single, centralized endpoint for all API requests:</p>
+    <p><code>https://eu.checker-soft.com/testing/api_index.php</code></p>
+    <p>Each request sent to this endpoint must include two essential URL parameters:</p>
+    <ul class="list-disc pl-6">
+      <li><strong>app_id</strong>: Your unique application identifier, provided by Checker.</li>
+      <li><strong>enc_request</strong>: This parameter carries your encrypted and encoded request payload.</li>
+    </ul>
+    <h3>Important Note on Security Keys</h3>
+    <p>Your secret encryption key (provided by Checker) is crucial for encrypting your requests, but it is <strong>NEVER</strong> sent as a URL parameter or directly exposed in your API calls. It is used internally within your application's code to prepare the <code>enc_request</code> payload.</p>
+    <h3>The enc_request Parameter Construction Steps</h3>
+    <p>The <code>enc_request</code> parameter is not raw JSON; it’s a specially prepared string. Follow these steps to construct it:</p>
+    <ol class="list-decimal pl-6">
+      <li><strong>Prepare the JSON Payload</strong>: Begin by defining your request data as a standard JSON object. This object will always contain <code>controller</code> and <code>action</code> fields, followed by any other properties required for your specific request.</li>
+      <li><strong>Core JSON Structure</strong>:
+        <pre><code class="language-json">
+{
+  "controller": "Name of the API module (e.g., 'Review')",
+  "action": "Specific operation within the module (e.g., 'selectrecord')",
+  // ... additional properties and data relevant to the chosen controller and action.
+}
+        </code></pre>
+      </li>
+      <li><strong>Encrypt the JSON Payload (AES-256-CBC)</strong>: The JSON payload must be encrypted using the AES-256-CBC symmetric encryption algorithm. Use the unique, secret encryption key provided by Checker and generate a new, random Initialization Vector (IV) for each encryption operation to ensure security.</li>
+      <li><strong>Combine IV and Encrypted Data, then Base64 Encode</strong>: Prepend the raw binary IV to the raw binary encrypted data, then Base64 encode the combined string.</li>
+      <li><strong>URL Encode</strong>: URL-encode the Base64-encoded string (using <code>rawurlencode</code> in PHP) before attaching it to the API URL as the <code>enc_request</code> parameter.</li>
+    </ol>
+    <h3>PHP Code Example (for constructing and sending a request)</h3>
+    <p>This example demonstrates all steps required to prepare, encrypt, encode, and send an API request, adhering to the specified encryption and parameter requirements.</p>
+    <pre><code class="language-php">
+<?php
+// Step 1: Prepare API Request Parameters
+$params = array(
+    'controller' => 'Review', // Specifies the API controller (e.g., 'Review' module)
+    'action' => 'selectrecord', // Specifies the action to perform (e.g., 'selectrecord' within 'Review')
+    'where' => array( // Filters or conditions for the request
+        'SetLink' => '1977', // Example filter: Questionnaire ID
+        'FinishTime' => '2024-03-03' // Example filter: Review Finish date
+    )
+);
+
+// Convert the PHP array into a JSON string
+$params_json = json_encode($params, JSON_PRETTY_PRINT);
+echo "-JSON Payload to Encrypt-\n" . $params_json . "\n\n";
+
+// Step 2: Encrypt the JSON Payload (AES-256-CBC)
+$iv_size = openssl_cipher_iv_length('aes-256-cbc');
+$iv = openssl_random_pseudo_bytes($iv_size);
+$encryption_key = 'b2fg839certr469fbc3118e286d2ca4b'; // REPLACE WITH YOUR ACTUAL ENCRYPTION KEY FROM CHECKER!
+$params_encrypted = openssl_encrypt(
+    $params_json,
+    'aes-256-cbc',
+    $encryption_key,
+    OPENSSL_RAW_DATA,
+    $iv
+);
+$params_encoded = base64_encode($iv . $params_encrypted);
+echo "-Base64 Encoded (IV + Encrypted Data)-\n" . $params_encoded . "\n\n";
+
+// Step 3: Build the Complete API URL
+$app_id = '30'; // REPLACE WITH YOUR ACTUAL app_id FROM CHECKER!
+$url = "https://eu.checker-soft.com/testing/api_index.php?app_id=" . $app_id . "&enc_request=" . rawurlencode($params_encoded);
+echo "-Constructed API URL-\n" . $url . "\n\n";
+
+// Step 4: Send the API Request via cURL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+$response = curl_exec($ch);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$error = curl_error($ch);
+curl_close($ch);
+
+// Step 5: Handle the API Response
+if ($http_code == 200) {
+    echo "✅ API Request Successful!\n";
+    echo "--- API Response Data ---\n" . $response . "\n";
+} else {
+    echo "❌ API Request Failed!\n";
+    echo "HTTP Status Code: $http_code\n";
+    echo "cURL Error (if any): $error\n";
+    echo "Raw Response (if received from server):\n" . $response . "\n";
+}
+?>
+    </code></pre>
+    <p><strong>Security Warning</strong>: Never hardcode the encryption key in your script in a production environment. Store it securely (e.g., using environment variables or a key management system).</p>
+  </section>
+
+  <section id="response">
+    <h2>3. Response</h2>
+    <p>API responses are provided in JSON format. The structure varies depending on whether the request was successful or an error occurred.</p>
+    <h3>Unsuccessful Response Format</h3>
+    <p>If the request encounters an error (e.g., invalid parameters, authentication issues), the response follows this format:</p>
+    <pre><code class="language-json">
+{
+  "success": false,
+  "errormsg": "A clear, descriptive error message explaining the reason for the failure",
+  "security_note": "data secured"
+}
+    </code></pre>
+    <h3>Successful Response Format</h3>
+    <p>If the request is processed successfully, the response contains the requested data in the <code>data</code> field:</p>
+    <pre><code class="language-json">
+{
+  "success": true,
+  "data": {
+    // Specific data returned by the API action, varying by controller and action
+  },
+  "security_note": "data secured"
+}
+    </code></pre>
+  </section>
+
+  <section id="specific-requests">
+    <h2>4. Specific Requests</h2>
+    <p>This section details the specific API requests available, organized by controller and action. Each controller corresponds to a <code>controller</code> field in the JSON payload, and subsections represent the <code>action</code> to be called.</p>
+    <h3 id="review">4.1 Review</h3>
+    <p>The Review controller is used to access and filter data related to reviews within the system.</p>
+    <h4 id="selectrecord">4.1.1 selectrecord</h4>
+    <p><strong>Description</strong>: This action retrieves review records based on specified filters.</p>
+    <p><strong>Parameters</strong>:</p>
+    <ul class="list-disc pl-6">
+      <li><strong>where (Object)</strong>: Defines filters for review fields. Combine multiple fields to narrow results.</li>
+      <ul class="list-circle pl-6">
+        <li><strong>CritID (Integer)</strong>: Unique ID of the review.</li>
+        <li><strong>SetTypeLink (Integer)</strong>: Type of questionnaire used for the review.</li>
+        <li><strong>CritMode (Integer)</strong>: Mode of the review (0 for online, 1 for offline).</li>
+        <li><strong>CheckerLink (Integer)</strong>: ID of the shopper who performed the review.</li>
+        <li><strong>ClientLink (Integer)</strong>: ID of the client associated with the review.</li>
+        <li><strong>BranchLink (Integer)</strong>: ID of the branch where the review took place.</li>
+        <li><strong>SetLink (Integer)</strong>: ID of the questionnaire.</li>
+        <li><strong>SetName (String)</strong>: Name of the questionnaire.</li>
+        <li><strong>ISurveyLink (Integer)</strong>: ID of the Internet survey.</li>
+        <li><strong>WorkerLink (Integer)</strong>: ID of the worker.</li>
+        <li><strong>ActualStartTime (Date/Time String)</strong>: Date and time when the shopper began the review.</li>
+        <li><strong>StartTime (Date/Time String)</strong>: Declared start time of the review.</li>
+        <li><strong>FinishTime (Date/Time String)</strong>: Declared finish time of the review (as a date).</li>
+        <li><strong>ActualFinishTime (Date/Time String)</strong>: Actual time when the shopper finished the review.</li>
+        <li><strong>Result (String)</strong>: Overall result of the review.</li>
+        <li><strong>CritStatusLink (Integer)</strong>: Status of the review (e.g., 1 for pending, 6 for approved).</li>
+        <li><strong>QaGradeAdjusted (Integer)</strong>: Set to 1 if QA adjusted the review result, 0 otherwise.</li>
+        <li><strong>QaGrade (String)</strong>: Result as adjusted by QA.</li>
+        <li><strong>QaUserLink (Integer)</strong>: ID of the QA user who performed the adjustment.</li>
+        <li><strong>WasSentBack (Integer)</strong>: Set to 1 if the review was sent back to the shopper, 0 otherwise.</li>
+        <li><strong>PanelistLink (Integer)</strong>: ID of the panelist.</li>
+        <li><strong>DataIDs (Array of Integers)</strong>: Limits returned questions to specified questionnaire object IDs.</li>
+        <li><strong>RemoveEmptyChapters (Boolean)</strong>: If true, removes empty sections or subsections from the response.</li>
+      </ul>
+    </ul>
+    <p><strong>Return Values</strong>: An object containing review data, including the review’s result, branch ID, name, and structured data (e.g., questions, sections). The content depends on the review’s structure.</p>
+    <p><strong>Example JSON Request</strong>:</p>
+    <pre><code class="language-json">
+{
+  "controller": "Review",
+  "action": "selectrecord",
+  "where": {
+    "SetLink": 444,
+    "ClientLink": 255
+  }
+}
+    </code></pre>
+    <h4 id="getOnceApproved">4.1.2 getOnceApproved</h4>
+    <p><strong>Description</strong>: This action retrieves approved reviews based on specified filter criteria, often within a specific time frame or related to projects/surveys.</p>
+    <p><strong>Parameters</strong>:</p>
+    <ul class="list-disc pl-6">
+      <li><strong>where (Object)</strong>: Defines filters for review fields.</li>
+      <ul class="list-circle pl-6">
+        <li><strong>CritID (Integer)</strong>: Unique ID of the review.</li>
+        <li><strong>SetTypeLink (Integer)</strong>: Type of questionnaire.</li>
+        <li><strong>CritMode (Integer)</strong>: Mode of the review.</li>
+        <li><strong>CheckerLink (Integer)</strong>: ID of the shopper.</li>
+        <li><strong>ClientLink (Integer)</strong>: ID of the client.</li>
+        <li><strong>BranchLink (Integer)</strong>: ID of the branch.</li>
+        <li><strong>SetLink (Integer)</strong>: ID of the questionnaire.</li>
+        <li><strong>SetName (String)</strong>: Name of the questionnaire.</li>
+        <li><strong>ISurveyLink (Integer)</strong>: ID of the Internet survey.</li>
+        <li><strong>WorkerLink (Integer)</strong>: ID of the worker.</li>
+        <li><strong>ActualStartTime (Date/Time String)</strong>: Date when the shopper began the review.</li>
+        <li><strong>StartTime (Date/Time String)</strong>: Declared start time.</li>
+        <li><strong>FinishTime (Date/Time String)</strong>: Declared finish time (as a date).</li>
+        <li><strong>ActualFinishTime (Date/Time String)</strong>: Actual time when the shopper finished the review.</li>
+        <li><strong>Result (String)</strong>: Result of the review.</li>
+        <li><strong>CritStatusLink (Integer)</strong>: Status of the review (e.g., 6 for approved).</li>
+        <li><strong>QaGradeAdjusted (Integer)</strong>: Set to 1 if QA adjusted review result, 0 otherwise.</li>
+        <li><strong>QaGrade (String)</strong>: Result adjusted by QA.</li>
+        <li><strong>QaUserLink (Integer)</strong>: ID of the QA user.</li>
+        <li><strong>WasSentBack (Integer)</strong>: Set to 1 if sent back to shopper, 0 otherwise.</li>
+        <li><strong>PanelistLink (Integer)</strong>: ID of the panelist.</li>
+        <li><strong>FinishTimeStart (Date String)</strong>: Start of the period for reviews (YYYY-MM-DD).</li>
+        <li><strong>FinishTimeEnd (Date String)</strong>: End of the period for reviews (YYYY-MM-DD).</li>
+        <li><strong>ProjectIDs (Array of Integers)</strong>: Array of project IDs to filter reviews.</li>
+        <li><strong>SurveyIDs (Array of Integers)</strong>: Array of survey IDs to filter reviews.</li>
+        <li><strong>LastUpdateStart (Date/Time String)</strong>: Start of the period for last updated reviews.</li>
+        <li><strong>LastUpdateEnd (Date/Time String)</strong>: End of the period for last updated reviews.</li>
+      </ul>
+    </ul>
+    <p><strong>Return Values</strong>: An object containing review data, including the review’s result, branch ID, name, and structured data (e.g., questions, sections). The content depends on the review’s structure.</p>
+    <p><strong>Example JSON Request</strong>:</p>
+    <pre><code class="language-json">
+{
+  "controller": "Review",
+  "action": "getOnceApproved",
+  "where": {
+    "LastUpdateStart": "2025-02-01 00:00:00",
+    "LastUpdateEnd": "2025-06-14 23:59:59",
+    "SetLink": 6456
+  }
+}
+    </code></pre>
+  </section>
+</body>
+</html>
