@@ -5,11 +5,9 @@ info:
   description: |
     Comprehensive API documentation for integrating with the Checker system. This API allows external systems to access and manage data within the Checker platform, facilitating seamless integration with third-party software. All requests use HTTP POST with a single endpoint and encrypted payloads.
   version: 1.0.0
-
 servers:
   - url: https://eu.checker-soft.com/testing
     description: Testing environment for Checker API
-
 tags:
   - name: Overview
     description: General information about the Checker API and its purpose
@@ -19,7 +17,6 @@ tags:
     description: Structure of API responses (successful and unsuccessful)
   - name: Review
     description: Operations related to retrieving review data
-
 paths:
   /api_index.php:
     post:
@@ -74,7 +71,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
 components:
   schemas:
     RequestPayload:
@@ -94,7 +90,7 @@ components:
         where:
           type: object
           description: Filters or conditions for the request.
-      additionalProperties: true
+          additionalProperties: true
     SuccessResponse:
       type: object
       required:
@@ -342,5 +338,4 @@ components:
           LastUpdateStart: "2025-02-01 00:00:00"
           LastUpdateEnd: "2025-06-14 23:59:59"
           SetLink: 6456
-
 ```
