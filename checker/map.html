@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map with a Pin</title>
+    <script>
+        function initMap() {
+            // Set the latitude and longitude for the map's center
+            var location = { lat: 30.521579, lng: 76.576562 };
+            //30.521579, 76.576562
+            
+            // Create the map and center it on the defined location
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: location
+            });
+            
+            // Create a marker (pin) and place it on the map
+            var marker = new google.maps.Marker({
+                position: location, // The marker's position
+                map: map,          // The map instance to place the marker on
+                title: 'My Location' // The text to display when hovering over the pin
+            });
+        }
+    </script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h3>My Map with a Pin</h3>
+    <div id="map"></div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJnh7p1CJ5abh6NBzHkCA6xlnLrzNdNMw&callback=initMap"></script>
+</body>
+</html>
