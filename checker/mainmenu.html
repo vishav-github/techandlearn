@@ -85,17 +85,27 @@
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .header .welcome-note-group {
+            display: flex;
+            flex-direction: column;
+        }
         .header .welcome-note {
             font-size: 1.2rem;
             font-weight: 600;
+        }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        .breadcrumb a {
+            color: var(--text-light);
+            text-decoration: none;
         }
         .header-controls {
             display: flex;
             align-items: center;
             gap: 1.5rem;
-        }
-        .search-box {
-            position: relative;
         }
         .search-box input {
             padding: 0.75rem 1rem;
@@ -135,40 +145,44 @@
             padding: 2rem;
             flex-grow: 1;
         }
-        .breadcrumb {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-        .breadcrumb a {
-            color: var(--text-light);
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        .breadcrumb span {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        .quick-stats-row {
+        .quick-actions-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 1rem;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
         }
-        .quick-stats-row .quick-stat-item {
-            display: flex;
-            flex-direction: column;
-        }
-        .quick-stats-row .quick-stat-item span {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        .quick-stats-row .quick-stat-item strong {
-            font-size: 1.2rem;
+        .quick-actions-row .quick-action-btn {
+            text-decoration: none;
             color: var(--primary-green);
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--primary-green);
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .quick-actions-row .quick-action-btn:hover {
+            background-color: var(--primary-green);
+            color: white;
+        }
+        .system-updates-banner {
+            background-color: var(--highlight-bg);
+            border: 1px solid var(--highlight-border);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .system-updates-banner strong {
+            color: var(--text-dark);
         }
         .summary-grid {
             display: grid;
@@ -209,10 +223,6 @@
             color: var(--text-light);
             margin-top: 0.5rem;
         }
-        .updates-card {
-            background-color: var(--highlight-bg);
-            border: 1px solid var(--highlight-border);
-        }
         .credits-card .buy-btn {
             background-color: var(--primary-green);
             color: white;
@@ -228,25 +238,33 @@
         .credits-card .buy-btn:hover {
             background-color: var(--dark-green);
         }
+        .credits-card .scrollable-list {
+            max-height: 400px; /* Adjust height as needed */
+            overflow-y: auto;
+        }
         .credits-card ul {
             list-style: none;
             padding: 0;
             margin: 0;
-            columns: 2; /* Split into two columns */
         }
         .credits-card ul li {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
         }
-        .credits-card ul li span:first-child {
-            max-width: 70%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .credits-card ul li:last-child {
+            border-bottom: none;
         }
-        .credits-card ul li span:last-child {
+        .credit-group-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 1rem;
+            padding-bottom: 0.5rem;
+        }
+        .credit-value {
             font-weight: 500;
         }
         .used-up {
@@ -290,7 +308,12 @@
 
         <div class="main-content">
             <header class="header">
-                <div class="welcome-note">Welcome, Vishav Singh!</div>
+                <div class="welcome-note-group">
+                    <div class="welcome-note">Welcome, Vishav Singh!</div>
+                    <div class="breadcrumb">
+                        <a href="#">Main menu</a> > <span>Dashboard Overview</span>
+                    </div>
+                </div>
                 <div class="header-controls">
                     <div class="search-box">
                         <input type="text" placeholder="Search for anything...">
@@ -307,25 +330,26 @@
             </header>
 
             <div class="dashboard-container">
-                <div class="breadcrumb">
-                    <a href="#">Main menu</a> > <a href="#">Dashboard</a> > <span>Dashboard Overview</span>
+                <div class="quick-actions-row">
+                    <div class="quick-stats-row">
+                        <div class="quick-stat-item">
+                            <span>Active shoppers count:</span>
+                            <strong>33055</strong>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span>Active clients count:</span>
+                            <strong>244</strong>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap: 1rem;">
+                        <a href="#" class="quick-action-btn">&#9989; Add New Order</a>
+                        <a href="#" class="quick-action-btn">&#128202; View Reports</a>
+                        <a href="#" class="quick-action-btn">&#128100; Manage Clients</a>
+                    </div>
                 </div>
-                
-                <div class="quick-stats-row">
-                    <div class="quick-stat-item">
-                        <span>Active shoppers count:</span>
-                        <strong>33055</strong>
-                    </div>
-                    <div class="quick-stat-item">
-                        <span>Active clients count:</span>
-                        <strong>244</strong>
-                    </div>
-                    <div class="quick-stat-item">
-                        <a href="#">&#9989; Add New Order</a>
-                    </div>
-                    <div class="quick-stat-item">
-                        <a href="#">&#128202; View Reports</a>
-                    </div>
+
+                <div class="system-updates-banner">
+                    <strong>System Update:</strong> New report templates are now available. <a href="#">Learn more</a>
                 </div>
 
                 <div class="summary-grid">
@@ -357,86 +381,81 @@
                         <div class="card-number">2854</div>
                         <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
                     </div>
-                    <div class="card updates-card">
-                        <div class="card-header">
-                            <h3>&#128226; Latest System Updates</h3>
-                        </div>
-                        <ul>
-                            <li>New report templates available.</li>
-                            <li>Improved security protocols.</li>
-                            <li>Bug fix for invoice generation.</li>
-                        </ul>
-                    </div>
+                    
                     <div class="card credits-card">
                         <a href="#" class="buy-btn">&#128722; Buy Credits & Services</a>
-                        <div class="credit-group-header">Service Credits</div>
-                        <ul>
-                            <li>
-                                <span>&#128224; SMSs sent left:</span>
-                                <span>12/1024</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Voice calls left:</span>
-                                <span>500</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Phone surveys left:</span>
-                                <span>1690</span>
-                            </li>
-                            <li>
-                                <span>&#128224; WhatsApp messages:</span>
-                                <span>100</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Internet surveys left:</span>
-                                <span>9990</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Panel reviews left:</span>
-                                <span>1096</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Employee reviews:</span>
-                                <span>109</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Field survey left:</span>
-                                <span>1802</span>
-                            </li>
-                            <li>
-                                <span>&#128224; CAWI survey left:</span>
-                                <span>134</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Chat surveys left:</span>
-                                <span>120</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Image reviews left:</span>
-                                <span>1024</span>
-                            </li>
-                            <li>
-                                <span>&#128224; AI Credit count:</span>
-                                <span class="used-up">0</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Video calls left:</span>
-                                <span>120</span>
-                            </li>
-                            <li>
-                                <span>&#128224; Email credits left:</span>
-                                <span>2457</span>
-                            </li>
+                        <div class="scrollable-list">
+                            <div class="credit-group-header">Service Credits</div>
+                            <ul>
+                                <li>
+                                    <span>&#128224; SMSs left:</span>
+                                    <span>12/1024</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Voice calls left:</span>
+                                    <span>500</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Phone surveys left:</span>
+                                    <span>1690</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; WhatsApp messages:</span>
+                                    <span>100</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Internet surveys left:</span>
+                                    <span>9990</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Panel reviews left:</span>
+                                    <span>1096</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Employee reviews:</span>
+                                    <span>109</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Field survey left:</span>
+                                    <span>1802</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; CAWI survey left:</span>
+                                    <span>134</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Chat surveys left:</span>
+                                    <span>120</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Image reviews left:</span>
+                                    <span>1024</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; AI Credit count:</span>
+                                    <span class="used-up">0</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Video calls left:</span>
+                                    <span>120</span>
+                                </li>
+                                <li>
+                                    <span>&#128224; Email credits left:</span>
+                                    <span>2457</span>
+                                </li>
+                            </ul>
                             <div class="credit-group-header">Storage Usage</div>
-                            <li>
-                                <span>&#128190; Files storage quota:</span>
-                                <span>8824m used</span>
-                            </li>
-                            <li>
-                                <span>&#128190; Archive storage quota:</span>
-                                <span>27m used</span>
-                            </li>
-                        </ul>
+                            <ul>
+                                <li>
+                                    <span>&#128190; Files storage quota:</span>
+                                    <span>8824m used</span>
+                                </li>
+                                <li>
+                                    <span>&#128190; Archive storage quota:</span>
+                                    <span>27m used</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
