@@ -32,6 +32,7 @@
         .container {
             display: flex;
             flex-grow: 1;
+            transition: all 0.3s ease-in-out;
         }
         .sidebar {
             width: 250px;
@@ -41,6 +42,12 @@
             display: flex;
             flex-direction: column;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
         }
         .sidebar .logo {
             font-size: 1.8rem;
@@ -85,9 +92,18 @@
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .header .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            margin-right: 1rem;
+        }
         .header .welcome-note-group {
             display: flex;
             flex-direction: column;
+            margin-left: 1rem;
         }
         .header .welcome-note {
             font-size: 1.2rem;
@@ -238,9 +254,10 @@
         .credits-card .buy-btn:hover {
             background-color: var(--dark-green);
         }
-        .credits-card .scrollable-list {
-            max-height: 400px; /* Adjust height as needed */
-            overflow-y: auto;
+        .credits-card .credit-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
         }
         .credits-card ul {
             list-style: none;
@@ -290,8 +307,8 @@
 </head>
 <body>
 
-    <div class="container">
-        <aside class="sidebar">
+    <div class="container" id="mainContainer">
+        <aside class="sidebar" id="sidebar">
             <div class="logo">Checker</div>
             <nav>
                 <ul>
@@ -308,6 +325,7 @@
 
         <div class="main-content">
             <header class="header">
+                <button class="menu-toggle" id="menuToggle">&#9776;</button>
                 <div class="welcome-note-group">
                     <div class="welcome-note">Welcome, Vishav Singh!</div>
                     <div class="breadcrumb">
@@ -382,11 +400,11 @@
                         <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
                     </div>
                     
-                    <div class="card credits-card">
+                    <div class="card credits-card" style="grid-column: span 2;">
                         <a href="#" class="buy-btn">&#128722; Buy Credits & Services</a>
-                        <div class="scrollable-list">
-                            <div class="credit-group-header">Service Credits</div>
+                        <div class="credit-list-grid">
                             <ul>
+                                <div class="credit-group-header">Service Credits</div>
                                 <li>
                                     <span>&#128224; SMSs left:</span>
                                     <span>12/1024</span>
@@ -415,6 +433,9 @@
                                     <span>&#128224; Employee reviews:</span>
                                     <span>109</span>
                                 </li>
+                            </ul>
+                            <ul>
+                                <div class="credit-group-header">Additional Services</div>
                                 <li>
                                     <span>&#128224; Field survey left:</span>
                                     <span>1802</span>
@@ -443,9 +464,7 @@
                                     <span>&#128224; Email credits left:</span>
                                     <span>2457</span>
                                 </li>
-                            </ul>
-                            <div class="credit-group-header">Storage Usage</div>
-                            <ul>
+                                <div class="credit-group-header">Storage Usage</div>
                                 <li>
                                     <span>&#128190; Files storage quota:</span>
                                     <span>8824m used</span>
@@ -471,5 +490,10 @@
         </div>
     </div>
 
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+    </script>
 </body>
 </html>
