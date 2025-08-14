@@ -202,7 +202,7 @@
         }
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -239,6 +239,9 @@
             color: var(--text-light);
             margin-top: 0.5rem;
         }
+        .credits-card {
+            grid-column: 2 / span 2;
+        }
         .credits-card .buy-btn {
             background-color: var(--primary-green);
             color: white;
@@ -248,16 +251,16 @@
             font-weight: 600;
             text-align: center;
             transition: background-color 0.2s;
-            margin-bottom: 1rem;
+            margin-top: 1rem;
             display: block;
         }
         .credits-card .buy-btn:hover {
             background-color: var(--dark-green);
         }
-        .credits-card .credit-list-grid {
+        .credits-card-content {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
         }
         .credits-card ul {
             list-style: none;
@@ -274,12 +277,19 @@
         .credits-card ul li:last-child {
             border-bottom: none;
         }
-        .credit-group-header {
-            font-size: 0.9rem;
+        .credits-card .title {
+            grid-column: span 2;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: var(--text-dark);
-            margin-top: 1rem;
-            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .credits-card .storage-column {
+            grid-column: 3;
+            display: flex;
+            flex-direction: column;
+        }
+        .credits-card .storage-column .title {
+            grid-column: span 1;
         }
         .credit-value {
             font-weight: 500;
@@ -302,6 +312,26 @@
         }
         .footer-details {
             margin-top: 0.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .credits-card {
+                grid-column: 1 / span 3;
+            }
+        }
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            .credits-card {
+                grid-column: 1;
+            }
+            .credits-card-content {
+                grid-template-columns: 1fr;
+            }
+            .credits-card .title {
+                grid-column: auto;
+            }
         }
     </style>
 </head>
@@ -371,13 +401,46 @@
                 </div>
 
                 <div class="summary-grid">
-                    <div class="card">
+                    <div class="card" style="grid-column: 1;">
                         <div class="card-header">
                             <h3>&#128221; Assignments</h3>
                         </div>
                         <div class="card-number">2059</div>
                         <div class="card-sub-info">Waiting for assignment. Of which urgent: 0</div>
                     </div>
+                    
+                    <div class="card credits-card">
+                        <div class="credits-card-content">
+                            <div class="title">&#128722; Service Credits</div>
+                            <ul>
+                                <li><span>&#128224; SMSs left:</span><span>12/1024</span></li>
+                                <li><span>&#128224; Voice calls left:</span><span>500</span></li>
+                                <li><span>&#128224; Phone surveys left:</span><span>1690</span></li>
+                                <li><span>&#128224; WhatsApp messages:</span><span>100</span></li>
+                                <li><span>&#128224; Internet surveys left:</span><span>9990</span></li>
+                                <li><span>&#128224; Panel reviews left:</span><span>1096</span></li>
+                                <li><span>&#128224; Employee reviews:</span><span>109</span></li>
+                            </ul>
+                            <ul>
+                                <li><span>&#128224; Field survey left:</span><span>1802</span></li>
+                                <li><span>&#128224; CAWI survey left:</span><span>134</span></li>
+                                <li><span>&#128224; Chat surveys left:</span><span>120</span></li>
+                                <li><span>&#128224; Image reviews left:</span><span>1024</span></li>
+                                <li><span>&#128224; AI Credit count:</span><span class="used-up">0</span></li>
+                                <li><span>&#128224; Video calls left:</span><span>120</span></li>
+                                <li><span>&#128224; Email credits left:</span><span>2457</span></li>
+                            </ul>
+                            <div class="storage-column">
+                                <div class="title">&#128190; Storage Usage</div>
+                                <ul>
+                                    <li><span>Files storage quota:</span><span>8824m used</span></li>
+                                    <li><span>Archive storage quota:</span><span>27m used</span></li>
+                                </ul>
+                                <a href="#" class="buy-btn">Buy Credits & Services</a>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="card">
                         <div class="card-header">
                             <h3>&#128100; Confirmation of assignments</h3>
@@ -399,83 +462,7 @@
                         <div class="card-number">2854</div>
                         <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
                     </div>
-                    
-                    <div class="card credits-card" style="grid-column: span 2;">
-                        <a href="#" class="buy-btn">&#128722; Buy Credits & Services</a>
-                        <div class="credit-list-grid">
-                            <ul>
-                                <div class="credit-group-header">Service Credits</div>
-                                <li>
-                                    <span>&#128224; SMSs left:</span>
-                                    <span>12/1024</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Voice calls left:</span>
-                                    <span>500</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Phone surveys left:</span>
-                                    <span>1690</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; WhatsApp messages:</span>
-                                    <span>100</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Internet surveys left:</span>
-                                    <span>9990</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Panel reviews left:</span>
-                                    <span>1096</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Employee reviews:</span>
-                                    <span>109</span>
-                                </li>
-                            </ul>
-                            <ul>
-                                <div class="credit-group-header">Additional Services</div>
-                                <li>
-                                    <span>&#128224; Field survey left:</span>
-                                    <span>1802</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; CAWI survey left:</span>
-                                    <span>134</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Chat surveys left:</span>
-                                    <span>120</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Image reviews left:</span>
-                                    <span>1024</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; AI Credit count:</span>
-                                    <span class="used-up">0</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Video calls left:</span>
-                                    <span>120</span>
-                                </li>
-                                <li>
-                                    <span>&#128224; Email credits left:</span>
-                                    <span>2457</span>
-                                </li>
-                                <div class="credit-group-header">Storage Usage</div>
-                                <li>
-                                    <span>&#128190; Files storage quota:</span>
-                                    <span>8824m used</span>
-                                </li>
-                                <li>
-                                    <span>&#128190; Archive storage quota:</span>
-                                    <span>27m used</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
                 </div>
 
             </div>
