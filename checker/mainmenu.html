@@ -6,7 +6,7 @@
     <title>Checker - Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-green: #2ecc71;
@@ -24,59 +24,127 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
         }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-green);
+        }
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar nav ul li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .sidebar nav ul li a:hover {
+            background-color: #49627e;
+        }
+        .sidebar nav ul li a.active {
+            background-color: var(--primary-green);
+            font-weight: 600;
+        }
+        .main-content {
+            flex-grow: 1;
+        }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
-            background-color: var(--primary-green);
-            color: white;
-            box-shadow: var(--shadow-light);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
         }
-        .header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .header .user-profile {
+        .search-box {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 10px;
+            width: 400px;
+            position: relative;
         }
-        .header .user-profile span {
-            font-weight: 600;
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
         }
-        .header .user-profile .avatar {
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .user-profile .client-logo {
+            height: 40px;
+            width: 100px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .user-profile .avatar {
             width: 40px;
             height: 40px;
-            background-color: white;
+            background-color: var(--bg-light);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-green);
+            color: var(--text-dark);
             font-weight: 700;
+            cursor: pointer;
         }
         .dashboard-container {
             padding: 2rem;
         }
         .welcome-section {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
         .welcome-section h1 {
             margin: 0;
             font-size: 1.5rem;
         }
-        .welcome-section p {
-            margin: 0.5rem 0 0;
-            color: var(--text-light);
+        .quick-access a {
+            text-decoration: none;
+            color: var(--primary-green);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary-green);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .quick-access a:hover {
+            background-color: var(--primary-green);
+            color: white;
         }
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
         }
         .card {
@@ -112,169 +180,179 @@
             color: var(--text-light);
             margin-top: 0.5rem;
         }
-        .operations-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
+        .updates-card h3 {
+            margin-bottom: 0.5rem;
         }
-        .operations-list {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-light);
-        }
-        .operations-list h3 {
-            margin: 0 0 1rem;
-            font-size: 1.2rem;
-        }
-        .operations-list ul {
+        .updates-card ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        .operations-list ul li {
+        .updates-card ul li {
+            font-size: 0.9rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .updates-card ul li:last-child {
+            border-bottom: none;
+        }
+        .credits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .credit-list h3, .storage-list h3 {
+            margin: 0 0 1rem;
+            font-size: 1.2rem;
+        }
+        .credit-list ul, .storage-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .credit-list ul li, .storage-list ul li {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 0.75rem 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .operations-list ul li:last-child {
+        .credit-list ul li:last-child, .storage-list ul li:last-child {
             border-bottom: none;
         }
-        .progress-bar {
-            background-color: var(--bg-light);
-            border-radius: 10px;
-            height: 8px;
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 10px;
-            background-color: var(--primary-green);
-            width: 50%; /* Example percentage */
-        }
-        .store-section {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-light);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .store-section p {
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-        .store-section .btn {
+        .credit-list ul li .buy-btn {
             background-color: var(--primary-green);
             color: white;
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
+            padding: 0.25rem 0.75rem;
             border-radius: 5px;
-            font-weight: 600;
-            text-align: center;
+            font-size: 0.8rem;
             transition: background-color 0.2s;
         }
-        .store-section .btn:hover {
+        .credit-list ul li .buy-btn:hover {
             background-color: var(--dark-green);
+        }
+        .credit-list .used-up {
+            color: red;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="logo">Checker</div>
-        <nav>
-            </nav>
-        <div class="user-profile">
-            <span>vishav.singh@checker-soft.com</span>
-            <div class="avatar">VS</div>
-        </div>
-    </header>
-
-    <div class="dashboard-container">
-        
-        <div class="welcome-section">
-            <h1>Welcome, Vishav Singh</h1>
-            <p>Your dashboard for managing all assignments, reviews, and budgets.</p>
-        </div>
-
-        <div class="summary-grid">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Assignments</h3>
-                    <span style="color:red;">&#9888;</span>
-                </div>
-                <div class="card-number">2059</div>
-                <div class="card-sub-info">Waiting for assignment. Of which urgent: 0</div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3>Confirmation of assignments</h3>
-                    <span style="color:var(--primary-green);">&#10003;</span>
-                </div>
-                <div class="card-number">1955</div>
-                <div class="card-sub-info">Waiting for approval: 3</div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3>Reviews</h3>
-                    <span style="color:var(--text-dark);">&#9998;</span>
-                </div>
-                <div class="card-number">9303</div>
-                <div class="card-sub-info">Waiting for implementation: 15858 in progress.</div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3>Budget control</h3>
-                    <span style="color:var(--text-dark);">&#128176;</span>
-                </div>
-                <div class="card-number">2854</div>
-                <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
-            </div>
-        </div>
-
-        <div class="operations-section">
-            <div class="operations-list">
-                <h3>Operation Summary</h3>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">Checker</div>
+            <nav>
                 <ul>
-                    <li>
-                        <span>Active shoppers count:</span>
-                        <span>33055</span>
-                    </li>
-                    <li>
-                        <span>Active clients count:</span>
-                        <span>244</span>
-                    </li>
-                    <li>
-                        <span>SMSs sent (left):</span>
-                        <span>12/1024</span>
-                    </li>
-                    <li>
-                        <span>Archived storage quota:</span>
-                        <span>8824m</span>
-                    </li>
-                    <li>
-                        <span>Files storage quota:</span>
-                        <span>27m</span>
-                    </li>
-                    <li>
-                        <span>SMS usage:</span>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 12%;"></div></div>
-                    </li>
-                    <li>
-                        <span>Files usage:</span>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div>
-                    </li>
+                    <li><a href="#" class="active">Main menu</a></li>
+                    <li><a href="#">Management</a></li>
+                    <li><a href="#">Questionnaires</a></li>
+                    <li><a href="#">Operation</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Support tickets</a></li>
+                    <li><a href="#">Settings</a></li>
                 </ul>
-            </div>
-            <div class="store-section">
-                <h3>Buy Credits & Services</h3>
-                <p>Access our secure Purchase platform to conveniently buy credits and services with credit cards or bank transfers.</p>
-                <a href="#" class="btn">Go to Store</a>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <header class="header">
+                <div class="search-box">
+                    <input type="text" placeholder="Search for anything...">
+                </div>
+                <div class="user-profile">
+                    <div class="client-logo">Your Logo Here</div>
+                    <select>
+                        <option>EN</option>
+                        <option>JP</option>
+                    </select>
+                    <div class="avatar">VS</div>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+                <div class="welcome-section">
+                    <h1>Welcome, Vishav Singh</h1>
+                    <div class="quick-access">
+                        <a href="#">Add New Order</a>
+                        <a href="#">View Reports</a>
+                        <a href="#">Edit Profile</a>
+                    </div>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Assignments</h3>
+                        </div>
+                        <div class="card-number">2059</div>
+                        <div class="card-sub-info">Waiting for assignment. Of which urgent: 0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Reviews</h3>
+                        </div>
+                        <div class="card-number">9303</div>
+                        <div class="card-sub-info">Waiting for implementation: 15858 in progress.</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Budget control</h3>
+                        </div>
+                        <div class="card-number">2854</div>
+                        <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
+                    </div>
+                    <div class="card updates-card">
+                        <div class="card-header">
+                            <h3>Latest System Updates</h3>
+                        </div>
+                        <ul>
+                            <li>New report templates available.</li>
+                            <li>Improved security protocols.</li>
+                            <li>Bug fix for invoice generation.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="credits-grid">
+                    <div class="card credit-list">
+                        <h3>Credits & Services</h3>
+                        <ul>
+                            <li>
+                                <span>Reviews left:</span>
+                                <span>1690</span>
+                            </li>
+                            <li>
+                                <span>Phone surveys left:</span>
+                                <span>1690</span>
+                            </li>
+                            <li>
+                                <span>SMSs left:</span>
+                                <span>12/1024</span>
+                            </li>
+                            <li>
+                                <span>AI Credit:</span>
+                                <span class="used-up">0</span>
+                                <a href="#" class="buy-btn">Buy Credits</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card storage-list">
+                        <h3>Storage Usage</h3>
+                        <ul>
+                            <li>
+                                <span>Files storage quota:</span>
+                                <span>8824m used / 9000m</span>
+                            </li>
+                            <li>
+                                <span>Archive storage quota:</span>
+                                <span>27m used / 305540m</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
