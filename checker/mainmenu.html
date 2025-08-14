@@ -241,6 +241,7 @@
         }
         .credits-card {
             grid-column: 2 / span 2;
+            padding-bottom: 0.5rem;
         }
         .credits-card .buy-btn {
             background-color: var(--primary-green);
@@ -251,52 +252,45 @@
             font-weight: 600;
             text-align: center;
             transition: background-color 0.2s;
-            margin-top: 1rem;
+            margin-bottom: 1rem;
             display: block;
         }
         .credits-card .buy-btn:hover {
             background-color: var(--dark-green);
         }
-        .credits-card-content {
+        .credits-card .credits-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
         }
-        .credits-card ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .credits-card ul li {
+        .credit-mini-card {
+            background-color: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
+            gap: 1rem;
+            box-shadow: inset 0 0 0 1px var(--border-color);
         }
-        .credits-card ul li:last-child {
-            border-bottom: none;
+        .credit-mini-card .credit-icon {
+            font-size: 1.5rem;
+            color: var(--primary-green);
         }
-        .credits-card .title {
-            grid-column: span 2;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        .credits-card .storage-column {
-            grid-column: 3;
+        .credit-mini-card .credit-details {
             display: flex;
             flex-direction: column;
+            line-height: 1.2;
         }
-        .credits-card .storage-column .title {
-            grid-column: span 1;
+        .credit-mini-card .credit-name {
+            font-size: 0.8rem;
+            color: var(--text-light);
         }
-        .credit-value {
-            font-weight: 500;
-        }
-        .used-up {
-            color: red;
+        .credit-mini-card .credit-value {
+            font-size: 1.1rem;
             font-weight: 600;
+        }
+        .credit-mini-card .credit-value.used-up {
+            color: red;
         }
         .footer {
             padding: 1.5rem 2rem;
@@ -325,12 +319,6 @@
             }
             .credits-card {
                 grid-column: 1;
-            }
-            .credits-card-content {
-                grid-template-columns: 1fr;
-            }
-            .credits-card .title {
-                grid-column: auto;
             }
         }
     </style>
@@ -410,33 +398,119 @@
                     </div>
                     
                     <div class="card credits-card">
-                        <div class="credits-card-content">
-                            <div class="title">&#128722; Service Credits</div>
-                            <ul>
-                                <li><span>&#128224; SMSs left:</span><span>12/1024</span></li>
-                                <li><span>&#128224; Voice calls left:</span><span>500</span></li>
-                                <li><span>&#128224; Phone surveys left:</span><span>1690</span></li>
-                                <li><span>&#128224; WhatsApp messages:</span><span>100</span></li>
-                                <li><span>&#128224; Internet surveys left:</span><span>9990</span></li>
-                                <li><span>&#128224; Panel reviews left:</span><span>1096</span></li>
-                                <li><span>&#128224; Employee reviews:</span><span>109</span></li>
-                            </ul>
-                            <ul>
-                                <li><span>&#128224; Field survey left:</span><span>1802</span></li>
-                                <li><span>&#128224; CAWI survey left:</span><span>134</span></li>
-                                <li><span>&#128224; Chat surveys left:</span><span>120</span></li>
-                                <li><span>&#128224; Image reviews left:</span><span>1024</span></li>
-                                <li><span>&#128224; AI Credit count:</span><span class="used-up">0</span></li>
-                                <li><span>&#128224; Video calls left:</span><span>120</span></li>
-                                <li><span>&#128224; Email credits left:</span><span>2457</span></li>
-                            </ul>
-                            <div class="storage-column">
-                                <div class="title">&#128190; Storage Usage</div>
-                                <ul>
-                                    <li><span>Files storage quota:</span><span>8824m used</span></li>
-                                    <li><span>Archive storage quota:</span><span>27m used</span></li>
-                                </ul>
-                                <a href="#" class="buy-btn">Buy Credits & Services</a>
+                        <a href="#" class="buy-btn">&#128722; Buy Credits & Services</a>
+                        <div class="credits-grid">
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">SMSs left</div>
+                                    <div class="credit-value">12/1024</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Voice calls left</div>
+                                    <div class="credit-value">500</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Phone surveys left</div>
+                                    <div class="credit-value">1690</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">WhatsApp messages</div>
+                                    <div class="credit-value">100</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Internet surveys left</div>
+                                    <div class="credit-value">9990</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Panel reviews left</div>
+                                    <div class="credit-value">1096</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Employee reviews</div>
+                                    <div class="credit-value">109</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Field survey left</div>
+                                    <div class="credit-value">1802</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">CAWI survey left</div>
+                                    <div class="credit-value">134</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Chat surveys left</div>
+                                    <div class="credit-value">120</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Image reviews left</div>
+                                    <div class="credit-value">1024</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">AI Credit count</div>
+                                    <div class="credit-value used-up">0</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Video calls left</div>
+                                    <div class="credit-value">120</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128224;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Email credits left</div>
+                                    <div class="credit-value">2457</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128190;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Files storage quota</div>
+                                    <div class="credit-value">8824m used</div>
+                                </div>
+                            </div>
+                            <div class="credit-mini-card">
+                                <span class="credit-icon">&#128190;</span>
+                                <div class="credit-details">
+                                    <div class="credit-name">Archive storage quota</div>
+                                    <div class="credit-value">27m used</div>
+                                </div>
                             </div>
                         </div>
                     </div>
