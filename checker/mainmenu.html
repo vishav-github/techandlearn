@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checker - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --dark-green: #27ae60;
+            --text-dark: #333;
+            --text-light: #7f8c8d;
+            --bg-light: #f4f7f9;
+            --card-bg: #fff;
+            --border-color: #e0e6ed;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--primary-green);
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+        .header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .header .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header .user-profile span {
+            font-weight: 600;
+        }
+        .header .user-profile .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+        .dashboard-container {
+            padding: 2rem;
+        }
+        .welcome-section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-light);
+        }
+        .welcome-section h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .welcome-section p {
+            margin: 0.5rem 0 0;
+            color: var(--text-light);
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-light);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .card-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 0;
+        }
+        .card-sub-info {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+        .operations-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .operations-list {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-light);
+        }
+        .operations-list h3 {
+            margin: 0 0 1rem;
+            font-size: 1.2rem;
+        }
+        .operations-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .operations-list ul li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .operations-list ul li:last-child {
+            border-bottom: none;
+        }
+        .progress-bar {
+            background-color: var(--bg-light);
+            border-radius: 10px;
+            height: 8px;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background-color: var(--primary-green);
+            width: 50%; /* Example percentage */
+        }
+        .store-section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .store-section p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        .store-section .btn {
+            background-color: var(--primary-green);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        .store-section .btn:hover {
+            background-color: var(--dark-green);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">Checker</div>
+        <nav>
+            </nav>
+        <div class="user-profile">
+            <span>vishav.singh@checker-soft.com</span>
+            <div class="avatar">VS</div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        
+        <div class="welcome-section">
+            <h1>Welcome, Vishav Singh</h1>
+            <p>Your dashboard for managing all assignments, reviews, and budgets.</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Assignments</h3>
+                    <span style="color:red;">&#9888;</span>
+                </div>
+                <div class="card-number">2059</div>
+                <div class="card-sub-info">Waiting for assignment. Of which urgent: 0</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Confirmation of assignments</h3>
+                    <span style="color:var(--primary-green);">&#10003;</span>
+                </div>
+                <div class="card-number">1955</div>
+                <div class="card-sub-info">Waiting for approval: 3</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Reviews</h3>
+                    <span style="color:var(--text-dark);">&#9998;</span>
+                </div>
+                <div class="card-number">9303</div>
+                <div class="card-sub-info">Waiting for implementation: 15858 in progress.</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Budget control</h3>
+                    <span style="color:var(--text-dark);">&#128176;</span>
+                </div>
+                <div class="card-number">2854</div>
+                <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
+            </div>
+        </div>
+
+        <div class="operations-section">
+            <div class="operations-list">
+                <h3>Operation Summary</h3>
+                <ul>
+                    <li>
+                        <span>Active shoppers count:</span>
+                        <span>33055</span>
+                    </li>
+                    <li>
+                        <span>Active clients count:</span>
+                        <span>244</span>
+                    </li>
+                    <li>
+                        <span>SMSs sent (left):</span>
+                        <span>12/1024</span>
+                    </li>
+                    <li>
+                        <span>Archived storage quota:</span>
+                        <span>8824m</span>
+                    </li>
+                    <li>
+                        <span>Files storage quota:</span>
+                        <span>27m</span>
+                    </li>
+                    <li>
+                        <span>SMS usage:</span>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 12%;"></div></div>
+                    </li>
+                    <li>
+                        <span>Files usage:</span>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="store-section">
+                <h3>Buy Credits & Services</h3>
+                <p>Access our secure Purchase platform to conveniently buy credits and services with credit cards or bank transfers.</p>
+                <a href="#" class="btn">Go to Store</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
