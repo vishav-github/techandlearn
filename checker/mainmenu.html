@@ -17,16 +17,21 @@
             --card-bg: #fff;
             --border-color: #e0e6ed;
             --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --highlight-bg: #fdf5e6; /* Light orange for highlight */
+            --highlight-border: #f8c253;
         }
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
             background-color: var(--bg-light);
             color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .container {
             display: flex;
-            min-height: 100vh;
+            flex-grow: 1;
         }
         .sidebar {
             width: 250px;
@@ -35,6 +40,7 @@
             padding: 2rem 1rem;
             display: flex;
             flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
         .sidebar .logo {
             font-size: 1.8rem;
@@ -49,7 +55,9 @@
             margin: 0;
         }
         .sidebar nav ul li a {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             padding: 0.75rem 1rem;
             color: white;
             text-decoration: none;
@@ -65,6 +73,8 @@
         }
         .main-content {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         .header {
             display: flex;
@@ -73,19 +83,25 @@
             padding: 1rem 2rem;
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .search-box {
+        .header .welcome-note {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .header-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
-            width: 400px;
+            gap: 1.5rem;
+        }
+        .search-box {
             position: relative;
         }
         .search-box input {
-            width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
+            width: 250px;
         }
         .user-profile {
             display: flex;
@@ -117,35 +133,13 @@
         }
         .dashboard-container {
             padding: 2rem;
-        }
-        .welcome-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        .welcome-section h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        .quick-access a {
-            text-decoration: none;
-            color: var(--primary-green);
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--primary-green);
-            border-radius: 5px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .quick-access a:hover {
-            background-color: var(--primary-green);
-            color: white;
+            flex-grow: 1;
         }
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         .card {
             background-color: var(--card-bg);
@@ -180,62 +174,73 @@
             color: var(--text-light);
             margin-top: 0.5rem;
         }
-        .updates-card h3 {
-            margin-bottom: 0.5rem;
+        .updates-card {
+            background-color: var(--highlight-bg);
+            border: 1px solid var(--highlight-border);
         }
-        .updates-card ul {
+        .credits-card {
+            display: flex;
+            flex-direction: column;
+        }
+        .credits-card .buy-btn {
+            background-color: var(--primary-green);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.2s;
+            margin-bottom: 1rem;
+        }
+        .credits-card .buy-btn:hover {
+            background-color: var(--dark-green);
+        }
+        .credits-card ul {
             list-style: none;
             padding: 0;
             margin: 0;
+            flex-grow: 1;
         }
-        .updates-card ul li {
-            font-size: 0.9rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .updates-card ul li:last-child {
-            border-bottom: none;
-        }
-        .credits-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        .credit-list h3, .storage-list h3 {
-            margin: 0 0 1rem;
-            font-size: 1.2rem;
-        }
-        .credit-list ul, .storage-list ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .credit-list ul li, .storage-list ul li {
+        .credits-card ul li {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0.75rem 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .credit-list ul li:last-child, .storage-list ul li:last-child {
+        .credits-card ul li:last-child {
             border-bottom: none;
         }
-        .credit-list ul li .buy-btn {
-            background-color: var(--primary-green);
-            color: white;
-            text-decoration: none;
-            padding: 0.25rem 0.75rem;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            transition: background-color 0.2s;
+        .credit-group-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
-        .credit-list ul li .buy-btn:hover {
-            background-color: var(--dark-green);
+        .credit-value {
+            font-weight: 500;
         }
-        .credit-list .used-up {
+        .used-up {
             color: red;
             font-weight: 600;
+        }
+        .footer {
+            padding: 1.5rem 2rem;
+            background-color: #34495e;
+            color: #ecf0f1;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #49627e;
+        }
+        .footer a {
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+        .footer-details {
+            margin-top: 0.5rem;
         }
     </style>
 </head>
@@ -246,67 +251,68 @@
             <div class="logo">Checker</div>
             <nav>
                 <ul>
-                    <li><a href="#" class="active">Main menu</a></li>
-                    <li><a href="#">Management</a></li>
-                    <li><a href="#">Questionnaires</a></li>
-                    <li><a href="#">Operation</a></li>
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Support tickets</a></li>
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="#" class="active"><i class="fa fa-home"></i>&#127968; Main menu</a></li>
+                    <li><a href="#">&#128100; Management</a></li>
+                    <li><a href="#">&#128221; Questionnaires</a></li>
+                    <li><a href="#">&#9881; Operation</a></li>
+                    <li><a href="#">&#128202; Reports</a></li>
+                    <li><a href="#">&#128187; Support tickets</a></li>
+                    <li><a href="#">&#9962; Settings</a></li>
                 </ul>
             </nav>
         </aside>
 
         <div class="main-content">
             <header class="header">
-                <div class="search-box">
-                    <input type="text" placeholder="Search for anything...">
-                </div>
-                <div class="user-profile">
-                    <div class="client-logo">Your Logo Here</div>
+                <div class="welcome-note">Welcome, Vishav Singh!</div>
+                <div class="header-controls">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search for anything...">
+                    </div>
                     <select>
                         <option>EN</option>
                         <option>JP</option>
                     </select>
-                    <div class="avatar">VS</div>
+                    <div class="user-profile">
+                        <div class="client-logo">Your Logo Here</div>
+                        <div class="avatar">VS</div>
+                    </div>
                 </div>
             </header>
 
             <div class="dashboard-container">
-                <div class="welcome-section">
-                    <h1>Welcome, Vishav Singh</h1>
-                    <div class="quick-access">
-                        <a href="#">Add New Order</a>
-                        <a href="#">View Reports</a>
-                        <a href="#">Edit Profile</a>
-                    </div>
-                </div>
-
                 <div class="summary-grid">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Assignments</h3>
+                            <h3>&#128221; Assignments</h3>
                         </div>
                         <div class="card-number">2059</div>
                         <div class="card-sub-info">Waiting for assignment. Of which urgent: 0</div>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h3>Reviews</h3>
+                            <h3>&#128100; Confirmation of assignments</h3>
+                        </div>
+                        <div class="card-number">1955</div>
+                        <div class="card-sub-info">Waiting for approval: 3</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>&#9998; Reviews</h3>
                         </div>
                         <div class="card-number">9303</div>
                         <div class="card-sub-info">Waiting for implementation: 15858 in progress.</div>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h3>Budget control</h3>
+                            <h3>&#128176; Budget control</h3>
                         </div>
                         <div class="card-number">2854</div>
                         <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
                     </div>
                     <div class="card updates-card">
                         <div class="card-header">
-                            <h3>Latest System Updates</h3>
+                            <h3>&#128226; Latest System Updates</h3>
                         </div>
                         <ul>
                             <li>New report templates available.</li>
@@ -316,44 +322,62 @@
                     </div>
                 </div>
 
-                <div class="credits-grid">
-                    <div class="card credit-list">
-                        <h3>Credits & Services</h3>
+                <div class="summary-grid">
+                    <div class="card credits-card">
+                        <a href="#" class="buy-btn">Buy Credits & Services</a>
+                        <div class="credit-group-header">Service Credits</div>
                         <ul>
                             <li>
-                                <span>Reviews left:</span>
-                                <span>1690</span>
+                                <span>&#128224; SMSs left:</span>
+                                <span class="credit-value">12/1024</span>
                             </li>
                             <li>
-                                <span>Phone surveys left:</span>
-                                <span>1690</span>
+                                <span>&#128224; Phone surveys left:</span>
+                                <span class="credit-value">1690</span>
                             </li>
                             <li>
-                                <span>SMSs left:</span>
-                                <span>12/1024</span>
-                            </li>
-                            <li>
-                                <span>AI Credit:</span>
+                                <span>&#128224; AI Credit:</span>
                                 <span class="used-up">0</span>
-                                <a href="#" class="buy-btn">Buy Credits</a>
+                            </li>
+                        </ul>
+                        <div class="credit-group-header">Storage Usage</div>
+                        <ul>
+                            <li>
+                                <span>&#128190; Files storage quota:</span>
+                                <span class="credit-value">8824m used / 9000m</span>
+                            </li>
+                            <li>
+                                <span>&#128190; Archive storage quota:</span>
+                                <span class="credit-value">27m used / 305540m</span>
                             </li>
                         </ul>
                     </div>
-                    <div class="card storage-list">
-                        <h3>Storage Usage</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>&#128100; Client & Shopper Stats</h3>
+                        </div>
                         <ul>
                             <li>
-                                <span>Files storage quota:</span>
-                                <span>8824m used / 9000m</span>
+                                <span>Active shoppers count:</span>
+                                <span class="credit-value">33055</span>
                             </li>
                             <li>
-                                <span>Archive storage quota:</span>
-                                <span>27m used / 305540m</span>
+                                <span>Active clients count:</span>
+                                <span class="credit-value">244</span>
                             </li>
                         </ul>
                     </div>
                 </div>
+
             </div>
+            
+            <footer class="footer">
+                &copy; 2025 Checker Systems LTD (TESTING system). Your company's address here.
+                <div class="footer-details">
+                    Email: <a href="mailto:info@yourcompany.com">info@yourcompany.com</a> |
+                    Phone: <a href="tel:+1234567890">+1 (234) 567-890</a>
+                </div>
+            </footer>
         </div>
     </div>
 
