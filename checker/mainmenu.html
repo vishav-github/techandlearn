@@ -16,7 +16,7 @@
             --bg-light: #f4f7f9;
             --card-bg: #fff;
             --border-color: #e0e6ed;
-            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-light: 0 10px 20px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.08);
             --highlight-bg: #fdf5e6;
             --highlight-border: #f8c253;
         }
@@ -202,82 +202,112 @@
         }
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
+
+        /* NEW ELEVATED CARD STYLES */
+        .elevated-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
             box-shadow: var(--shadow-light);
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
+            position: relative;
         }
-        .card:hover {
+        .elevated-card:hover {
             transform: translateY(-5px);
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            color: var(--text-light);
+            margin-bottom: 18px;
         }
-        .card-header h3 {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
+        .card-header .title-group {
+            display: flex;
+            align-items: center;
         }
-        .card-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-green);
-            margin: 0;
+        .card-header .icon {
+            font-size: 2rem;
+            margin-right: 12px;
         }
-        .card-sub-info {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 0.5rem;
-        }
-        .small-card .card-header {
-            margin-bottom: 0.5rem;
-            justify-content: flex-start;
-            gap: 1rem;
-        }
-        .small-card .card-header .icon {
-            font-size: 1.5rem;
-            color: var(--primary-green);
-        }
-        .small-card .card-header h3 {
+        .card-header .title {
+            font-size: 1.2rem;
             font-weight: 500;
+            color: #333;
         }
-        .small-card .card-content {
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .main-stat-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+        .main-stat {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        .main-stat.low-credit {
+            color: #e74c3c;
+        }
+        .main-stat-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #7f8c8d;
+        }
+        .layered-details {
+            background-color: #f0f4f7;
+            border-radius: 8px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            padding-top: 0.5rem;
+            align-items: center;
         }
-        .small-card .credit-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            text-align: left;
-            color: var(--text-dark);
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
         }
-        
-        .small-card .credit-value-available {
-            font-size: 1.2rem;
-            font-weight: 300;
-            text-align: left;
-            color: var(--text-dark);
+        .detail-item .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
         }
-        .small-card .credit-info {
+        .detail-item .label {
             font-size: 0.8rem;
-            color: var(--text-light);
-            text-align: right;
-            line-height: 1.2;
-        }
-        .small-card .credit-value.used-up {
-            color: red;
+            font-weight: 500;
+            color: #7f8c8d;
         }
         .footer {
             padding: 1.5rem 2rem;
@@ -295,11 +325,6 @@
             margin-top: 0.5rem;
         }
 
-        @media (max-width: 1200px) {
-            .credits-card {
-                grid-column: 1 / span 3;
-            }
-        }
         @media (max-width: 768px) {
             .summary-grid {
                 grid-template-columns: 1fr;
@@ -373,139 +398,604 @@
                 </div>
 
                 <div class="summary-grid">
-                    <div class="card">
-                        <div class="card-header"><h3>&#128221; Assignments</h3></div>
-                        <div class="card-number">2059</div>
-                        <div class="card-sub-info">Waiting for assignment. Of which urgent: 0</div>
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#128221;</span>
+                                <span class="title">Assignments</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    This shows the total number of assignments waiting to be assigned to shoppers.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">2059</div>
+                            <div class="main-stat-label">Total</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">0</div>
+                                <div class="label">Urgent</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">301</div>
+                                <div class="label">Completed</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header"><h3>&#128100; Confirmation of assignments</h3></div>
-                        <div class="card-number">1955</div>
-                        <div class="card-sub-info">Waiting for approval: 3</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>&#9998; Reviews</h3></div>
-                        <div class="card-number">9303</div>
-                        <div class="card-sub-info">Waiting for implementation: 15858 in progress.</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>&#128176; Budget control</h3></div>
-                        <div class="card-number">2854</div>
-                        <div class="card-sub-info">Mass orders awaiting approval: 2854</div>
+                    
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#128100;</span>
+                                <span class="title">Confirmations</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Total assignments awaiting confirmation from shoppers.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">1955</div>
+                            <div class="main-stat-label">Pending</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">3</div>
+                                <div class="label">For Approval</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">88</div>
+                                <div class="label">In Progress</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="card small-card">
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128224;</span><h3>SMSs</h3>
+                            <div class="title-group">
+                                <span class="icon">&#9998;</span>
+                                <span class="title">Reviews</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    The number of reviews waiting to be checked or approved.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">12</div>
-                            <div class="credit-value-available">Available</div>
-                            <div class="credit-info">1012 USED</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">9303</div>
+                            <div class="main-stat-label">Pending</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">15858</div>
+                                <div class="label">In Progress</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">890</div>
+                                <div class="label">Awaiting Exp.</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128224;</span><h3>Voice Calls</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128176;</span>
+                                <span class="title">Budget Control</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Displays the number of mass orders awaiting approval from the client.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">500 Available</div>
-                            <div class="credit-info">120 USED</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">2854</div>
+                            <div class="main-stat-label">Orders</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">32</div>
+                                <div class="label">Approved</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">12</div>
+                                <div class="label">Rejected</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128221;</span><h3>Phone Surveys</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128224;</span>
+                                <span class="title">SMSs</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Total SMS credits remaining, used, and total credits purchased.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">1690 Available</div>
-                            <div class="credit-info">210 USED</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">12</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">1012</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">1024</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128224;</span><h3>WhatsApp Messages</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128224;</span>
+                                <span class="title">Voice Calls</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for making voice calls to shoppers and clients.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">100 Available</div>
-                            <div class="credit-info">50 USED</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">500</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">120</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">620</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#127760;</span><h3>Internet Surveys</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128221;</span>
+                                <span class="title">Phone Surveys</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for conducting phone-based surveys.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">9990</div>
-                            <div class="credit-info">left, 10 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">1690</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">210</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">1900</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+                    
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128270;</span><h3>Panel Reviews</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128224;</span>
+                                <span class="title">WhatsApp</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for automated messages via WhatsApp.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">1096</div>
-                            <div class="credit-info">left, 30 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">100</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">50</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">150</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+                    
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128104;&#8205;&#128187;</span><h3>Employee Reviews</h3>
+                            <div class="title-group">
+                                <span class="icon">&#127760;</span>
+                                <span class="title">Internet Surveys</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for conducting surveys online.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">109</div>
-                            <div class="credit-info">left, 20 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">9990</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">10</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">10000</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+                    
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#127965;</span><h3>Field Surveys</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128270;</span>
+                                <span class="title">Panel Reviews</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for a number of panel-based reviews.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">1802</div>
-                            <div class="credit-info">left, 120 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">1096</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">30</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">1126</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128221;</span><h3>CAWI Surveys</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128104;&#8205;&#128187;</span>
+                                <span class="title">Employee Reviews</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for conducting internal employee performance reviews.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">134</div>
-                            <div class="credit-info">left, 66 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">109</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">20</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">129</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128172;</span><h3>Chat Surveys</h3>
+                            <div class="title-group">
+                                <span class="icon">&#127965;</span>
+                                <span class="title">Field Surveys</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for on-location field surveys.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">120</div>
-                            <div class="credit-info">left, 30 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">1802</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">120</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">1922</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128247;</span><h3>Image Reviews</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128221;</span>
+                                <span class="title">CAWI Surveys</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for Computer-Assisted Web Interviewing.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">1024</div>
-                            <div class="credit-info">left, 45 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">134</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">66</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">200</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#9728;</span><h3>AI Credits</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128172;</span>
+                                <span class="title">Chat Surveys</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for chat-based surveys.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value used-up">0</div>
-                            <div class="credit-info">left, 50 used</div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">120</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">30</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">150</div>
+                                <div class="label">Total</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card small-card">
+
+                    <div class="elevated-card">
                         <div class="card-header">
-                            <span class="icon">&#128249;</span><h3>Video Calls</h3>
+                            <div class="title-group">
+                                <span class="icon">&#128247;</span>
+                                <span class="title">Image Reviews</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for reviewing submitted images.
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div class="credit-value">1
+                        <div class="main-stat-group">
+                            <div class="main-stat">1024</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">45</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">1069</div>
+                                <div class="label">Total</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#9728;</span>
+                                <span class="title">AI Credits</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for using AI-powered services.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat low-credit">0</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">50</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">50</div>
+                                <div class="label">Total</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#128249;</span>
+                                <span class="title">Video Calls</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for conducting video calls.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">120</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">80</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">200</div>
+                                <div class="label">Total</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#128231;</span>
+                                <span class="title">Email Credits</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Credits for automated email communication.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">2457</div>
+                            <div class="main-stat-label">Available</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">120</div>
+                                <div class="label">Used</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">2577</div>
+                                <div class="label">Total</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#128190;</span>
+                                <span class="title">Files Storage</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Total storage space for files.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">8824m</div>
+                            <div class="main-stat-label">Used</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">12GB</div>
+                                <div class="label">Total</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">3.2GB</div>
+                                <div class="label">Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="elevated-card">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <span class="icon">&#128190;</span>
+                                <span class="title">Archive Storage</span>
+                            </div>
+                            <div class="tooltip-container">
+                                ⓘ
+                                <span class="tooltip-text">
+                                    Total storage space for archived files.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main-stat-group">
+                            <div class="main-stat">27m</div>
+                            <div class="main-stat-label">Used</div>
+                        </div>
+                        <div class="layered-details">
+                            <div class="detail-item">
+                                <div class="value">1GB</div>
+                                <div class="label">Total</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="value">973m</div>
+                                <div class="label">Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            
+            <footer class="footer">
+                &copy; 2025 Checker Systems LTD (TESTING system). Your company's address here.
+                <div class="footer-details">
+                    Email: <a href="mailto:info@yourcompany.com">info@yourcompany.com</a> |
+                    Phone: <a href="tel:+1234567890">+1 (234) 567-890</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+    </script>
+</body>
+</html>
