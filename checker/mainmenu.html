@@ -16,7 +16,7 @@
             --bg-light: #f4f7f9;
             --card-bg: #fff;
             --border-color: #e0e6ed;
-            --shadow-light: 0 10px 20px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.08);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
             --highlight-bg: #fdf5e6;
             --highlight-border: #f8c253;
         }
@@ -206,9 +206,9 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-
-        /* NEW ELEVATED CARD STYLES */
-        .elevated-card {
+        
+        /* NEW Side-by-Side Card STYLES */
+        .side-by-side-card {
             background-color: #ffffff;
             border-radius: 12px;
             padding: 24px;
@@ -216,14 +216,14 @@
             transition: transform 0.3s ease;
             position: relative;
         }
-        .elevated-card:hover {
+        .side-by-side-card:hover {
             transform: translateY(-5px);
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 24px;
         }
         .card-header .title-group {
             display: flex;
@@ -265,49 +265,51 @@
             visibility: visible;
             opacity: 1;
         }
-        .main-stat-group {
+        .main-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .stats-group {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 24px;
         }
-        .main-stat {
-            font-size: 2rem;
+        .stat-value {
+            font-size: 2.5rem;
             font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 4px;
+            line-height: 1;
         }
-        .main-stat.low-credit {
+        .stat-value.low-credit {
             color: #e74c3c;
         }
-        .main-stat-label {
+        .stat-label {
             font-size: 0.9rem;
             font-weight: 500;
             color: #7f8c8d;
+            margin-top: 8px;
         }
-        .layered-details {
-            background-color: #f0f4f7;
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .detail-item {
+        .secondary-stats {
             display: flex;
             flex-direction: column;
-            text-align: center;
+            text-align: right;
+            gap: 12px;
         }
-        .detail-item .value {
+        .secondary-stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .secondary-stat-item .value {
             font-size: 1.1rem;
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 4px;
+            line-height: 1;
         }
-        .detail-item .label {
+        .secondary-stat-item .label {
             font-size: 0.8rem;
             font-weight: 500;
             color: #7f8c8d;
+            margin-top: 4px;
         }
         .footer {
             padding: 1.5rem 2rem;
@@ -398,7 +400,7 @@
                 </div>
 
                 <div class="summary-grid">
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128221;</span>
@@ -411,23 +413,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">2059</div>
-                            <div class="main-stat-label">Total</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">0</div>
-                                <div class="label">Urgent</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">2059</div>
+                                <div class="stat-label">Total</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">301</div>
-                                <div class="label">Completed</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">0</div>
+                                    <div class="label">Urgent</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">301</div>
+                                    <div class="label">Completed</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128100;</span>
@@ -440,23 +444,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">1955</div>
-                            <div class="main-stat-label">Pending</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">3</div>
-                                <div class="label">For Approval</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">1955</div>
+                                <div class="stat-label">Pending</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">88</div>
-                                <div class="label">In Progress</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">3</div>
+                                    <div class="label">For Approval</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">88</div>
+                                    <div class="label">In Progress</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#9998;</span>
@@ -469,23 +475,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">9303</div>
-                            <div class="main-stat-label">Pending</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">15858</div>
-                                <div class="label">In Progress</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">9303</div>
+                                <div class="stat-label">Pending</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">890</div>
-                                <div class="label">Awaiting Exp.</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">15858</div>
+                                    <div class="label">In Progress</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">890</div>
+                                    <div class="label">Awaiting Exp.</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128176;</span>
@@ -498,23 +506,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">2854</div>
-                            <div class="main-stat-label">Orders</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">32</div>
-                                <div class="label">Approved</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">2854</div>
+                                <div class="stat-label">Orders</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">12</div>
-                                <div class="label">Rejected</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">32</div>
+                                    <div class="label">Approved</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">12</div>
+                                    <div class="label">Rejected</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128224;</span>
@@ -527,23 +537,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">12</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">1012</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">1024</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">1012</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">1024</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128224;</span>
@@ -556,23 +568,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">500</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">120</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">500</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">620</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">120</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">620</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128221;</span>
@@ -585,23 +599,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">1690</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">210</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">1690</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">1900</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">210</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">1900</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128224;</span>
@@ -614,23 +630,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">100</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">50</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">100</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">150</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">50</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">150</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#127760;</span>
@@ -643,23 +661,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">9990</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">10</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">9990</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">10000</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">10</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">10000</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128270;</span>
@@ -672,23 +692,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">1096</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">30</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">1096</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">1126</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">30</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">1126</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128104;&#8205;&#128187;</span>
@@ -701,23 +723,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">109</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">20</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">109</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">129</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">20</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">129</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#127965;</span>
@@ -730,23 +754,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">1802</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">120</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">1802</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">1922</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">120</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">1922</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128221;</span>
@@ -759,23 +785,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">134</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">66</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">134</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">200</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">66</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">200</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128172;</span>
@@ -788,23 +816,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">120</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">30</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">120</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">150</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">30</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">150</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128247;</span>
@@ -817,23 +847,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">1024</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">45</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">1024</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">1069</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">45</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">1069</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#9728;</span>
@@ -846,23 +878,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat low-credit">0</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">50</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value low-credit">0</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">50</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">50</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">50</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128249;</span>
@@ -875,23 +909,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">120</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">80</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">120</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">200</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">80</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">200</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128231;</span>
@@ -904,23 +940,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">2457</div>
-                            <div class="main-stat-label">Available</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">120</div>
-                                <div class="label">Used</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">2457</div>
+                                <div class="stat-label">Available</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">2577</div>
-                                <div class="label">Total</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">120</div>
+                                    <div class="label">Used</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">2577</div>
+                                    <div class="label">Total</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128190;</span>
@@ -933,23 +971,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">8824m</div>
-                            <div class="main-stat-label">Used</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">12GB</div>
-                                <div class="label">Total</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">8824m</div>
+                                <div class="stat-label">Used</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">3.2GB</div>
-                                <div class="label">Remaining</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">12GB</div>
+                                    <div class="label">Total</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">3.2GB</div>
+                                    <div class="label">Remaining</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="elevated-card">
+                    <div class="side-by-side-card">
                         <div class="card-header">
                             <div class="title-group">
                                 <span class="icon">&#128190;</span>
@@ -962,18 +1002,20 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="main-stat-group">
-                            <div class="main-stat">27m</div>
-                            <div class="main-stat-label">Used</div>
-                        </div>
-                        <div class="layered-details">
-                            <div class="detail-item">
-                                <div class="value">1GB</div>
-                                <div class="label">Total</div>
+                        <div class="main-stats">
+                            <div class="stats-group">
+                                <div class="stat-value">27m</div>
+                                <div class="stat-label">Used</div>
                             </div>
-                            <div class="detail-item">
-                                <div class="value">973m</div>
-                                <div class="label">Remaining</div>
+                            <div class="secondary-stats">
+                                <div class="secondary-stat-item">
+                                    <div class="value">1GB</div>
+                                    <div class="label">Total</div>
+                                </div>
+                                <div class="secondary-stat-item">
+                                    <div class="value">973m</div>
+                                    <div class="label">Remaining</div>
+                                </div>
                             </div>
                         </div>
                     </div>
