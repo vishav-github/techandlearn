@@ -78,6 +78,12 @@
         .step-icon.warning {
             color: #e74c3c;
         }
+        .step-icon.suspension {
+            color: #e74c3c;
+        }
+        .step-icon.final {
+            color: #f39c12;
+        }
         .step-content {
             background-color: #fff;
             padding: 20px;
@@ -106,7 +112,7 @@
             height: 50px;
             width: 2px;
             background-color: #ccc;
-            margin-left: 39px; /* Aligns the line with the icon center */
+            margin-left: 39px;
         }
         .gap-text {
             position: absolute;
@@ -165,9 +171,9 @@
             <div class="timeline-step">
                 <div class="step-icon">&#128231;</div>
                 <div class="step-content">
-                    <h3 class="step-title">1st Reminder</h3>
+                    <h3 class="step-title">Gentle Reminder</h3>
                     <div class="step-date">September 8, 2025 (Monday)</div>
-                    <div class="step-description">We skip the weekend (September 6 & 7).</div>
+                    <div class="step-description">Your invoice is due soon. This is a friendly reminder to process the payment.</div>
                 </div>
             </div>
 
@@ -178,9 +184,9 @@
             <div class="timeline-step">
                 <div class="step-icon">&#128231;</div>
                 <div class="step-content">
-                    <h3 class="step-title">2nd Reminder</h3>
+                    <h3 class="step-title">Follow-up Reminder</h3>
                     <div class="step-date">September 15, 2025 (Monday)</div>
-                    <div class="step-description">The gap from the 1st reminder is exactly 5 business days.</div>
+                    <div class="step-description">This is a follow-up to our previous notification regarding your outstanding invoice.</div>
                 </div>
             </div>
 
@@ -189,11 +195,11 @@
             </div>
 
             <div class="timeline-step">
-                <div class="step-icon">&#128231;</div>
+                <div class="step-icon final">&#128231;</div>
                 <div class="step-content">
-                    <h3 class="step-title">3rd Reminder</h3>
+                    <h3 class="step-title">Final Reminder</h3>
                     <div class="step-date">September 19, 2025 (Friday)</div>
-                    <div class="step-description">The gap from the 2nd reminder is exactly 4 business days.</div>
+                    <div class="step-description">This is the final notification before your account is scheduled for suspension.</div>
                 </div>
             </div>
 
@@ -202,23 +208,10 @@
             </div>
 
             <div class="timeline-step">
-                <div class="step-icon">&#128231;</div>
-                <div class="step-content">
-                    <h3 class="step-title">4th Reminder</h3>
-                    <div class="step-date">September 24, 2025 (Wednesday)</div>
-                    <div class="step-description">We skip the weekend (September 20 & 21).</div>
-                </div>
-            </div>
-
-            <div class="gap-indicator">
-                <span class="gap-text">1 Business Day</span>
-            </div>
-
-            <div class="timeline-step">
-                <div class="step-icon warning">&#9888;</div>
+                <div class="step-icon suspension">&#9888;</div>
                 <div class="step-content">
                     <h3 class="step-title">Service Suspension</h3>
-                    <div class="step-date">September 25, 2025 (Thursday)</div>
+                    <div class="step-date">September 24, 2025 (Wednesday)</div>
                     <div class="step-description">Service will be suspended on this date if the invoice remains unpaid.</div>
                 </div>
             </div>
