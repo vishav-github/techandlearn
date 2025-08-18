@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Billing & Service Terms</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+            color: #333;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-top: 20px;
+        }
+        h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        p {
+            margin-bottom: 1em;
+            padding: 0 40px;
+        }
+        strong {
+            color: #34495e;
+        }
+        .container {
+            padding: 20px 40px;
+        }
+        .note {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin: 20px 40px;
+            border-radius: 4px;
+        }
+        .input-section {
+            text-align: center;
+            margin: 20px 0;
+            padding: 0 40px;
+        }
+        .input-section label {
+            font-size: 1em;
+            font-weight: bold;
+            color: #555;
+        }
+        .input-section input[type="date"] {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+
+        /* Timeline-specific styles */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            margin: 0 40px;
+        }
+        .timeline-step {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .step-icon {
+            font-size: 2em;
+            margin-right: 20px;
+            color: #3498db;
+            background-color: #fff;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .step-icon.warning {
+            color: #e74c3c;
+        }
+        .step-icon.suspension {
+            color: #e74c3c;
+        }
+        .step-icon.final {
+            color: #f39c12;
+        }
+        .step-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex-grow: 1;
+        }
+        .step-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .step-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .step-description {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .gap-indicator {
+            position: relative;
+            height: 50px;
+            width: 2px;
+            background-color: #ccc;
+            margin-left: 39px;
+        }
+        .gap-text {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ddd;
+            color: #555;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            .timeline-step {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .step-icon {
+                margin: 0 0 10px 0;
+            }
+            .gap-indicator {
+                height: 20px;
+                width: 2px;
+                margin-left: 0;
+            }
+            .step-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Dynamic Reminder Schedule</h2>
+        <p>This tool helps you understand your billing cycle. Just enter your invoice creation date below, and we'll calculate the dates for all reminders and the service suspension based on our **5-5-4-3 business day** schedule.</p>
+
+        <div class="input-section">
+            <label for="invoiceDate">Select Invoice Creation Date:</label>
+            <input type="date" id="invoiceDate">
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-step">
+                <div class="step-icon">&#128196;</div>
+                <div class="step-content">
+                    <h3 class="step-title">Invoice Creation</h3>
+                    <div class="step-date" id="step0-date">Please select a date above.</div>
+                    <div class="step-description">This is your starting point for all reminder calculations.</div>
+                </div>
+            </div>
+
+            <div class="gap-indicator">
+                <span class="gap-text">5 Business Days</span>
+            </div>
+
+            <div class="timeline-step">
+                <div class="step-icon">&#128231;</div>
+                <div class="step-content">
+                    <h3 class="step-title">Gentle Reminder</h3>
+                    <div class="step-date" id="step1-date"></div>
+                    <div class="step-description">Your invoice is due soon. (5 business days from creation)</div>
+                </div>
+            </div>
+
+            <div class="gap-indicator">
+                <span class="gap-text">5 Business Days</span>
+            </div>
+
+            <div class="timeline-step">
+                <div class="step-icon">&#128231;</div>
+                <div class="step-content">
+                    <h3 class="step-title">Follow-up Reminder</h3>
+                    <div class="step-date" id="step2-date"></div>
+                    <div class="step-description">This is a follow-up to our previous notification. (10 business days from creation)</div>
+                </div>
+            </div>
+
+            <div class="gap-indicator">
+                <span class="gap-text">4 Business Days</span>
+            </div>
+
+            <div class="timeline-step">
+                <div class="step-icon final">&#128231;</div>
+                <div class="step-content">
+                    <h3 class="step-title">Final Reminder</h3>
+                    <div class="step-date" id="step3-date"></div>
+                    <div class="step-description">This is the final notification before your account is scheduled for suspension. (14 business days from creation)</div>
+                </div>
+            </div>
+
+            <div class="gap-indicator">
+                <span class="gap-text">3 Business Days</span>
+            </div>
+
+            <div class="timeline-step">
+                <div class="step-icon suspension">&#9888;</div>
+                <div class="step-content">
+                    <h3 class="step-title">Service Suspension</h3>
+                    <div class="step-date" id="step4-date"></div>
+                    <div class="step-description">Your service will be suspended on this date if the invoice remains unpaid. (17 business days from creation)</div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="note">All dates are calculated by counting **business days only** (Monday to Friday), skipping weekends and public holidays.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const invoiceDateInput = document.getElementById('invoiceDate');
+            const step0Date = document.getElementById('step0-date');
+            const step1Date = document.getElementById('step1-date');
+            const step2Date = document.getElementById('step2-date');
+            const step3Date = document.getElementById('step3-date');
+            const step4Date = document.getElementById('step4-date');
+            const dateFormat = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+            // Function to add business days to a date, skipping weekends
+            function addBusinessDays(date, days) {
+                let newDate = new Date(date.getTime());
+                let addedDays = 0;
+                while (addedDays < days) {
+                    newDate.setDate(newDate.getDate() + 1);
+                    const dayOfWeek = newDate.getDay();
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
+                        addedDays++;
+                    }
+                }
+                return newDate;
+            }
+
+            // Function to update the timeline dates
+            function updateTimeline() {
+                const invoiceDate = invoiceDateInput.value;
+                if (!invoiceDate) {
+                    step0Date.textContent = 'Please select a date above.';
+                    step1Date.textContent = '';
+                    step2Date.textContent = '';
+                    step3Date.textContent = '';
+                    step4Date.textContent = '';
+                    return;
+                }
+
+                const startDate = new Date(invoiceDate);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                
+                // Display initial invoice date
+                step0Date.textContent = startDate.toLocaleDateString('en-US', options);
+
+                // Calculate and display reminder dates
+                const reminder1Date = addBusinessDays(startDate, 5);
+                step1Date.textContent = reminder1Date.toLocaleDateString('en-US', options);
+
+                const reminder2Date = addBusinessDays(reminder1Date, 5);
+                step2Date.textContent = reminder2Date.toLocaleDateString('en-US', options);
+
+                const reminder3Date = addBusinessDays(reminder2Date, 4);
+                step3Date.textContent = reminder3Date.toLocaleDateString('en-US', options);
+
+                const suspensionDate = addBusinessDays(reminder3Date, 3);
+                step4Date.textContent = suspensionDate.toLocaleDateString('en-US', options);
+            }
+
+            // Set a default date for initial load and add event listener
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const day = today.getDate().toString().padStart(2, '0');
+            invoiceDateInput.value = `${year}-${month}-${day}`;
+            
+            invoiceDateInput.addEventListener('change', updateTimeline);
+            
+            // Initial call to populate the timeline with the default date
+            updateTimeline();
+        });
+    </script>
+</body>
+</html>
