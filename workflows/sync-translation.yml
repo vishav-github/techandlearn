@@ -1,0 +1,13 @@
+name: Scheduled Translation Sync
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour (UTC)
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run sync script
+        run: php scripts/syncTranslation.php
