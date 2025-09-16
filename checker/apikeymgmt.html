@@ -283,11 +283,11 @@
                     </tr>
                 </thead>
                 <tbody id="api-keys-table-body">
-                    <tr data-full-key="sk_live_678g99k3j887f84g" data-status="Active">
+                    <tr data-full-key="sk_live_678g99k3j887f84g" data-status="Active" data-app-id="0123">
                         <td>Client A Access</td>
                         <td>Client A</td>
                         <td class="status"><span style="color: #48bb78; font-weight: 600;">Active</span></td>
-                        <td>23</td>
+                        <td>0123</td>
                         <td class="key-cell">
                             <div class="masked-key-container">
                                 <span class="key-value-text">sk_****************f84g</span>
@@ -302,11 +302,11 @@
                             <a href="#" class="action-btn revoke-btn" style="color: #e53e3e;">Revoke</a>
                         </td>
                     </tr>
-                    <tr data-full-key="sk_test_h4u78f7k3j9gf5b2" data-status="Active">
+                    <tr data-full-key="sk_test_h4u78f7k3j9gf5b2" data-status="Active" data-app-id="0456">
                         <td>Client B Reports</td>
                         <td>Client B</td>
                         <td class="status"><span style="color: #48bb78; font-weight: 600;">Active</span></td>
-                        <td>24</td>
+                        <td>0456</td>
                         <td class="key-cell">
                             <div class="masked-key-container">
                                 <span class="key-value-text">sk_****************f5b2</span>
@@ -527,7 +527,7 @@
         const cancelBtn = document.getElementById('cancel-btn');
         const saveBtn = document.getElementById('save-key-btn');
         const generateSuccessMessage = document.getElementById('success-message');
-        const copySuccessMessage = document.getElementById('copy-success-message');
+        const existingAppIDs = ['0123', '0456']; // Mock list of existing IDs
 
         function checkTableStatus() {
             if (tableBody.rows.length === 0) {
@@ -538,6 +538,16 @@
         }
         
         checkTableStatus();
+
+        // New function to generate a unique 4-digit App ID
+        function generateUniqueAppID() {
+            let newID;
+            do {
+                newID = String(Math.floor(1000 + Math.random() * 9000));
+            } while (existingAppIDs.includes(newID));
+            existingAppIDs.push(newID); // Add the new ID to our mock list
+            return newID;
+        }
 
         // Action Buttons on Main Table
         document.getElementById('api-keys-table-body').addEventListener('click', function(e) {
@@ -645,6 +655,7 @@
             const clientSelectElement = document.getElementById('clientSelect');
             const clientName = clientSelectElement.options[clientSelectElement.selectedIndex].text;
             const expiration = document.getElementById('keyExpiration').value;
+            const generatedAppID = generateUniqueAppID(); // Generate unique App ID
             
             const generatedKey = 'sk_live_' + Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 5);
             const maskedKey = 'sk_' + '*'.repeat(generatedKey.length - 7) + generatedKey.substring(generatedKey.length - 4);
@@ -652,11 +663,12 @@
             const newRow = tableBody.insertRow();
             newRow.dataset.fullKey = generatedKey;
             newRow.dataset.status = "Active";
+            newRow.dataset.appId = generatedAppID;
             newRow.innerHTML = `
                 <td>${keyName}</td>
                 <td>${clientName}</td>
                 <td class="status" data-status="Active"><span style="color: #48bb78; font-weight: 600;">Active</span></td>
-                <td>N/A</td>
+                <td>${generatedAppID}</td>
                 <td class="key-cell">
                     <div class="masked-key-container">
                         <span class="key-value-text">${maskedKey}</span>
