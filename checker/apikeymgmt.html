@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key Management</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1a202c;
+            font-size: 2rem;
+            margin-bottom: 0;
+        }
+
+        p {
+            color: #718096;
+            margin-top: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #63b3ed;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #3182ce;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #edf2f7;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        td a {
+            color: #4299e1;
+            text-decoration: none;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+        
+        .no-records {
+            text-align: center;
+            color: #718096;
+            padding: 2rem;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        /* Custom Dropdown Styles */
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .dropdown-container {
+            position: relative;
+        }
+        .dropdown-display {
+            width: 90%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            background-color: #fff;
+            z-index: 10;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .dropdown-menu.visible {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .dropdown-item:hover {
+            background-color: #f7fafc;
+        }
+        .dropdown-item input[type="checkbox"] {
+            margin-right: 0.75rem;
+        }
+
+        /* New Styles for the Key and Copy message */
+        .key-cell {
+            position: relative;
+        }
+        .masked-key-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .key-value-text {
+            cursor: pointer;
+            user-select: none;
+            font-family: monospace;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .key-value-text:hover {
+            background-color: #f7fafc;
+        }
+        .copy-message {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            background-color: #3182ce;
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            display: none;
+            pointer-events: none;
+            animation: fadeOut 2s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; top: -10px; }
+            80% { opacity: 1; top: -20px; }
+            100% { opacity: 0; top: -20px; }
+        }
+
+        /* New Styles for the Success Message */
+        .success-message {
+            background-color: #e6fffa;
+            color: #38a169;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>API Key Management</h1>
+    <p>View and manage all API access keys, or generate a new one.</p>
+    
+    <hr>
+    
+    <div class="section">
+        <h2 class="section-title">1. Manage Existing Keys</h2>
+        
+        <div id="success-message" class="success-message">
+            Key Generated Successfully!
+        </div>
+        <div id="copy-success-message" class="success-message" style="display:none; background-color:#c4e2ff; color:#0b61a4;">
+            Key Copied!
+        </div>
+
+        <div id="records-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key Name</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>App ID</th>
+                        <th>Key</th>
+                        <th>Expiration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="api-keys-table-body">
+                    <tr data-full-key="sk_live_678g99k3j887f84g" data-status="Active">
+                        <td>Client A Access</td>
+                        <td>Client A</td>
+                        <td class="status"><span style="color: #48bb78; font-weight: 600;">Active</span></td>
+                        <td>23</td>
+                        <td class="key-cell">
+                            <div class="masked-key-container">
+                                <span class="key-value-text">sk_****************f84g</span>
+                                <span class="show-toggle" style="cursor: pointer;">👁️</span>
+                            </div>
+                            <span class="copy-message">Copied!</span>
+                        </td>
+                        <td>Never</td>
+                        <td class="actions-cell">
+                            <a href="#" class="action-btn edit-btn">Edit</a> |
+                            <a href="#" class="action-btn regenerate-btn">Regenerate</a> | 
+                            <a href="#" class="action-btn revoke-btn" style="color: #e53e3e;">Revoke</a>
+                        </td>
+                    </tr>
+                    <tr data-full-key="sk_test_h4u78f7k3j9gf5b2" data-status="Active">
+                        <td>Client B Reports</td>
+                        <td>Client B</td>
+                        <td class="status"><span style="color: #48bb78; font-weight: 600;">Active</span></td>
+                        <td>24</td>
+                        <td class="key-cell">
+                            <div class="masked-key-container">
+                                <span class="key-value-text">sk_****************f5b2</span>
+                                <span class="show-toggle" style="cursor: pointer;">👁️</span>
+                            </div>
+                            <span class="copy-message">Copied!</span>
+                        </td>
+                        <td>1 Month</td>
+                        <td class="actions-cell">
+                            <a href="#" class="action-btn edit-btn">Edit</a> |
+                            <a href="#" class="action-btn regenerate-btn">Regenerate</a> | 
+                            <a href="#" class="action-btn revoke-btn" style="color: #e53e3e;">Revoke</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="no-records-message" class="no-records" style="display:none;">
+            No API keys have been generated yet.
+        </div>
+    </div>
+    
+    <hr>
+    
+    <div class="button-container">
+        <button class="btn-primary" id="generate-key-btn">Generate a New API Key</button>
+    </div>
+    
+    <div class="section" id="create-key-form" style="display: none;">
+        <h2 class="section-title" style="margin-top: 2rem;">2. Create & Define a New Key</h2>
+        <div class="form-group">
+            <label for="keyName">Key Name</label>
+            <input type="text" id="keyName" placeholder="e.g., Client A Review Access">
+        </div>
+        <div class="form-group">
+            <label for="clientSelect">Client</label>
+            <select id="clientSelect">
+                <option value="">Select a Client</option>
+                <option value="client-a">Client A</option>
+                <option value="client-b">Client B</option>
+                <option value="client-c">Client C</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="keyExpiration">Key Expiration</label>
+            <select id="keyExpiration">
+                <option value="Never">Never</option>
+                <option value="1 Day">1 Day</option>
+                <option value="1 Week">1 Week</option>
+                <option value="1 Month">1 Month</option>
+                <option value="1 Year">1 Year</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="description">Description (optional)</label>
+            <textarea id="description" rows="3" placeholder="Notes about the key's purpose or expiration."></textarea>
+        </div>
+    
+        <h3 style="margin-top: 2rem;">Key Permissions</h3>
+        <p style="font-size: 0.9rem; color: #718096; margin-top: -1rem;">Select the specific actions this key will be able to perform.</p>
+    
+        <div class="permissions-grid">
+            
+            <div class="form-group">
+                <label><strong>Review</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Review">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Review.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Review.getOnceApproved"> getOnceApproved</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Branch</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Branch">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Branch.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Branch.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Branch.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Questionnaire</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Questionnaire">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Questionnaire.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Questionnaire.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Questionnaire.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Order</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Order">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Order.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Order.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Order.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>User</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="User">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="User.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="User.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="User.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Question</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Question">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Question.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Question.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Question.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <h4 style="margin-top: 2rem; color: #c53030;">System-Level Data ⚙️ (High-Risk)</h4>
+
+        <div class="permissions-grid">
+            <div class="form-group">
+                <label><strong>Checker</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Checker">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Checker.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Checker.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Checker.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Client</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="Client">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Client.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="checkbox" value="Client.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="Client.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>CustomScale</strong></label>
+                <div class="dropdown-container">
+                    <div class="dropdown-display" data-controller="CustomScale">
+                        <span>Select...</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="CustomScale.selectrecord"> selectrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="CustomScale.createrecord"> createrecord</div>
+                        <div class="dropdown-item"><input type="checkbox" name="permission" value="CustomScale.updaterecord"> updaterecord</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: right; margin-top: 2rem;">
+            <button class="btn-secondary" id="cancel-btn">Cancel</button>
+            <button class="btn-primary" id="save-key-btn">Save Key</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableBody = document.getElementById('api-keys-table-body');
+        const noRecordsMessage = document.getElementById('no-records-message');
+        const createForm = document.getElementById('create-key-form');
+        const generateBtn = document.getElementById('generate-key-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const saveBtn = document.getElementById('save-key-btn');
+        const generateSuccessMessage = document.getElementById('success-message');
+        const copySuccessMessage = document.getElementById('copy-success-message');
+
+        function checkTableStatus() {
+            if (tableBody.rows.length === 0) {
+                noRecordsMessage.style.display = 'block';
+            } else {
+                noRecordsMessage.style.display = 'none';
+            }
+        }
+        
+        checkTableStatus();
+
+        // Action Buttons on Main Table
+        document.getElementById('api-keys-table-body').addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = e.target;
+            const row = target.closest('tr');
+            if (!row) return;
+
+            // Revoke, Regenerate, and Edit logic remains the same
+            if (target.classList.contains('revoke-btn')) {
+                const statusCell = row.querySelector('.status');
+                if (statusCell.dataset.status !== 'Revoked') {
+                    statusCell.innerHTML = '<span style="color: #a0aec0; font-weight: 600;">Revoked</span>';
+                    row.dataset.status = 'Revoked';
+                    alert('Key has been revoked.');
+                }
+            } else if (target.classList.contains('regenerate-btn')) {
+                const newKey = 'sk_live_' + Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 5);
+                row.dataset.fullKey = newKey;
+                const maskedKey = 'sk_' + '*'.repeat(newKey.length - 7) + newKey.substring(newKey.length - 4);
+                row.querySelector('.key-value-text').textContent = maskedKey;
+                alert('New key generated for ' + row.cells[0].textContent);
+            } else if (target.classList.contains('edit-btn')) {
+                alert('Edit functionality is not implemented in this mockup.');
+            }
+            
+            // New logic for the eye icon and key-value-text
+            else if (target.classList.contains('show-toggle')) {
+                const keyText = row.querySelector('.key-value-text');
+                const fullKey = row.dataset.fullKey;
+                
+                if (keyText.textContent.includes('*')) {
+                    keyText.textContent = fullKey;
+                    target.textContent = '🙈';
+                } else {
+                    const maskedKey = 'sk_' + '*'.repeat(fullKey.length - 7) + fullKey.substring(fullKey.length - 4);
+                    keyText.textContent = maskedKey;
+                    target.textContent = '👁️';
+                }
+            } else if (target.classList.contains('key-value-text')) {
+                const fullKey = row.dataset.fullKey;
+                const copyMessage = row.querySelector('.copy-message');
+
+                navigator.clipboard.writeText(fullKey).then(() => {
+                    copyMessage.style.display = 'block';
+                    copyMessage.style.animation = 'none'; // Reset animation
+                    copyMessage.offsetHeight; // Trigger reflow
+                    copyMessage.style.animation = ''; // Start animation
+                    setTimeout(() => {
+                        copyMessage.style.display = 'none';
+                    }, 2000);
+                }).catch(err => {
+                    alert('Could not copy key: ' + err);
+                });
+            }
+        });
+
+        generateBtn.addEventListener('click', function() {
+            createForm.style.display = 'block';
+            generateBtn.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', function() {
+            createForm.style.display = 'none';
+            generateBtn.style.display = 'block';
+        });
+
+        // Custom Dropdown Logic
+        const dropdownDisplays = document.querySelectorAll('.dropdown-display');
+        dropdownDisplays.forEach(display => {
+            display.addEventListener('click', function(event) {
+                const menu = this.nextElementSibling;
+                menu.classList.toggle('visible');
+                event.stopPropagation();
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            const menus = document.querySelectorAll('.dropdown-menu');
+            menus.forEach(menu => {
+                if (!menu.contains(event.target)) {
+                    menu.classList.remove('visible');
+                }
+            });
+        });
+        
+        const permissionCheckboxes = document.querySelectorAll('input[name="permission"]');
+        permissionCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const menu = this.closest('.dropdown-menu');
+                const display = menu.previousElementSibling;
+                const selectedItems = Array.from(menu.querySelectorAll('input:checked')).map(cb => cb.value.split('.')[1]);
+                
+                if (selectedItems.length > 0) {
+                    display.querySelector('span').textContent = `${selectedItems.join(', ')}`;
+                } else {
+                    display.querySelector('span').textContent = 'Select...';
+                }
+            });
+        });
+        
+        // Save Key Logic
+        saveBtn.addEventListener('click', function() {
+            const keyName = document.getElementById('keyName').value;
+            const clientSelectElement = document.getElementById('clientSelect');
+            const clientName = clientSelectElement.options[clientSelectElement.selectedIndex].text;
+            const expiration = document.getElementById('keyExpiration').value;
+            
+            const generatedKey = 'sk_live_' + Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 5);
+            const maskedKey = 'sk_' + '*'.repeat(generatedKey.length - 7) + generatedKey.substring(generatedKey.length - 4);
+
+            const newRow = tableBody.insertRow();
+            newRow.dataset.fullKey = generatedKey;
+            newRow.dataset.status = "Active";
+            newRow.innerHTML = `
+                <td>${keyName}</td>
+                <td>${clientName}</td>
+                <td class="status" data-status="Active"><span style="color: #48bb78; font-weight: 600;">Active</span></td>
+                <td>N/A</td>
+                <td class="key-cell">
+                    <div class="masked-key-container">
+                        <span class="key-value-text">${maskedKey}</span>
+                        <span class="show-toggle" style="cursor: pointer;">👁️</span>
+                    </div>
+                    <span class="copy-message">Copied!</span>
+                </td>
+                <td>${expiration}</td>
+                <td class="actions-cell">
+                    <a href="#" class="action-btn edit-btn">Edit</a> |
+                    <a href="#" class="action-btn regenerate-btn">Regenerate</a> | 
+                    <a href="#" class="action-btn revoke-btn" style="color: #e53e3e;">Revoke</a>
+                </td>
+            `;
+            
+            // Show the success message and then hide it
+            generateSuccessMessage.style.display = 'block';
+            setTimeout(() => {
+                generateSuccessMessage.style.display = 'none';
+            }, 3000);
+
+            // Hide the form and show the generate button
+            createForm.style.display = 'none';
+            generateBtn.style.display = 'block';
+            
+            checkTableStatus();
+        });
+    });
+</script>
+
+</body>
+</html>
