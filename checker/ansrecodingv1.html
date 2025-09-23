@@ -689,278 +689,292 @@
 
         <div id="tab-review" class="tab-content">
             <h2>Review, Validate & Finalize</h2>
-            <h2>STEP 4: Review, Validate & Finalize</h2>
+            <div class="review-dashboard" id="review-dashboard-section">
+                <h3>Extracted Data for Review:</h3>
+                <div class="filter-section">
+                    <div class="form-group">
+                        <label for="filter-source-question">Source Question(s):</label>
+                        <select id="filter-source-question" multiple size="3">
+                            <option value="">All</option>
+                            <option value="q1">What went well?</option>
+                            <option value="q2">Tell us about your experience...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-destination-question">Destination Question(s):</label>
+                        <select id="filter-destination-question" multiple size="3">
+                            <option value="">All</option>
+                            <option value="dest1">Overall Sentiment</option>
+                            <option value="dest2">Experience Rating</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-output-type">Output Type(s):</label>
+                        <select id="filter-output-type" multiple size="3">
+                            <option value="">All</option>
+                            <option value="sentiment">Sentiment</option>
+                            <option value="rating">Rating</option>
+                            <option value="theme">Theme</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-confidence">Confidence Score (Min): <span
+                                id="filter-confidence-value">0%</span></label>
+                        <input type="range" id="filter-confidence" min="0" max="100" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-validation-status">Validation Status:</label>
+                        <select id="filter-validation-status">
+                            <option value="all">All</option>
+                            <option value="unreviewed">Unreviewed</option>
+                            <option value="reviewed">Reviewed</option>
+                            <option value="finalized">Finalized</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="button">Apply Filters</button>
+                        <button class="button secondary">Clear Filters</button>
+                    </div>
+                </div>
 
-            <div class="filter-section">
-                <div class="form-group">
-                    <label for="filter-source-question">Source Question(s):</label>
-                    <select id="filter-source-question" multiple size="3">
-                        <option value="">All</option>
-                        <option value="q1">What went well?</option>
-                        <option value="q2">Tell us about your experience...</option>
-                    </select>
+                <div class="batch-actions">
+                    <button class="button">Accept All Filtered</button>
+                    <button class="button secondary">Reject All Filtered</button>
+                    <div class="xai-batch-toggle">
+                        <input type="checkbox" id="xai-batch-toggle-checkbox">
+                        <label for="xai-batch-toggle-checkbox">Show all XAI Info</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="filter-destination-question">Destination Question(s):</label>
-                    <select id="filter-destination-question" multiple size="3">
-                        <option value="">All</option>
-                        <option value="dest1">Overall Sentiment</option>
-                        <option value="dest2">Experience Rating</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-output-type">Output Type(s):</label>
-                    <select id="filter-output-type" multiple size="3">
-                        <option value="">All</option>
-                        <option value="sentiment">Sentiment</option>
-                        <option value="rating">Rating</option>
-                        <option value="theme">Theme</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-confidence">Confidence Score (Min): <span
-                            id="filter-confidence-value">0%</span></label>
-                    <input type="range" id="filter-confidence" min="0" max="100" value="0">
-                </div>
-                <div class="form-group">
-                    <label for="filter-validation-status">Validation Status:</label>
-                    <select id="filter-validation-status">
-                        <option value="all">All</option>
-                        <option value="unreviewed">Unreviewed</option>
-                        <option value="reviewed">Reviewed</option>
-                        <option value="finalized">Finalized</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button class="button">Apply Filters</button>
-                    <button class="button secondary">Clear Filters</button>
-                </div>
-            </div>
 
-            <h3>Extracted Data for Review:</h3>
-            <table id="extractedDataTable">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="selectAllRows"></th>
-                        <th>Review #</th>
-                        <th>Original Review Text</th>
-                        <th>Source Q</th>
-                        <th>Destination Q</th>
-                        <th>Output Type</th>
-                        <th>AI Extracted Answer</th>
-                        <th>Confidence</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-review-id="R101" data-output-type="Scale Rating">
-                        <td><input type="checkbox" class="row-select"></td>
-                        <td class="review-id-cell"><strong>R101</strong></td>
-                        <td class="original-text-cell">"The service was great, but the food was cold and took ages to
-                            arrive.
-                            Customer support was quick though."</td>
-                        <td>"Overall Feedback"</td>
-                        <td>Overall Sentiment</td>
-                        <td>Scale Rating</td>
-                        <td class="editable-cell" data-original-content="8">
-                            <span class="display-mode" data-original-value="8" data-original-content="8">8</span>
-                            <div class="edit-mode">
-                                <select class="editable-field" data-field-type="select">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8" selected>8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                </select>
-                            </div>
-                            <div class="xai-info" style="display: none;">Keywords: wait time, too long, good coffee
-                            </div>
-                        </td>
-                        <td>95%</td>
-                        <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                        <td class="action-buttons-cell">
-                            <div class="kebab"></div>
-                            <div class="editable-cell-controls"></div>
-                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
-                                        href="#" class="edit-row-button">Edit Answer</a></div>
-                            </div>
-                            <button class="button" style="display: none;" data-action="save">Save</button>
-                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
-                        </td>
-                    </tr>
-                    <tr data-review-id="R101" data-output-type="Themes">
-                        <td><input type="checkbox" class="row-select"></td>
-                        <td class="review-id-cell"></td>
-                        <td class="original-text-cell"></td>
-                        <td>"Overall Feedback"</td>
-                        <td>Service Theme</td>
-                        <td>Themes</td>
-                        <td class="editable-cell" data-original-content='["Customer Service", "Service Quality"]'>
-                            <span class="display-mode" data-original-value='["Customer Service", "Service Quality"]'
-                                data-original-content='["Customer Service", "Service Quality"]'><span
-                                    class="tag">Customer
-                                    Service</span>
-                                <span class="tag">Service Quality</span></span>
-                            <div class="edit-mode">
-                                <input type="text" class="editable-field" value="Service, Quality"
-                                    data-field-type="text">
-                            </div>
-                            <div class="xai-info" style="display: none;">XAI: "customer support was quick"</div>
-                        </td>
-                        <td>88%</td>
-                        <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                        <td class="action-buttons-cell">
-                            <div class="kebab"></div>
-                            <div class="editable-cell-controls"></div>
-                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
-                                        href="#" class="edit-row-button">Edit Answer</a></div>
-                            </div>
-                            <button class="button" style="display: none;" data-action="save">Save</button>
-                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
-                        </td>
-                    </tr>
-                    <tr data-review-id="R101" data-output-type="Categories">
-                        <td><input type="checkbox" class="row-select"></td>
-                        <td class="review-id-cell"></td>
-                        <td class="original-text-cell"></td>
-                        <td>"Overall Feedback"</td>
-                        <td>Food Issues</td>
-                        <td>Categories</td>
-                        <td class="editable-cell" data-original-content="Food Quality">
-                            <span class="display-mode" data-original-value="Food Quality"
-                                data-original-content="Food Quality">
-                                Food Quality
-                            </span>
-                            <div class="edit-mode">
-                                <input type="text" class="editable-field" value="Food Qualit" data-field-type="text">
-                            </div>
-                            <span class="xai-info hidden">XAI: "food was cold"</span>
-                        </td>
-                        <td>91%</td>
-                        <td><span class="status-badge status-reviewed">Reviewed</span></td>
-                        <td class="action-buttons-cell">
-                            <div class="kebab"></div>
-                            <div class="editable-cell-controls"></div>
-                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
-                                        href="#" class="edit-row-button">Edit Answer</a></div>
-                            </div>
-                            <button class="button" style="display: none;" data-action="save">Save</button>
-                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
-                        </td>
-                    </tr>
-                    <tr data-review-id="R102" data-output-type="Custom Answers">
-                        <td><input type="checkbox" class="row-select"></td>
-                        <td class="review-id-cell"><strong>R102</strong></td>
-                        <td class="original-text-cell">"Easy to use, highly recommend this app for productivity.
-                            Interface is
-                            intuitive."</td>
-                        <td>"Product Experience"</td>
-                        <td>Product Usability</td>
-                        <td>Custom Answers</td>
-                        <td class="editable-cell" data-original-content='["Intuitive", "User-Friendly"]'>
-                            <span class="display-mode" data-original-value="Intuitive, User-Friendly"
-                                data-original-content='["Intuitive", "User-Friendly"]'>
-                                <span class="tag">Intuitive</span>
-                                <span class="tag">User-Friendly</span></span>
-                            <div class="edit-mode">
-                                <input type="text" class="editable-field" value="Intuitive, User-Friendly"
-                                    data-field-type="text">
-                            </div>
-                            <div class="xai-info" style="display: none;">XAI: "easy to use"</div>
-                        </td>
-                        <td>93%</td>
-                        <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                        <td class="action-buttons-cell">
-                            <div class="kebab"></div>
-                            <div class="editable-cell-controls"></div>
-                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
-                                        href="#" class="edit-row-button">Edit Answer</a></div>
-                            </div>
-                            <button class="button" style="display: none;" data-action="save">Save</button>
-                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
-                        </td>
-                    </tr>
-                    <tr data-review-id="R102" data-output-type="Keywords">
-                        <td><input type="checkbox" class="row-select"></td>
-                        <td class="review-id-cell"></td>
-                        <td class="original-text-cell"></td>
-                        <td>"Product Experience"</td>
-                        <td>Keywords</td>
-                        <td>Keywords</td>
-                        <td class="editable-cell"
-                            data-original-content='["easy to use", "highly recommend", "intuitive"]'>
-                            <span class="display-mode" data-original-value="easy to use, highly recommend, intuitive"
-                                data-original-content='["easy to use", "highly recommend", "intuitive"]'>
-                                <span class="tag">easy to use</span>
-                                <span class="tag">highly recommend</span>
-                                <span class="tag">intuitive</span>
-                            </span>
-                            <div class="edit-mode">
-                                <input type="text" class="editable-field"
-                                    value="easy to use, highly recommend, intuitive" data-field-type="text">
-                            </div>
-                            <span class="xai-info hidden">XAI: "keywords extracted directly"</span>
-                        </td>
-                        <td>85%</td>
-                        <td><span class="status-badge status-modified">Modified</span></td>
-                        <td class="action-buttons-cell">
-                            <div class="kebab"></div>
-                            <div class="editable-cell-controls"></div>
-                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
-                                        href="#" class="edit-row-button">Edit Answer</a></div>
-                            </div>
-                            <button class="button" style="display: none;" data-action="save">Save</button>
-                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="text-align: center; margin-top: 15px; font-size: 0.9em;">
-                <a href="#" class="pagination-link">&lt; Prev</a> | <a href="#" class="pagination-link active">1</a> |
-                <a href="#" class="pagination-link">2</a> | <a href="#" class="pagination-link">3</a> | <a href="#"
-                    class="pagination-link">Next &gt;</a>
-            </div>
-
-            <div class="batch-actions">
-                <input type="checkbox" id="select-all-visible" aria-label="Select all visible rows"> <label
-                    for="select-all-visible">Select All Visible</label>
-                <button class="button">Mark Selected as Reviewed</button>
-                <button class="button" id="bulk-edit-button">Bulk Edit Selected Rows</button>
-                <div class="xai-batch-toggle">
-                    <input type="checkbox" id="show-all-xai-info">
-                    <label for="show-all-xai-info">Show Explainable AI (XAI) Info for All Rows</label>
+                <table id="extractedDataTable">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAllRows"></th>
+                            <th>Review #</th>
+                            <th>Original Review Text</th>
+                            <th>Source Q</th>
+                            <th>Destination Q</th>
+                            <th>Output Type</th>
+                            <th>AI Extracted Answer</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-review-id="R101" data-output-type="Scale Rating">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td class="review-id-cell"><strong>R101</strong></td>
+                            <td class="original-text-cell">"The service was great, but the food was cold and took ages
+                                to arrive. Customer support was quick though."</td>
+                            <td>"Overall Feedback"</td>
+                            <td>Overall Sentiment</td>
+                            <td>Scale Rating</td>
+                            <td class="editable-cell" data-original-content="8">
+                                <span class="display-mode" data-original-value="8"
+                                    data-original-content="8">8</span>
+                                <div class="edit-mode">
+                                    <select class="editable-field" data-field-type="select">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8" selected>8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                                <div class="xai-info" style="display: none;">Keywords: wait time, too long, good coffee
+                                </div>
+                            </td>
+                            <td>95%</td>
+                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                            <td class="action-buttons-cell">
+                                <div class="kebab"></div>
+                                <div class="editable-cell-controls"></div>
+                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                    <div class="kebab-menu-content">
+                                        <a href="#" class="action-edit">Modify Answer</a>
+                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                    </div>
+                                </div>
+                                <button class="button" style="display: none;" data-action="save">Save</button>
+                                <button class="button danger" style="display: none;"
+                                    data-action="cancel">Cancel</button>
+                            </td>
+                        </tr>
+                        <tr data-review-id="R101" data-output-type="Themes">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td class="review-id-cell"></td>
+                            <td class="original-text-cell"></td>
+                            <td>"Overall Feedback"</td>
+                            <td>Service Theme</td>
+                            <td>Themes</td>
+                            <td class="editable-cell" data-original-content='["Customer Service", "Service Quality"]'>
+                                <span class="display-mode"
+                                    data-original-value='["Customer Service", "Service Quality"]'
+                                    data-original-content='["Customer Service", "Service Quality"]'><span
+                                        class="tag">Customer Service</span> <span class="tag">Service
+                                        Quality</span></span>
+                                <div class="edit-mode">
+                                    <input type="text" class="editable-field" value="Service, Quality"
+                                        data-field-type="text">
+                                </div>
+                                <div class="xai-info" style="display: none;">XAI: "customer support was quick"</div>
+                            </td>
+                            <td>88%</td>
+                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                            <td class="action-buttons-cell">
+                                <div class="kebab"></div>
+                                <div class="editable-cell-controls"></div>
+                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                    <div class="kebab-menu-content">
+                                        <a href="#" class="action-edit">Modify Answer</a>
+                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                    </div>
+                                </div>
+                                <button class="button" style="display: none;" data-action="save">Save</button>
+                                <button class="button danger" style="display: none;"
+                                    data-action="cancel">Cancel</button>
+                            </td>
+                        </tr>
+                        <tr data-review-id="R101" data-output-type="Categories">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td class="review-id-cell"></td>
+                            <td class="original-text-cell"></td>
+                            <td>"Overall Feedback"</td>
+                            <td>Food Issues</td>
+                            <td>Categories</td>
+                            <td class="editable-cell" data-original-content="Food Quality">
+                                <span class="display-mode" data-original-value="Food Quality"
+                                    data-original-content="Food Quality">Food Quality</span>
+                                <div class="edit-mode">
+                                    <input type="text" class="editable-field" value="Food Quality"
+                                        data-field-type="text">
+                                </div>
+                                <div class="xai-info" style="display: none;">XAI: "the food was cold"</div>
+                            </td>
+                            <td>91%</td>
+                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                            <td class="action-buttons-cell">
+                                <div class="kebab"></div>
+                                <div class="editable-cell-controls"></div>
+                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                    <div class="kebab-menu-content">
+                                        <a href="#" class="action-edit">Modify Answer</a>
+                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                    </div>
+                                </div>
+                                <button class="button" style="display: none;" data-action="save">Save</button>
+                                <button class="button danger" style="display: none;"
+                                    data-action="cancel">Cancel</button>
+                            </td>
+                        </tr>
+                        <tr data-review-id="R102" data-output-type="Themes">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td class="review-id-cell"><strong>R102</strong></td>
+                            <td class="original-text-cell">"I am very satisfied with the new features in the app. The UI
+                                is intuitive."</td>
+                            <td>"App Feedback"</td>
+                            <td>Product Satisfaction</td>
+                            <td>Themes</td>
+                            <td class="editable-cell" data-original-content="Product Satisfaction">
+                                <span class="display-mode" data-original-value="Product Satisfaction"
+                                    data-original-content="Product Satisfaction">Product Satisfaction</span>
+                                <div class="edit-mode">
+                                    <input type="text" class="editable-field" value="Product Satisfaction"
+                                        data-field-type="text">
+                                </div>
+                                <div class="xai-info" style="display: none;">XAI: "satisfied with the new features"
+                                </div>
+                            </td>
+                            <td>99%</td>
+                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                            <td class="action-buttons-cell">
+                                <div class="kebab"></div>
+                                <div class="editable-cell-controls"></div>
+                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                    <div class="kebab-menu-content">
+                                        <a href="#" class="action-edit">Modify Answer</a>
+                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                    </div>
+                                </div>
+                                <button class="button" style="display: none;" data-action="save">Save</button>
+                                <button class="button danger" style="display: none;"
+                                    data-action="cancel">Cancel</button>
+                            </td>
+                        </tr>
+                        <tr data-review-id="R103" data-output-type="Scale Rating">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td class="review-id-cell"><strong>R103</strong></td>
+                            <td class="original-text-cell">"The cashier was very friendly and helpful. Gave a great
+                                recommendation."</td>
+                            <td>"Employee Feedback"</td>
+                            <td>Staff Performance</td>
+                            <td>Scale Rating</td>
+                            <td class="editable-cell" data-original-content="5">
+                                <span class="display-mode" data-original-value="5"
+                                    data-original-content="5">5</span>
+                                <div class="edit-mode">
+                                    <select class="editable-field" data-field-type="select">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected>5</option>
+                                    </select>
+                                </div>
+                                <div class="xai-info" style="display: none;">XAI: "friendly and helpful"</div>
+                            </td>
+                            <td>98%</td>
+                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                            <td class="action-buttons-cell">
+                                <div class="kebab"></div>
+                                <div class="editable-cell-controls"></div>
+                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                    <div class="kebab-menu-content">
+                                        <a href="#" class="action-edit">Modify Answer</a>
+                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                    </div>
+                                </div>
+                                <button class="button" style="display: none;" data-action="save">Save</button>
+                                <button class="button danger" style="display: none;"
+                                    data-action="cancel">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="final-actions">
+                    <button class="button danger">Reject & Finalize All Unreviewed</button>
+                    <button class="button">Accept & Finalize All Unreviewed</button>
                 </div>
-                <button class="button">Finalize All Reviewed Rows</button>
-            </div>
-
-            <div class="final-actions">
-                <button class="button secondary prev-step">
-                    < Previous Step</button>
-                        <button class="button">Save to Reports</button>
             </div>
         </div>
-
     </div>
-    <div id="editAnswerModal" class="modal" style="display: none;">
+
+    <div id="custom-answer-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h3>Edit Answer</h3>
-            <div id="modal-input-container"></div>
+            <h2 id="modal-title">Edit Custom Answer Set</h2>
+            <div class="form-group">
+                <label for="custom-answer-name">Set Name:</label>
+                <input type="text" id="custom-answer-name">
+            </div>
+            <div id="modal-labels-container">
+                <label>Labels:</label>
+                <div id="modal-labels-list"></div>
+                <div class="wrapper-inp">
+                    <input type="text" id="modal-add-label" placeholder="Enter new label name">
+                    <button class="button" id="modal-add-button">Add</button>
+                </div>
+            </div>
             <div class="modal-footer">
-                <button class="button danger" id="modal-delete">Delete row</button>
-                <button class="button secondary" id="modal-cancel">Cancel</button>
-                <button class="button" id="modal-save">Save</button>
+                <button class="button danger" id="modal-delete">Delete Set</button>
+                <button class="button secondary close-modal">Cancel</button>
+                <button class="button" id="modal-save">Save Set</button>
             </div>
         </div>
     </div>
