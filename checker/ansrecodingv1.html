@@ -279,6 +279,18 @@
             background-color: #e74c3c;
         }
 
+        .status-badge.unreviewed {
+            background-color: #bdc3c7;
+        }
+
+        .status-badge.reviewed {
+            background-color: #27ae60;
+        }
+
+        .status-badge.modified {
+            background-color: #f39c12;
+        }
+
         .kebab-menu {
             position: relative;
             display: inline-block;
@@ -357,10 +369,27 @@
             border-top: 1px dashed #eee;
             padding-top: 5px;
             display: block;
+            cursor: pointer;
         }
 
-        .xai-info.hidden {
+        .xai-info-content {
             display: none;
+            margin-top: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #3498db;
+        }
+
+        .xai-info-toggle {
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #3498db;
+            margin-left: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .xai-info-toggle.rotated {
+            transform: rotate(90deg);
         }
 
         .checkbox-group label {
@@ -445,7 +474,7 @@
         .content-toggle-section i.rotated {
             transform: rotate(90deg);
         }
-        
+
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -454,7 +483,35 @@
         }
 
         .collapsible-content.expanded {
-            max-height: 1000px; /* A value larger than the max height */
+            max-height: 1000px;
+            /* A value larger than the max height */
+        }
+
+        /* New styles for filter section */
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .filter-section .form-group {
+            flex: 1 1 calc(33% - 20px);
+            min-width: 250px;
+            margin-bottom: 0;
+        }
+
+        .filter-section .form-group label {
+            white-space: nowrap;
+        }
+
+        .filter-section .button-group {
+            flex: 1 1 100%;
+            text-align: right;
+            margin-top: 0;
         }
     </style>
 </head>
@@ -678,6 +735,8 @@
                             <th>Job Name</th>
                             <th>Status</th>
                             <th>Progress</th>
+                            <th>Started By</th>
+                            <th>Started On</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -762,7 +821,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-review-id="R101" data-output-type="Scale Rating">
+                        <tr data-review-id="R101" data-output-type="Scale Rating" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"><strong>R101</strong></td>
                             <td class="original-text-cell">"The service was great, but the food was cold and took ages
@@ -773,7 +832,7 @@
                             <td class="editable-cell" data-original-content="8">
                                 <span class="display-mode" data-original-value="8"
                                     data-original-content="8">8</span>
-                                <div class="edit-mode">
+                                <div class="edit-mode" style="display: none;">
                                     <select class="editable-field" data-field-type="select">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -787,26 +846,30 @@
                                         <option value="10">10</option>
                                     </select>
                                 </div>
-                                <div class="xai-info" style="display: none;">Keywords: wait time, too long, good coffee
+                                <div class="xai-info">
+                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
+                                    <div class="xai-info-content">
+                                        Keywords: wait time, too long, good coffee
+                                    </div>
                                 </div>
                             </td>
                             <td>95%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
                             <td class="action-buttons-cell">
-                                <div class="kebab"></div>
-                                <div class="editable-cell-controls"></div>
                                 <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
                                     <div class="kebab-menu-content">
+                                        <a href="#" class="action-accept">Accept & Finalize</a>
                                         <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                        <a href="#" class="action-reject">Reject</a>
                                     </div>
                                 </div>
-                                <button class="button" style="display: none;" data-action="save">Save</button>
-                                <button class="button danger" style="display: none;"
-                                    data-action="cancel">Cancel</button>
+                                <div class="editable-cell-controls" style="display: none;">
+                                    <button class="button" data-action="save">Save</button>
+                                    <button class="button danger" data-action="cancel">Cancel</button>
+                                </div>
                             </td>
                         </tr>
-                        <tr data-review-id="R101" data-output-type="Themes">
+                        <tr data-review-id="R101" data-output-type="Themes" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"></td>
                             <td class="original-text-cell"></td>
@@ -819,29 +882,34 @@
                                     data-original-content='["Customer Service", "Service Quality"]'><span
                                         class="tag">Customer Service</span> <span class="tag">Service
                                         Quality</span></span>
-                                <div class="edit-mode">
-                                    <input type="text" class="editable-field" value="Service, Quality"
+                                <div class="edit-mode" style="display: none;">
+                                    <input type="text" class="editable-field" value="Customer Service, Service Quality"
                                         data-field-type="text">
                                 </div>
-                                <div class="xai-info" style="display: none;">XAI: "customer support was quick"</div>
+                                <div class="xai-info">
+                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
+                                    <div class="xai-info-content">
+                                        XAI: "customer support was quick"
+                                    </div>
+                                </div>
                             </td>
                             <td>88%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
                             <td class="action-buttons-cell">
-                                <div class="kebab"></div>
-                                <div class="editable-cell-controls"></div>
                                 <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
                                     <div class="kebab-menu-content">
+                                        <a href="#" class="action-accept">Accept & Finalize</a>
                                         <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                        <a href="#" class="action-reject">Reject</a>
                                     </div>
                                 </div>
-                                <button class="button" style="display: none;" data-action="save">Save</button>
-                                <button class="button danger" style="display: none;"
-                                    data-action="cancel">Cancel</button>
+                                <div class="editable-cell-controls" style="display: none;">
+                                    <button class="button" data-action="save">Save</button>
+                                    <button class="button danger" data-action="cancel">Cancel</button>
+                                </div>
                             </td>
                         </tr>
-                        <tr data-review-id="R101" data-output-type="Categories">
+                        <tr data-review-id="R101" data-output-type="Categories" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"></td>
                             <td class="original-text-cell"></td>
@@ -851,29 +919,34 @@
                             <td class="editable-cell" data-original-content="Food Quality">
                                 <span class="display-mode" data-original-value="Food Quality"
                                     data-original-content="Food Quality">Food Quality</span>
-                                <div class="edit-mode">
+                                <div class="edit-mode" style="display: none;">
                                     <input type="text" class="editable-field" value="Food Quality"
                                         data-field-type="text">
                                 </div>
-                                <div class="xai-info" style="display: none;">XAI: "the food was cold"</div>
+                                <div class="xai-info">
+                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
+                                    <div class="xai-info-content">
+                                        XAI: "the food was cold"
+                                    </div>
+                                </div>
                             </td>
                             <td>91%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
                             <td class="action-buttons-cell">
-                                <div class="kebab"></div>
-                                <div class="editable-cell-controls"></div>
                                 <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
                                     <div class="kebab-menu-content">
+                                        <a href="#" class="action-accept">Accept & Finalize</a>
                                         <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                        <a href="#" class="action-reject">Reject</a>
                                     </div>
                                 </div>
-                                <button class="button" style="display: none;" data-action="save">Save</button>
-                                <button class="button danger" style="display: none;"
-                                    data-action="cancel">Cancel</button>
+                                <div class="editable-cell-controls" style="display: none;">
+                                    <button class="button" data-action="save">Save</button>
+                                    <button class="button danger" data-action="cancel">Cancel</button>
+                                </div>
                             </td>
                         </tr>
-                        <tr data-review-id="R102" data-output-type="Themes">
+                        <tr data-review-id="R102" data-output-type="Themes" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"><strong>R102</strong></td>
                             <td class="original-text-cell">"I am very satisfied with the new features in the app. The UI
@@ -884,30 +957,34 @@
                             <td class="editable-cell" data-original-content="Product Satisfaction">
                                 <span class="display-mode" data-original-value="Product Satisfaction"
                                     data-original-content="Product Satisfaction">Product Satisfaction</span>
-                                <div class="edit-mode">
+                                <div class="edit-mode" style="display: none;">
                                     <input type="text" class="editable-field" value="Product Satisfaction"
                                         data-field-type="text">
                                 </div>
-                                <div class="xai-info" style="display: none;">XAI: "satisfied with the new features"
+                                <div class="xai-info">
+                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
+                                    <div class="xai-info-content">
+                                        XAI: "satisfied with the new features"
+                                    </div>
                                 </div>
                             </td>
                             <td>99%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
                             <td class="action-buttons-cell">
-                                <div class="kebab"></div>
-                                <div class="editable-cell-controls"></div>
                                 <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
                                     <div class="kebab-menu-content">
+                                        <a href="#" class="action-accept">Accept & Finalize</a>
                                         <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                        <a href="#" class="action-reject">Reject</a>
                                     </div>
                                 </div>
-                                <button class="button" style="display: none;" data-action="save">Save</button>
-                                <button class="button danger" style="display: none;"
-                                    data-action="cancel">Cancel</button>
+                                <div class="editable-cell-controls" style="display: none;">
+                                    <button class="button" data-action="save">Save</button>
+                                    <button class="button danger" data-action="cancel">Cancel</button>
+                                </div>
                             </td>
                         </tr>
-                        <tr data-review-id="R103" data-output-type="Scale Rating">
+                        <tr data-review-id="R103" data-output-type="Scale Rating" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"><strong>R103</strong></td>
                             <td class="original-text-cell">"The cashier was very friendly and helpful. Gave a great
@@ -918,7 +995,7 @@
                             <td class="editable-cell" data-original-content="5">
                                 <span class="display-mode" data-original-value="5"
                                     data-original-content="5">5</span>
-                                <div class="edit-mode">
+                                <div class="edit-mode" style="display: none;">
                                     <select class="editable-field" data-field-type="select">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -927,22 +1004,27 @@
                                         <option value="5" selected>5</option>
                                     </select>
                                 </div>
-                                <div class="xai-info" style="display: none;">XAI: "friendly and helpful"</div>
+                                <div class="xai-info">
+                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
+                                    <div class="xai-info-content">
+                                        XAI: "friendly and helpful"
+                                    </div>
+                                </div>
                             </td>
                             <td>98%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
                             <td class="action-buttons-cell">
-                                <div class="kebab"></div>
-                                <div class="editable-cell-controls"></div>
                                 <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
                                     <div class="kebab-menu-content">
+                                        <a href="#" class="action-accept">Accept & Finalize</a>
                                         <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="edit-row-button">Edit Answer</a>
+                                        <a href="#" class="action-reject">Reject</a>
                                     </div>
                                 </div>
-                                <button class="button" style="display: none;" data-action="save">Save</button>
-                                <button class="button danger" style="display: none;"
-                                    data-action="cancel">Cancel</button>
+                                <div class="editable-cell-controls" style="display: none;">
+                                    <button class="button" data-action="save">Save</button>
+                                    <button class="button danger" data-action="cancel">Cancel</button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -1003,7 +1085,6 @@
             const aiOutputPreview = document.getElementById('ai-output-preview');
             const testRunLimitNote = document.getElementById('test-run-limit-note');
             const kebabMenus = document.querySelectorAll('.kebab-menu');
-            const kebabMenuToggles = document.querySelectorAll('.kebab-menu i');
             const allRowsSelect = document.getElementById('selectAllRows');
             const rowSelectCheckboxes = document.querySelectorAll('.row-select');
             const contextToggle = document.getElementById('context-toggle');
@@ -1026,7 +1107,8 @@
             const modalSaveButton = document.getElementById('modal-save');
             const modalDeleteButton = document.getElementById('modal-delete');
             const jobsTableBody = document.getElementById('jobs-table-body');
-            
+            const reviewTable = document.getElementById('extractedDataTable');
+
             let jobs = [];
             let jobIdCounter = 1;
 
@@ -1036,7 +1118,6 @@
                 document.getElementById(tabId).classList.add('active');
                 document.querySelector(`[data-tab-id="${tabId}"]`).classList.add('active');
 
-                // Call groupReviewRows when switching to the review tab
                 if (tabId === 'tab-review') {
                     groupReviewRows();
                 }
@@ -1048,12 +1129,8 @@
                 });
             });
 
-            // Initial state
             showTab('tab-mapping');
 
-            // --- Functionality from original file ---
-
-            // Populate mock data
             const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Tell us about your experience...', 'How likely are you to recommend us? (NPS)'];
             mockSourceQuestions.forEach(q => {
                 const option = document.createElement('option');
@@ -1085,7 +1162,6 @@
             sourceQuestionsSelect.addEventListener('change', updateMappingSummary);
             destinationQuestionsSelect.addEventListener('change', updateMappingSummary);
 
-            // Custom Date Inputs
             periodSelect.addEventListener('change', function () {
                 if (this.value === 'custom_dates') {
                     customDateInputs.style.display = 'flex';
@@ -1094,7 +1170,6 @@
                 }
             });
 
-            // Custom Destination Questions
             let customQuestionId = 0;
             addCustomQuestionButton.addEventListener('click', function () {
                 customQuestionId++;
@@ -1113,26 +1188,25 @@
                 newRow.querySelector('input').addEventListener('input', updateMappingSummary);
             });
 
-            // Confidence Threshold
             confidenceThreshold.addEventListener('input', function () {
                 confidenceValueSpan.textContent = `${this.value}%`;
             });
 
-            // Start Processing - now adds a job to the queue
             startProcessingButton.addEventListener('click', function () {
                 const jobName = `Recoding Job ${jobIdCounter}`;
                 const newJob = {
                     id: jobIdCounter++,
                     name: jobName,
                     status: 'Queued',
-                    progress: 0
+                    progress: 0,
+                    user: '[Current User]',
+                    startedOn: new Date().toLocaleString()
                 };
                 jobs.push(newJob);
                 renderJobsTable();
-                
+
                 showTab('tab-jobs');
-                
-                // Simulate processing
+
                 setTimeout(() => {
                     const job = jobs.find(j => j.id === newJob.id);
                     if (job) {
@@ -1148,7 +1222,7 @@
                             renderJobsTable();
                         }, 500);
                     }
-                }, 2000); // 2 second delay to start processing
+                }, 2000);
             });
 
             function renderJobsTable() {
@@ -1166,6 +1240,8 @@
                             </div>
                             <span style="font-size: 0.9em; color: #555;">${job.progress}%</span>
                         </td>
+                        <td>${job.user}</td>
+                        <td>${job.startedOn}</td>
                         <td>
                             ${job.status === 'Completed' ? '<button class="button" onclick="showTab(\'tab-review\')">View Results</button>' : '<em>Processing...</em>'}
                         </td>
@@ -1174,11 +1250,9 @@
                 });
             }
 
-            // Group review rows
             function groupReviewRows() {
                 let lastReviewId = null;
-                const tableBody = document.querySelector('#extractedDataTable tbody');
-                const rows = tableBody.querySelectorAll('tr');
+                const rows = reviewTable.querySelectorAll('tbody tr');
 
                 rows.forEach(row => {
                     const reviewIdCell = row.querySelector('.review-id-cell');
@@ -1194,7 +1268,6 @@
                 });
             }
 
-            // Handle output type change to show/hide Custom Answers section
             outputTypeSelect.addEventListener('change', function () {
                 const selectedOptions = Array.from(this.selectedOptions).map(option => option.value);
                 if (selectedOptions.includes('custom')) {
@@ -1204,7 +1277,6 @@
                 }
             });
 
-            // Real-time test run functionality
             runTestButton.addEventListener('click', function () {
                 const sampleText = sampleInputText.value;
                 if (sampleText.trim() === "") {
@@ -1216,7 +1288,6 @@
                 testRunLimitNote.textContent = 'This is a mock function. The AI output is a placeholder.';
             });
 
-            // Kebab menu toggle
             document.addEventListener('click', function (e) {
                 if (e.target.closest('.kebab-menu')) {
                     const menu = e.target.closest('.kebab-menu');
@@ -1226,34 +1297,55 @@
                 }
             });
 
-            // Inline editing and controls
-            document.getElementById('extractedDataTable').addEventListener('click', function (e) {
+            reviewTable.addEventListener('click', function (e) {
                 const target = e.target;
-                if (target.classList.contains('edit-row-button') || target.classList.contains('action-edit')) {
-                    const row = target.closest('tr');
+                const row = target.closest('tr');
+                if (!row) return;
+
+                const statusBadge = row.querySelector('.status-badge');
+
+                // Handle Modify Answer action
+                if (target.classList.contains('action-edit')) {
+                    e.preventDefault();
                     const editableCell = row.querySelector('.editable-cell');
                     const displayMode = editableCell.querySelector('.display-mode');
                     const editMode = editableCell.querySelector('.edit-mode');
                     const controls = row.querySelector('.editable-cell-controls');
                     const kebab = row.querySelector('.kebab-menu');
-                    const saveButton = document.createElement('button');
-                    saveButton.className = 'button';
-                    saveButton.dataset.action = 'save';
-                    saveButton.textContent = 'Save';
-                    const cancelButton = document.createElement('button');
-                    cancelButton.className = 'button danger';
-                    cancelButton.dataset.action = 'cancel';
-                    cancelButton.textContent = 'Cancel';
-                    controls.innerHTML = '';
-                    controls.appendChild(saveButton);
-                    controls.appendChild(cancelButton);
+
+                    // Show editing mode
                     displayMode.style.display = 'none';
                     editMode.style.display = 'block';
-                    editableCell.classList.add('editing');
+                    controls.style.display = 'block';
                     if (kebab) kebab.style.display = 'none';
+
+                    // Update status to Modified
+                    if (statusBadge) {
+                        statusBadge.textContent = 'Modified';
+                        statusBadge.className = 'status-badge status-modified';
+                    }
                 }
+                
+                // Handle Accept & Finalize action
+                if (target.classList.contains('action-accept')) {
+                    e.preventDefault();
+                    if (statusBadge) {
+                        statusBadge.textContent = 'Reviewed';
+                        statusBadge.className = 'status-badge status-reviewed';
+                    }
+                }
+                
+                // Handle Reject action
+                if (target.classList.contains('action-reject')) {
+                    e.preventDefault();
+                    if (statusBadge) {
+                        statusBadge.textContent = 'Rejected';
+                        statusBadge.className = 'status-badge status-rejected';
+                    }
+                }
+
+                // Handle Save action
                 if (target.dataset.action === 'save') {
-                    const row = target.closest('tr');
                     const editableCell = row.querySelector('.editable-cell');
                     const displayMode = editableCell.querySelector('.display-mode');
                     const editMode = editableCell.querySelector('.edit-mode');
@@ -1261,67 +1353,51 @@
                     const kebab = row.querySelector('.kebab-menu');
                     const inputField = editMode.querySelector('.editable-field');
                     const newValue = inputField.value;
+
                     displayMode.textContent = newValue;
                     displayMode.style.display = 'block';
                     editMode.style.display = 'none';
-                    controls.innerHTML = '';
-                    editableCell.classList.remove('editing');
+                    controls.style.display = 'none';
                     if (kebab) kebab.style.display = 'block';
                 }
+
+                // Handle Cancel action
                 if (target.dataset.action === 'cancel') {
-                    const row = target.closest('tr');
                     const editableCell = row.querySelector('.editable-cell');
                     const displayMode = editableCell.querySelector('.display-mode');
                     const editMode = editableCell.querySelector('.edit-mode');
                     const controls = row.querySelector('.editable-cell-controls');
                     const kebab = row.querySelector('.kebab-menu');
+
                     displayMode.style.display = 'block';
                     editMode.style.display = 'none';
-                    controls.innerHTML = '';
-                    editableCell.classList.remove('editing');
+                    controls.style.display = 'none';
                     if (kebab) kebab.style.display = 'block';
+                }
+
+                // Handle XAI Info toggle
+                if (target.classList.contains('xai-info-toggle')) {
+                    const xaiInfoContent = target.closest('.xai-info').querySelector('.xai-info-content');
+                    target.classList.toggle('rotated');
+                    if (xaiInfoContent.style.display === 'block') {
+                        xaiInfoContent.style.display = 'none';
+                    } else {
+                        xaiInfoContent.style.display = 'block';
+                    }
                 }
             });
 
-            // Select all rows
             allRowsSelect.addEventListener('change', function () {
                 rowSelectCheckboxes.forEach(checkbox => {
                     checkbox.checked = this.checked;
                 });
             });
 
-            // Contextual Metadata collapsible
             contextToggle.addEventListener('click', function () {
                 contextMetadataContent.classList.toggle('expanded');
                 this.querySelector('i').classList.toggle('rotated');
             });
 
-            // XAI Batch Toggle
-            xaiBatchToggleCheckbox.addEventListener('change', function () {
-                xaiInfoElements.forEach(xaiInfo => {
-                    if (this.checked) {
-                        xaiInfo.style.display = 'block';
-                    } else {
-                        xaiInfo.style.display = 'none';
-                    }
-                });
-            });
-
-            // Modal functionality
-            function showModal() {
-                customAnswerModal.style.display = 'flex';
-            }
-            function hideModal() {
-                customAnswerModal.style.display = 'none';
-            }
-            closeButtons.forEach(btn => btn.addEventListener('click', hideModal));
-            window.addEventListener('click', (e) => {
-                if (e.target === customAnswerModal) {
-                    hideModal();
-                }
-            });
-
-            // Custom Answer Bank Logic
             const mockAnswerBanks = {
                 'yes-no': ['Yes', 'No'],
                 'good-bad': ['Good', 'Bad', 'Neutral'],
@@ -1395,7 +1471,19 @@
                 }
             });
 
-            // Call on initial load to display content
+            function showModal() {
+                customAnswerModal.style.display = 'flex';
+            }
+            function hideModal() {
+                customAnswerModal.style.display = 'none';
+            }
+            closeButtons.forEach(btn => btn.addEventListener('click', hideModal));
+            window.addEventListener('click', (e) => {
+                if (e.target === customAnswerModal) {
+                    hideModal();
+                }
+            });
+
             groupReviewRows();
         });
     </script>
