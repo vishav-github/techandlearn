@@ -252,6 +252,7 @@
             background-color: #f1f1f1;
         }
 
+        /* Status Badges */
         .status-badge {
             display: inline-block;
             padding: 5px 10px;
@@ -259,36 +260,20 @@
             font-size: 0.8em;
             font-weight: bold;
             text-transform: uppercase;
-            color: white;
+            color: #333;
             text-align: center;
         }
 
-        .status-badge.queued {
-            background-color: #f39c12;
+        .status-badge.status-unreviewed {
+            background-color: #dcdcdc; /* Light Grey */
         }
 
-        .status-badge.processing {
-            background-color: #3498db;
+        .status-badge.status-reviewed {
+            background-color: #b3e0ff; /* Light Blue */
         }
 
-        .status-badge.completed {
-            background-color: #27ae60;
-        }
-
-        .status-badge.failed {
-            background-color: #e74c3c;
-        }
-
-        .status-badge.unreviewed {
-            background-color: #bdc3c7;
-        }
-
-        .status-badge.reviewed {
-            background-color: #27ae60;
-        }
-
-        .status-badge.modified {
-            background-color: #f39c12;
+        .status-badge.status-modified {
+            background-color: #ffcc99; /* Light Orange */
         }
 
         .kebab-menu {
@@ -362,14 +347,13 @@
             border-radius: 4px;
         }
 
+        /* XAI Info Styling */
         .xai-info {
             font-size: 0.8em;
             color: #666;
             margin-top: 5px;
             border-top: 1px dashed #eee;
             padding-top: 5px;
-            display: block;
-            cursor: pointer;
         }
 
         .xai-info-content {
@@ -390,6 +374,10 @@
 
         .xai-info-toggle.rotated {
             transform: rotate(90deg);
+        }
+
+        .xai-info.hidden {
+            display: none;
         }
 
         .checkbox-group label {
@@ -513,6 +501,22 @@
             text-align: right;
             margin-top: 0;
         }
+
+        .final-actions {
+            margin-top: 20px;
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .batch-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
@@ -589,7 +593,8 @@
 
             <div id="custom-destination-questions-container" class="form-group"></div>
             <div class="form-group">
-                <button class="button secondary" style="margin: 0px;" id="add-custom-destination-question">+ Add New Custom
+                <button class="button secondary" style="margin: 0px;" id="add-custom-destination-question">+ Add New
+                    Custom
                     Destination Question</button>
             </div>
 
@@ -719,7 +724,8 @@
                 <label for="confidence-threshold">Set Minimum AI Confidence Threshold for Auto-Acceptance: <span
                         id="confidence-value">75%</span></label>
                 <input type="range" id="confidence-threshold" min="0" max="100" value="75">
-                <p style="font-size: 0.85em; color: #666; margin-top: 5px;">Items below this threshold will be flagged for
+                <p style="font-size: 0.85em; color: #666; margin-top: 5px;">Items below this threshold will be flagged
+                    for
                     manual review.</p>
                 <button class="button" id="start-processing-button">Start Processing</button>
             </div>
@@ -814,7 +820,9 @@
                             <th>Source Q</th>
                             <th>Destination Q</th>
                             <th>Output Type</th>
-                            <th>AI Extracted Answer</th>
+                            <th>AI Extracted Answer<i class="fas fa-info-circle" style="margin-left: 5px;"
+                                    title="This answer was extracted by the AI based on the prompt instructions and contextual metadata. You can edit it if needed."></i>
+                            </th>
                             <th>Confidence</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -832,6 +840,7 @@
                             <td class="editable-cell" data-original-content="8">
                                 <span class="display-mode" data-original-value="8"
                                     data-original-content="8">8</span>
+                                <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <select class="editable-field" data-field-type="select">
                                         <option value="1">1</option>
@@ -846,11 +855,8 @@
                                         <option value="10">10</option>
                                     </select>
                                 </div>
-                                <div class="xai-info">
-                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
-                                    <div class="xai-info-content">
-                                        Keywords: wait time, too long, good coffee
-                                    </div>
+                                <div class="xai-info xai-info-content">
+                                    Keywords: wait time, too long, good coffee
                                 </div>
                             </td>
                             <td>95%</td>
@@ -882,15 +888,13 @@
                                     data-original-content='["Customer Service", "Service Quality"]'><span
                                         class="tag">Customer Service</span> <span class="tag">Service
                                         Quality</span></span>
+                                <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <input type="text" class="editable-field" value="Customer Service, Service Quality"
                                         data-field-type="text">
                                 </div>
-                                <div class="xai-info">
-                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
-                                    <div class="xai-info-content">
-                                        XAI: "customer support was quick"
-                                    </div>
+                                <div class="xai-info xai-info-content">
+                                    XAI: "customer support was quick"
                                 </div>
                             </td>
                             <td>88%</td>
@@ -919,15 +923,13 @@
                             <td class="editable-cell" data-original-content="Food Quality">
                                 <span class="display-mode" data-original-value="Food Quality"
                                     data-original-content="Food Quality">Food Quality</span>
+                                <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <input type="text" class="editable-field" value="Food Quality"
                                         data-field-type="text">
                                 </div>
-                                <div class="xai-info">
-                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
-                                    <div class="xai-info-content">
-                                        XAI: "the food was cold"
-                                    </div>
+                                <div class="xai-info xai-info-content">
+                                    XAI: "the food was cold"
                                 </div>
                             </td>
                             <td>91%</td>
@@ -957,15 +959,13 @@
                             <td class="editable-cell" data-original-content="Product Satisfaction">
                                 <span class="display-mode" data-original-value="Product Satisfaction"
                                     data-original-content="Product Satisfaction">Product Satisfaction</span>
+                                <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <input type="text" class="editable-field" value="Product Satisfaction"
                                         data-field-type="text">
                                 </div>
-                                <div class="xai-info">
-                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
-                                    <div class="xai-info-content">
-                                        XAI: "satisfied with the new features"
-                                    </div>
+                                <div class="xai-info xai-info-content">
+                                    XAI: "satisfied with the new features"
                                 </div>
                             </td>
                             <td>99%</td>
@@ -995,6 +995,7 @@
                             <td class="editable-cell" data-original-content="5">
                                 <span class="display-mode" data-original-value="5"
                                     data-original-content="5">5</span>
+                                <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <select class="editable-field" data-field-type="select">
                                         <option value="1">1</option>
@@ -1004,11 +1005,8 @@
                                         <option value="5" selected>5</option>
                                     </select>
                                 </div>
-                                <div class="xai-info">
-                                    <i class="fas fa-chevron-right xai-info-toggle"></i> XAI Info
-                                    <div class="xai-info-content">
-                                        XAI: "friendly and helpful"
-                                    </div>
+                                <div class="xai-info xai-info-content">
+                                    XAI: "friendly and helpful"
                                 </div>
                             </td>
                             <td>98%</td>
@@ -1032,6 +1030,7 @@
                 <div class="final-actions">
                     <button class="button danger">Reject & Finalize All Unreviewed</button>
                     <button class="button">Accept & Finalize All Unreviewed</button>
+                    <button class="button">Save to Reports</button>
                 </div>
             </div>
         </div>
@@ -1108,6 +1107,7 @@
             const modalDeleteButton = document.getElementById('modal-delete');
             const jobsTableBody = document.getElementById('jobs-table-body');
             const reviewTable = document.getElementById('extractedDataTable');
+            const xaiInfoToggles = document.querySelectorAll('.xai-info-toggle');
 
             let jobs = [];
             let jobIdCounter = 1;
@@ -1325,7 +1325,7 @@
                         statusBadge.className = 'status-badge status-modified';
                     }
                 }
-                
+
                 // Handle Accept & Finalize action
                 if (target.classList.contains('action-accept')) {
                     e.preventDefault();
@@ -1334,7 +1334,7 @@
                         statusBadge.className = 'status-badge status-reviewed';
                     }
                 }
-                
+
                 // Handle Reject action
                 if (target.classList.contains('action-reject')) {
                     e.preventDefault();
@@ -1375,16 +1375,6 @@
                     if (kebab) kebab.style.display = 'block';
                 }
 
-                // Handle XAI Info toggle
-                if (target.classList.contains('xai-info-toggle')) {
-                    const xaiInfoContent = target.closest('.xai-info').querySelector('.xai-info-content');
-                    target.classList.toggle('rotated');
-                    if (xaiInfoContent.style.display === 'block') {
-                        xaiInfoContent.style.display = 'none';
-                    } else {
-                        xaiInfoContent.style.display = 'block';
-                    }
-                }
             });
 
             allRowsSelect.addEventListener('change', function () {
@@ -1482,6 +1472,34 @@
                 if (e.target === customAnswerModal) {
                     hideModal();
                 }
+            });
+
+            xaiInfoToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const xaiInfoContent = e.target.closest('.editable-cell').querySelector('.xai-info-content');
+                    if (xaiInfoContent) {
+                        // Toggle the display of the next sibling div with class .xai-info-content
+                        xaiInfoContent.style.display = xaiInfoContent.style.display === 'block' ? 'none' : 'block';
+                        // Toggle the rotation of the chevron icon
+                        e.target.classList.toggle('rotated', xaiInfoContent.style.display === 'block');
+                    }
+                });
+            });
+
+            // Initial state for all individual xai-info-content elements
+            document.querySelectorAll('.xai-info-content').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // Handle the batch toggle checkbox
+            xaiBatchToggleCheckbox.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                document.querySelectorAll('.xai-info-content').forEach(el => {
+                    el.style.display = isChecked ? 'block' : 'none';
+                });
+                document.querySelectorAll('.xai-info-toggle').forEach(el => {
+                    el.classList.toggle('rotated', isChecked);
+                });
             });
 
             groupReviewRows();
