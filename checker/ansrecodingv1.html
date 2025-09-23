@@ -263,20 +263,20 @@
             text-align: center;
         }
 
-        .status-unreviewed {
+        .status-badge.queued {
             background-color: #f39c12;
         }
 
-        .status-reviewed {
+        .status-badge.processing {
+            background-color: #3498db;
+        }
+
+        .status-badge.completed {
             background-color: #27ae60;
         }
 
-        .status-finalized {
-            background-color: #8e44ad;
-        }
-
-        .status-modified {
-            background-color: #3498db;
+        .status-badge.failed {
+            background-color: #e74c3c;
         }
 
         .kebab-menu {
@@ -426,6 +426,36 @@
         .wrapper-inp button {
             min-width: 40px;
         }
+
+        .content-toggle-section {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .content-toggle-section i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-toggle-section i.rotated {
+            transform: rotate(90deg);
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 10px;
+        }
+
+        .collapsible-content.expanded {
+            max-height: 1000px; /* A value larger than the max height */
+        }
     </style>
 </head>
 
@@ -440,7 +470,8 @@
         <div class="tabs">
             <button class="tab-button active" data-tab-id="tab-mapping">1. Mapping</button>
             <button class="tab-button" data-tab-id="tab-config">2. AI Task & Output</button>
-            <button class="tab-button" data-tab-id="tab-review">3. Review & Finalize</button>
+            <button class="tab-button" data-tab-id="tab-jobs">3. Recoding Jobs</button>
+            <button class="tab-button" data-tab-id="tab-review">4. Review & Finalize</button>
         </div>
 
         <div id="tab-mapping" class="tab-content active">
@@ -512,26 +543,25 @@
 - 'What went well?' maps to 'Overall Sentiment', 'Service Quality'
 - 'What could be improved?' maps to 'Product Satisfaction Score', 'Feature Request Category', '[Source] What could be improved?'"></textarea>
             </div>
-
-            <div class="button-group" style="text-align: left;">
-                <button class="button secondary">Load Configuration Template</button>
-                <button class="button" id="save-template-button">Save Configuration as Template</button>
-            </div>
         </div>
 
         <div id="tab-config" class="tab-content">
             <h2>Define AI Task & Output Configuration</h2>
+            <div class="button-group" style="text-align: left; margin-bottom: 20px;">
+                <button class="button secondary">Load Configuration Template</button>
+                <button class="button" id="save-template-button">Save Configuration as Template</button>
+            </div>
             <div class="form-group">
                 <label for="prompt-instruction-textarea">General Prompt Instructions / Context for AI:</label>
                 <textarea id="prompt-instruction-textarea"
                     placeholder="Provide any high-level instructions or context for the AI, e.g., 'Focus on operational feedback for retail branches in North America.'"></textarea>
             </div>
 
-            <div class="content-toggle-section">
+            <div class="content-toggle-section" id="context-toggle">
                 <h3>Contextual Metadata (for AI Accuracy)</h3>
-                <i id="toggleContextMetadata" class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right"></i>
             </div>
-            <div id="contextMetadataContent" class="collapsible-content hidden">
+            <div id="contextMetadataContent" class="collapsible-content">
                 <p style="font-size: 0.9em; color: #777; margin-bottom: 15px;">
                     Provide additional information to the AI to help it understand the context of your data, leading to
                     more accurate and relevant extractions.
@@ -635,6 +665,25 @@
                 <p style="font-size: 0.85em; color: #666; margin-top: 5px;">Items below this threshold will be flagged for
                     manual review.</p>
                 <button class="button" id="start-processing-button">Start Processing</button>
+            </div>
+        </div>
+
+        <div id="tab-jobs" class="tab-content">
+            <h2>My Recoding Jobs</h2>
+            <div id="jobs-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Job ID</th>
+                            <th>Job Name</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobs-table-body">
+                        </tbody>
+                </table>
             </div>
         </div>
 
@@ -969,7 +1018,7 @@
             const kebabMenuToggles = document.querySelectorAll('.kebab-menu i');
             const allRowsSelect = document.getElementById('selectAllRows');
             const rowSelectCheckboxes = document.querySelectorAll('.row-select');
-            const contextMetadataToggle = document.getElementById('toggleContextMetadata');
+            const contextToggle = document.getElementById('context-toggle');
             const contextMetadataContent = document.getElementById('contextMetadataContent');
             const xaiBatchToggleCheckbox = document.getElementById('xai-batch-toggle-checkbox');
             const xaiInfoElements = document.querySelectorAll('.xai-info');
@@ -988,6 +1037,10 @@
             const modalTitle = document.getElementById('modal-title');
             const modalSaveButton = document.getElementById('modal-save');
             const modalDeleteButton = document.getElementById('modal-delete');
+            const jobsTableBody = document.getElementById('jobs-table-body');
+            
+            let jobs = [];
+            let jobIdCounter = 1;
 
             function showTab(tabId) {
                 tabContents.forEach(content => content.classList.remove('active'));
@@ -1072,22 +1125,61 @@
                 confidenceValueSpan.textContent = `${this.value}%`;
             });
 
-            // Start Processing
+            // Start Processing - now adds a job to the queue
             startProcessingButton.addEventListener('click', function () {
-                processingView.style.display = 'block';
-                reviewDashboardSection.style.display = 'none';
+                const jobName = `Recoding Job ${jobIdCounter}`;
+                const newJob = {
+                    id: jobIdCounter++,
+                    name: jobName,
+                    status: 'Queued',
+                    progress: 0
+                };
+                jobs.push(newJob);
+                renderJobsTable();
+                
+                showTab('tab-jobs');
+                
                 // Simulate processing
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 10;
-                    document.getElementById('processing-count').textContent = progress;
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        processingView.style.display = 'none';
-                        reviewDashboardSection.style.display = 'block';
+                setTimeout(() => {
+                    const job = jobs.find(j => j.id === newJob.id);
+                    if (job) {
+                        job.status = 'Processing';
+                        renderJobsTable();
+                        let progressInterval = setInterval(() => {
+                            job.progress += 10;
+                            if (job.progress >= 100) {
+                                job.progress = 100;
+                                job.status = 'Completed';
+                                clearInterval(progressInterval);
+                            }
+                            renderJobsTable();
+                        }, 500);
                     }
-                }, 500);
+                }, 2000); // 2 second delay to start processing
             });
+
+            function renderJobsTable() {
+                jobsTableBody.innerHTML = '';
+                jobs.forEach(job => {
+                    const row = document.createElement('tr');
+                    const statusClass = job.status.toLowerCase().replace(' ', '');
+                    row.innerHTML = `
+                        <td>#${job.id}</td>
+                        <td>${job.name}</td>
+                        <td><span class="status-badge ${statusClass}">${job.status}</span></td>
+                        <td>
+                            <div class="progress-bar-container" style="height: 10px; background-color: #eee; border-radius: 5px;">
+                                <div class="progress-bar" style="height: 100%; width: ${job.progress}%; background-color: #3498db; border-radius: 5px;"></div>
+                            </div>
+                            <span style="font-size: 0.9em; color: #555;">${job.progress}%</span>
+                        </td>
+                        <td>
+                            ${job.status === 'Completed' ? '<button class="button" onclick="showTab(\'tab-review\')">View Results</button>' : '<em>Processing...</em>'}
+                        </td>
+                    `;
+                    jobsTableBody.appendChild(row);
+                });
+            }
 
             // Group review rows
             function groupReviewRows() {
@@ -1207,9 +1299,9 @@
             });
 
             // Contextual Metadata collapsible
-            contextMetadataToggle.addEventListener('click', function () {
-                contextMetadataContent.classList.toggle('hidden');
-                this.classList.toggle('rotated');
+            contextToggle.addEventListener('click', function () {
+                contextMetadataContent.classList.toggle('expanded');
+                this.querySelector('i').classList.toggle('rotated');
             });
 
             // XAI Batch Toggle
