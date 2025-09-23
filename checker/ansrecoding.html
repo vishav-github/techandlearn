@@ -113,6 +113,11 @@
             background-color: #5a6268;
         }
 
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -124,6 +129,7 @@
         }
 
         input[type="text"],
+        input[type="date"],
         select,
         textarea {
             width: 100%;
@@ -301,6 +307,69 @@
         .action-cell {
             white-space: nowrap;
         }
+
+        .mapping-selection-container {
+            border: 1px dashed var(--border-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            min-height: 50px;
+        }
+
+        .mapping-entry {
+            background-color: #e9f2ff;
+            border: 1px solid #cce1ff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mapping-entry .remove-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .multiselect-container {
+            position: relative;
+        }
+
+        .multiselect-list {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .multiselect-list label {
+            padding: 8px;
+            display: block;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .multiselect-list label:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -387,6 +456,14 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="branchSelect">Branches</label>
+                            <select id="branchSelect" multiple>
+                                <option value="NY">New York</option>
+                                <option value="SF">San Francisco</option>
+                                <option value="TX">Texas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="questionnaireSelect">Questionnaire</label>
                             <select id="questionnaireSelect">
                                 <option>Select Questionnaire...</option>
@@ -395,16 +472,42 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="sourceQuestionSelect">Source Question</label>
-                            <select id="sourceQuestionSelect">
-                                <option>Select Source Question...</option>
-                                <option>What do you like most?</option>
-                                <option>What can we improve?</option>
+                            <label for="periodStart">Select Period</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="date" id="periodStart">
+                                <input type="date" id="periodEnd">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Source Questions</label>
+                            <select id="sourceQuestions" multiple>
+                                <option value="s1">What did you like most?</option>
+                                <option value="s2">What can we improve?</option>
+                                <option value="s3">How was the service?</option>
                             </select>
                         </div>
+
                         <div class="form-group">
-                            <label for="destinationQuestions">Destination Questions (One-to-many)</label>
-                            <textarea id="destinationQuestions" rows="4" placeholder="Select or type destination questions (e.g., Pricing, Features, Support)"></textarea>
+                            <label>Destination Questions</label>
+                            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                                <select id="destinationQuestions" multiple>
+                                    <option value="d1">Pricing</option>
+                                    <option value="d2">Features</option>
+                                    <option value="d3">Customer Service</option>
+                                </select>
+                                <button class="btn btn-secondary btn-sm" onclick="showAddDestinationModal()">Add Custom</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="text-align: right;">
+                            <button class="btn btn-primary" onclick="addMapping()">Add Mapping</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mapped Selections (Visual Mapping)</label>
+                            <div id="visualMapping" class="mapping-selection-container">
+                                </div>
                         </div>
                     </div>
 
@@ -415,28 +518,44 @@
                             <textarea id="instructions" rows="4" placeholder="e.g., 'Recode answers into one of the provided categories. Be concise.'"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="outputTypes">Output Type</label>
-                            <select id="outputTypes">
-                                <option>Categories (from bank)</option>
-                                <option>Keywords</option>
-                                <option>Themes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                Contextual Metadata
-                                <button class="collapse-btn" onclick="toggleCollapse(this)"><i class="fas fa-chevron-down"></i></button>
-                            </label>
+                            <label>Contextual Metadata (for AI Accuracy)</label>
+                            <button class="collapse-btn" onclick="toggleCollapse(this)"><i class="fas fa-chevron-down"></i></button>
                             <div class="collapsible-content active">
                                 <textarea id="contextualMetadata" rows="3" placeholder="e.g., 'Industry: Retail', 'Language: English'"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
+                            <label>Output Configuration</label>
+                            <div class="multiselect-container">
+                                <label><input type="checkbox" name="outputType" value="categories"> Categories (from bank)</label>
+                                <label><input type="checkbox" name="outputType" value="keywords"> Keywords</label>
+                                <label><input type="checkbox" name="outputType" value="themes"> Themes</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confidenceThreshold">AI Confidence Threshold for Auto-Acceptance</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="range" id="confidenceThreshold" min="0" max="100" value="75" style="width: 100%;">
+                                <span id="thresholdValue">75%</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="aiDecide"> Let the AI decide answers
+                                <i class="fas fa-info-circle" title="If unchecked, the AI will only select from the provided destination questions."></i>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="includeXAI" checked> Include Explainable AI (XAI) Info
+                            </label>
+                        </div>
+                        <div class="form-group">
                             <label for="testInput">Real-Time Test Run</label>
                             <textarea id="testInput" rows="2" placeholder="Enter sample text to test the AI"></textarea>
                             <button class="btn btn-secondary btn-sm" onclick="runTest()">Run Test</button>
+                            <div id="testOutput"></div>
                         </div>
-                        <div id="testOutput"></div>
                     </div>
                 </div>
 
@@ -461,6 +580,20 @@
         </div>
     </div>
 
+    <div id="addDestinationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Custom Destination Question</h2>
+                <span class="close-btn" onclick="closeModal('addDestinationModal')">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="newDestinationName">New Destination Question</label>
+                <input type="text" id="newDestinationName" placeholder="e.g., User Experience">
+            </div>
+            <button class="btn btn-primary" onclick="addCustomDestination()">Add</button>
+        </div>
+    </div>
+
     <div id="processingModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -478,6 +611,12 @@
             const saveTemplateBtn = document.getElementById('saveTemplateBtn');
             const saveTemplateModal = document.getElementById('saveTemplateModal');
             const processingModal = document.getElementById('processingModal');
+            const addDestinationModal = document.getElementById('addDestinationModal');
+            const destinationQuestionsSelect = document.getElementById('destinationQuestions');
+            const sourceQuestionsSelect = document.getElementById('sourceQuestions');
+            const visualMappingContainer = document.getElementById('visualMapping');
+            const confidenceThreshold = document.getElementById('confidenceThreshold');
+            const thresholdValue = document.getElementById('thresholdValue');
 
             // --- Navigation Logic ---
             navLinks.forEach(link => {
@@ -485,11 +624,9 @@
                     e.preventDefault();
                     const targetId = e.target.getAttribute('data-target');
 
-                    // Update active class for nav links
                     navLinks.forEach(nav => nav.classList.remove('active'));
                     e.target.classList.add('active');
 
-                    // Show the correct content section
                     contentSections.forEach(section => {
                         if (section.id === targetId) {
                             section.style.display = 'block';
@@ -522,19 +659,70 @@
                 }
             };
 
-            // --- Form & Button Actions ---
+            // --- Dynamic UX Logic ---
+            confidenceThreshold.addEventListener('input', (e) => {
+                thresholdValue.textContent = `${e.target.value}%`;
+            });
+
+            window.showAddDestinationModal = () => {
+                addDestinationModal.style.display = 'block';
+            };
+
+            window.addCustomDestination = () => {
+                const newName = document.getElementById('newDestinationName').value.trim();
+                if (newName) {
+                    const newOption = document.createElement('option');
+                    newOption.value = newName.replace(/\s+/g, '-').toLowerCase();
+                    newOption.textContent = newName;
+                    newOption.selected = true;
+                    destinationQuestionsSelect.appendChild(newOption);
+                    closeModal('addDestinationModal');
+                }
+            };
+
+            window.addMapping = () => {
+                const selectedSource = Array.from(sourceQuestionsSelect.selectedOptions).map(option => option.text);
+                const selectedDestinations = Array.from(destinationQuestionsSelect.selectedOptions).map(option => option.text);
+
+                if (selectedSource.length === 0 || selectedDestinations.length === 0) {
+                    alert('Please select at least one source and one destination question.');
+                    return;
+                }
+
+                selectedSource.forEach(sourceText => {
+                    const mappingEntry = document.createElement('div');
+                    mappingEntry.classList.add('mapping-entry');
+                    mappingEntry.innerHTML = `
+                        <span><strong>${sourceText}</strong> → ${selectedDestinations.join(', ')}</span>
+                        <button class="remove-btn" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
+                    `;
+                    visualMappingContainer.appendChild(mappingEntry);
+                });
+
+                // Clear selections after mapping
+                sourceQuestionsSelect.selectedIndex = -1;
+                destinationQuestionsSelect.selectedIndex = -1;
+            };
+
             window.runTest = () => {
                 const testInput = document.getElementById('testInput').value;
+                const includeXAI = document.getElementById('includeXAI').checked;
                 const testOutput = document.getElementById('testOutput');
+
                 if (testInput.trim() === '') {
                     testOutput.innerHTML = '<p style="color:red;">Please enter text to test.</p>';
                     return;
                 }
-                // Mock AI response for the demo
+
+                let xaiInfo = '';
+                if (includeXAI) {
+                    xaiInfo = `<p style="font-weight: bold;">Explainable AI Info:</p><p style="font-size: 0.9em; margin: 0;">The AI identified the phrase "helpful and friendly" as a key indicator for this category.</p>`;
+                }
+
                 testOutput.innerHTML = `
                     <h4>AI Output:</h4>
                     <p style="font-weight: bold;">Category: <span style="color: var(--primary-color);">Customer Service</span></p>
-                    <p><strong>XAI Info:</strong> The AI identified the phrase "helpful and friendly" as key indicators for this category.</p>
+                    ${xaiInfo}
                 `;
             };
 
