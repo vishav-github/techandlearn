@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assisted Answer Recoding</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --text-color: #333;
+            --border-color: #dee2e6;
+            --card-bg: #fff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--dark-bg);
+            color: #fff;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1a252f;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a.active,
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        main {
+            padding: 25px;
+        }
+
+        .section-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h2 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-header {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .collapse-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .collapse-btn i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-btn.collapsed i {
+            transform: rotate(-90deg);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--dark-bg);
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-unreviewed {
+            background-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .status-reviewed {
+            background-color: var(--success-color);
+            color: #fff;
+        }
+
+        .status-finalized {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .status-processing {
+            background-color: var(--info-color);
+            color: #fff;
+        }
+
+        .progress-bar-container {
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 10px;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+        }
+
+        .action-cell {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>AI Recoding</h1>
+            </div>
+            <nav>
+                <a href="#dashboard" class="nav-link active" data-target="dashboard">Dashboard</a>
+                <a href="#create-job" class="nav-link" data-target="create-job">Create New Job</a>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2>My Recoding Jobs</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job ID</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Last Activity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>Q4 Feedback Analysis</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 100%;"></div>
+                                    </div>
+                                    100%
+                                </td>
+                                <td>2 mins ago</td>
+                                <td class="action-cell">
+                                    <button class="btn btn-primary btn-sm">Review Results</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#002</td>
+                                <td>New Product Survey</td>
+                                <td><span class="status-badge status-processing">Processing</span></td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 50%;"></div>
+                                    </div>
+                                    50%
+                                </td>
+                                <td>1 hour ago</td>
+                                <td class="action-cell">
+                                    <button class="btn btn-secondary btn-sm" disabled>Review Results</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="create-job" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Create New Recoding Job</h2>
+                    <button class="btn btn-primary" id="saveTemplateBtn">Save Configuration as Template</button>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header">1. Data Source & Question Mapping</div>
+                        <div class="form-group">
+                            <label for="clientSelect">Client</label>
+                            <select id="clientSelect">
+                                <option>Select Client...</option>
+                                <option>Client A</option>
+                                <option>Client B</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="questionnaireSelect">Questionnaire</label>
+                            <select id="questionnaireSelect">
+                                <option>Select Questionnaire...</option>
+                                <option>Q4 Customer Satisfaction</option>
+                                <option>Product Usability Test</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sourceQuestionSelect">Source Question</label>
+                            <select id="sourceQuestionSelect">
+                                <option>Select Source Question...</option>
+                                <option>What do you like most?</option>
+                                <option>What can we improve?</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="destinationQuestions">Destination Questions (One-to-many)</label>
+                            <textarea id="destinationQuestions" rows="4" placeholder="Select or type destination questions (e.g., Pricing, Features, Support)"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">2. Define AI Task & Output</div>
+                        <div class="form-group">
+                            <label for="instructions">General Instructions for AI</label>
+                            <textarea id="instructions" rows="4" placeholder="e.g., 'Recode answers into one of the provided categories. Be concise.'"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="outputTypes">Output Type</label>
+                            <select id="outputTypes">
+                                <option>Categories (from bank)</option>
+                                <option>Keywords</option>
+                                <option>Themes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Contextual Metadata
+                                <button class="collapse-btn" onclick="toggleCollapse(this)"><i class="fas fa-chevron-down"></i></button>
+                            </label>
+                            <div class="collapsible-content active">
+                                <textarea id="contextualMetadata" rows="3" placeholder="e.g., 'Industry: Retail', 'Language: English'"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="testInput">Real-Time Test Run</label>
+                            <textarea id="testInput" rows="2" placeholder="Enter sample text to test the AI"></textarea>
+                            <button class="btn btn-secondary btn-sm" onclick="runTest()">Run Test</button>
+                        </div>
+                        <div id="testOutput"></div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 25px;">
+                    <button class="btn btn-primary" onclick="startProcessing()">Start Processing</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="saveTemplateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Save Template</h2>
+                <span class="close-btn" onclick="closeModal('saveTemplateModal')">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="templateName">Template Name</label>
+                <input type="text" id="templateName" placeholder="e.g., Q1 NPS Recoding Template">
+            </div>
+            <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+        </div>
+    </div>
+
+    <div id="processingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Job Started</h2>
+                <span class="close-btn" onclick="closeModal('processingModal')">&times;</span>
+            </div>
+            <p>Your AI recoding job has been successfully queued. You will be notified when the results are ready for review on your dashboard.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const saveTemplateBtn = document.getElementById('saveTemplateBtn');
+            const saveTemplateModal = document.getElementById('saveTemplateModal');
+            const processingModal = document.getElementById('processingModal');
+
+            // --- Navigation Logic ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.target.getAttribute('data-target');
+
+                    // Update active class for nav links
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    // Show the correct content section
+                    contentSections.forEach(section => {
+                        if (section.id === targetId) {
+                            section.style.display = 'block';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // --- Collapsible Sections ---
+            window.toggleCollapse = (btn) => {
+                const content = btn.parentElement.nextElementSibling;
+                content.classList.toggle('active');
+                btn.querySelector('i').classList.toggle('collapsed');
+            };
+
+            // --- Modals Logic ---
+            saveTemplateBtn.addEventListener('click', () => {
+                saveTemplateModal.style.display = 'block';
+            });
+
+            window.closeModal = (id) => {
+                document.getElementById(id).style.display = 'none';
+            };
+
+            window.onclick = (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            };
+
+            // --- Form & Button Actions ---
+            window.runTest = () => {
+                const testInput = document.getElementById('testInput').value;
+                const testOutput = document.getElementById('testOutput');
+                if (testInput.trim() === '') {
+                    testOutput.innerHTML = '<p style="color:red;">Please enter text to test.</p>';
+                    return;
+                }
+                // Mock AI response for the demo
+                testOutput.innerHTML = `
+                    <h4>AI Output:</h4>
+                    <p style="font-weight: bold;">Category: <span style="color: var(--primary-color);">Customer Service</span></p>
+                    <p><strong>XAI Info:</strong> The AI identified the phrase "helpful and friendly" as key indicators for this category.</p>
+                `;
+            };
+
+            window.saveTemplate = () => {
+                const templateName = document.getElementById('templateName').value;
+                if (templateName.trim() === '') {
+                    alert('Please enter a template name.');
+                    return;
+                }
+                alert(`Template "${templateName}" saved successfully!`);
+                closeModal('saveTemplateModal');
+            };
+
+            window.startProcessing = () => {
+                // Here, you would collect all form data and send it to your backend
+                // This would trigger a worker job to be added to the queue
+                // The backend would then handle the AI processing in the background
+                processingModal.style.display = 'block';
+            };
+        });
+    </script>
+</body>
+</html>
