@@ -689,17 +689,7 @@
 
         <div id="tab-review" class="tab-content">
             <h2>Review, Validate & Finalize</h2>
-            <div class="processing-view" id="processing-view" style="display: none;">
-                <div class="loader"></div>
-                <p>"AI is currently processing your data. This may take a few moments..."</p>
-                <p>"Processing <span id="processing-count">0</span> of <span id="total-reviews">100</span> reviews..."
-                </p>
-                <div class="button-group">
-                    <button class="button danger" id="cancel-processing-button">Cancel Processing</button>
-                </div>
-            </div>
-
-            <div class="review-dashboard" id="review-dashboard-section" style="display: none;">
+            <div class="review-dashboard" id="review-dashboard-section">
                 <h3>Extracted Data for Review:</h3>
                 <div class="filter-section">
                     <div class="form-group">
@@ -1004,8 +994,6 @@
             const confidenceThreshold = document.getElementById('confidence-threshold');
             const confidenceValueSpan = document.getElementById('confidence-value');
             const startProcessingButton = document.getElementById('start-processing-button');
-            const processingView = document.getElementById('processing-view');
-            const reviewDashboardSection = document.getElementById('review-dashboard-section');
             const reviewIdCells = document.querySelectorAll('.review-id-cell');
             const originalTextCells = document.querySelectorAll('.original-text-cell');
             const outputTypeSelect = document.getElementById('output-type-select');
@@ -1047,6 +1035,11 @@
                 tabButtons.forEach(button => button.classList.remove('active'));
                 document.getElementById(tabId).classList.add('active');
                 document.querySelector(`[data-tab-id="${tabId}"]`).classList.add('active');
+
+                // Call groupReviewRows when switching to the review tab
+                if (tabId === 'tab-review') {
+                    groupReviewRows();
+                }
             }
 
             tabButtons.forEach(button => {
@@ -1200,7 +1193,6 @@
                     lastReviewId = currentReviewId;
                 });
             }
-            groupReviewRows();
 
             // Handle output type change to show/hide Custom Answers section
             outputTypeSelect.addEventListener('change', function () {
@@ -1402,6 +1394,9 @@
                     newCustomAnswerLabelInput.value = '';
                 }
             });
+
+            // Call on initial load to display content
+            groupReviewRows();
         });
     </script>
 </body>
