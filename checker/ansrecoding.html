@@ -140,6 +140,10 @@
             font-size: 1rem;
         }
 
+        select[multiple] {
+            height: 100px;
+        }
+
         textarea {
             resize: vertical;
         }
@@ -334,42 +338,6 @@
             cursor: pointer;
             font-size: 1.1rem;
         }
-
-        .multiselect-container {
-            position: relative;
-        }
-
-        .multiselect-list {
-            display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1;
-        }
-
-        .multiselect-list label {
-            padding: 8px;
-            display: block;
-            cursor: pointer;
-            font-weight: normal;
-        }
-
-        .multiselect-list label:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            cursor: pointer;
-        }
     </style>
 </head>
 
@@ -472,7 +440,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="periodStart">Select Period</label>
+                            <label>Select Period</label>
                             <div style="display: flex; gap: 10px;">
                                 <input type="date" id="periodStart">
                                 <input type="date" id="periodEnd">
@@ -481,7 +449,7 @@
 
                         <div class="form-group">
                             <label>Source Questions</label>
-                            <select id="sourceQuestions" multiple>
+                            <select id="sourceQuestions" multiple onchange="updateMappings()">
                                 <option value="s1">What did you like most?</option>
                                 <option value="s2">What can we improve?</option>
                                 <option value="s3">How was the service?</option>
@@ -491,17 +459,13 @@
                         <div class="form-group">
                             <label>Destination Questions</label>
                             <div style="display: flex; gap: 10px; align-items: flex-end;">
-                                <select id="destinationQuestions" multiple>
+                                <select id="destinationQuestions" multiple onchange="updateMappings()">
                                     <option value="d1">Pricing</option>
                                     <option value="d2">Features</option>
                                     <option value="d3">Customer Service</option>
                                 </select>
                                 <button class="btn btn-secondary btn-sm" onclick="showAddDestinationModal()">Add Custom</button>
                             </div>
-                        </div>
-
-                        <div class="form-group" style="text-align: right;">
-                            <button class="btn btn-primary" onclick="addMapping()">Add Mapping</button>
                         </div>
 
                         <div class="form-group">
@@ -517,23 +481,56 @@
                             <label for="instructions">General Instructions for AI</label>
                             <textarea id="instructions" rows="4" placeholder="e.g., 'Recode answers into one of the provided categories. Be concise.'"></textarea>
                         </div>
+
                         <div class="form-group">
-                            <label>Contextual Metadata (for AI Accuracy)</label>
-                            <button class="collapse-btn" onclick="toggleCollapse(this)"><i class="fas fa-chevron-down"></i></button>
+                            <label>Contextual Metadata</label>
                             <div class="collapsible-content active">
-                                <textarea id="contextualMetadata" rows="3" placeholder="e.g., 'Industry: Retail', 'Language: English'"></textarea>
+                                <label for="industrySelect">Industry Type(s)</label>
+                                <select id="industrySelect" multiple>
+                                    <option value="retail">Retail</option>
+                                    <option value="finance">Finance</option>
+                                    <option value="tech">Technology</option>
+                                </select>
+                                <label for="countrySelect">Country(s)</label>
+                                <select id="countrySelect" multiple>
+                                    <option value="us">United States</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="ca">Canada</option>
+                                </select>
+                                <label for="languageSelect">Language(s)</label>
+                                <select id="languageSelect" multiple>
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                </select>
+                                <label for="customRules">Custom Rules / Scoring Logic</label>
+                                <textarea id="customRules" rows="3" placeholder="e.g., 'Score mentions of pricing as 5 stars if positive.'"></textarea>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label>Output Configuration</label>
+                            <label>Select Desired Output Type(s)</label>
                             <div class="multiselect-container">
-                                <label><input type="checkbox" name="outputType" value="categories"> Categories (from bank)</label>
+                                <label><input type="checkbox" name="outputType" value="categories"> Categories</label>
+                                <label><input type="checkbox" name="outputType" value="themes"> Themes/Topics</label>
                                 <label><input type="checkbox" name="outputType" value="keywords"> Keywords</label>
-                                <label><input type="checkbox" name="outputType" value="themes"> Themes</label>
+                                <label><input type="checkbox" name="outputType" value="scale"> Scale Rating</label>
+                                <label><input type="checkbox" name="outputType" value="custom" id="customOutputCheck"> Custom Answer</label>
                             </div>
                         </div>
+                        <div id="customAnswerSection" class="form-group" style="display: none;">
+                            <label for="customAnswerSetSelect">Existing Custom Answer Set</label>
+                            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                                <select id="customAnswerSetSelect">
+                                    <option value="set1">Set 1: Product Issues</option>
+                                    <option value="set2">Set 2: Service Ratings</option>
+                                </select>
+                                <button class="btn btn-secondary btn-sm" onclick="showManageCustomAnswersModal()">Manage</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="confidenceThreshold">AI Confidence Threshold for Auto-Acceptance</label>
+                            <label for="confidenceThreshold">Set Minimum AI Confidence Threshold for Auto-Acceptance</label>
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <input type="range" id="confidenceThreshold" min="0" max="100" value="75" style="width: 100%;">
                                 <span id="thresholdValue">75%</span>
@@ -594,6 +591,25 @@
         </div>
     </div>
 
+    <div id="manageCustomAnswersModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Manage Custom Answers</h2>
+                <span class="close-btn" onclick="closeModal('manageCustomAnswersModal')">&times;</span>
+            </div>
+            <div class="form-group">
+                <label>Existing Answers</label>
+                <ul id="existingAnswersList" style="list-style-type: none; padding: 0; margin: 0;">
+                    </ul>
+            </div>
+            <div class="form-group">
+                <label for="newCustomAnswer">Add New Answer</label>
+                <input type="text" id="newCustomAnswer" placeholder="e.g., UI/UX">
+            </div>
+            <button class="btn btn-primary" onclick="addCustomAnswer()">Add Answer</button>
+        </div>
+    </div>
+
     <div id="processingModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -612,11 +628,24 @@
             const saveTemplateModal = document.getElementById('saveTemplateModal');
             const processingModal = document.getElementById('processingModal');
             const addDestinationModal = document.getElementById('addDestinationModal');
+            const manageCustomAnswersModal = document.getElementById('manageCustomAnswersModal');
             const destinationQuestionsSelect = document.getElementById('destinationQuestions');
             const sourceQuestionsSelect = document.getElementById('sourceQuestions');
             const visualMappingContainer = document.getElementById('visualMapping');
             const confidenceThreshold = document.getElementById('confidenceThreshold');
             const thresholdValue = document.getElementById('thresholdValue');
+            const customOutputCheck = document.getElementById('customOutputCheck');
+            const customAnswerSection = document.getElementById('customAnswerSection');
+            const existingAnswersList = document.getElementById('existingAnswersList');
+
+            let existingMappings = {};
+
+            // Mock data for demo purposes
+            const existingAnswersData = [
+                { id: 'ans1', text: 'Billing Issues' },
+                { id: 'ans2', text: 'Technical Support' },
+                { id: 'ans3', text: 'Product Bugs' }
+            ];
 
             // --- Navigation Logic ---
             navLinks.forEach(link => {
@@ -659,13 +688,60 @@
                 }
             };
 
+            window.showAddDestinationModal = () => {
+                addDestinationModal.style.display = 'block';
+            };
+
+            window.showManageCustomAnswersModal = () => {
+                manageCustomAnswersModal.style.display = 'block';
+                renderExistingAnswers();
+            };
+
             // --- Dynamic UX Logic ---
             confidenceThreshold.addEventListener('input', (e) => {
                 thresholdValue.textContent = `${e.target.value}%`;
             });
 
-            window.showAddDestinationModal = () => {
-                addDestinationModal.style.display = 'block';
+            customOutputCheck.addEventListener('change', (e) => {
+                customAnswerSection.style.display = e.target.checked ? 'block' : 'none';
+            });
+
+            // Live mapping update logic
+            window.updateMappings = () => {
+                const selectedSource = Array.from(sourceQuestionsSelect.selectedOptions).map(option => ({
+                    value: option.value,
+                    text: option.text
+                }));
+                const selectedDestinations = Array.from(destinationQuestionsSelect.selectedOptions).map(option => ({
+                    value: option.value,
+                    text: option.text
+                }));
+
+                visualMappingContainer.innerHTML = '';
+                existingMappings = {};
+
+                selectedSource.forEach(source => {
+                    const destinations = selectedDestinations.map(dest => dest.text);
+                    if (destinations.length > 0) {
+                        const mappingKey = `${source.value}`;
+                        if (!existingMappings[mappingKey]) {
+                            existingMappings[mappingKey] = destinations;
+                            const mappingEntry = document.createElement('div');
+                            mappingEntry.classList.add('mapping-entry');
+                            mappingEntry.innerHTML = `
+                                <span><strong>${source.text}</strong> → ${destinations.join(', ')}</span>
+                                <button class="remove-btn" onclick="removeMapping('${mappingKey}')"><i class="fas fa-times-circle"></i></button>
+                            `;
+                            visualMappingContainer.appendChild(mappingEntry);
+                        }
+                    }
+                });
+            };
+
+            window.removeMapping = (key) => {
+                delete existingMappings[key];
+                // Manually remove the UI element
+                document.querySelector(`[data-key="${key}"]`).remove();
             };
 
             window.addCustomDestination = () => {
@@ -674,35 +750,43 @@
                     const newOption = document.createElement('option');
                     newOption.value = newName.replace(/\s+/g, '-').toLowerCase();
                     newOption.textContent = newName;
-                    newOption.selected = true;
                     destinationQuestionsSelect.appendChild(newOption);
                     closeModal('addDestinationModal');
+                    updateMappings();
                 }
             };
 
-            window.addMapping = () => {
-                const selectedSource = Array.from(sourceQuestionsSelect.selectedOptions).map(option => option.text);
-                const selectedDestinations = Array.from(destinationQuestionsSelect.selectedOptions).map(option => option.text);
-
-                if (selectedSource.length === 0 || selectedDestinations.length === 0) {
-                    alert('Please select at least one source and one destination question.');
-                    return;
+            window.addCustomAnswer = () => {
+                const newAnswer = document.getElementById('newCustomAnswer').value.trim();
+                if (newAnswer) {
+                    // Add to mock data and re-render list
+                    existingAnswersData.push({ id: `ans${existingAnswersData.length + 1}`, text: newAnswer });
+                    renderExistingAnswers();
+                    document.getElementById('newCustomAnswer').value = '';
                 }
+            };
 
-                selectedSource.forEach(sourceText => {
-                    const mappingEntry = document.createElement('div');
-                    mappingEntry.classList.add('mapping-entry');
-                    mappingEntry.innerHTML = `
-                        <span><strong>${sourceText}</strong> → ${selectedDestinations.join(', ')}</span>
-                        <button class="remove-btn" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
+            window.deleteCustomAnswer = (id) => {
+                const index = existingAnswersData.findIndex(answer => answer.id === id);
+                if (index !== -1) {
+                    existingAnswersData.splice(index, 1);
+                    renderExistingAnswers();
+                }
+            };
+
+            function renderExistingAnswers() {
+                existingAnswersList.innerHTML = '';
+                existingAnswersData.forEach(answer => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px;">
+                            <span>${answer.text}</span>
+                            <button class="remove-btn" onclick="deleteCustomAnswer('${answer.id}')"><i class="fas fa-times-circle"></i></button>
+                        </div>
                     `;
-                    visualMappingContainer.appendChild(mappingEntry);
+                    existingAnswersList.appendChild(li);
                 });
-
-                // Clear selections after mapping
-                sourceQuestionsSelect.selectedIndex = -1;
-                destinationQuestionsSelect.selectedIndex = -1;
-            };
+            }
 
             window.runTest = () => {
                 const testInput = document.getElementById('testInput').value;
@@ -738,11 +822,10 @@
 
             window.startProcessing = () => {
                 // Here, you would collect all form data and send it to your backend
-                // This would trigger a worker job to be added to the queue
-                // The backend would then handle the AI processing in the background
                 processingModal.style.display = 'block';
             };
         });
     </script>
 </body>
+
 </html>
