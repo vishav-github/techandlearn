@@ -747,18 +747,19 @@
                 <textarea id="prompt-instruction-textarea" placeholder="Provide any high-level instructions or context for the AI, e.g., 'Focus on operational feedback for retail branches in North America.'"></textarea>
             </div>
 
-            <div class="content-toggle-section" id="context-toggle">
+            <div class="content-toggle-section">
                 <h3>Contextual Metadata (for AI Accuracy)</h3>
-                <i class="fas fa-chevron-right"></i>
+                <i id="context-toggle" class="fas fa-chevron-right rotated"></i>
             </div>
-            <div id="contextMetadataContent" class="collapsible-content">
+
+                <div id="contextMetadataContent" class="collapsible-content">
                 <p style="font-size: 0.9em; color: #777; margin-bottom: 15px;">
                     Provide additional information to the AI to help it understand the context of your data, leading to
                     more accurate and relevant extractions.
                 </p>
                 <div class="form-group">
                     <label for="industry">Industry Type(s):</label>
-                    <select id="industry" multiple size="5">
+                    <select id="industry" multiple="" size="5">
                         <option value="healthcare">Healthcare</option>
                         <option value="retail">Retail</option>
                         <option value="hospitality">Hospitality</option>
@@ -768,7 +769,7 @@
                 </div>
                 <div class="form-group">
                     <label for="country">Country(s):</label>
-                    <select id="country" multiple size="5">
+                    <select id="country" multiple="" size="5">
                         <option value="usa">USA</option>
                         <option value="india">India</option>
                         <option value="germany">Germany</option>
@@ -778,7 +779,7 @@
                 </div>
                 <div class="form-group">
                     <label for="language">Language(s):</label>
-                    <select id="language" multiple size="5">
+                    <select id="language" multiple="" size="5">
                         <option value="english">English</option>
                         <option value="hindi">Hindi</option>
                         <option value="spanish">Spanish</option>
@@ -791,6 +792,7 @@
                     <textarea id="custom-rules" placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
                 </div>
             </div>
+            
             <div class="xai-option-group">
                 <input type="checkbox" id="include-xai-info" checked>
                 <label for="include-xai-info">Include Explainable AI (XAI) Info</label>
