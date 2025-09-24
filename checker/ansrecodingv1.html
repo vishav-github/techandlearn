@@ -756,45 +756,40 @@
                     Provide additional information to the AI to help it understand the context of your data, leading to
                     more accurate and relevant extractions.
                 </p>
-                <div class="form-group">
-                    <label for="industry">Industry Type(s):</label>
-                    <select id="industry" multiple="" size="5">
-                        <option value="healthcare">Healthcare</option>
-                        <option value="retail">Retail</option>
-                        <option value="hospitality">Hospitality</option>
-                        <option value="finance">Finance</option>
-                        <option value="technology">Technology</option>
-                    </select>
+                <div style="display: flex; gap: 20px;">
+    <div class="form-group">
+        <label for="industry">Industry Type(s):</label>
+        <select id="industry" multiple size="5">
+            <option value="healthcare">Healthcare</option>
+            <option value="retail">Retail</option>
+            <option value="hospitality">Hospitality</option>
+            <option value="finance">Finance</option>
+            <option value="technology">Technology</option>
+        </select>
+    </div>
 
-                    <label for="country">Country(s):</label>
-                    <select id="country" multiple="" size="5">
-                        <option value="usa">USA</option>
-                        <option value="india">India</option>
-                        <option value="germany">Germany</option>
-                        <option value="uk">United Kingdom</option>
-                        <option value="canada">Canada</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="country">Country(s):</label>
-                    <select id="country" multiple="" size="5">
-                        <option value="usa">USA</option>
-                        <option value="india">India</option>
-                        <option value="germany">Germany</option>
-                        <option value="uk">United Kingdom</option>
-                        <option value="canada">Canada</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="language">Language(s):</label>
-                    <select id="language" multiple="" size="5">
-                        <option value="english">English</option>
-                        <option value="hindi">Hindi</option>
-                        <option value="spanish">Spanish</option>
-                        <option value="french">French</option>
-                        <option value="german">German</option>
-                    </select>
-                </div>
+    <div class="form-group">
+        <label for="country">Country(s):</label>
+        <select id="country" multiple size="5">
+            <option value="usa">USA</option>
+            <option value="india">India</option>
+            <option value="germany">Germany</option>
+            <option value="uk">United Kingdom</option>
+            <option value="canada">Canada</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="language">Language(s):</label>
+        <select id="language" multiple size="5">
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+            <option value="spanish">Spanish</option>
+            <option value="french">French</option>
+            <option value="german">German</option>
+        </select>
+    </div>
+</div>
                 <div class="form-group">
                     <label for="custom-rules">Custom Rules/Scoring Logic:</label>
                     <textarea id="custom-rules" placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
