@@ -791,32 +791,6 @@
                     <textarea id="custom-rules" placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
                 </div>
             </div>
-            <div class="output-type-config-section" id="custom-answers-config-section">
-                <h3>Custom Answers (Labels) Bank:</h3>
-                <div class="form-group">
-                    <label for="custom-answer-bank">Select Existing Custom Answer Set (Single Select):</label>
-                    <select id="custom-answer-bank" size="5">
-                        <option value="yes-no">Yes/No</option>
-                        <option value="good-bad">Good/Bad/Neutral</option>
-                        <option value="satisfied-unsatisfied">Satisfied/Unsatisfied</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="new-custom-answer-label-input" placeholder="Enter new custom answer set name (e.g., Problem/Solution/Neutral)">
-                    <button class="button" id="add-custom-answer-bank">Add New Bank</button>
-                </div>
-                <p style="font-size: 0.9em; color: #777;">*Selecting a bank will load its labels. Adding a new bank will
-                    create an empty set ready for labels.*</p>
-                <div id="selected-custom-answer-labels" style="margin-top: 15px;">
-                    <h4>Labels for selected bank: <span id="current-bank-name">[None Selected]</span></h4>
-                    <div id="custom-labels-list"></div>
-                    <div class="input-group">
-                        <input type="text" id="add-label-to-current-bank" placeholder="Add label to current bank">
-                        <button class="button" id="add-label-button">Add Label</button>
-                    </div>
-                </div>
-            </div>
-
             <div class="xai-option-group">
                 <input type="checkbox" id="include-xai-info" checked>
                 <label for="include-xai-info">Include Explainable AI (XAI) Info</label>
