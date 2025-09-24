@@ -265,15 +265,18 @@
         }
 
         .status-badge.status-unreviewed {
-            background-color: #dcdcdc; /* Light Grey */
+            background-color: #dcdcdc;
+            /* Light Grey */
         }
 
         .status-badge.status-reviewed {
-            background-color: #b3e0ff; /* Light Blue */
+            background-color: #b3e0ff;
+            /* Light Blue */
         }
 
         .status-badge.status-modified {
-            background-color: #ffcc99; /* Light Orange */
+            background-color: #ffcc99;
+            /* Light Orange */
         }
 
         .kebab-menu {
@@ -517,6 +520,67 @@
             gap: 10px;
             margin-bottom: 15px;
         }
+
+        /* Single selection view specific styles */
+        .selection-list-container {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            min-height: 150px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #fff;
+        }
+
+        .selection-list-item {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .selection-list-item:hover {
+            background-color: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .selection-list-item input[type="radio"] {
+            margin-right: 8px;
+            accent-color: #3498db;
+        }
+
+        /* Mapping Summary Table */
+        #mapping-summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #mapping-summary-table th,
+        #mapping-summary-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: left;
+        }
+
+        #mapping-summary-table th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+        }
+
+        #mapping-summary-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #mapping-summary-table .remove-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -580,31 +644,96 @@
                     <input type="date" id="end-date" style="width: auto;">
                 </div>
             </div>
-            <div class="form-group">
-                <label for="source-questions">Select Source Questions (Multiple Select from Dataset):</label>
-                <select id="source-questions" multiple size="6"></select>
+
+            <div class="flex-container" id="question-selection-row">
+                <div class="flex-item">
+                    <label for="source-questions">Source Questions</label>
+                    <div class="selection-list-container">
+                        <label class="selection-list-item">
+                            <input type="radio" name="source-question" value="source-q1" id="source-q1-radio">
+                            What went well?
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="source-question" value="source-q2" id="source-q2-radio">
+                            What could be improved?
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="source-question" value="source-q3" id="source-q3-radio">
+                            Employee performance feedback
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex-item">
+                    <label for="destination-questions">
+                        Destination Questions
+                        <i class="fas fa-plus" style="cursor:pointer; margin-left: 5px;"></i>
+                        <i class="fas fa-sync-alt" style="cursor:pointer; margin-left: 5px;"></i>
+                    </label>
+                    <div class="selection-list-container">
+                        <label class="selection-list-item">
+                            <input type="radio" name="destination-question" value="dest-q1" id="dest-q1-radio">
+                            Overall Sentiment
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="destination-question" value="dest-q2" id="dest-q2-radio">
+                            Service Quality
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="destination-question" value="dest-q3" id="dest-q3-radio">
+                            Product Satisfaction Score
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex-item">
+                    <label for="output-type-select">
+                        Output Type
+                        <i class="fas fa-plus" style="cursor:pointer; margin-left: 5px;"></i>
+                        <i class="fas fa-sync-alt" style="cursor:pointer; margin-left: 5px;"></i>
+                    </label>
+                    <div class="selection-list-container">
+                        <label class="selection-list-item">
+                            <input type="radio" name="output-type" value="themes" id="output-themes-radio">
+                            Themes/Topics
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="output-type" value="categories" id="output-categories-radio">
+                            Categories
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="output-type" value="scale" id="output-scale-radio">
+                            Scale Rating (e.g., 1-10)
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="output-type" value="custom" id="output-custom-radio">
+                            Custom Answers (Labels)
+                        </label>
+                        <label class="selection-list-item">
+                            <input type="radio" name="output-type" value="keywords" id="output-keywords-radio">
+                            Keywords
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="destination-questions">Select Destination Questions (Multiple Select from Question Bank /
-                    Source Questions):</label>
-                <select id="destination-questions" multiple size="6"></select>
+            <div class="form-group" style="margin-top: 20px;">
+                <button class="button" id="insert-mapping-button">Insert Mapping</button>
             </div>
 
-            <div id="custom-destination-questions-container" class="form-group"></div>
-            <div class="form-group">
-                <button class="button secondary" style="margin: 0px;" id="add-custom-destination-question">+ Add New
-                    Custom
-                    Destination Question</button>
-            </div>
-
-            <h3 style="margin-top: 30px;">Mapped Selections (Visual Mapping Representation):</h3>
-            <div class="form-group">
-                <textarea id="mapping-summary" rows="5" readonly
-                    placeholder="Selected Source Questions will be mapped to Destination Questions here. Example:
-- 'What went well?' maps to 'Overall Sentiment', 'Service Quality'
-- 'What could be improved?' maps to 'Product Satisfaction Score', 'Feature Request Category', '[Source] What could be improved?'"></textarea>
-            </div>
+            <h3 style="margin-top: 30px;">Mapped Selections (Summary):</h3>
+            <table id="mapping-summary-table">
+                <thead>
+                    <tr>
+                        <th>Source Question</th>
+                        <th>Destination Question</th>
+                        <th>Output Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="mapping-summary-body">
+                    </tbody>
+            </table>
         </div>
 
         <div id="tab-config" class="tab-content">
@@ -615,8 +744,7 @@
             </div>
             <div class="form-group">
                 <label for="prompt-instruction-textarea">General Prompt Instructions / Context for AI:</label>
-                <textarea id="prompt-instruction-textarea"
-                    placeholder="Provide any high-level instructions or context for the AI, e.g., 'Focus on operational feedback for retail branches in North America.'"></textarea>
+                <textarea id="prompt-instruction-textarea" placeholder="Provide any high-level instructions or context for the AI, e.g., 'Focus on operational feedback for retail branches in North America.'"></textarea>
             </div>
 
             <div class="content-toggle-section" id="context-toggle">
@@ -660,21 +788,8 @@
                 </div>
                 <div class="form-group">
                     <label for="custom-rules">Custom Rules/Scoring Logic:</label>
-                    <textarea id="custom-rules"
-                        placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
+                    <textarea id="custom-rules" placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
                 </div>
-            </div>
-
-            <h3 style="margin-top: 30px;">Output Configuration:</h3>
-            <div class="form-group">
-                <label for="output-type-select">Select Desired Output Type(s):</label>
-                <select id="output-type-select" multiple size="5">
-                    <option value="themes">Themes/Topics</option>
-                    <option value="categories">Categories</option>
-                    <option value="scale">Scale Rating (e.g., 1-10)</option>
-                    <option value="custom">Custom Answers (Labels)</option>
-                    <option value="keywords">Keywords</option>
-                </select>
             </div>
             <div class="output-type-config-section" id="custom-answers-config-section">
                 <h3>Custom Answers (Labels) Bank:</h3>
@@ -687,8 +802,7 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="new-custom-answer-label-input"
-                        placeholder="Enter new custom answer set name (e.g., Problem/Solution/Neutral)">
+                    <input type="text" id="new-custom-answer-label-input" placeholder="Enter new custom answer set name (e.g., Problem/Solution/Neutral)">
                     <button class="button" id="add-custom-answer-bank">Add New Bank</button>
                 </div>
                 <p style="font-size: 0.9em; color: #777;">*Selecting a bank will load its labels. Adding a new bank will
@@ -712,8 +826,7 @@
             <h3 style="margin-top: 30px;">Real-time Test Run:</h3>
             <div class="test-run-area">
                 <label for="sample-input-text">Enter Sample Text:</label>
-                <textarea id="sample-input-text" placeholder="Type a few sentences to test AI extraction..."
-                    rows="3"></textarea>
+                <textarea id="sample-input-text" placeholder="Type a few sentences to test AI extraction..." rows="3"></textarea>
                 <button class="button" style="margin-top: 10px;" id="run-test-button">Run Test</button>
                 <span id="test-run-limit-note" class="test-limit-note"></span>
                 <label style="margin-top: 15px;">AI Output Preview:</label>
@@ -721,12 +834,10 @@
             </div>
 
             <div class="button-group">
-                <label for="confidence-threshold">Set Minimum AI Confidence Threshold for Auto-Acceptance: <span
-                        id="confidence-value">75%</span></label>
+                <label for="confidence-threshold">Set Minimum AI Confidence Threshold for Auto-Acceptance: <span id="confidence-value">75%</span></label>
                 <input type="range" id="confidence-threshold" min="0" max="100" value="75">
                 <p style="font-size: 0.85em; color: #666; margin-top: 5px;">Items below this threshold will be flagged
-                    for
-                    manual review.</p>
+                    for manual review.</p>
                 <button class="button" id="start-processing-button">Start Processing</button>
             </div>
         </div>
@@ -747,7 +858,7 @@
                         </tr>
                     </thead>
                     <tbody id="jobs-table-body">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -783,8 +894,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="filter-confidence">Confidence Score (Min): <span
-                                id="filter-confidence-value">0%</span></label>
+                        <label for="filter-confidence">Confidence Score (Min): <span id="filter-confidence-value">0%</span></label>
                         <input type="range" id="filter-confidence" min="0" max="100" value="0">
                     </div>
                     <div class="form-group">
@@ -820,9 +930,7 @@
                             <th>Source Q</th>
                             <th>Destination Q</th>
                             <th>Output Type</th>
-                            <th>AI Extracted Answer<i class="fas fa-info-circle" style="margin-left: 5px;"
-                                    title="This answer was extracted by the AI based on the prompt instructions and contextual metadata. You can edit it if needed."></i>
-                            </th>
+                            <th>AI Extracted Answer<i class="fas fa-info-circle" style="margin-left: 5px;" title="This answer was extracted by the AI based on the prompt instructions and contextual metadata. You can edit it if needed."></i> </th>
                             <th>Confidence</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -832,14 +940,12 @@
                         <tr data-review-id="R101" data-output-type="Scale Rating" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"><strong>R101</strong></td>
-                            <td class="original-text-cell">"The service was great, but the food was cold and took ages
-                                to arrive. Customer support was quick though."</td>
+                            <td class="original-text-cell">"The service was great, but the food was cold and took ages to arrive. Customer support was quick though."</td>
                             <td>"Overall Feedback"</td>
                             <td>Overall Sentiment</td>
                             <td>Scale Rating</td>
                             <td class="editable-cell" data-original-content="8">
-                                <span class="display-mode" data-original-value="8"
-                                    data-original-content="8">8</span>
+                                <span class="display-mode" data-original-value="8" data-original-content="8">8</span>
                                 <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <select class="editable-field" data-field-type="select">
@@ -855,9 +961,7 @@
                                         <option value="10">10</option>
                                     </select>
                                 </div>
-                                <div class="xai-info xai-info-content">
-                                    Keywords: wait time, too long, good coffee
-                                </div>
+                                <div class="xai-info xai-info-content"> Keywords: wait time, too long, good coffee </div>
                             </td>
                             <td>95%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
@@ -883,19 +987,12 @@
                             <td>Service Theme</td>
                             <td>Themes</td>
                             <td class="editable-cell" data-original-content='["Customer Service", "Service Quality"]'>
-                                <span class="display-mode"
-                                    data-original-value='["Customer Service", "Service Quality"]'
-                                    data-original-content='["Customer Service", "Service Quality"]'><span
-                                        class="tag">Customer Service</span> <span class="tag">Service
-                                        Quality</span></span>
+                                <span class="display-mode" data-original-value='["Customer Service", "Service Quality"]' data-original-content='["Customer Service", "Service Quality"]'><span class="tag">Customer Service</span> <span class="tag">Service Quality</span></span>
                                 <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
-                                    <input type="text" class="editable-field" value="Customer Service, Service Quality"
-                                        data-field-type="text">
+                                    <input type="text" class="editable-field" value="Customer Service, Service Quality" data-field-type="text">
                                 </div>
-                                <div class="xai-info xai-info-content">
-                                    XAI: "customer support was quick"
-                                </div>
+                                <div class="xai-info xai-info-content"> XAI: "customer support was quick" </div>
                             </td>
                             <td>88%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
@@ -921,16 +1018,12 @@
                             <td>Food Issues</td>
                             <td>Categories</td>
                             <td class="editable-cell" data-original-content="Food Quality">
-                                <span class="display-mode" data-original-value="Food Quality"
-                                    data-original-content="Food Quality">Food Quality</span>
+                                <span class="display-mode" data-original-value="Food Quality" data-original-content="Food Quality">Food Quality</span>
                                 <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
-                                    <input type="text" class="editable-field" value="Food Quality"
-                                        data-field-type="text">
+                                    <input type="text" class="editable-field" value="Food Quality" data-field-type="text">
                                 </div>
-                                <div class="xai-info xai-info-content">
-                                    XAI: "the food was cold"
-                                </div>
+                                <div class="xai-info xai-info-content"> XAI: "the food was cold" </div>
                             </td>
                             <td>91%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
@@ -951,22 +1044,17 @@
                         <tr data-review-id="R102" data-output-type="Themes" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"><strong>R102</strong></td>
-                            <td class="original-text-cell">"I am very satisfied with the new features in the app. The UI
-                                is intuitive."</td>
+                            <td class="original-text-cell">"I am very satisfied with the new features in the app. The UI is intuitive."</td>
                             <td>"App Feedback"</td>
                             <td>Product Satisfaction</td>
                             <td>Themes</td>
                             <td class="editable-cell" data-original-content="Product Satisfaction">
-                                <span class="display-mode" data-original-value="Product Satisfaction"
-                                    data-original-content="Product Satisfaction">Product Satisfaction</span>
+                                <span class="display-mode" data-original-value="Product Satisfaction" data-original-content="Product Satisfaction">Product Satisfaction</span>
                                 <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
-                                    <input type="text" class="editable-field" value="Product Satisfaction"
-                                        data-field-type="text">
+                                    <input type="text" class="editable-field" value="Product Satisfaction" data-field-type="text">
                                 </div>
-                                <div class="xai-info xai-info-content">
-                                    XAI: "satisfied with the new features"
-                                </div>
+                                <div class="xai-info xai-info-content"> XAI: "satisfied with the new features" </div>
                             </td>
                             <td>99%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
@@ -987,14 +1075,12 @@
                         <tr data-review-id="R103" data-output-type="Scale Rating" data-status="unreviewed">
                             <td><input type="checkbox" class="row-select"></td>
                             <td class="review-id-cell"><strong>R103</strong></td>
-                            <td class="original-text-cell">"The cashier was very friendly and helpful. Gave a great
-                                recommendation."</td>
+                            <td class="original-text-cell">"The cashier was very friendly and helpful. Gave a great recommendation."</td>
                             <td>"Employee Feedback"</td>
                             <td>Staff Performance</td>
                             <td>Scale Rating</td>
                             <td class="editable-cell" data-original-content="5">
-                                <span class="display-mode" data-original-value="5"
-                                    data-original-content="5">5</span>
+                                <span class="display-mode" data-original-value="5" data-original-content="5">5</span>
                                 <i class="fas fa-chevron-right xai-info-toggle"></i>
                                 <div class="edit-mode" style="display: none;">
                                     <select class="editable-field" data-field-type="select">
@@ -1005,9 +1091,7 @@
                                         <option value="5" selected>5</option>
                                     </select>
                                 </div>
-                                <div class="xai-info xai-info-content">
-                                    XAI: "friendly and helpful"
-                                </div>
+                                <div class="xai-info xai-info-content"> XAI: "friendly and helpful" </div>
                             </td>
                             <td>98%</td>
                             <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
@@ -1035,7 +1119,6 @@
             </div>
         </div>
     </div>
-
     <div id="custom-answer-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -1059,25 +1142,20 @@
             </div>
         </div>
     </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const tabsContainer = document.querySelector('.tabs');
             const tabButtons = tabsContainer.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
-            const sourceQuestionsSelect = document.getElementById('source-questions');
-            const destinationQuestionsSelect = document.getElementById('destination-questions');
-            const mappingSummary = document.getElementById('mapping-summary');
-            const customDateInputs = document.getElementById('custom-date-inputs');
+            const insertMappingButton = document.getElementById('insert-mapping-button');
+            const mappingSummaryBody = document.getElementById('mapping-summary-body');
             const periodSelect = document.getElementById('period-select');
-            const customDestinationQuestionsContainer = document.getElementById('custom-destination-questions-container');
-            const addCustomQuestionButton = document.getElementById('add-custom-destination-question');
+            const customDateInputs = document.getElementById('custom-date-inputs');
             const confidenceThreshold = document.getElementById('confidence-threshold');
             const confidenceValueSpan = document.getElementById('confidence-value');
             const startProcessingButton = document.getElementById('start-processing-button');
             const reviewIdCells = document.querySelectorAll('.review-id-cell');
             const originalTextCells = document.querySelectorAll('.original-text-cell');
-            const outputTypeSelect = document.getElementById('output-type-select');
             const customAnswersConfigSection = document.getElementById('custom-answers-config-section');
             const runTestButton = document.getElementById('run-test-button');
             const sampleInputText = document.getElementById('sample-input-text');
@@ -1089,409 +1167,101 @@
             const contextToggle = document.getElementById('context-toggle');
             const contextMetadataContent = document.getElementById('contextMetadataContent');
             const xaiBatchToggleCheckbox = document.getElementById('xai-batch-toggle-checkbox');
-            const xaiInfoElements = document.querySelectorAll('.xai-info');
-            const customAnswerModal = document.getElementById('custom-answer-modal');
-            const modalLabelsList = document.getElementById('modal-labels-list');
-            const modalAddLabelInput = document.getElementById('modal-add-label');
-            const modalAddButton = document.getElementById('modal-add-button');
-            const closeButtons = document.querySelectorAll('.close-modal');
-            const addLabelToCurrentBankInput = document.getElementById('add-label-to-current-bank');
-            const addLabelButton = document.getElementById('add-label-button');
-            const customAnswerBankSelect = document.getElementById('custom-answer-bank');
-            const selectedCustomLabelsContainer = document.getElementById('selected-custom-answer-labels');
-            const currentBankNameSpan = document.getElementById('current-bank-name');
-            const newCustomAnswerLabelInput = document.getElementById('new-custom-answer-label-input');
-            const addCustomAnswerBankButton = document.getElementById('add-custom-answer-bank');
-            const modalTitle = document.getElementById('modal-title');
-            const modalSaveButton = document.getElementById('modal-save');
-            const modalDeleteButton = document.getElementById('modal-delete');
-            const jobsTableBody = document.getElementById('jobs-table-body');
-            const reviewTable = document.getElementById('extractedDataTable');
             const xaiInfoToggles = document.querySelectorAll('.xai-info-toggle');
-
-            let jobs = [];
-            let jobIdCounter = 1;
-
-            function showTab(tabId) {
-                tabContents.forEach(content => content.classList.remove('active'));
-                tabButtons.forEach(button => button.classList.remove('active'));
-                document.getElementById(tabId).classList.add('active');
-                document.querySelector(`[data-tab-id="${tabId}"]`).classList.add('active');
-
-                if (tabId === 'tab-review') {
-                    groupReviewRows();
-                }
-            }
 
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    showTab(button.dataset.tabId);
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(button.dataset.tabId).classList.add('active');
                 });
             });
 
-            showTab('tab-mapping');
+            insertMappingButton.addEventListener('click', () => {
+                const sourceQuestionRadio = document.querySelector('input[name="source-question"]:checked');
+                const destinationQuestionRadio = document.querySelector('input[name="destination-question"]:checked');
+                const outputTypeRadio = document.querySelector('input[name="output-type"]:checked');
 
-            const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Tell us about your experience...', 'How likely are you to recommend us? (NPS)'];
-            mockSourceQuestions.forEach(q => {
-                const option = document.createElement('option');
-                option.value = q;
-                option.textContent = q;
-                sourceQuestionsSelect.appendChild(option);
-            });
+                if (sourceQuestionRadio && destinationQuestionRadio && outputTypeRadio) {
+                    const sourceText = sourceQuestionRadio.parentElement.textContent.trim();
+                    const destText = destinationQuestionRadio.parentElement.textContent.trim();
+                    const outputText = outputTypeRadio.parentElement.textContent.trim();
 
-            const mockDestinationQuestions = ['Overall Sentiment', 'Service Quality', 'Product Satisfaction Score', 'Feature Request Category'];
-            mockDestinationQuestions.forEach(q => {
-                const option = document.createElement('option');
-                option.value = q;
-                option.textContent = q;
-                destinationQuestionsSelect.appendChild(option);
-            });
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${sourceText}</td>
+                        <td>${destText}</td>
+                        <td>${outputText}</td>
+                        <td><button class="remove-button">Remove</button></td>
+                    `;
+                    mappingSummaryBody.appendChild(newRow);
 
-            function updateMappingSummary() {
-                const selectedSources = Array.from(sourceQuestionsSelect.selectedOptions).map(option => `'${option.textContent}'`).join(', ');
-                const selectedDestinations = Array.from(destinationQuestionsSelect.selectedOptions).map(option => `'${option.textContent}'`).join(', ');
-                const customDestinations = Array.from(customDestinationQuestionsContainer.querySelectorAll('input')).map(input => `'${input.value}'`).join(', ');
-
-                let summary = '';
-                if (selectedSources || selectedDestinations || customDestinations) {
-                    summary = `- Source Questions: ${selectedSources}\n- Destination Questions: ${selectedDestinations}\n- Custom Destinations: ${customDestinations}`;
+                    // Clear selections after adding mapping
+                    sourceQuestionRadio.checked = false;
+                    destinationQuestionRadio.checked = false;
+                    outputTypeRadio.checked = false;
+                } else {
+                    alert('Please select a Source Question, Destination Question, and Output Type.');
                 }
-                mappingSummary.value = summary;
-            }
+            });
 
-            sourceQuestionsSelect.addEventListener('change', updateMappingSummary);
-            destinationQuestionsSelect.addEventListener('change', updateMappingSummary);
+            mappingSummaryBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-button')) {
+                    e.target.closest('tr').remove();
+                }
+            });
 
-            periodSelect.addEventListener('change', function () {
-                if (this.value === 'custom_dates') {
+            periodSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'custom_dates') {
                     customDateInputs.style.display = 'flex';
                 } else {
                     customDateInputs.style.display = 'none';
                 }
             });
 
-            let customQuestionId = 0;
-            addCustomQuestionButton.addEventListener('click', function () {
-                customQuestionId++;
-                const newRow = document.createElement('div');
-                newRow.className = 'custom-item-row';
-                newRow.innerHTML = `
-                    <label>Custom Question ${customQuestionId}:</label>
-                    <input type="text" placeholder="Enter new question">
-                    <button class="button danger remove">Remove</button>
-                `;
-                customDestinationQuestionsContainer.appendChild(newRow);
-                newRow.querySelector('.remove').addEventListener('click', () => {
-                    newRow.remove();
-                    updateMappingSummary();
-                });
-                newRow.querySelector('input').addEventListener('input', updateMappingSummary);
+            confidenceThreshold.addEventListener('input', (e) => {
+                confidenceValueSpan.textContent = e.target.value + '%';
             });
 
-            confidenceThreshold.addEventListener('input', function () {
-                confidenceValueSpan.textContent = `${this.value}%`;
-            });
+            // Simulate loading questions and a test run
+            function loadQuestions() {
+                // In a real application, this would fetch data from an API
+                // For this mock-up, we'll just populate some options
+            }
 
-            startProcessingButton.addEventListener('click', function () {
-                const jobName = `Recoding Job ${jobIdCounter}`;
-                const newJob = {
-                    id: jobIdCounter++,
-                    name: jobName,
-                    status: 'Queued',
-                    progress: 0,
-                    user: '[Current User]',
-                    startedOn: new Date().toLocaleString()
-                };
-                jobs.push(newJob);
-                renderJobsTable();
-
-                showTab('tab-jobs');
-
+            function runTest() {
+                // In a real application, this would send a request to the AI model
+                aiOutputPreview.textContent = 'Analyzing text...';
                 setTimeout(() => {
-                    const job = jobs.find(j => j.id === newJob.id);
-                    if (job) {
-                        job.status = 'Processing';
-                        renderJobsTable();
-                        let progressInterval = setInterval(() => {
-                            job.progress += 10;
-                            if (job.progress >= 100) {
-                                job.progress = 100;
-                                job.status = 'Completed';
-                                clearInterval(progressInterval);
-                            }
-                            renderJobsTable();
-                        }, 500);
-                    }
-                }, 2000);
-            });
+                    const sampleText = sampleInputText.value;
+                    const destinationQuestion = document.querySelector('input[name="destination-question"]:checked');
+                    const outputType = document.querySelector('input[name="output-type"]:checked');
 
-            function renderJobsTable() {
-                jobsTableBody.innerHTML = '';
-                jobs.forEach(job => {
-                    const row = document.createElement('tr');
-                    const statusClass = job.status.toLowerCase().replace(' ', '');
-                    row.innerHTML = `
-                        <td>#${job.id}</td>
-                        <td>${job.name}</td>
-                        <td><span class="status-badge ${statusClass}">${job.status}</span></td>
-                        <td>
-                            <div class="progress-bar-container" style="height: 10px; background-color: #eee; border-radius: 5px;">
-                                <div class="progress-bar" style="height: 100%; width: ${job.progress}%; background-color: #3498db; border-radius: 5px;"></div>
-                            </div>
-                            <span style="font-size: 0.9em; color: #555;">${job.progress}%</span>
-                        </td>
-                        <td>${job.user}</td>
-                        <td>${job.startedOn}</td>
-                        <td>
-                            ${job.status === 'Completed' ? '<button class="button" onclick="showTab(\'tab-review\')">View Results</button>' : '<em>Processing...</em>'}
-                        </td>
-                    `;
-                    jobsTableBody.appendChild(row);
-                });
+                    if (!sampleText || !destinationQuestion || !outputType) {
+                        aiOutputPreview.textContent = 'Please enter sample text and select both a destination question and output type.';
+                        return;
+                    }
+
+                    const outputText = outputType.parentElement.textContent.trim();
+                    aiOutputPreview.textContent = `[Simulated AI Output for '${sampleText}']\n\nDestination: ${destinationQuestion.parentElement.textContent.trim()}\nOutput Type: ${outputText}\n\nExtracted Result: Based on the input, the AI detected the key theme of 'Customer Experience' and a sentiment of 'Positive'.`;
+                }, 1500);
             }
 
-            function groupReviewRows() {
-                let lastReviewId = null;
-                const rows = reviewTable.querySelectorAll('tbody tr');
+            runTestButton.addEventListener('click', runTest);
 
-                rows.forEach(row => {
-                    const reviewIdCell = row.querySelector('.review-id-cell');
-                    const originalTextCell = row.querySelector('.original-text-cell');
-                    const currentReviewId = row.dataset.reviewId;
-                    if (currentReviewId === lastReviewId) {
-                        if (reviewIdCell) reviewIdCell.textContent = '';
-                        if (originalTextCell) originalTextCell.textContent = '';
-                    } else {
-                        if (reviewIdCell && row.dataset.reviewId) reviewIdCell.textContent = row.dataset.reviewId;
-                    }
-                    lastReviewId = currentReviewId;
-                });
-            }
-
-            outputTypeSelect.addEventListener('change', function () {
-                const selectedOptions = Array.from(this.selectedOptions).map(option => option.value);
-                if (selectedOptions.includes('custom')) {
-                    customAnswersConfigSection.style.display = 'block';
-                } else {
-                    customAnswersConfigSection.style.display = 'none';
-                }
-            });
-
-            runTestButton.addEventListener('click', function () {
-                const sampleText = sampleInputText.value;
-                if (sampleText.trim() === "") {
-                    aiOutputPreview.textContent = "Please enter some text to test.";
-                    return;
-                }
-                const selectedTypes = Array.from(outputTypeSelect.selectedOptions).map(option => option.textContent).join(', ');
-                aiOutputPreview.textContent = `AI is analyzing "${sampleText}" to find: ${selectedTypes}.`;
-                testRunLimitNote.textContent = 'This is a mock function. The AI output is a placeholder.';
-            });
-
-            document.addEventListener('click', function (e) {
-                if (e.target.closest('.kebab-menu')) {
-                    const menu = e.target.closest('.kebab-menu');
-                    menu.classList.toggle('active');
-                } else {
-                    kebabMenus.forEach(menu => menu.classList.remove('active'));
-                }
-            });
-
-            reviewTable.addEventListener('click', function (e) {
-                const target = e.target;
-                const row = target.closest('tr');
-                if (!row) return;
-
-                const statusBadge = row.querySelector('.status-badge');
-
-                // Handle Modify Answer action
-                if (target.classList.contains('action-edit')) {
-                    e.preventDefault();
-                    const editableCell = row.querySelector('.editable-cell');
-                    const displayMode = editableCell.querySelector('.display-mode');
-                    const editMode = editableCell.querySelector('.edit-mode');
-                    const controls = row.querySelector('.editable-cell-controls');
-                    const kebab = row.querySelector('.kebab-menu');
-
-                    // Show editing mode
-                    displayMode.style.display = 'none';
-                    editMode.style.display = 'block';
-                    controls.style.display = 'block';
-                    if (kebab) kebab.style.display = 'none';
-
-                    // Update status to Modified
-                    if (statusBadge) {
-                        statusBadge.textContent = 'Modified';
-                        statusBadge.className = 'status-badge status-modified';
-                    }
-                }
-
-                // Handle Accept & Finalize action
-                if (target.classList.contains('action-accept')) {
-                    e.preventDefault();
-                    if (statusBadge) {
-                        statusBadge.textContent = 'Reviewed';
-                        statusBadge.className = 'status-badge status-reviewed';
-                    }
-                }
-
-                // Handle Reject action
-                if (target.classList.contains('action-reject')) {
-                    e.preventDefault();
-                    if (statusBadge) {
-                        statusBadge.textContent = 'Rejected';
-                        statusBadge.className = 'status-badge status-rejected';
-                    }
-                }
-
-                // Handle Save action
-                if (target.dataset.action === 'save') {
-                    const editableCell = row.querySelector('.editable-cell');
-                    const displayMode = editableCell.querySelector('.display-mode');
-                    const editMode = editableCell.querySelector('.edit-mode');
-                    const controls = row.querySelector('.editable-cell-controls');
-                    const kebab = row.querySelector('.kebab-menu');
-                    const inputField = editMode.querySelector('.editable-field');
-                    const newValue = inputField.value;
-
-                    displayMode.textContent = newValue;
-                    displayMode.style.display = 'block';
-                    editMode.style.display = 'none';
-                    controls.style.display = 'none';
-                    if (kebab) kebab.style.display = 'block';
-                }
-
-                // Handle Cancel action
-                if (target.dataset.action === 'cancel') {
-                    const editableCell = row.querySelector('.editable-cell');
-                    const displayMode = editableCell.querySelector('.display-mode');
-                    const editMode = editableCell.querySelector('.edit-mode');
-                    const controls = row.querySelector('.editable-cell-controls');
-                    const kebab = row.querySelector('.kebab-menu');
-
-                    displayMode.style.display = 'block';
-                    editMode.style.display = 'none';
-                    controls.style.display = 'none';
-                    if (kebab) kebab.style.display = 'block';
-                }
-
-            });
-
-            allRowsSelect.addEventListener('change', function () {
-                rowSelectCheckboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
-
-            contextToggle.addEventListener('click', function () {
-                contextMetadataContent.classList.toggle('expanded');
-                this.querySelector('i').classList.toggle('rotated');
-            });
-
-            const mockAnswerBanks = {
-                'yes-no': ['Yes', 'No'],
-                'good-bad': ['Good', 'Bad', 'Neutral'],
-                'satisfied-unsatisfied': ['Satisfied', 'Unsatisfied']
-            };
-
-            function renderLabels(bankName) {
-                modalLabelsList.innerHTML = '';
-                const labels = mockAnswerBanks[bankName] || [];
-                labels.forEach(label => {
-                    const row = document.createElement('div');
-                    row.className = 'custom-item-row';
-                    row.innerHTML = `
-                        <input type="text" value="${label}" readonly>
-                        <button class="button danger remove">Remove</button>
-                    `;
-                    modalLabelsList.appendChild(row);
-                    row.querySelector('.remove').addEventListener('click', () => {
-                        row.remove();
-                    });
-                });
-            }
-
-            function loadBankIntoSection(bankName) {
-                const labelsList = document.getElementById('custom-labels-list');
-                labelsList.innerHTML = '';
-                currentBankNameSpan.textContent = bankName;
-                const labels = mockAnswerBanks[bankName] || [];
-                labels.forEach(label => {
-                    const labelDiv = document.createElement('div');
-                    labelDiv.className = 'tag';
-                    labelDiv.innerHTML = `${label} <span class="close-tag">&times;</span>`;
-                    labelsList.appendChild(labelDiv);
-                    labelDiv.querySelector('.close-tag').addEventListener('click', () => labelDiv.remove());
-                });
-            }
-
-            customAnswerBankSelect.addEventListener('change', function () {
-                if (this.value) {
-                    loadBankIntoSection(this.value);
-                } else {
-                    currentBankNameSpan.textContent = '[None Selected]';
-                    document.getElementById('custom-labels-list').innerHTML = '';
-                }
-            });
-
-            addLabelButton.addEventListener('click', function () {
-                const label = addLabelToCurrentBankInput.value.trim();
-                const currentBank = customAnswerBankSelect.value;
-                if (label && currentBank) {
-                    if (!mockAnswerBanks[currentBank]) {
-                        mockAnswerBanks[currentBank] = [];
-                    }
-                    mockAnswerBanks[currentBank].push(label);
-                    loadBankIntoSection(currentBank);
-                    addLabelToCurrentBankInput.value = '';
-                }
-            });
-
-            addCustomAnswerBankButton.addEventListener('click', function () {
-                const newBankName = newCustomAnswerLabelInput.value.trim();
-                if (newBankName) {
-                    mockAnswerBanks[newBankName] = [];
-                    const newOption = document.createElement('option');
-                    newOption.value = newBankName;
-                    newOption.textContent = newBankName;
-                    customAnswerBankSelect.appendChild(newOption);
-                    customAnswerBankSelect.value = newBankName;
-                    loadBankIntoSection(newBankName);
-                    newCustomAnswerLabelInput.value = '';
-                }
-            });
-
-            function showModal() {
-                customAnswerModal.style.display = 'flex';
-            }
-            function hideModal() {
-                customAnswerModal.style.display = 'none';
-            }
-            closeButtons.forEach(btn => btn.addEventListener('click', hideModal));
-            window.addEventListener('click', (e) => {
-                if (e.target === customAnswerModal) {
-                    hideModal();
-                }
-            });
-
+            // Hide/Show XAI info for individual rows
             xaiInfoToggles.forEach(toggle => {
                 toggle.addEventListener('click', (e) => {
                     const xaiInfoContent = e.target.closest('.editable-cell').querySelector('.xai-info-content');
                     if (xaiInfoContent) {
-                        // Toggle the display of the next sibling div with class .xai-info-content
                         xaiInfoContent.style.display = xaiInfoContent.style.display === 'block' ? 'none' : 'block';
-                        // Toggle the rotation of the chevron icon
                         e.target.classList.toggle('rotated', xaiInfoContent.style.display === 'block');
                     }
                 });
             });
 
-            // Initial state for all individual xai-info-content elements
-            document.querySelectorAll('.xai-info-content').forEach(el => {
-                el.style.display = 'none';
-            });
-
-            // Handle the batch toggle checkbox
+            // Handle the batch toggle checkbox for XAI info
             xaiBatchToggleCheckbox.addEventListener('change', (e) => {
                 const isChecked = e.target.checked;
                 document.querySelectorAll('.xai-info-content').forEach(el => {
@@ -1502,7 +1272,15 @@
                 });
             });
 
-            groupReviewRows();
+            // Handle row selection for bulk actions
+            allRowsSelect.addEventListener('change', (e) => {
+                rowSelectCheckboxes.forEach(checkbox => {
+                    checkbox.checked = e.target.checked;
+                });
+            });
+
+            // Initial load
+            loadQuestions();
         });
     </script>
 </body>
