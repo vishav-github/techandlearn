@@ -7,6 +7,12 @@
     <title>AI Assisted Answer Recoding</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --success-color: #D2F7C3;
+            --warning-color: #FFE9B6;
+            --info-color: #CFEFFE;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -729,6 +735,7 @@
             white-space: nowrap;
         }
 
+
         .status-unreviewed {
             background-color: var(--warning-color);
             color: #856404;
@@ -736,7 +743,7 @@
 
         .status-reviewed {
             background-color: var(--success-color);
-            color: #fff;
+            color: #000;
         }
 
         .status-finalized {
@@ -749,7 +756,7 @@
         }
 
         .status-modified {
-            background-color: #3498db;
+            background-color: var(--info-color);
         }
 
         /* Kebab Menu */
@@ -1236,8 +1243,8 @@
                 <div class="modal-content">
                     <p>AI recoding job is ready to run. Do you want to continue to queue the jobs?<br>
                         You will be notified when the results are ready for review on your dashboard.</p>
-                    <button onclick="closeModal()">OK</button>
-                    <button onclick="closeModal()">Cancel</button>
+                    <button onclick="closeModalFirst()">OK</button>
+                    <button onclick="closeModalFirst()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -1332,7 +1339,8 @@
                 <div class="form-group">
                     <label for="filter-confidence">Confidence Score (Min): <span
                             id="filter-confidence-value">0%</span></label>
-                    <input type="range" id="filter-confidence" min="0" max="100" value="0">
+                    <input type="range" id="filter-confidence" min="0" max="100" value="0"
+                        oninput="updateFilterConfidenceValue(this.value)">
                 </div>
                 <div class="form-group">
                     <label for="filter-validation-status">Validation Status:</label>
@@ -1711,14 +1719,17 @@
             function updateConfidenceValue(val) {
                 document.getElementById('confidence-value').textContent = `${val}%`;
             }
+            function updateFilterConfidenceValue(val) {
+                document.getElementById('filter-confidence-value').textContent = `${val}%`;
+            }
 
             document.getElementById('start-processing').addEventListener('click', function () {
                 document.getElementById('confirmation-modal').style.display = 'block';
             });
 
-            // function closeModal() {
-            //     document.getElementById('confirmation-modal').style.display = 'none';
-            // }
+            function closeModalFirst() {
+                document.getElementById('confirmation-modal').style.display = 'none';
+            }
 
             // Step 4: Table Interactions
             const dataTable = document.getElementById('extractedDataTable');
