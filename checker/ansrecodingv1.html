@@ -1734,9 +1734,14 @@
             // Step 4: Table Interactions
             const dataTable = document.getElementById('extractedDataTable');
             let editingCell = null; // To keep track of the currently edited cell
-
+            document.addEventListener('click', function (event) {
+                document.querySelectorAll('.action-buttons-cell.active').forEach(menu => {
+                    menu.classList.remove('active');
+                });
+            })
             // Kebab Menu Logic
             dataTable.addEventListener('click', function (event) {
+
                 const kebabIcon = event.target.closest('.kebab-menu');
                 if (kebabIcon) {
                     const kebabMenu = kebabIcon.parentElement;
@@ -1753,6 +1758,8 @@
                     document.querySelectorAll('.kebab-menu.active').forEach(menu => {
                         menu.classList.remove('active');
                     });
+                }
+                else {
                 }
             });
 
