@@ -1035,6 +1035,11 @@
             font-size: 1.2em;
             margin-left: 10px;
         }
+
+        .buttons-between {
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 
@@ -1144,10 +1149,7 @@
                     been added yet.</p>
             </div>
 
-            <div class="button-group" style="text-align: left;">
-                <button class="button secondary">Load Configuration Template</button>
-                <button class="button" id="save-template-button">Save Configuration as Template</button>
-            </div>
+
         </div>
 
         <div class="step-section" id="step1">
@@ -1234,8 +1236,14 @@
                 <p style="font-size: 0.85em; color: #666; margin-top: 5px;">
                     Items below this threshold will be flagged for manual review.
                 </p>
+                <div class="buttons-between">
+                    <button id="start-processing" style="margin-top: 10px;">Start Processing</button>
+                    <div class="button-group" style="text-align: left;">
+                        <button class="button secondary" id="load-template-button">Load Configuration Template</button>
+                        <button class="button" id="save-template-button">Save Configuration as Template</button>
+                    </div>
+                </div>
 
-                <button id="start-processing" style="margin-top: 10px;">Start Processing</button>
             </div>
 
             <!-- Modal Structure -->
@@ -1246,6 +1254,38 @@
                     <button onclick="closeModalFirst()">OK</button>
                     <button onclick="closeModalFirst()">Cancel</button>
                 </div>
+            </div>
+        </div>
+        <!-- Save Template Modal -->
+        <div id="saveTemplateModal" class="modal" style="display: none;">
+            <div class="modal-content"><span class="close-modal">×</span>
+                <div class="modal-header">
+                    <h2>Save Template</h2>
+                </div>
+                <div class="form-group">
+                    <label for="templateName">Template Name</label>
+                    <input type="text" id="templateName" placeholder="e.g., Q1 NPS Recoding Template">
+                </div>
+                <button class="btn-primary" onclick="saveTemplate()">Save Template</button>
+            </div>
+        </div>
+
+        <!-- Load Template Modal -->
+        <div id="loadTemplateModal" class="modal" style="display: none;">
+            <div class="modal-content"><span class="close-modal">×</span>
+                <div class="modal-header">
+                    <h2>Load Template</h2>
+                </div>
+                <div class="form-group">
+                    <label for="templateSelect">Select a Template</label>
+                    <select id="templateSelect">
+                        <option value="">-- Choose Template --</option>
+                        <option value="template1">Q1 NPS Recoding Template</option>
+                        <option value="template2">Customer Satisfaction Template</option>
+                        <option value="template3">Default Configuration</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="loadTemplate()">Load Template</button>
             </div>
         </div>
 
@@ -1585,7 +1625,38 @@
             </div>
         </div>
         <script>
+            function saveTemplate() {
+                const name = document.getElementById("templateName").value;
+                if (name.trim()) {
+                    alert("Template saved: " + name);
+                    closeModal("saveTemplateModal");
+                } else {
+                    alert("Please enter a template name.");
+                }
+            }
+
+            function loadTemplate() {
+                const selected = document.getElementById("templateSelect").value;
+                if (selected) {
+                    alert("Template loaded: " + selected);
+                    closeModal("loadTemplateModal");
+                } else {
+                    alert("Please select a template.");
+                }
+            }
             document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById("save-template-button").addEventListener("click", function () {
+                    document.getElementById("saveTemplateModal").style.display = "flex";
+                });
+
+                document.getElementById("load-template-button").addEventListener("click", function () {
+                    document.getElementById("loadTemplateModal").style.display = "flex";
+                });
+
+                function closeModal(id) {
+                    document.getElementById(id).style.display = "none";
+                }
+
                 // Mock data for the new single-select lists
                 const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Overall experience? Give positive and negative experience.'];
                 const mockDestinationQuestions = ['Staff Performance', 'Operational Issues', 'Employee Satisfaction', 'Overall Sentiment'];
@@ -1786,14 +1857,18 @@
             });
 
             let editingRow = null;
-            const modal = document.getElementById('editAnswerModal');
             const closeModal = () => {
-                modal.style.display = 'none';
+                const modal = document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+
                 editingCell = null;
                 editingRow = null;
             };
 
-            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', closeModal);
+            });
             document.getElementById('modal-cancel').addEventListener('click', closeModal);
 
             function handleEditAnswer(row, cell) {
