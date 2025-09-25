@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assisted Answer Recoding (Tab View)</title>
+    <title>AI Assisted Answer Recoding</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -39,49 +39,507 @@
             width: calc(100% + 50px);
         }
 
-        .logo {
+        header .logo {
             font-weight: bold;
             font-size: 1.2em;
         }
 
-        .user-info {
+        header .user-info {
             font-size: 0.9em;
         }
 
-        .tabs {
+        .progress-indicator {
+            background-color: #ecf0f1;
+            padding: 15px 25px;
+            border-bottom: 1px solid #ddd;
             display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .progress-indicator span {
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #e0e6e8;
+            margin: 2px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .progress-indicator span.active {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .progress-indicator {
+            display: none;
+            /* Hide the old element */
+        }
+        
+        .tab-menu {
+            display: flex;
+            justify-content: center;
             border-bottom: 2px solid #ddd;
             margin-bottom: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
         }
-
-        .tab-button {
-            padding: 15px 25px;
-            border: none;
-            background-color: transparent;
+        
+        .tab-item {
+            flex-grow: 1;
+            text-align: center;
+            padding: 15px 10px;
             cursor: pointer;
-            font-size: 1em;
             font-weight: bold;
             color: #555;
-            transition: color 0.2s ease, border-bottom 0.2s ease;
-            border-bottom: 2px solid transparent;
+            transition: background-color 0.3s, color 0.3s;
+            border-right: 1px solid #ddd;
+        }
+        
+        .tab-item:last-child {
+            border-right: none;
+        }
+        
+        .tab-item:hover:not(.active) {
+            background-color: #e0e6e8;
+        }
+        
+        .tab-item.active {
+            background-color: #3498db;
+            color: #fff;
+            border-bottom: 2px solid #3498db;
+            margin-bottom: -2px;
         }
 
-        .tab-button.active {
-            color: #3498db;
-            border-bottom-color: #3498db;
-        }
-
-        .tab-content {
+        .step-section {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
             display: none;
-            padding: 10px;
         }
 
-        .tab-content.active {
+        .step-section.active {
             display: block;
         }
 
-        h1,
-        h2 {
+        .step-section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        select,
+        input[type="text"],
+        textarea,
+        input[type="range"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        select[multiple] {
+            height: auto;
+            min-height: 100px;
+        }
+
+        input[type="range"] {
+            padding: 0;
+            height: 25px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .button.secondary {
+            background-color: #95a5a6;
+        }
+
+        button.action-cancel,
+        .button.danger {
+            background-color: #e74c3c;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .button.secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .button.danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* Custom Question / Label Item styles */
+        .custom-item-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .custom-item-row input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .custom-item-row .button.remove {
+            background-color: #e74c3c;
+            padding: 5px 8px;
+        }
+
+        /* Test Run */
+        .test-run-area {
+            background-color: #f9f9f9;
+            border: 1px dashed #ddd;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .test-run-area textarea {
+            width: calc(100% - 22px);
+            min-height: 60px;
+        }
+
+        .test-run-area #ai-output-preview {
+            background-color: #eef;
+            border: 1px solid #ccd;
+            padding: 10px;
+            min-height: 50px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .test-run-area .test-limit-note {
+            font-size: 0.8em;
+            color: #e74c3c;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+
+        /* Output Type Section (Custom Answers) */
+        .output-type-config-section {
+            background-color: #f9f9f9;
+            border: 1px dashed #ddd;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .output-type-config-section .input-group {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .output-type-config-section .input-group input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        /* Processing View */
+        .processing-view {
+            text-align: center;
+            padding: 50px;
+            display: none;
+            /* Hidden until processing starts */
+        }
+
+        .processing-view .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* AI Extracted Answer cell specific styles */
+        table td .display-mode {
+            display: block;
+            /* Shown by default */
+            word-wrap: break-word;
+        }
+
+        table td .edit-mode {
+            display: none;
+            /* Hidden by default */
+        }
+
+        table td .edit-mode input[type="text"],
+        table td .edit-mode select {
+            width: calc(100% - 10px);
+            /* Adjust for padding/border */
+            padding: 5px;
+            border: 1px solid #007bff;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        .xai-info {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+            background-color: #eaf6ff;
+            padding: 5px;
+            border-radius: 3px;
+            border-left: 3px solid #3498db;
+            display: none;
+            /* Controlled by bulk toggle now */
+        }
+
+        /* No more individual xai-toggle-icon styles as they are removed */
+
+
+        /* Filter Section */
+        .filter-section {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .filter-section .form-group {
+            flex: 1 1 calc(33% - 30px);
+            min-width: 180px;
+            margin-bottom: 0;
+        }
+
+        .filter-section .form-group input,
+        .filter-section .form-group select {
+            width: 100%;
+        }
+
+        .filter-section .button-group {
+            flex: 1 1 100%;
+            text-align: left;
+            margin-top: 0;
+        }
+
+        .filter-section .button {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        /* Batch Actions */
+        .batch-actions {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .batch-actions .button {
+            margin: 0;
+        }
+
+        .batch-actions .xai-batch-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .batch-actions .xai-batch-toggle input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .batch-actions .xai-batch-toggle label {
+            margin: 0;
+        }
+
+        .final-actions {
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        /* Styles for hide/show content with icon */
+        .content-toggle-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            /* Adjust spacing as needed */
+        }
+
+        .content-toggle-section h3 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.1em;
+            /* Adjust font size if needed */
+        }
+
+        #toggleContextMetadata {
+            font-size: 18px;
+            /* Size for section toggle icon */
+            color: #555;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #toggleContextMetadata.rotated {
+            transform: rotate(90deg);
+            /* Rotate for 'shown' state */
+        }
+
+        .collapsible-content {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+            /* display: none;
+            /* Initially hidden */
+        }
+
+        .collapsible-content.hidden {
+            display: none;
+        }
+
+        .xai-option-group {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .xai-option-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .xai-option-group label {
+            margin-bottom: 0;
+            display: inline-block;
+        }
+
+        .xai-option-group .cost-note {
+            font-size: 0.85em;
+            color: #777;
+            margin-left: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            /* Increased max-width for wider tables */
+            overflow: hidden;
+            padding: 25px;
+            /* Added padding to container */
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1a252f;
+            margin: -25px -25px 25px -25px;
+            /* Adjust header margin to fit padding */
+            width: calc(100% + 50px);
+            /* Extend header full width */
+        }
+
+        h1 {
             color: #2c3e50;
             margin-top: 0;
             margin-bottom: 20px;
@@ -90,11 +548,27 @@
             padding-bottom: 10px;
         }
 
+        h2 {
+            color: #34495e;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
         h3 {
             color: #555;
             font-size: 1.2em;
             margin-top: 20px;
             margin-bottom: 10px;
+        }
+
+        .step-content {
+            display: none;
+            /* Hidden by default */
+        }
+
+        .step-content.active {
+            display: block;
+            /* Shown when active */
         }
 
         .form-group {
@@ -111,9 +585,8 @@
         input[type="text"],
         input[type="number"],
         textarea,
-        select,
-        input[type="date"] {
-            width: calc(100% - 22px);
+        select {
+            width: calc(100% - 80px);
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -122,17 +595,12 @@
             margin-top: 5px;
         }
 
-        select[multiple] {
-            height: auto;
-            min-height: 100px;
-        }
-
         textarea {
             resize: vertical;
             min-height: 80px;
         }
 
-        .button {
+        button {
             background-color: #3498db;
             color: white;
             padding: 10px 18px;
@@ -142,31 +610,27 @@
             font-size: 1em;
             transition: background-color 0.3s ease;
             margin-right: 10px;
+            /* Add margin-right for spacing */
         }
 
-        .button:hover {
+        button:hover {
             background-color: #2980b9;
         }
 
-        .button.secondary {
+        .btn-secondary {
             background-color: #95a5a6;
         }
 
-        .button.secondary:hover {
+        .btn-secondary:hover {
             background-color: #7f8c8d;
         }
 
-        .button.danger {
-            background-color: #e74c3c;
-        }
-
-        .button.danger:hover {
-            background-color: #c0392b;
-        }
-
-        .button-group {
-            margin-top: 20px;
-            text-align: right;
+        .navigation-buttons {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .flex-container {
@@ -254,31 +718,37 @@
 
         /* Status Badges */
         .status-badge {
-            display: inline-block;
             padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
+            border-radius: 12px;
+            font-size: 0.8rem;
             font-weight: bold;
-            text-transform: uppercase;
-            color: #333;
-            text-align: center;
+            white-space: nowrap;
         }
 
-        .status-badge.status-unreviewed {
-            background-color: #dcdcdc;
-            /* Light Grey */
+        .status-unreviewed {
+            background-color: var(--warning-color);
+            color: #856404;
         }
 
-        .status-badge.status-reviewed {
-            background-color: #b3e0ff;
-            /* Light Blue */
+        .status-reviewed {
+            background-color: var(--success-color);
+            color: #fff;
         }
 
-        .status-badge.status-modified {
-            background-color: #ffcc99;
-            /* Light Orange */
+        .status-finalized {
+            background-color: #8e44ad;
         }
 
+        .status-processing {
+            background-color: var(--info-color);
+            color: #b8174e;
+        }
+        
+        .status-modified {
+            background-color: #3498db;
+        }
+
+        /* Kebab Menu */
         .kebab-menu {
             position: relative;
             display: inline-block;
@@ -295,8 +765,10 @@
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 10;
+            /* Ensure it's above table content */
             right: 0;
             top: 100%;
+            /* Position below the dots */
             border-radius: 4px;
             overflow: hidden;
             border: 1px solid #ddd;
@@ -319,9 +791,11 @@
             background-color: #f2f2f2;
         }
 
+        /* Inline Editing Specifics */
         .editable-cell.editing {
             background-color: rgba(52, 152, 219, 0.1);
             padding: 9px;
+            /* Adjust for border */
         }
 
         .editable-cell-input {
@@ -336,7 +810,7 @@
             margin-top: 5px;
         }
 
-        .editable-cell-controls button {
+        button {
             padding: 5px 10px;
             font-size: 0.85em;
             margin-left: 5px;
@@ -357,26 +831,8 @@
             margin-top: 5px;
             border-top: 1px dashed #eee;
             padding-top: 5px;
-        }
-
-        .xai-info-content {
-            display: none;
-            margin-top: 5px;
-            padding: 5px;
-            background-color: #f9f9f9;
-            border-left: 3px solid #3498db;
-        }
-
-        .xai-info-toggle {
-            cursor: pointer;
-            font-size: 0.9em;
-            color: #3498db;
-            margin-left: 5px;
-            transition: transform 0.2s ease;
-        }
-
-        .xai-info-toggle.rotated {
-            transform: rotate(90deg);
+            display: block;
+            /* Hidden/shown by JS */
         }
 
         .xai-info.hidden {
@@ -396,43 +852,41 @@
             display: none;
         }
 
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
+       .modal {
+          display: none;
+          position: fixed;
+          z-index: 999;
+          left: 0; top: 0;
+          width: 100%; height: 100%;
+          background-color: rgba(0,0,0,0.5);
         }
-
+        
         .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 500px;
-            max-width: 90%;
+          background-color: #fff;
+          margin: 15% auto;
+          padding: 20px 30px;
+          border-radius: 8px;
+          width: 90%;
+          max-width: 400px;
+          text-align: center;
+          box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .modal-content h3 {
+          margin-top: 0;
+          color: #28a745;
+        }
+        
+        .modal-content button {
+          margin-top: 15px;
+          padding: 8px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
         }
 
-        .modal-footer {
-            margin-top: 20px;
-            text-align: right;
-            display: flex;
-        }
-
-        #modal-delete {
-            margin-left: 0px;
-            margin-right: auto;
-        }
-
-        .close-modal {
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-        }
 
         .wrapper-inp {
             display: flex;
@@ -447,139 +901,79 @@
             min-width: 40px;
         }
 
-        .content-toggle-section {
+
+        /* New and Updated Styles */
+        .mapping-row {
             display: flex;
-            align-items: center;
-            cursor: pointer;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            color: #555;
-            font-size: 1.2em;
-        }
-
-        .content-toggle-section i {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .content-toggle-section i.rotated {
-            transform: rotate(90deg);
-        }
-
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            padding: 0 10px;
-        }
-
-        .collapsible-content.expanded {
-            max-height: 1000px;
-            /* A value larger than the max height */
-        }
-
-        /* New styles for filter section */
-        .filter-section {
-            display: flex;
-            flex-wrap: wrap;
             gap: 20px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #eee;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .filter-section .form-group {
-            flex: 1 1 calc(33% - 20px);
-            min-width: 250px;
-            margin-bottom: 0;
+        .mapping-column {
+            flex: 1;
         }
 
-        .filter-section .form-group label {
-            white-space: nowrap;
-        }
-
-        .filter-section .button-group {
-            flex: 1 1 100%;
-            text-align: right;
-            margin-top: 0;
-        }
-
-        .final-actions {
-            margin-top: 20px;
-            text-align: right;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .batch-actions {
+        .mapping-column label {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 5px;
         }
 
-        /* Single selection view specific styles */
-        .selection-list-container {
+        .single-select-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
             border: 1px solid #ccc;
             border-radius: 4px;
-            min-height: 150px;
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
-            padding: 10px;
-            margin-top: 5px;
             background-color: #fff;
         }
 
-        .selection-list-item {
-            display: block;
-            margin-bottom: 8px;
+        .single-select-list li {
+            padding: 10px;
             cursor: pointer;
-            user-select: none;
+            border-bottom: 1px solid #eee;
         }
 
-        .selection-list-item:hover {
-            background-color: #f0f0f0;
-            border-radius: 3px;
+        .single-select-list li:last-child {
+            border-bottom: none;
         }
 
-        .selection-list-item input[type="radio"] {
-            margin-right: 8px;
-            accent-color: #3498db;
+        .single-select-list li:hover {
+            background-color: #f0f8ff;
         }
 
-        /* Mapping Summary Table */
-        #mapping-summary-table {
+        .single-select-list li.active {
+            background-color: #e6f7ff;
+            border-left: 4px solid #3498db;
+            font-weight: bold;
+        }
+
+        .mapping-summary-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
 
-        #mapping-summary-table th,
-        #mapping-summary-table td {
-            border: 1px solid #e0e0e0;
-            padding: 12px;
+        .mapping-summary-table th,
+        .mapping-summary-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
             text-align: left;
         }
 
-        #mapping-summary-table th {
-            background-color: #f8f8f8;
-            font-weight: bold;
+        .mapping-summary-table th {
+            background-color: #f2f2f2;
         }
 
-        #mapping-summary-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        #mapping-summary-table .remove-button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+        .mapping-summary-table td .remove-mapping {
+            color: #e74c3c;
             cursor: pointer;
+            font-size: 1.2em;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -592,15 +986,15 @@
             </div>
         </header>
 
-        <div class="tabs">
-            <button class="tab-button active" data-tab-id="tab-mapping">1. Mapping</button>
-            <button class="tab-button" data-tab-id="tab-config">2. AI Task & Output</button>
-            <button class="tab-button" data-tab-id="tab-jobs">3. Recoding Jobs</button>
-            <button class="tab-button" data-tab-id="tab-review">4. Review & Finalize</button>
+        <div class="tab-menu">
+            <div class="tab-item active" data-tab="step0">1. Mapping</div>
+            <div class="tab-item" data-tab="step1">2. AI Task & Output</div>
+            <div class="tab-item" data-tab="step2">3. Job Monitoring</div>
+            <div class="tab-item" data-tab="step3">4. Review & Finalize</div>
         </div>
 
-        <div id="tab-mapping" class="tab-content active">
-            <h2>Data Source & Question Mapping</h2>
+        <div class="step-section active" id="step0">
+            <h2>STEP 1: Data Source & Question Mapping</h2>
             <div class="form-group">
                 <label for="client-select">Select Client:</label>
                 <select id="client-select">
@@ -611,8 +1005,8 @@
             </div>
 
             <div class="form-group">
-                <label for="branch-select">Select Branches:</label>
-                <select id="branch-select" multiple>
+                <label for="branch-select">Select Branch:</label>
+                <select id="branch-select" multiple="">
                     <option value="branch_1">Branch 1</option>
                     <option value="branch_2">Branch 2</option>
                     <option value="branch_3">Branch 3</option>
@@ -645,621 +1039,585 @@
                 </div>
             </div>
 
-            <div class="flex-container" id="question-selection-row">
-                <div class="flex-item">
-                    <label for="source-questions">Source Questions</label>
-                    <div class="selection-list-container">
-                        <label class="selection-list-item">
-                            <input type="radio" name="source-question" value="source-q1" id="source-q1-radio">
-                            What went well?
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="source-question" value="source-q2" id="source-q2-radio">
-                            What could be improved?
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="source-question" value="source-q3" id="source-q3-radio">
-                            Employee performance feedback
-                        </label>
-                    </div>
+            <h3 style="margin-top: 30px;">Define New Mapping:</h3>
+            <div class="mapping-row">
+                <div class="mapping-column">
+                    <label for="source-questions">Select Source Questions:</label>
+                    <ul id="source-questions-list" class="single-select-list">
+                    </ul>
                 </div>
-
-                <div class="flex-item">
-                    <label for="destination-questions">
-                        Destination Questions
-                        <i class="fas fa-plus" style="cursor:pointer; margin-left: 5px;"></i>
-                        <i class="fas fa-sync-alt" style="cursor:pointer; margin-left: 5px;"></i>
-                    </label>
-                    <div class="selection-list-container">
-                        <label class="selection-list-item">
-                            <input type="radio" name="destination-question" value="dest-q1" id="dest-q1-radio">
-                            Overall Sentiment
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="destination-question" value="dest-q2" id="dest-q2-radio">
-                            Service Quality
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="destination-question" value="dest-q3" id="dest-q3-radio">
-                            Product Satisfaction Score
-                        </label>
-                    </div>
+                <div class="mapping-column">
+                    <label for="destination-questions">Select Destination Questions: <i class="fas fa-plus-circle"
+                            style="cursor: pointer;" title="Add new destination question"></i> <i
+                            class="fas fa-sync-alt" style="cursor: pointer;" title="Refresh list"></i></label>
+                    <ul id="destination-questions-list" class="single-select-list">
+                    </ul>
                 </div>
-
-                <div class="flex-item">
-                    <label for="output-type-select">
-                        Output Type
-                        <i class="fas fa-plus" style="cursor:pointer; margin-left: 5px;"></i>
-                        <i class="fas fa-sync-alt" style="cursor:pointer; margin-left: 5px;"></i>
-                    </label>
-                    <div class="selection-list-container">
-                        <label class="selection-list-item">
-                            <input type="radio" name="output-type" value="themes" id="output-themes-radio">
-                            Themes/Topics
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="output-type" value="categories" id="output-categories-radio">
-                            Categories
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="output-type" value="scale" id="output-scale-radio">
-                            Scale Rating (e.g., 1-10)
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="output-type" value="custom" id="output-custom-radio">
-                            Custom Answers (Labels)
-                        </label>
-                        <label class="selection-list-item">
-                            <input type="radio" name="output-type" value="keywords" id="output-keywords-radio">
-                            Keywords
-                        </label>
-                    </div>
+                <div class="mapping-column">
+                    <label for="output-type-select">Select Output Type: <i class="fas fa-plus-circle"
+                            style="cursor: pointer;" title="Add new custom answer set"></i> <i class="fas fa-sync-alt"
+                            style="cursor: pointer;" title="Refresh list"></i></label>
+                    <ul id="output-type-list" class="single-select-list">
+                    </ul>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 20px;">
+            <div class="button-group" style="text-align: left;">
                 <button class="button" id="insert-mapping-button">Insert Mapping</button>
             </div>
 
-            <h3 style="margin-top: 30px;">Mapped Selections (Summary):</h3>
-            <table id="mapping-summary-table">
-                <thead>
-                    <tr>
-                        <th>Source Question</th>
-                        <th>Destination Question</th>
-                        <th>Output Type</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="mapping-summary-body">
+            <h3 style="margin-top: 30px;">Current Mappings:</h3>
+            <div class="form-group" id="mapping-summary">
+                <table class="mapping-summary-table">
+                    <thead>
+                        <tr>
+                            <th>Source Question</th>
+                            <th>Destination Question</th>
+                            <th>Output Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mapping-summary-body">
                     </tbody>
-            </table>
-        </div>
+                </table>
+                <p id="no-mappings-message" style="color: #999; text-align: center; margin-top: 20px;">No mappings have been added yet.</p>
+            </div>
 
-        <div id="tab-config" class="tab-content">
-            <h2>Define AI Task & Output Configuration</h2>
-            <div class="button-group" style="text-align: left; margin-bottom: 20px;">
+            <div class="button-group" style="text-align: left;">
                 <button class="button secondary">Load Configuration Template</button>
                 <button class="button" id="save-template-button">Save Configuration as Template</button>
             </div>
+        </div>
+
+        <div class="step-section" id="step1">
+            <h2>STEP 2: Define AI Task & Output Configuration</h2>
             <div class="form-group">
                 <label for="prompt-instruction-textarea">General Prompt Instructions / Context for AI:</label>
-                <textarea id="prompt-instruction-textarea" placeholder="Provide any high-level instructions or context for the AI, e.g., 'Focus on operational feedback for retail branches in North America.'"></textarea>
+                <textarea id="prompt-instruction-textarea"
+                    placeholder="Provide any high-level instructions or context for the AI, e.g., 'Focus on operational feedback for retail branches in North America.'"></textarea>
             </div>
-
-            <div>
+            <div class="content-toggle-section">
                 <h3>Contextual Metadata (for AI Accuracy)</h3>
+                <i id="toggleContextMetadata" class="fas fa-chevron-right"></i>
             </div>
+            <div id="contextMetadataContent" class="collapsible-content hidden">
+                <p style="font-size: 0.9em; color: #777; margin-bottom: 15px;"> Provide additional information to the AI to
+                    help it understand the context of your data, leading to more accurate and relevant extractions. </p>
+            
 
-                <div>
-                <p style="font-size: 0.9em; color: #777; margin-bottom: 15px;">
-                    Provide additional information to the AI to help it understand the context of your data, leading to
-                    more accurate and relevant extractions.
-                </p>
-                <div style="display: flex; gap: 40px;">
-    <div class="form-group">
-        <label for="industry">Industry Type(s):</label>
-        <select id="industry" multiple="" size="5">
-            <option value="healthcare">Healthcare</option>
-            <option value="retail">Retail</option>
-            <option value="hospitality">Hospitality</option>
-            <option value="finance">Finance</option>
-            <option value="technology">Technology</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="country">Country(s):</label>
-        <select id="country" multiple="" size="5">
-            <option value="usa">USA</option>
-            <option value="india">India</option>
-            <option value="germany">Germany</option>
-            <option value="uk">United Kingdom</option>
-            <option value="canada">Canada</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="language">Language(s):</label>
-        <select id="language" multiple="" size="5">
-            <option value="english">English</option>
-            <option value="hindi">Hindi</option>
-            <option value="spanish">Spanish</option>
-            <option value="french">French</option>
-            <option value="german">German</option>
-        </select>
-    </div>
-</div>
-                    <div class="form-group">
+                <div class="form-group">
+                <label for="industry">Industry Type:</label>
+                <select id="industry">
+                    <option value="" disabled selected>Select an industry</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="retail">Retail</option>
+                    <option value="hospitality">Hospitality</option>
+                    <option value="finance">Finance</option>
+                    <option value="technology">Technology</option>
+                </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country(s):</label>
+                    <select id="country">
+                        <option value="" disabled selected>Select a Country</option>
+                        <option value="usa">USA</option>
+                        <option value="india">India</option>
+                        <option value="germany">Germany</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="canada">Canada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language(s):</label>
+                    <select id="language">
+                        <option value="" disabled selected>Select a language</option>
+                        <option value="english">English</option>
+                        <option value="hindi">Hindi</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="french">French</option>
+                        <option value="german">German</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="custom-rules">Custom Rules/Scoring Logic:</label>
-                    <textarea id="custom-rules" placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
+                    <textarea id="custom-rules"
+                        placeholder="e.g., Scores below 3 are negative, above 3 positive."></textarea>
                 </div>
             </div>
-            
             <div class="xai-option-group">
                 <input type="checkbox" id="include-xai-info" checked>
                 <label for="include-xai-info">Include Explainable AI (XAI) Info</label>
                 <span class="cost-note">(May incur additional processing cost)</span>
             </div>
-
             <h3 style="margin-top: 30px;">Real-time Test Run:</h3>
             <div class="test-run-area">
                 <label for="sample-input-text">Enter Sample Text:</label>
-                <textarea id="sample-input-text" placeholder="Type a few sentences to test AI extraction..." rows="3"></textarea>
+                <textarea id="sample-input-text" placeholder="Type a few sentences to test AI extraction..."
+                    rows="3"></textarea>
                 <button class="button" style="margin-top: 10px;" id="run-test-button">Run Test</button>
                 <span id="test-run-limit-note" class="test-limit-note"></span>
                 <label style="margin-top: 15px;">AI Output Preview:</label>
                 <div id="ai-output-preview" placeholder="AI extracted output will appear here."></div>
             </div>
-
-            <div class="button-group">
-                <label for="confidence-threshold">Set Minimum AI Confidence Threshold for Auto-Acceptance: <span id="confidence-value">75%</span></label>
-                <input type="range" id="confidence-threshold" min="0" max="100" value="75">
-                <p style="font-size: 0.85em; color: #666; margin-top: 5px;">Items below this threshold will be flagged
-                    for manual review.</p>
-                <button class="button" id="start-processing-button">Start Processing</button>
-            </div>
-        </div>
-
-        <div id="tab-jobs" class="tab-content">
-            <h2>My Recoding Jobs</h2>
-            <div id="jobs-table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Job ID</th>
-                            <th>Job Name</th>
-                            <th>Status</th>
-                            <th>Progress</th>
-                            <th>Started By</th>
-                            <th>Started On</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="jobs-table-body">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="tab-review" class="tab-content">
-            <h2>Review, Validate & Finalize</h2>
-            <div class="review-dashboard" id="review-dashboard-section">
-                <h3>Extracted Data for Review:</h3>
-                <div class="filter-section">
-                    <div class="form-group">
-                        <label for="filter-source-question">Source Question(s):</label>
-                        <select id="filter-source-question" multiple size="3">
-                            <option value="">All</option>
-                            <option value="q1">What went well?</option>
-                            <option value="q2">Tell us about your experience...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filter-destination-question">Destination Question(s):</label>
-                        <select id="filter-destination-question" multiple size="3">
-                            <option value="">All</option>
-                            <option value="dest1">Overall Sentiment</option>
-                            <option value="dest2">Experience Rating</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filter-output-type">Output Type(s):</label>
-                        <select id="filter-output-type" multiple size="3">
-                            <option value="">All</option>
-                            <option value="sentiment">Sentiment</option>
-                            <option value="rating">Rating</option>
-                            <option value="theme">Theme</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filter-confidence">Confidence Score (Min): <span id="filter-confidence-value">0%</span></label>
-                        <input type="range" id="filter-confidence" min="0" max="100" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="filter-validation-status">Validation Status:</label>
-                        <select id="filter-validation-status">
-                            <option value="all">All</option>
-                            <option value="unreviewed">Unreviewed</option>
-                            <option value="reviewed">Reviewed</option>
-                            <option value="finalized">Finalized</option>
-                        </select>
-                    </div>
-                    <div class="button-group">
-                        <button class="button">Apply Filters</button>
-                        <button class="button secondary">Clear Filters</button>
-                    </div>
-                </div>
-
-                <div class="batch-actions">
-                    <button class="button">Accept All Filtered</button>
-                    <button class="button secondary">Reject All Filtered</button>
-                    <div class="xai-batch-toggle">
-                        <input type="checkbox" id="xai-batch-toggle-checkbox">
-                        <label for="xai-batch-toggle-checkbox">Show all XAI Info</label>
-                    </div>
-                </div>
-
-                <table id="extractedDataTable">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="selectAllRows"></th>
-                            <th>Review #</th>
-                            <th>Original Review Text</th>
-                            <th>Source Q</th>
-                            <th>Destination Q</th>
-                            <th>Output Type</th>
-                            <th>AI Extracted Answer<i class="fas fa-info-circle" style="margin-left: 5px;" title="This answer was extracted by the AI based on the prompt instructions and contextual metadata. You can edit it if needed."></i> </th>
-                            <th>Confidence</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-review-id="R101" data-output-type="Scale Rating" data-status="unreviewed">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td class="review-id-cell"><strong>R101</strong></td>
-                            <td class="original-text-cell">"The service was great, but the food was cold and took ages to arrive. Customer support was quick though."</td>
-                            <td>"Overall Feedback"</td>
-                            <td>Overall Sentiment</td>
-                            <td>Scale Rating</td>
-                            <td class="editable-cell" data-original-content="8">
-                                <span class="display-mode" data-original-value="8" data-original-content="8">8</span>
-                                <i class="fas fa-chevron-right xai-info-toggle"></i>
-                                <div class="edit-mode" style="display: none;">
-                                    <select class="editable-field" data-field-type="select">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8" selected>8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                    </select>
-                                </div>
-                                <div class="xai-info xai-info-content"> Keywords: wait time, too long, good coffee </div>
-                            </td>
-                            <td>95%</td>
-                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                            <td class="action-buttons-cell">
-                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                    <div class="kebab-menu-content">
-                                        <a href="#" class="action-accept">Accept & Finalize</a>
-                                        <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="action-reject">Reject</a>
-                                    </div>
-                                </div>
-                                <div class="editable-cell-controls" style="display: none;">
-                                    <button class="button" data-action="save">Save</button>
-                                    <button class="button danger" data-action="cancel">Cancel</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr data-review-id="R101" data-output-type="Themes" data-status="unreviewed">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td class="review-id-cell"></td>
-                            <td class="original-text-cell"></td>
-                            <td>"Overall Feedback"</td>
-                            <td>Service Theme</td>
-                            <td>Themes</td>
-                            <td class="editable-cell" data-original-content='["Customer Service", "Service Quality"]'>
-                                <span class="display-mode" data-original-value='["Customer Service", "Service Quality"]' data-original-content='["Customer Service", "Service Quality"]'><span class="tag">Customer Service</span> <span class="tag">Service Quality</span></span>
-                                <i class="fas fa-chevron-right xai-info-toggle"></i>
-                                <div class="edit-mode" style="display: none;">
-                                    <input type="text" class="editable-field" value="Customer Service, Service Quality" data-field-type="text">
-                                </div>
-                                <div class="xai-info xai-info-content"> XAI: "customer support was quick" </div>
-                            </td>
-                            <td>88%</td>
-                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                            <td class="action-buttons-cell">
-                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                    <div class="kebab-menu-content">
-                                        <a href="#" class="action-accept">Accept & Finalize</a>
-                                        <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="action-reject">Reject</a>
-                                    </div>
-                                </div>
-                                <div class="editable-cell-controls" style="display: none;">
-                                    <button class="button" data-action="save">Save</button>
-                                    <button class="button danger" data-action="cancel">Cancel</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr data-review-id="R101" data-output-type="Categories" data-status="unreviewed">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td class="review-id-cell"></td>
-                            <td class="original-text-cell"></td>
-                            <td>"Overall Feedback"</td>
-                            <td>Food Issues</td>
-                            <td>Categories</td>
-                            <td class="editable-cell" data-original-content="Food Quality">
-                                <span class="display-mode" data-original-value="Food Quality" data-original-content="Food Quality">Food Quality</span>
-                                <i class="fas fa-chevron-right xai-info-toggle"></i>
-                                <div class="edit-mode" style="display: none;">
-                                    <input type="text" class="editable-field" value="Food Quality" data-field-type="text">
-                                </div>
-                                <div class="xai-info xai-info-content"> XAI: "the food was cold" </div>
-                            </td>
-                            <td>91%</td>
-                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                            <td class="action-buttons-cell">
-                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                    <div class="kebab-menu-content">
-                                        <a href="#" class="action-accept">Accept & Finalize</a>
-                                        <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="action-reject">Reject</a>
-                                    </div>
-                                </div>
-                                <div class="editable-cell-controls" style="display: none;">
-                                    <button class="button" data-action="save">Save</button>
-                                    <button class="button danger" data-action="cancel">Cancel</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr data-review-id="R102" data-output-type="Themes" data-status="unreviewed">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td class="review-id-cell"><strong>R102</strong></td>
-                            <td class="original-text-cell">"I am very satisfied with the new features in the app. The UI is intuitive."</td>
-                            <td>"App Feedback"</td>
-                            <td>Product Satisfaction</td>
-                            <td>Themes</td>
-                            <td class="editable-cell" data-original-content="Product Satisfaction">
-                                <span class="display-mode" data-original-value="Product Satisfaction" data-original-content="Product Satisfaction">Product Satisfaction</span>
-                                <i class="fas fa-chevron-right xai-info-toggle"></i>
-                                <div class="edit-mode" style="display: none;">
-                                    <input type="text" class="editable-field" value="Product Satisfaction" data-field-type="text">
-                                </div>
-                                <div class="xai-info xai-info-content"> XAI: "satisfied with the new features" </div>
-                            </td>
-                            <td>99%</td>
-                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                            <td class="action-buttons-cell">
-                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                    <div class="kebab-menu-content">
-                                        <a href="#" class="action-accept">Accept & Finalize</a>
-                                        <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="action-reject">Reject</a>
-                                    </div>
-                                </div>
-                                <div class="editable-cell-controls" style="display: none;">
-                                    <button class="button" data-action="save">Save</button>
-                                    <button class="button danger" data-action="cancel">Cancel</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr data-review-id="R103" data-output-type="Scale Rating" data-status="unreviewed">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td class="review-id-cell"><strong>R103</strong></td>
-                            <td class="original-text-cell">"The cashier was very friendly and helpful. Gave a great recommendation."</td>
-                            <td>"Employee Feedback"</td>
-                            <td>Staff Performance</td>
-                            <td>Scale Rating</td>
-                            <td class="editable-cell" data-original-content="5">
-                                <span class="display-mode" data-original-value="5" data-original-content="5">5</span>
-                                <i class="fas fa-chevron-right xai-info-toggle"></i>
-                                <div class="edit-mode" style="display: none;">
-                                    <select class="editable-field" data-field-type="select">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5" selected>5</option>
-                                    </select>
-                                </div>
-                                <div class="xai-info xai-info-content"> XAI: "friendly and helpful" </div>
-                            </td>
-                            <td>98%</td>
-                            <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
-                            <td class="action-buttons-cell">
-                                <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                    <div class="kebab-menu-content">
-                                        <a href="#" class="action-accept">Accept & Finalize</a>
-                                        <a href="#" class="action-edit">Modify Answer</a>
-                                        <a href="#" class="action-reject">Reject</a>
-                                    </div>
-                                </div>
-                                <div class="editable-cell-controls" style="display: none;">
-                                    <button class="button" data-action="save">Save</button>
-                                    <button class="button danger" data-action="cancel">Cancel</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="final-actions">
-                    <button class="button danger">Reject & Finalize All Unreviewed</button>
-                    <button class="button">Accept & Finalize All Unreviewed</button>
-                    <button class="button">Save to Reports</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="custom-answer-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 id="modal-title">Edit Custom Answer Set</h2>
+            <h3 margin-top: 30px;>AI Processing</h3>
             <div class="form-group">
-                <label for="custom-answer-name">Set Name:</label>
-                <input type="text" id="custom-answer-name">
+              <label for="confidence-threshold">
+                Set Minimum AI Confidence Threshold for Auto-Acceptance:
+                <span id="confidence-value">75%</span>
+              </label>
+              <input type="range" id="confidence-threshold" min="0" max="100" value="75" oninput="updateConfidenceValue(this.value)">
+              
+              <p style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                Items below this threshold will be flagged for manual review.
+              </p>
+            
+              <button id="start-processing" style="margin-top: 10px;">Start Processing</button>
             </div>
-            <div id="modal-labels-container">
-                <label>Labels:</label>
-                <div id="modal-labels-list"></div>
-                <div class="wrapper-inp">
-                    <input type="text" id="modal-add-label" placeholder="Enter new label name">
-                    <button class="button" id="modal-add-button">Add</button>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="button danger" id="modal-delete">Delete Set</button>
-                <button class="button secondary close-modal">Cancel</button>
-                <button class="button" id="modal-save">Save Set</button>
+            
+            <!-- Modal Structure -->
+            <div id="confirmation-modal" class="modal">
+              <div class="modal-content">
+                <p>AI recoding job is ready to run. Do you want to continue to queue the jobs?<br>
+                   You will be notified when the results are ready for review on your dashboard.</p>
+                <button onclick="closeModal()">OK</button>
+                <button onclick="closeModal()">Cancel</button>
+              </div>
             </div>
         </div>
-    </div>
+
+        <div class="step-section" id="step2">
+            <section id="dashboard" class="content-section active" style="display: block;">
+                <div class="section-header">
+                    <h2>My Recoding Jobs</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job ID</th>
+                                <th>User Name</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Last Activity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>Q4 Feedback Analysis</td>
+                                <td>Asraf Ali</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 100%;"></div>
+                                    </div>
+                                    100%
+                                </td>
+                                <td>2 mins ago</td>
+                                <td class="action-cell">
+                                    <button class="btn btn-primary btn-sm">Review Results</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#002</td>
+                                <td>New Product Survey</td>
+                                <td>Bhagwant Singh</td>
+                                <td><span class="status-badge status-processing">Processing</span></td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 50%;"></div>
+                                    </div>
+                                    50%
+                                </td>
+                                <td>1 hour ago</td>
+                                
+                                <td class="action-cell">
+                                    <button class="btn btn-secondary btn-sm" disabled="">Review Results</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        
+    <div class="step-section" id="step3">
+            <h2>STEP 4: Review, Validate &amp; Finalize</h2>
+
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="filter-source-question">Source Question(s):</label>
+                    <select id="filter-source-question" multiple="" size="3">
+                        <option value="">All</option>
+                        <option value="q1">What went well?</option>
+                        <option value="q2">Tell us about your experience...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-destination-question">Destination Question(s):</label>
+                    <select id="filter-destination-question" multiple="" size="3">
+                        <option value="">All</option>
+                        <option value="dest1">Overall Sentiment</option>
+                        <option value="dest2">Experience Rating</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-output-type">Output Type(s):</label>
+                    <select id="filter-output-type" multiple="" size="3">
+                        <option value="">All</option>
+                        <option value="sentiment">Sentiment</option>
+                        <option value="rating">Rating</option>
+                        <option value="theme">Theme</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-confidence">Confidence Score (Min): <span id="filter-confidence-value">0%</span></label>
+                    <input type="range" id="filter-confidence" min="0" max="100" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="filter-validation-status">Validation Status:</label>
+                    <select id="filter-validation-status">
+                        <option value="all">All</option>
+                        <option value="unreviewed">Unreviewed</option>
+                        <option value="reviewed">Reviewed</option>
+                        <option value="finalized">Finalized</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="button">Apply Filters</button>
+                    <button class="button secondary">Clear Filters</button>
+                </div>
+            </div>
+
+            <h3>Extracted Data for Review:</h3>
+            <table id="extractedDataTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllRows"></th>
+                        <th>Review #</th>
+                        <th>Original Review Text</th>
+                        <th>Source Q</th>
+                        <th>Destination Q</th>
+                        <th>Output Type</th>
+                        <th>AI Extracted Answer</th>
+                        <th>Confidence</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-review-id="R101" data-output-type="Scale Rating">
+                        <td><input type="checkbox" class="row-select"></td>
+                        <td class="review-id-cell"><strong>R101</strong></td>
+                        <td class="original-text-cell">"The service was great, but the food was cold and took ages to
+                            arrive.
+                            Customer support was quick though."</td>
+                        <td>"Overall Feedback"</td>
+                        <td>Overall Sentiment</td>
+                        <td>Scale Rating</td>
+                        <td class="editable-cell" data-original-content="8">
+                            <span class="display-mode" data-original-value="8" data-original-content="8">8</span>
+                            <div class="edit-mode">
+                                <select class="editable-field" data-field-type="select">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8" selected="">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <div class="xai-info" style="display: none;">Keywords: wait time, too long, good coffee
+                            </div>
+                        </td>
+                        <td>95%</td>
+                        <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                        <td class="action-buttons-cell">
+                            <div class="kebab"></div>
+                            <div class="editable-cell-controls"></div>
+                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                            </div>
+                            <button class="button" style="display: none;" data-action="save">Save</button>
+                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr data-review-id="R101" data-output-type="Themes">
+                        <td><input type="checkbox" class="row-select"></td>
+                        <td class="review-id-cell"></td>
+                        <td class="original-text-cell"></td>
+                        <td>"Overall Feedback"</td>
+                        <td>Service Theme</td>
+                        <td>Themes</td>
+                        <td class="editable-cell" data-original-content="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]">
+                            <span class="display-mode" data-original-value="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]" data-original-content="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]"><span class="tag">Customer
+                                    Service</span>
+                                <span class="tag">Service Quality</span></span>
+                            <div class="edit-mode">
+                                <input type="text" class="editable-field" value="Service, Quality" data-field-type="text">
+                            </div>
+                            <div class="xai-info" style="display: none;">XAI: "customer support was quick"</div>
+                        </td>
+                        <td>88%</td>
+                        <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                        <td class="action-buttons-cell">
+                            <div class="kebab"></div>
+                            <div class="editable-cell-controls"></div>
+                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                            </div>
+                            <button class="button" style="display: none;" data-action="save">Save</button>
+                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr data-review-id="R101" data-output-type="Categories">
+                        <td><input type="checkbox" class="row-select"></td>
+                        <td class="review-id-cell"></td>
+                        <td class="original-text-cell"></td>
+                        <td>"Overall Feedback"</td>
+                        <td>Food Issues</td>
+                        <td>Categories</td>
+                        <td class="editable-cell" data-original-content="Food Quality">
+                            <span class="display-mode" data-original-value="Food Quality" data-original-content="Food Quality">
+                                Food Quality
+                            </span>
+                            <div class="edit-mode">
+                                <input type="text" class="editable-field" value="Food Qualit" data-field-type="text">
+                            </div>
+                            <span class="xai-info hidden" style="display: none;">XAI: "food was cold"</span>
+                        </td>
+                        <td>91%</td>
+                        <td><span class="status-badge status-reviewed">Reviewed</span></td>
+                        <td class="action-buttons-cell">
+                            <div class="kebab"></div>
+                            <div class="editable-cell-controls"></div>
+                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                            </div>
+                            <button class="button" style="display: none;" data-action="save">Save</button>
+                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr data-review-id="R102" data-output-type="Custom Answers">
+                        <td><input type="checkbox" class="row-select"></td>
+                        <td class="review-id-cell"><strong>R102</strong></td>
+                        <td class="original-text-cell">"Easy to use, highly recommend this app for productivity.
+                            Interface is
+                            intuitive."</td>
+                        <td>"Product Experience"</td>
+                        <td>Product Usability</td>
+                        <td>Custom Answers</td>
+                        <td class="editable-cell" data-original-content="[&quot;Intuitive&quot;, &quot;User-Friendly&quot;]">
+                            <span class="display-mode" data-original-value="Intuitive, User-Friendly" data-original-content="[&quot;Intuitive&quot;, &quot;User-Friendly&quot;]">
+                                <span class="tag">Intuitive</span>
+                                <span class="tag">User-Friendly</span></span>
+                            <div class="edit-mode">
+                                <input type="text" class="editable-field" value="Intuitive, User-Friendly" data-field-type="text">
+                            </div>
+                            <div class="xai-info" style="display: none;">XAI: "easy to use"</div>
+                        </td>
+                        <td>93%</td>
+                        <td><span class="status-badge status-unreviewed">Unreviewed</span></td>
+                        <td class="action-buttons-cell">
+                            <div class="kebab"></div>
+                            <div class="editable-cell-controls"></div>
+                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                            </div>
+                            <button class="button" style="display: none;" data-action="save">Save</button>
+                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr data-review-id="R102" data-output-type="Keywords">
+                        <td><input type="checkbox" class="row-select"></td>
+                        <td class="review-id-cell"></td>
+                        <td class="original-text-cell"></td>
+                        <td>"Product Experience"</td>
+                        <td>Keywords</td>
+                        <td>Keywords</td>
+                        <td class="editable-cell" data-original-content="[&quot;easy to use&quot;, &quot;highly recommend&quot;, &quot;intuitive&quot;]">
+                            <span class="display-mode" data-original-value="easy to use, highly recommend, intuitive" data-original-content="[&quot;easy to use&quot;, &quot;highly recommend&quot;, &quot;intuitive&quot;]">
+                                <span class="tag">easy to use</span>
+                                <span class="tag">highly recommend</span>
+                                <span class="tag">intuitive</span>
+                            </span>
+                            <div class="edit-mode">
+                                <input type="text" class="editable-field" value="easy to use, highly recommend, intuitive" data-field-type="text">
+                            </div>
+                            <span class="xai-info hidden" style="display: none;">XAI: "keywords extracted directly"</span>
+                        </td>
+                        <td>85%</td>
+                        <td><span class="status-badge status-modified">Modified</span></td>
+                        <td class="action-buttons-cell">
+                            <div class="kebab"></div>
+                            <div class="editable-cell-controls"></div>
+                            <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                            </div>
+                            <button class="button" style="display: none;" data-action="save">Save</button>
+                            <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.9em;">
+                <a href="#" class="pagination-link">&lt; Prev</a> | <a href="#" class="pagination-link active">1</a> |
+                <a href="#" class="pagination-link">2</a> | <a href="#" class="pagination-link">3</a> | <a href="#" class="pagination-link">Next &gt;</a>
+            </div>
+
+            <div class="batch-actions">
+                <input type="checkbox" id="select-all-visible" aria-label="Select all visible rows"> <label for="select-all-visible">Select All Visible</label>
+                <button class="button">Mark Selected as Reviewed</button>
+                <button class="button" id="bulk-edit-button">Bulk Edit Selected Rows</button>
+                <div class="xai-batch-toggle">
+                    <input type="checkbox" id="show-all-xai-info">
+                    <label for="show-all-xai-info">Show Explainable AI (XAI) Info for All Rows</label>
+                </div>
+                <button class="button">Finalize All Reviewed Rows</button>
+            </div>
+
+            <div class="final-actions">
+                <button class="button secondary prev-step">
+                    &lt; Previous Step</button>
+                        <button class="button">Save to Reports</button>
+            </div>
+        </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabsContainer = document.querySelector('.tabs');
-            const tabButtons = tabsContainer.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const insertMappingButton = document.getElementById('insert-mapping-button');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mock data for the new single-select lists
+            const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Overall experience? Give positive and negative experience.'];
+            const mockDestinationQuestions = ['Staff Performance', 'Operational Issues', 'Employee Satisfaction', 'Overall Sentiment'];
+            const mockOutputTypes = ['Scale Rating (1-5) (Default)', 'Themes (Default)', 'Keywords (Default)', 'Yes/No/NA', 'BMW 1-10', 'KFC Agree/Disagree'];
+            const sourceList = document.getElementById('source-questions-list');
+            const destinationList = document.getElementById('destination-questions-list');
+            const outputTypeList = document.getElementById('output-type-list');
+
             const mappingSummaryBody = document.getElementById('mapping-summary-body');
-            const periodSelect = document.getElementById('period-select');
-            const customDateInputs = document.getElementById('custom-date-inputs');
-            const confidenceThreshold = document.getElementById('confidence-threshold');
-            const confidenceValueSpan = document.getElementById('confidence-value');
-            const startProcessingButton = document.getElementById('start-processing-button');
-            const reviewIdCells = document.querySelectorAll('.review-id-cell');
-            const originalTextCells = document.querySelectorAll('.original-text-cell');
-            const customAnswersConfigSection = document.getElementById('custom-answers-config-section');
-            const runTestButton = document.getElementById('run-test-button');
-            const sampleInputText = document.getElementById('sample-input-text');
-            const aiOutputPreview = document.getElementById('ai-output-preview');
-            const testRunLimitNote = document.getElementById('test-run-limit-note');
-            const kebabMenus = document.querySelectorAll('.kebab-menu');
-            const allRowsSelect = document.getElementById('selectAllRows');
-            const rowSelectCheckboxes = document.querySelectorAll('.row-select');
-            const contextToggle = document.getElementById('context-toggle');
-            const contextMetadataContent = document.getElementById('contextMetadataContent');
-            const xaiBatchToggleCheckbox = document.getElementById('xai-batch-toggle-checkbox');
-            const xaiInfoToggles = document.querySelectorAll('.xai-info-toggle');
+            const noMappingsMessage = document.getElementById('no-mappings-message');
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    document.getElementById(button.dataset.tabId).classList.add('active');
+            // Function to populate a single-select list
+            function populateList(listElement, data) {
+                listElement.innerHTML = '';
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.dataset.value = item;
+                    listElement.appendChild(li);
                 });
-            });
+            }
 
-            insertMappingButton.addEventListener('click', () => {
-                const sourceQuestionRadio = document.querySelector('input[name="source-question"]:checked');
-                const destinationQuestionRadio = document.querySelector('input[name="destination-question"]:checked');
-                const outputTypeRadio = document.querySelector('input[name="output-type"]:checked');
+            // Function to handle single-select behavior
+            function setupSingleSelect(listElement) {
+                listElement.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'LI') {
+                        const allItems = listElement.querySelectorAll('li');
+                        allItems.forEach(item => item.classList.remove('active'));
+                        e.target.classList.add('active');
+                    }
+                });
+            }
 
-                if (sourceQuestionRadio && destinationQuestionRadio && outputTypeRadio) {
-                    const sourceText = sourceQuestionRadio.parentElement.textContent.trim();
-                    const destText = destinationQuestionRadio.parentElement.textContent.trim();
-                    const outputText = outputTypeRadio.parentElement.textContent.trim();
+            // Populate and set up the lists
+            populateList(sourceList, mockSourceQuestions);
+            populateList(destinationList, mockDestinationQuestions);
+            populateList(outputTypeList, mockOutputTypes);
+            setupSingleSelect(sourceList);
+            setupSingleSelect(destinationList);
+            setupSingleSelect(outputTypeList);
 
+            // Handle Insert Mapping Button
+            document.getElementById('insert-mapping-button').addEventListener('click', () => {
+                const selectedSource = sourceList.querySelector('li.active');
+                const selectedDestination = destinationList.querySelector('li.active');
+                const selectedOutputType = outputTypeList.querySelector('li.active');
+
+                if (selectedSource && selectedDestination && selectedOutputType) {
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
-                        <td>${sourceText}</td>
-                        <td>${destText}</td>
-                        <td>${outputText}</td>
-                        <td><button class="remove-button">Remove</button></td>
+                        <td>${selectedSource.textContent}</td>
+                        <td>${selectedDestination.textContent}</td>
+                        <td>${selectedOutputType.textContent}</td>
+                        <td>
+                            <i class="fas fa-trash-alt remove-mapping" title="Remove Mapping"></i>
+                        </td>
                     `;
                     mappingSummaryBody.appendChild(newRow);
 
-                    // Clear selections after adding mapping
-                    sourceQuestionRadio.checked = false;
-                    destinationQuestionRadio.checked = false;
-                    outputTypeRadio.checked = false;
+                    // Clear selections
+                    selectedSource.classList.remove('active');
+                    selectedDestination.classList.remove('active');
+                    selectedOutputType.classList.remove('active');
+
+                    // Hide "no mappings" message
+                    noMappingsMessage.style.display = 'none';
                 } else {
                     alert('Please select a Source Question, Destination Question, and Output Type.');
                 }
             });
 
+            // Handle Remove Mapping
             mappingSummaryBody.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-button')) {
+                if (e.target.classList.contains('remove-mapping')) {
                     e.target.closest('tr').remove();
+                    // Show "no mappings" message if table is empty
+                    if (mappingSummaryBody.rows.length === 0) {
+                        noMappingsMessage.style.display = 'block';
+                    }
                 }
             });
+            // This is the hidden content that will be shown or hidden when toggled.
+            const toggleIcon = document.getElementById('toggleContextMetadata');
+            const content = document.getElementById('contextMetadataContent');
 
-            periodSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'custom_dates') {
-                    customDateInputs.style.display = 'flex';
-                } else {
-                    customDateInputs.style.display = 'none';
-                }
+                toggleIcon.addEventListener('click', () => {
+                content.classList.toggle('hidden');
+                toggleIcon.classList.toggle('rotated');
             });
 
-            confidenceThreshold.addEventListener('input', (e) => {
-                confidenceValueSpan.textContent = e.target.value + '%';
-            });
+          // Tab navigation logic
+          const tabItems = document.querySelectorAll('.tab-item');
+          const stepSections = document.querySelectorAll('.step-section');
+          
+          tabItems.forEach(item => {
+              item.addEventListener('click', () => {
+                  // Deactivate all tabs and content sections
+                  tabItems.forEach(tab => tab.classList.remove('active'));
+                  stepSections.forEach(section => section.classList.remove('active'));
+          
+                  // Activate the clicked tab
+                  item.classList.add('active');
+          
+                  // Show the corresponding content section
+                  const targetTab = item.getAttribute('data-tab');
+                  document.getElementById(targetTab).classList.add('active');
+              });
+          });
+          
+          // Set initial active tab and content
+          document.querySelector('.tab-item.active').click();
 
-            // Simulate loading questions and a test run
-            function loadQuestions() {
-                // In a real application, this would fetch data from an API
-                // For this mock-up, we'll just populate some options
-            }
-
-            function runTest() {
-                // In a real application, this would send a request to the AI model
-                aiOutputPreview.textContent = 'Analyzing text...';
-                setTimeout(() => {
-                    const sampleText = sampleInputText.value;
-                    const destinationQuestion = document.querySelector('input[name="destination-question"]:checked');
-                    const outputType = document.querySelector('input[name="output-type"]:checked');
-
-                    if (!sampleText || !destinationQuestion || !outputType) {
-                        aiOutputPreview.textContent = 'Please enter sample text and select both a destination question and output type.';
-                        return;
-                    }
-
-                    const outputText = outputType.parentElement.textContent.trim();
-                    aiOutputPreview.textContent = `[Simulated AI Output for '${sampleText}']\n\nDestination: ${destinationQuestion.parentElement.textContent.trim()}\nOutput Type: ${outputText}\n\nExtracted Result: Based on the input, the AI detected the key theme of 'Customer Experience' and a sentiment of 'Positive'.`;
-                }, 1500);
-            }
-
-            runTestButton.addEventListener('click', runTest);
-
-            // Hide/Show XAI info for individual rows
-            xaiInfoToggles.forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    const xaiInfoContent = e.target.closest('.editable-cell').querySelector('.xai-info-content');
-                    if (xaiInfoContent) {
-                        xaiInfoContent.style.display = xaiInfoContent.style.display === 'block' ? 'none' : 'block';
-                        e.target.classList.toggle('rotated', xaiInfoContent.style.display === 'block');
-                    }
-                });
-            });
-
-            // Handle the batch toggle checkbox for XAI info
-            xaiBatchToggleCheckbox.addEventListener('change', (e) => {
-                const isChecked = e.target.checked;
-                document.querySelectorAll('.xai-info-content').forEach(el => {
-                    el.style.display = isChecked ? 'block' : 'none';
-                });
-                document.querySelectorAll('.xai-info-toggle').forEach(el => {
-                    el.classList.toggle('rotated', isChecked);
-                });
-            });
-
-            // Handle row selection for bulk actions
-            allRowsSelect.addEventListener('change', (e) => {
-                rowSelectCheckboxes.forEach(checkbox => {
-                    checkbox.checked = e.target.checked;
-                });
-            });
-
-            // Initial load
-            loadQuestions();
         });
-    </script>
+    
+      function updateConfidenceValue(val) {
+          document.getElementById('confidence-value').textContent = `${val}%`;
+        }
+        
+        document.getElementById('start-processing').addEventListener('click', function () {
+          document.getElementById('confirmation-modal').style.display = 'block';
+        });
+        
+        function closeModal() {
+          document.getElementById('confirmation-modal').style.display = 'none';
+        }
+</script>
 </body>
 
 </html>
