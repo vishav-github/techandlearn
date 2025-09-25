@@ -1239,7 +1239,7 @@
             </div>
 
             <!-- Modal Structure -->
-            <div id="confirmation-modal" class="modal">
+            <div id="confirmation-modal" class="modal" style="display: none;">
                 <div class="modal-content">
                     <p>AI recoding job is ready to run. Do you want to continue to queue the jobs?<br>
                         You will be notified when the results are ready for review on your dashboard.</p>
@@ -1724,7 +1724,7 @@
             }
 
             document.getElementById('start-processing').addEventListener('click', function () {
-                document.getElementById('confirmation-modal').style.display = 'block';
+                document.getElementById('confirmation-modal').style.display = 'flex';
             });
 
             function closeModalFirst() {
