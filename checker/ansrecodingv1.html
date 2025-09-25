@@ -73,12 +73,12 @@
             color: #fff;
             font-weight: bold;
         }
-        
+
         .progress-indicator {
             display: none;
             /* Hide the old element */
         }
-        
+
         .tab-menu {
             display: flex;
             justify-content: center;
@@ -88,7 +88,7 @@
             border-radius: 8px 8px 0 0;
             overflow: hidden;
         }
-        
+
         .tab-item {
             flex-grow: 1;
             text-align: center;
@@ -99,15 +99,15 @@
             transition: background-color 0.3s, color 0.3s;
             border-right: 1px solid #ddd;
         }
-        
+
         .tab-item:last-child {
             border-right: none;
         }
-        
+
         .tab-item:hover:not(.active) {
             background-color: #e0e6e8;
         }
-        
+
         .tab-item.active {
             background-color: #3498db;
             color: #fff;
@@ -155,6 +155,10 @@
             border-radius: 4px;
             font-size: 1em;
             box-sizing: border-box;
+        }
+
+        .editable-cell-input {
+            width: calc(100% - 10px) !important
         }
 
         select[multiple] {
@@ -743,7 +747,7 @@
             background-color: var(--info-color);
             color: #b8174e;
         }
-        
+
         .status-modified {
             background-color: #3498db;
         }
@@ -785,10 +789,23 @@
             text-decoration: none;
             display: block;
             white-space: nowrap;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .kebab-menu-content a:hover {
             background-color: #f2f2f2;
+        }
+
+        .action-buttons-cell {
+            width: 95px;
+        }
+
+        .action-buttons-cell button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 3px auto;
         }
 
         /* Inline Editing Specifics */
@@ -852,39 +869,75 @@
             display: none;
         }
 
-       .modal {
-          display: none;
-          position: fixed;
-          z-index: 999;
-          left: 0; top: 0;
-          width: 100%; height: 100%;
-          background-color: rgba(0,0,0,0.5);
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
         }
-        
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
         .modal-content {
-          background-color: #fff;
-          margin: 15% auto;
-          padding: 20px 30px;
-          border-radius: 8px;
-          width: 90%;
-          max-width: 400px;
-          text-align: center;
-          box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
         }
-        
-        .modal-content h3 {
-          margin-top: 0;
-          color: #28a745;
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+            display: flex;
         }
-        
+
+        #modal-delete {
+            margin-left: 0px;
+            margin-right: auto;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .wrapper-inp {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .wrapper-inp input {
+            margin: 0px;
+        }
+
+        .wrapper-inp button {
+            min-width: 40px;
+        }
+
         .modal-content button {
-          margin-top: 15px;
-          padding: 8px 16px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
 
@@ -1080,7 +1133,8 @@
                     <tbody id="mapping-summary-body">
                     </tbody>
                 </table>
-                <p id="no-mappings-message" style="color: #999; text-align: center; margin-top: 20px;">No mappings have been added yet.</p>
+                <p id="no-mappings-message" style="color: #999; text-align: center; margin-top: 20px;">No mappings have
+                    been added yet.</p>
             </div>
 
             <div class="button-group" style="text-align: left;">
@@ -1101,20 +1155,21 @@
                 <i id="toggleContextMetadata" class="fas fa-chevron-right"></i>
             </div>
             <div id="contextMetadataContent" class="collapsible-content hidden">
-                <p style="font-size: 0.9em; color: #777; margin-bottom: 15px;"> Provide additional information to the AI to
+                <p style="font-size: 0.9em; color: #777; margin-bottom: 15px;"> Provide additional information to the AI
+                    to
                     help it understand the context of your data, leading to more accurate and relevant extractions. </p>
-            
+
 
                 <div class="form-group">
-                <label for="industry">Industry Type:</label>
-                <select id="industry">
-                    <option value="" disabled selected>Select an industry</option>
-                    <option value="healthcare">Healthcare</option>
-                    <option value="retail">Retail</option>
-                    <option value="hospitality">Hospitality</option>
-                    <option value="finance">Finance</option>
-                    <option value="technology">Technology</option>
-                </select>
+                    <label for="industry">Industry Type:</label>
+                    <select id="industry">
+                        <option value="" disabled selected>Select an industry</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="retail">Retail</option>
+                        <option value="hospitality">Hospitality</option>
+                        <option value="finance">Finance</option>
+                        <option value="technology">Technology</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -1146,7 +1201,7 @@
                 </div>
             </div>
             <div class="xai-option-group">
-                <input type="checkbox" id="include-xai-info" checked>
+                <input type="checkbox" id="include-xai-info">
                 <label for="include-xai-info">Include Explainable AI (XAI) Info</label>
                 <span class="cost-note">(May incur additional processing cost)</span>
             </div>
@@ -1162,27 +1217,28 @@
             </div>
             <h3 margin-top: 30px;>AI Processing</h3>
             <div class="form-group">
-              <label for="confidence-threshold">
-                Set Minimum AI Confidence Threshold for Auto-Acceptance:
-                <span id="confidence-value">75%</span>
-              </label>
-              <input type="range" id="confidence-threshold" min="0" max="100" value="75" oninput="updateConfidenceValue(this.value)">
-              
-              <p style="font-size: 0.85em; color: #666; margin-top: 5px;">
-                Items below this threshold will be flagged for manual review.
-              </p>
-            
-              <button id="start-processing" style="margin-top: 10px;">Start Processing</button>
+                <label for="confidence-threshold">
+                    Set Minimum AI Confidence Threshold for Auto-Acceptance:
+                    <span id="confidence-value">75%</span>
+                </label>
+                <input type="range" id="confidence-threshold" min="0" max="100" value="75"
+                    oninput="updateConfidenceValue(this.value)">
+
+                <p style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                    Items below this threshold will be flagged for manual review.
+                </p>
+
+                <button id="start-processing" style="margin-top: 10px;">Start Processing</button>
             </div>
-            
+
             <!-- Modal Structure -->
             <div id="confirmation-modal" class="modal">
-              <div class="modal-content">
-                <p>AI recoding job is ready to run. Do you want to continue to queue the jobs?<br>
-                   You will be notified when the results are ready for review on your dashboard.</p>
-                <button onclick="closeModal()">OK</button>
-                <button onclick="closeModal()">Cancel</button>
-              </div>
+                <div class="modal-content">
+                    <p>AI recoding job is ready to run. Do you want to continue to queue the jobs?<br>
+                        You will be notified when the results are ready for review on your dashboard.</p>
+                    <button onclick="closeModal()">OK</button>
+                    <button onclick="closeModal()">Cancel</button>
+                </div>
             </div>
         </div>
 
@@ -1233,7 +1289,7 @@
                                     50%
                                 </td>
                                 <td>1 hour ago</td>
-                                
+
                                 <td class="action-cell">
                                     <button class="btn btn-secondary btn-sm" disabled="">Review Results</button>
                                 </td>
@@ -1243,8 +1299,8 @@
                 </div>
             </section>
         </div>
-        
-    <div class="step-section" id="step3">
+
+        <div class="step-section" id="step3">
             <h2>STEP 4: Review, Validate &amp; Finalize</h2>
 
             <div class="filter-section">
@@ -1274,7 +1330,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="filter-confidence">Confidence Score (Min): <span id="filter-confidence-value">0%</span></label>
+                    <label for="filter-confidence">Confidence Score (Min): <span
+                            id="filter-confidence-value">0%</span></label>
                     <input type="range" id="filter-confidence" min="0" max="100" value="0">
                 </div>
                 <div class="form-group">
@@ -1343,7 +1400,8 @@
                             <div class="kebab"></div>
                             <div class="editable-cell-controls"></div>
                             <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
+                                        href="#" class="edit-row-button">Edit Answer</a></div>
                             </div>
                             <button class="button" style="display: none;" data-action="save">Save</button>
                             <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
@@ -1356,12 +1414,17 @@
                         <td>"Overall Feedback"</td>
                         <td>Service Theme</td>
                         <td>Themes</td>
-                        <td class="editable-cell" data-original-content="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]">
-                            <span class="display-mode" data-original-value="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]" data-original-content="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]"><span class="tag">Customer
+                        <td class="editable-cell"
+                            data-original-content="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]">
+                            <span class="display-mode"
+                                data-original-value="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]"
+                                data-original-content="[&quot;Customer Service&quot;, &quot;Service Quality&quot;]"><span
+                                    class="tag">Customer
                                     Service</span>
                                 <span class="tag">Service Quality</span></span>
                             <div class="edit-mode">
-                                <input type="text" class="editable-field" value="Service, Quality" data-field-type="text">
+                                <input type="text" class="editable-field" value="Service, Quality"
+                                    data-field-type="text">
                             </div>
                             <div class="xai-info" style="display: none;">XAI: "customer support was quick"</div>
                         </td>
@@ -1371,7 +1434,8 @@
                             <div class="kebab"></div>
                             <div class="editable-cell-controls"></div>
                             <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
+                                        href="#" class="edit-row-button">Edit Answer</a></div>
                             </div>
                             <button class="button" style="display: none;" data-action="save">Save</button>
                             <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
@@ -1385,7 +1449,8 @@
                         <td>Food Issues</td>
                         <td>Categories</td>
                         <td class="editable-cell" data-original-content="Food Quality">
-                            <span class="display-mode" data-original-value="Food Quality" data-original-content="Food Quality">
+                            <span class="display-mode" data-original-value="Food Quality"
+                                data-original-content="Food Quality">
                                 Food Quality
                             </span>
                             <div class="edit-mode">
@@ -1399,7 +1464,8 @@
                             <div class="kebab"></div>
                             <div class="editable-cell-controls"></div>
                             <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
+                                        href="#" class="edit-row-button">Edit Answer</a></div>
                             </div>
                             <button class="button" style="display: none;" data-action="save">Save</button>
                             <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
@@ -1414,12 +1480,15 @@
                         <td>"Product Experience"</td>
                         <td>Product Usability</td>
                         <td>Custom Answers</td>
-                        <td class="editable-cell" data-original-content="[&quot;Intuitive&quot;, &quot;User-Friendly&quot;]">
-                            <span class="display-mode" data-original-value="Intuitive, User-Friendly" data-original-content="[&quot;Intuitive&quot;, &quot;User-Friendly&quot;]">
+                        <td class="editable-cell"
+                            data-original-content="[&quot;Intuitive&quot;, &quot;User-Friendly&quot;]">
+                            <span class="display-mode" data-original-value="Intuitive, User-Friendly"
+                                data-original-content="[&quot;Intuitive&quot;, &quot;User-Friendly&quot;]">
                                 <span class="tag">Intuitive</span>
                                 <span class="tag">User-Friendly</span></span>
                             <div class="edit-mode">
-                                <input type="text" class="editable-field" value="Intuitive, User-Friendly" data-field-type="text">
+                                <input type="text" class="editable-field" value="Intuitive, User-Friendly"
+                                    data-field-type="text">
                             </div>
                             <div class="xai-info" style="display: none;">XAI: "easy to use"</div>
                         </td>
@@ -1429,7 +1498,8 @@
                             <div class="kebab"></div>
                             <div class="editable-cell-controls"></div>
                             <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
+                                        href="#" class="edit-row-button">Edit Answer</a></div>
                             </div>
                             <button class="button" style="display: none;" data-action="save">Save</button>
                             <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
@@ -1442,16 +1512,20 @@
                         <td>"Product Experience"</td>
                         <td>Keywords</td>
                         <td>Keywords</td>
-                        <td class="editable-cell" data-original-content="[&quot;easy to use&quot;, &quot;highly recommend&quot;, &quot;intuitive&quot;]">
-                            <span class="display-mode" data-original-value="easy to use, highly recommend, intuitive" data-original-content="[&quot;easy to use&quot;, &quot;highly recommend&quot;, &quot;intuitive&quot;]">
+                        <td class="editable-cell"
+                            data-original-content="[&quot;easy to use&quot;, &quot;highly recommend&quot;, &quot;intuitive&quot;]">
+                            <span class="display-mode" data-original-value="easy to use, highly recommend, intuitive"
+                                data-original-content="[&quot;easy to use&quot;, &quot;highly recommend&quot;, &quot;intuitive&quot;]">
                                 <span class="tag">easy to use</span>
                                 <span class="tag">highly recommend</span>
                                 <span class="tag">intuitive</span>
                             </span>
                             <div class="edit-mode">
-                                <input type="text" class="editable-field" value="easy to use, highly recommend, intuitive" data-field-type="text">
+                                <input type="text" class="editable-field"
+                                    value="easy to use, highly recommend, intuitive" data-field-type="text">
                             </div>
-                            <span class="xai-info hidden" style="display: none;">XAI: "keywords extracted directly"</span>
+                            <span class="xai-info hidden" style="display: none;">XAI: "keywords extracted
+                                directly"</span>
                         </td>
                         <td>85%</td>
                         <td><span class="status-badge status-modified">Modified</span></td>
@@ -1459,7 +1533,8 @@
                             <div class="kebab"></div>
                             <div class="editable-cell-controls"></div>
                             <div class="kebab-menu"><i class="fas fa-ellipsis-v"></i>
-                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a href="#" class="edit-row-button">Edit Answer</a></div>
+                                <div class="kebab-menu-content"><a href="#" class="action-edit">Modify Answer</a><a
+                                        href="#" class="edit-row-button">Edit Answer</a></div>
                             </div>
                             <button class="button" style="display: none;" data-action="save">Save</button>
                             <button class="button danger" style="display: none;" data-action="cancel">Cancel</button>
@@ -1469,11 +1544,13 @@
             </table>
             <div style="text-align: center; margin-top: 15px; font-size: 0.9em;">
                 <a href="#" class="pagination-link">&lt; Prev</a> | <a href="#" class="pagination-link active">1</a> |
-                <a href="#" class="pagination-link">2</a> | <a href="#" class="pagination-link">3</a> | <a href="#" class="pagination-link">Next &gt;</a>
+                <a href="#" class="pagination-link">2</a> | <a href="#" class="pagination-link">3</a> | <a href="#"
+                    class="pagination-link">Next &gt;</a>
             </div>
 
             <div class="batch-actions">
-                <input type="checkbox" id="select-all-visible" aria-label="Select all visible rows"> <label for="select-all-visible">Select All Visible</label>
+                <input type="checkbox" id="select-all-visible" aria-label="Select all visible rows"> <label
+                    for="select-all-visible">Select All Visible</label>
                 <button class="button">Mark Selected as Reviewed</button>
                 <button class="button" id="bulk-edit-button">Bulk Edit Selected Rows</button>
                 <div class="xai-batch-toggle">
@@ -1484,62 +1561,73 @@
             </div>
 
             <div class="final-actions">
-                        <button class="button">Save to Reports</button>
+                <button class="button">Save to Reports</button>
             </div>
         </div>
+        <div id="editAnswerModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Edit Answer</h3>
+                <div id="modal-input-container"></div>
+                <div class="modal-footer">
+                    <button class="button danger" id="modal-delete">Delete row</button>
+                    <button class="button secondary" id="modal-cancel">Cancel</button>
+                    <button class="button" id="modal-save">Save</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Mock data for the new single-select lists
+                const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Overall experience? Give positive and negative experience.'];
+                const mockDestinationQuestions = ['Staff Performance', 'Operational Issues', 'Employee Satisfaction', 'Overall Sentiment'];
+                const mockOutputTypes = ['Scale Rating (1-5) (Default)', 'Themes (Default)', 'Keywords (Default)', 'Yes/No/NA', 'BMW 1-10', 'KFC Agree/Disagree'];
+                const sourceList = document.getElementById('source-questions-list');
+                const destinationList = document.getElementById('destination-questions-list');
+                const outputTypeList = document.getElementById('output-type-list');
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mock data for the new single-select lists
-            const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Overall experience? Give positive and negative experience.'];
-            const mockDestinationQuestions = ['Staff Performance', 'Operational Issues', 'Employee Satisfaction', 'Overall Sentiment'];
-            const mockOutputTypes = ['Scale Rating (1-5) (Default)', 'Themes (Default)', 'Keywords (Default)', 'Yes/No/NA', 'BMW 1-10', 'KFC Agree/Disagree'];
-            const sourceList = document.getElementById('source-questions-list');
-            const destinationList = document.getElementById('destination-questions-list');
-            const outputTypeList = document.getElementById('output-type-list');
+                const mappingSummaryBody = document.getElementById('mapping-summary-body');
+                const noMappingsMessage = document.getElementById('no-mappings-message');
 
-            const mappingSummaryBody = document.getElementById('mapping-summary-body');
-            const noMappingsMessage = document.getElementById('no-mappings-message');
+                // Function to populate a single-select list
+                function populateList(listElement, data) {
+                    listElement.innerHTML = '';
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        li.dataset.value = item;
+                        listElement.appendChild(li);
+                    });
+                }
 
-            // Function to populate a single-select list
-            function populateList(listElement, data) {
-                listElement.innerHTML = '';
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item;
-                    li.dataset.value = item;
-                    listElement.appendChild(li);
-                });
-            }
+                // Function to handle single-select behavior
+                function setupSingleSelect(listElement) {
+                    listElement.addEventListener('click', (e) => {
+                        if (e.target.tagName === 'LI') {
+                            const allItems = listElement.querySelectorAll('li');
+                            allItems.forEach(item => item.classList.remove('active'));
+                            e.target.classList.add('active');
+                        }
+                    });
+                }
 
-            // Function to handle single-select behavior
-            function setupSingleSelect(listElement) {
-                listElement.addEventListener('click', (e) => {
-                    if (e.target.tagName === 'LI') {
-                        const allItems = listElement.querySelectorAll('li');
-                        allItems.forEach(item => item.classList.remove('active'));
-                        e.target.classList.add('active');
-                    }
-                });
-            }
+                // Populate and set up the lists
+                populateList(sourceList, mockSourceQuestions);
+                populateList(destinationList, mockDestinationQuestions);
+                populateList(outputTypeList, mockOutputTypes);
+                setupSingleSelect(sourceList);
+                setupSingleSelect(destinationList);
+                setupSingleSelect(outputTypeList);
 
-            // Populate and set up the lists
-            populateList(sourceList, mockSourceQuestions);
-            populateList(destinationList, mockDestinationQuestions);
-            populateList(outputTypeList, mockOutputTypes);
-            setupSingleSelect(sourceList);
-            setupSingleSelect(destinationList);
-            setupSingleSelect(outputTypeList);
+                // Handle Insert Mapping Button
+                document.getElementById('insert-mapping-button').addEventListener('click', () => {
+                    const selectedSource = sourceList.querySelector('li.active');
+                    const selectedDestination = destinationList.querySelector('li.active');
+                    const selectedOutputType = outputTypeList.querySelector('li.active');
 
-            // Handle Insert Mapping Button
-            document.getElementById('insert-mapping-button').addEventListener('click', () => {
-                const selectedSource = sourceList.querySelector('li.active');
-                const selectedDestination = destinationList.querySelector('li.active');
-                const selectedOutputType = outputTypeList.querySelector('li.active');
-
-                if (selectedSource && selectedDestination && selectedOutputType) {
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
+                    if (selectedSource && selectedDestination && selectedOutputType) {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
                         <td>${selectedSource.textContent}</td>
                         <td>${selectedDestination.textContent}</td>
                         <td>${selectedOutputType.textContent}</td>
@@ -1547,75 +1635,393 @@
                             <i class="fas fa-trash-alt remove-mapping" title="Remove Mapping"></i>
                         </td>
                     `;
-                    mappingSummaryBody.appendChild(newRow);
+                        mappingSummaryBody.appendChild(newRow);
 
-                    // Clear selections
-                    selectedSource.classList.remove('active');
-                    selectedDestination.classList.remove('active');
-                    selectedOutputType.classList.remove('active');
+                        // Clear selections
+                        selectedSource.classList.remove('active');
+                        selectedDestination.classList.remove('active');
+                        selectedOutputType.classList.remove('active');
 
-                    // Hide "no mappings" message
-                    noMappingsMessage.style.display = 'none';
-                } else {
-                    alert('Please select a Source Question, Destination Question, and Output Type.');
-                }
-            });
-
-            // Handle Remove Mapping
-            mappingSummaryBody.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-mapping')) {
-                    e.target.closest('tr').remove();
-                    // Show "no mappings" message if table is empty
-                    if (mappingSummaryBody.rows.length === 0) {
-                        noMappingsMessage.style.display = 'block';
+                        // Hide "no mappings" message
+                        noMappingsMessage.style.display = 'none';
+                    } else {
+                        alert('Please select a Source Question, Destination Question, and Output Type.');
                     }
-                }
-            });
-            // This is the hidden content that will be shown or hidden when toggled.
-            const toggleIcon = document.getElementById('toggleContextMetadata');
-            const content = document.getElementById('contextMetadataContent');
+                });
+
+                // Handle Remove Mapping
+                mappingSummaryBody.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-mapping')) {
+                        e.target.closest('tr').remove();
+                        // Show "no mappings" message if table is empty
+                        if (mappingSummaryBody.rows.length === 0) {
+                            noMappingsMessage.style.display = 'block';
+                        }
+                    }
+                });
+                // This is the hidden content that will be shown or hidden when toggled.
+                const toggleIcon = document.getElementById('toggleContextMetadata');
+                const content = document.getElementById('contextMetadataContent');
 
                 toggleIcon.addEventListener('click', () => {
-                content.classList.toggle('hidden');
-                toggleIcon.classList.toggle('rotated');
+                    content.classList.toggle('hidden');
+                    toggleIcon.classList.toggle('rotated');
+                });
+
+                // Tab navigation logic
+                const tabItems = document.querySelectorAll('.tab-item');
+                const stepSections = document.querySelectorAll('.step-section');
+
+                tabItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        // Deactivate all tabs and content sections
+                        tabItems.forEach(tab => tab.classList.remove('active'));
+                        stepSections.forEach(section => section.classList.remove('active'));
+
+                        // Activate the clicked tab
+                        item.classList.add('active');
+
+                        // Show the corresponding content section
+                        const targetTab = item.getAttribute('data-tab');
+                        document.getElementById(targetTab).classList.add('active');
+                    });
+                });
+
+                // Set initial active tab and content
+                document.querySelector('.tab-item.active').click();
+
+            });
+            const showAllXaiInfoCheckbox = document.getElementById('show-all-xai-info');
+
+            function updateXaiInfoDisplayInTable() {
+                const xaiInfoDivs = document.querySelectorAll('.xai-info');
+                const showXaiInStep4 = showAllXaiInfoCheckbox.checked;
+
+                xaiInfoDivs.forEach(div => {
+                    if (showXaiInStep4) {
+                        div.style.display = 'block';
+                    } else {
+                        div.style.display = 'none';
+                    }
+                });
+            }
+
+            document.addEventListener('change', updateXaiInfoDisplayInTable);
+
+            function updateConfidenceValue(val) {
+                document.getElementById('confidence-value').textContent = `${val}%`;
+            }
+
+            document.getElementById('start-processing').addEventListener('click', function () {
+                document.getElementById('confirmation-modal').style.display = 'block';
             });
 
-          // Tab navigation logic
-          const tabItems = document.querySelectorAll('.tab-item');
-          const stepSections = document.querySelectorAll('.step-section');
-          
-          tabItems.forEach(item => {
-              item.addEventListener('click', () => {
-                  // Deactivate all tabs and content sections
-                  tabItems.forEach(tab => tab.classList.remove('active'));
-                  stepSections.forEach(section => section.classList.remove('active'));
-          
-                  // Activate the clicked tab
-                  item.classList.add('active');
-          
-                  // Show the corresponding content section
-                  const targetTab = item.getAttribute('data-tab');
-                  document.getElementById(targetTab).classList.add('active');
-              });
-          });
-          
-          // Set initial active tab and content
-          document.querySelector('.tab-item.active').click();
+            // function closeModal() {
+            //     document.getElementById('confirmation-modal').style.display = 'none';
+            // }
 
-        });
-    
-      function updateConfidenceValue(val) {
-          document.getElementById('confidence-value').textContent = `${val}%`;
-        }
-        
-        document.getElementById('start-processing').addEventListener('click', function () {
-          document.getElementById('confirmation-modal').style.display = 'block';
-        });
-        
-        function closeModal() {
-          document.getElementById('confirmation-modal').style.display = 'none';
-        }
-</script>
+            // Step 4: Table Interactions
+            const dataTable = document.getElementById('extractedDataTable');
+            let editingCell = null; // To keep track of the currently edited cell
+
+            // Kebab Menu Logic
+            dataTable.addEventListener('click', function (event) {
+                const kebabIcon = event.target.closest('.kebab-menu');
+                if (kebabIcon) {
+                    const kebabMenu = kebabIcon.parentElement;
+                    // Close any other open menus
+                    document.querySelectorAll('.action-buttons-cell.active').forEach(menu => {
+                        if (menu !== kebabMenu) {
+                            menu.classList.remove('active');
+                        }
+                    });
+                    kebabMenu.classList.toggle('active');
+                    event.stopPropagation(); // Prevent document click from closing immediately
+                } else if (!event.target.closest('.kebab-menu-content')) {
+                    // Clicked outside any kebab menu content, close all
+                    document.querySelectorAll('.kebab-menu.active').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+
+            // Handle Kebab Menu Actions
+            dataTable.addEventListener('click', function (event) {
+                const actionLink = event.target.closest('.kebab-menu-content a');
+                if (!actionLink) return;
+
+                event.preventDefault(); // Stop default link behavior
+                const row = actionLink.closest('tr');
+                const answerCell = row.querySelector('.editable-cell');
+                const actionType = actionLink.classList[0]; // e.g., 'action-edit', 'action-delete'
+
+                // Close the kebab menu
+                actionLink.closest('.kebab-menu').classList.remove('active');
+
+                if (actionType === 'action-edit') {
+                    handleEditAnswer(row, answerCell);
+                } else if (actionType === 'edit-row-button') {
+                    editRow(row, answerCell);
+                } else if (actionType === 'action-view-original') {
+                    viewOriginalText(row);
+                }
+            });
+
+            let editingRow = null;
+            const modal = document.getElementById('editAnswerModal');
+            const closeModal = () => {
+                modal.style.display = 'none';
+                editingCell = null;
+                editingRow = null;
+            };
+
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            document.getElementById('modal-cancel').addEventListener('click', closeModal);
+
+            function handleEditAnswer(row, cell) {
+                editingRow = row;
+                editingCell = cell;
+
+                const originalContent = cell.dataset.originalContent;
+                const outputType = row.dataset.outputType;
+                const modal = document.getElementById('editAnswerModal');
+                const modalContainer = document.getElementById('modal-input-container');
+
+                let inputHTML = '';
+                let parsedValue;
+
+                try {
+                    parsedValue = JSON.parse(originalContent);
+                    if (!Array.isArray(parsedValue)) parsedValue = originalContent;
+                } catch (e) {
+                    parsedValue = originalContent;
+                }
+
+                if (Array.isArray(parsedValue)) {
+                    inputHTML = '<div class="editable-cell-tags">';
+                    parsedValue.forEach(tag => {
+                        inputHTML += `<span class="tag editing-tag"><input type="text" value="${tag}"><span class="close-tag">&times;</span></span>`;
+                    });
+                    inputHTML += `<div class="wrapper-inp"><input type="text" class="add-tag-input" placeholder="+ Add New Tag"><button id="add-tag">+</button></div></div>`;
+                } else if (outputType === 'Scale Rating') {
+                    inputHTML = `<input type="number" class="editable-cell-input" value="${parsedValue}" min="1" max="10">`;
+                } else {
+                    inputHTML = `<input type="text" class="editable-cell-input" value="${parsedValue}">`;
+                }
+
+                modalContainer.innerHTML = inputHTML;
+                modal.style.display = 'flex';
+
+                if (Array.isArray(parsedValue)) {
+                    modalContainer.querySelectorAll('.editing-tag .close-tag').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            this.closest('.editing-tag').remove();
+                        });
+                    });
+                }
+
+                document.getElementById('modal-save').addEventListener('click', () => handleSaveAnswer(cell, row));
+                if (document.getElementById('add-tag')) { document.getElementById('add-tag').addEventListener('click', () => addTag(cell, row)); }
+
+                document.getElementById('modal-delete').addEventListener('click', () => deleteRow(row));
+
+            }
+            function addTag(cell, row) {
+                const tags = Array.from(document.querySelectorAll('.editing-tag input')).map(input => input.value.trim()).filter(val => val !== '');
+                const newTagInput = document.querySelector('.add-tag-input');
+                if (newTagInput && newTagInput.value.trim() !== '') {
+                    tags.push(newTagInput.value.trim());
+                }
+                newValue = JSON.stringify(tags); // Store as JSON string for multi-value
+                // Reconstruct display HTML
+                let displayHtml = '';
+                tags.forEach(tag => {
+                    displayHtml += `<span class="tag editing-tag"><input type="text" value="${tag}"><span class="close-tag">×</span></span>`;
+                });
+
+                const editableCell = document.querySelector('.editable-cell-tags');
+                if (editableCell) {
+                    const tags = editableCell.querySelectorAll('.tag.editing-tag');
+                    tags.forEach(tag => tag.remove());
+
+                    const newHtml = displayHtml;
+
+                    editableCell.insertAdjacentHTML('afterbegin', newHtml);
+                    document.getElementsByClassName('add-tag-input')[0].value = ''
+                }
+
+                document.querySelectorAll('.editing-tag .close-tag').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        this.closest('.editing-tag').remove();
+                    });
+                });
+
+            }
+
+            function editRow(row, answerCell) {
+                const aiExtractedCell = row.querySelector('.editable-cell');
+                const displayMode = aiExtractedCell.querySelector('.display-mode');
+                const editMode = aiExtractedCell.querySelector('.edit-mode');
+                const editableField = editMode.querySelector('.editable-field');
+
+
+                const saveButton = row.querySelector('[data-action="save"]');
+                const cancelButton = row.querySelector('[data-action="cancel"]');
+
+                console.log(saveButton)
+                displayMode.style.display = 'none';
+                editMode.style.display = 'block';
+
+                // this.style.display = 'none';
+                saveButton.style.display = 'inline-block';
+                cancelButton.style.display = 'inline-block';
+
+                const currentDisplayValue = displayMode.dataset.originalValue.replace(/['"\(\)\{\}\[\]]/g, '');
+                if (editableField.tagName === 'SELECT') {
+                    editableField.value = currentDisplayValue;
+                } else if (editableField.tagName === 'INPUT') {
+                    editableField.value = currentDisplayValue;
+                }
+                editableField.focus();
+            }
+            document.querySelectorAll('[data-action="save"]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const cell = row.querySelector('.editable-cell');
+                    const displayMode = cell.querySelector('.display-mode');
+                    const editMode = cell.querySelector('.edit-mode');
+                    const editableField = editMode.querySelector('.editable-field');
+                    const editButton = row.querySelector('.edit-row-button');
+                    const cancelButton = row.querySelector('[data-action="cancel"]');
+                    let newValue = ''
+                    if (cell.querySelector('.tag')) {
+                        const tags = Array.from(cell.querySelectorAll('.editable-field')[0].value.split(",")).map(input => input.trim()).filter(val => val !== '');
+                        const newTagInput = cell.querySelector('.add-tag-input');
+                        if (newTagInput && newTagInput.value.trim() !== '') {
+                            tags.push(newTagInput.value.trim());
+                        }
+                        newValue = JSON.stringify(tags); // Store as JSON string for multi-value
+                        // Reconstruct display HTML
+                        let displayHtml = '';
+                        tags.forEach(tag => {
+                            displayHtml += `<span class="tag">${tag}</span>`;
+                        });
+                        cell.querySelector('.display-mode').innerHTML = displayHtml;
+                    }
+                    else {
+                        newValue = editableField.value;
+                        displayMode.textContent = newValue;
+
+                    }
+                    displayMode.dataset.originalValue = newValue;
+                    displayMode.closest('td').setAttribute('data-original-value', newValue)
+                    displayMode.closest('td').setAttribute('data-original-content', newValue)
+                    displayMode.setAttribute('data-original-content', newValue)
+                    displayMode.style.display = 'block';
+                    editMode.style.display = 'none';
+                    this.style.display = 'none';
+                    cancelButton.style.display = 'none';
+                    editButton.style.display = 'inline-block';
+
+                    // Update status (conceptual)
+                    const statusCell = row.querySelector('.status-badge');
+                    if (statusCell && statusCell.textContent !== 'Finalized') {
+                        statusCell.className = 'status-badge status-modified';
+                        statusCell.textContent = 'Edited';
+                    }
+                });
+            });
+            document.querySelectorAll('[data-action="cancel"]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const cell = row.querySelector('.editable-cell');
+                    const displayMode = cell.querySelector('.display-mode');
+                    const editMode = cell.querySelector('.edit-mode');
+                    const editableField = editMode.querySelector('.editable-field');
+                    const saveButton = row.querySelector('[data-action="save"]');
+                    const editButton = row.querySelector('.edit-row-button');
+
+                    editableField.value = displayMode.dataset.originalValue;
+
+                    displayMode.style.display = 'block';
+                    editMode.style.display = 'none';
+                    this.style.display = 'none';
+                    saveButton.style.display = 'none';
+                    editButton.style.display = 'inline-block';
+                });
+            });
+            function handleSaveAnswer(cell, row) {
+                let newValue;
+                const outputType = row.dataset.outputType;
+
+                if (document.querySelector('.modal .editable-cell-tags')) { // Multi-value tags
+                    const tags = Array.from(document.querySelectorAll('.editing-tag input')).map(input => input.value.trim()).filter(val => val !== '');
+                    console.log(tags)
+                    const newTagInput = cell.querySelector('.add-tag-input');
+                    if (newTagInput && newTagInput.value.trim() !== '') {
+                        tags.push(newTagInput.value.trim());
+                    }
+                    newValue = JSON.stringify(tags); // Store as JSON string for multi-value
+                    // Reconstruct display HTML
+                    let displayHtml = '';
+                    tags.forEach(tag => {
+                        displayHtml += `<span class="tag">${tag}</span>`;
+                    });
+                    cell.querySelector('.display-mode').innerHTML = displayHtml;
+                    //console.log(displayHtml)
+                } else { // Single value
+                    const input = document.querySelector('.modal .editable-cell-input');
+                    newValue = input.value.trim();
+                    cell.querySelector('.display-mode').textContent = newValue;
+                }
+                cell.closest('td').dataset.originalContent = newValue;
+                cell.setAttribute('data-original-value', newValue)
+                cell.dataset.originalContent = newValue; // Update original content
+                cell.classList.remove('editing');
+                console.log(cell)
+                cell.querySelector('.display-mode').setAttribute('data-original-value', newValue)
+                cell.querySelector('.display-mode').setAttribute('data-original-content', newValue)
+                editingCell = null;
+
+                // Update status (conceptual)
+                const statusCell = row.querySelector('.status-badge');
+                if (statusCell && statusCell.textContent !== 'Finalized') {
+                    statusCell.className = 'status-badge status-modified';
+                    statusCell.textContent = 'Modified';
+                }
+                closeModal();
+                alert('Answer saved!'); // Placeholder confirmation
+                cell.closest('tr').querySelector('td:last-child .editable-cell-controls').innerHTML = ``;
+                updateXaiInfoDisplayInTable(); // Refresh XAI display if needed
+            }
+
+            function handleCancelEdit(cell, row) {
+                const originalContent = cell.dataset.originalContent;
+                const outputType = row.dataset.outputType;
+
+                try {
+                    const parsedContent = JSON.parse(originalContent);
+                    if (Array.isArray(parsedContent)) {
+                        let displayHtml = '';
+                        parsedContent.forEach(tag => {
+                            displayHtml += `<span class="tag">${tag}</span>`;
+                        });
+                        cell.innerHTML = displayHtml;
+                    } else {
+                        cell.textContent = originalContent;
+                    }
+                } catch (e) {
+                    cell.textContent = originalContent;
+                }
+
+                cell.classList.remove('editing');
+                editingCell = null;
+
+                cell.closest('tr').querySelector('td:last-child .editable-cell-controls').innerHTML = ``;
+                updateXaiInfoDisplayInTable(); // Refresh XAI display if needed
+            }
+
+        </script>
 </body>
 
 </html>
