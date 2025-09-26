@@ -1,8 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Issue Icons with Toggle Detail (Fixed)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup Archive</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .mockup-item {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .mockup-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+    }
+    .mockup-item h2 {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mockup Archive</h1>
+    <input type="search" id="search-input" placeholder="Search mockups...">
+  </header>
+  <main>
+    <div class="mockup-grid" id="mockup-grid">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -113,19 +148,15 @@
       color: white;
     }
   </style>
-</head>
 <body>
-
   <table>
     <thead>
       <tr>
-        <th>Response</th>
-        <th>Issues</th>
+        <th>Powered QA Issues</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>The staff was very helpful but the overall experience was not great.</td>
         <td>
           <div class="issue-icons">
             <!-- note: role="button" and tabindex make these keyboard-accessible -->
@@ -237,6 +268,57 @@
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
           e.preventDefault();
           toggleDetail(type, node);
+        }
+      });
+    });
+  </script>
+</body>
+    </div>
+  </main>
+  <script>
+    const mockupData = [
+      {
+        title: "Dropdown Mockup",
+        description: "A simple dropdown mockup",
+        image: "https://via.placeholder.com/300"
+      },
+      {
+        title: "Detail Box Mockup",
+        description: "A detail box mockup with expandable content",
+        image: "https://via.placeholder.com/300"
+      },
+      {
+        title: "Form Mockup",
+        description: "A form mockup with validation",
+        image: "https://via.placeholder.com/300"
+      }
+      // Add more mockup data here
+    ];
+
+    const mockupGrid = document.getElementById("mockup-grid");
+
+    mockupData.forEach((mockup) => {
+      const mockupItem = document.createElement("div");
+      mockupItem.classList.add("mockup-item");
+      mockupItem.innerHTML = `
+        <img src="${mockup.image}" alt="${mockup.title}">
+        <h2>${mockup.title}</h2>
+        <p>${mockup.description}</p>
+      `;
+      mockupGrid.appendChild(mockupItem);
+    });
+
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", () => {
+      const searchValue = searchInput.value.toLowerCase();
+      const mockupItems = document.querySelectorAll(".mockup-item");
+      mockupItems.forEach((item) => {
+        const title = item.querySelector("h2").textContent.toLowerCase();
+        const description = item.querySelector("p").textContent.toLowerCase();
+        if (title.includes(searchValue) || description.includes(searchValue)) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
         }
       });
     });
