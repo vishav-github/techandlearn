@@ -38,11 +38,6 @@
   </header>
   <main>
     <div class="mockup-grid" id="mockup-grid">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Issue Icons with Toggle Detail (Fixed)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -153,9 +148,7 @@
       color: white;
     }
   </style>
-</head>
 <body>
-
   <table>
     <thead>
       <tr>
@@ -280,7 +273,6 @@
     });
   </script>
 </body>
-</html>
     </div>
   </main>
   <script>
