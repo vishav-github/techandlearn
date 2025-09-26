@@ -1,0 +1,271 @@
+<table>
+  <thead>
+    <tr>
+      <th>Column 1</th>
+      <th>Column 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Issue Icons with Toggle Detail (Fixed)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f5f5f5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    .issue-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .issue-icon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      color: #0078d4;
+      font-weight: bold;
+      transition: color 0.2s ease;
+      padding: 6px;
+      border-radius: 6px;
+    }
+
+    .issue-icon:focus {
+      outline: 2px solid rgba(0,120,212,0.25);
+      outline-offset: 2px;
+    }
+
+    .issue-icon:hover {
+      color: #005a9e;
+      background: rgba(0,120,212,0.03);
+    }
+
+    .issue-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Make the chevron transformable and centered */
+    .chevron {
+      display: inline-block;           /* important so transform works */
+      transform-origin: center;
+      transition: transform 0.25s ease;
+      font-size: 14px;
+      color: #333;
+      margin-left: 8px;
+    }
+
+    /* rotated state */
+    .chevron.rotate {
+      transform: rotate(180deg);
+    }
+
+    .detail-box {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 0 15px;
+      margin-top: 8px;
+    }
+
+    .detail-box.open {
+      max-height: 400px; /* generous for content */
+      padding: 15px;
+    }
+
+    .button-group {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .accept {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .flag {
+      background-color: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Response</th>
+        <th>Issues</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>The staff was very helpful but the overall experience was not great.</td>
+        <td>
+          <div class="issue-icons">
+            <!-- note: role="button" and tabindex make these keyboard-accessible -->
+            <div class="issue-icon" role="button" tabindex="0" data-type="coherence" aria-expanded="false">
+              <div class="issue-label">
+                <i class="fas fa-link-slash" aria-hidden="true"></i>
+                <span>Coherence</span>
+              </div>
+              <i class="fas fa-chevron-up chevron" data-id="coherence"></i>
+            </div>
+
+            <div class="issue-icon" role="button" tabindex="0" data-type="grammar" aria-expanded="false">
+              <div class="issue-label">
+                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                <span>Grammar</span>
+              </div>
+              <i class="fas fa-chevron-up chevron" data-id="grammar"></i>
+            </div>
+
+            <div class="issue-icon" role="button" tabindex="0" data-type="spelling" aria-expanded="false">
+              <div class="issue-label">
+                <i class="fas fa-spell-check" aria-hidden="true"></i>
+                <span>Spelling</span>
+              </div>
+              <i class="fas fa-chevron-up chevron" data-id="spelling"></i>
+            </div>
+
+            <div class="issue-icon" role="button" tabindex="0" data-type="location" aria-expanded="false">
+              <div class="issue-label">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                <span>Location</span>
+              </div>
+              <i class="fas fa-chevron-up chevron" data-id="location"></i>
+            </div>
+          </div>
+
+          <div class="detail-box" id="detail-box" aria-live="polite">
+            <p id="detail-text">Select an issue to view details.</p>
+            <div class="button-group">
+              <button class="button accept">Accept</button>
+              <button class="button flag">Flag for Review</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Font Awesome JS (keeps your existing icons) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+  <script>
+    const detailBox = document.getElementById('detail-box');
+    const detailText = document.getElementById('detail-text');
+
+    const issueDetails = {
+      coherence: "This sentence lacks a clear transition between positive and negative feedback. Consider splitting or clarifying the contrast.",
+      grammar: "Consider revising “was very helpful but” to improve sentence structure and clarity.",
+      spelling: "No spelling errors detected in this response.",
+      location: "Location reference is missing or unclear. Consider specifying where the experience occurred."
+    };
+
+    let currentOpen = null;
+
+    // Helper to get the chevron element by issue type
+    function getChevron(type) {
+      return document.querySelector('.chevron[data-id="' + type + '"]');
+    }
+
+    // Handle toggling
+    function toggleDetail(type, triggeringIcon) {
+      const chevron = getChevron(type);
+
+      if (currentOpen === type) {
+        // Collapse
+        detailBox.classList.remove('open');
+        if (chevron) chevron.classList.remove('rotate');
+        // set aria-expanded on the triggering issue icon
+        if (triggeringIcon) triggeringIcon.setAttribute('aria-expanded', 'false');
+        currentOpen = null;
+        detailText.textContent = 'Select an issue to view details.';
+        return;
+      }
+
+      // Expand for new type
+      detailText.textContent = issueDetails[type] || 'No detail available.';
+      detailBox.classList.add('open');
+
+      // Reset all chevrons
+      document.querySelectorAll('.chevron').forEach(c => c.classList.remove('rotate'));
+      // rotate the active one
+      if (chevron) chevron.classList.add('rotate');
+
+      // update aria-expanded for all issue-icon elements
+      document.querySelectorAll('.issue-icon').forEach(el => {
+        el.setAttribute('aria-expanded', el.getAttribute('data-type') === type ? 'true' : 'false');
+      });
+
+      currentOpen = type;
+    }
+
+    // Attach event listeners to each issue-icon block (click + keyboard)
+    document.querySelectorAll('.issue-icon').forEach(node => {
+      const type = node.getAttribute('data-type');
+
+      node.addEventListener('click', () => toggleDetail(type, node));
+
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          toggleDetail(type, node);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+      </td>
+      <td>
+        <!-- Place your HTML code here for Column 2, Row 1 -->
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <!-- Place your HTML code here for Column 1, Row 2 -->
+      </td>
+      <td>
+        <!-- Place your HTML code here for Column 2, Row 2 -->
+      </td>
+    </tr>
+    <!-- Add more rows as needed -->
+  </tbody>
+</table>
