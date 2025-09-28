@@ -1707,14 +1707,12 @@
 
                     if (selectedSource && selectedDestination && selectedOutputType) {
                         const newRow = document.createElement('tr');
-                        const isClassification = selectedOutputType.textContent === "Destination Question's Answers (Classification)";
-                        const conflictStatus = isClassification ? "Conflict Status" : "No Conflict";
-
+                        
                         newRow.innerHTML = `
                         <td>${selectedSource.textContent}</td>
                         <td>${selectedDestination.textContent}</td>
                         <td>${selectedOutputType.textContent}</td>
-                        td>${conflictStatus}</td>
+                       
                         <td>
                             <i class="fas fa-trash-alt remove-mapping" title="Remove Mapping"></i>
                         </td>
