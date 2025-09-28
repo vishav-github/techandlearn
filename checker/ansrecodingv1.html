@@ -1140,7 +1140,6 @@
                             <th>Destination Question</th>
                             <th>Output Type</th>
                             <th>Actions</th>
-                            <th>Conflict Status</th>
                         </tr>
                     </thead>
                     <tbody id="mapping-summary-body">
@@ -1660,8 +1659,8 @@
 
                 // Mock data for the new single-select lists
                 const mockSourceQuestions = ['What went well?', 'What could be improved?', 'Overall experience? Give positive and negative experience.'];
-                const mockDestinationQuestions = ['Same Source Quesiton', 'Staff Performance', 'Operational Issues', 'Employee Satisfaction', 'Overall Sentiment'];
-                const mockOutputTypes = ['Destination Question's Answers (Classification)', 'Scale Rating (1-5) (New Codes)', 'Themes (New Codes)', 'Keywords (New Codes)', 'Yes/No/NA', 'BMW 1-10', 'KFC Agree/Disagree'];
+                const mockDestinationQuestions = ['Staff Performance', 'Operational Issues', 'Employee Satisfaction', 'Overall Sentiment'];
+                const mockOutputTypes = ['Scale Rating (1-5) (Default)', 'Themes (Default)', 'Keywords (Default)', 'Yes/No/NA', 'BMW 1-10', 'KFC Agree/Disagree'];
                 const sourceList = document.getElementById('source-questions-list');
                 const destinationList = document.getElementById('destination-questions-list');
                 const outputTypeList = document.getElementById('output-type-list');
@@ -1707,12 +1706,10 @@
 
                     if (selectedSource && selectedDestination && selectedOutputType) {
                         const newRow = document.createElement('tr');
-                        
                         newRow.innerHTML = `
                         <td>${selectedSource.textContent}</td>
                         <td>${selectedDestination.textContent}</td>
                         <td>${selectedOutputType.textContent}</td>
-                       
                         <td>
                             <i class="fas fa-trash-alt remove-mapping" title="Remove Mapping"></i>
                         </td>
