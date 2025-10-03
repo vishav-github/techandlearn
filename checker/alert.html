@@ -126,39 +126,31 @@
 </div>
 ---------------------------------------
 <div style="
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 10px 12px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.9em;
+    color: #5d4037;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     width: 100%;
-    box-sizing: border-box;
 ">
-    <div style="text-align: center; font-size: 24px; margin-bottom: 8px;">🔴</div>
-    <div>
-        <strong style="font-size: 1.1em;">CRITICAL: Location Anomaly Detected</strong>
-        <span style="display: block; font-size: 0.85em; color: #555;">(Anomaly based on: [Short Branch Name])</span>
-
-        <div style="margin: 6px 0; font-size: 0.9em;">
-            <div style="margin-bottom: 4px;">
-                <strong>Expected Location (Branch System):</strong>
-                📍 <a href="https://maps.google.com/?q=[Branch Lat],[Branch Long]" target="_blank" style="color: #721c24; text-decoration: none;">[Branch Lat], [Branch Long]</a>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex: 1;">
+            <div style="font-weight: 600; margin-bottom: 4px;">
+                ⚠️ Location Mismatch: <span style="color: #d84315;">[Short Branch Name]</span>
             </div>
-            <div>
-                <strong>Submitted Location (Review GPS):</strong>
-                📍 <a href="https://maps.google.com/?q=[Submitted Lat],[Submitted Long]" target="_blank" style="color: #721c24; text-decoration: none;">[Submitted Lat], [Submitted Long]</a>
+            <div style="line-height: 1.4;">
+                📍 <strong>Expected:</strong> <a href="https://maps.google.com/?q=[Branch Lat],[Branch Long]" target="_blank" style="color: #5d4037;">[Branch Lat], [Branch Long]</a><br>
+                📍 <strong>Submitted:</strong> <a href="https://maps.google.com/?q=[Submitted Lat],[Submitted Long]" target="_blank" style="color: #5d4037;">[Submitted Lat], [Submitted Long]</a>
             </div>
         </div>
-
-        <p style="margin: 4px 0; text-align: center;">
-            <a href="[LINK TO GOOGLE MAPS WITH BOTH PINS]" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold; font-size: 0.9em;">
-                🗺️ <u>View Both Locations on Google Maps</u>
-            </a>
-        </p>
-        <p style="margin: 4px 0; font-size: 0.95em; text-align: center;">
-            <strong style="color: #5a161c;">ACTION: Manual verification is mandatory before approval.</strong>
-        </p>
+        <div style="margin-left: 12px;">
+            <a href="[LINK TO GOOGLE MAPS WITH BOTH PINS]" target="_blank" title="Compare locations" style="text-decoration: none; font-size: 1.2em;">🗺️</a>
+        </div>
+    </div>
+    <div style="margin-top: 6px; font-weight: 500; color: #bf360c;">
+        🔍 Manual review required before approval.
     </div>
 </div>
