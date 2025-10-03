@@ -1,0 +1,44 @@
+<div style="
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+">
+    <div style="display: flex; align-items: flex-start;">
+        <span style="font-size: 24px; margin-right: 10px; margin-top: 2px;">🔴</span>
+        <div style="flex: 1; min-width: 0;">
+            <strong style="font-size: 1.1em;">CRITICAL: Location Anomaly Detected</strong>
+            <span style="display: block; font-size: 0.85em; color: #555; margin-top: 2px;">(Anomaly based on: [Short Branch Name])</span>
+
+            <table style="margin: 6px 0; font-size: 0.9em; border-collapse: collapse; width: 100%;">
+                <tr style="border-bottom: 1px solid #f5c6cb;">
+                    <td style="padding: 4px 15px 4px 0; vertical-align: top; white-space: nowrap;"><strong>Expected Location (Branch System):</strong></td>
+                    <td style="padding: 4px 0; vertical-align: top; font-weight: bold; width: 100%;">
+                        📍 <a href="https://maps.google.com/?q=[Branch Lat],[Branch Long]" target="_blank" style="color: #721c24; text-decoration: none; word-break: break-all;">[Branch Lat], [Branch Long]</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 4px 15px 4px 0; vertical-align: top; white-space: nowrap;"><strong>Submitted Location (Review GPS):</strong></td>
+                    <td style="padding: 4px 0; vertical-align: top; font-weight: bold; width: 100%;">
+                        📍 <a href="https://maps.google.com/?q=[Submitted Lat],[Submitted Long]" target="_blank" style="color: #721c24; text-decoration: none; word-break: break-all;">[Submitted Lat], [Submitted Long]</a>
+                    </td>
+                </tr>
+            </table>
+
+            <p style="margin: 4px 0 0 0;">
+                <a href="[LINK TO GOOGLE MAPS WITH BOTH PINS]" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                    🗺️ <u>View Both Locations on Google Maps</u>
+                </a>
+            </p>
+            <p style="margin: 4px 0 0 0; font-size: 0.95em;">
+                <strong style="color: #5a161c;">ACTION: Manual verification is mandatory before approval.</strong>
+            </p>
+        </div>
+    </div>
+</div>
