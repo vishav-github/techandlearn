@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mobile Submission Audit Logs</title>
+    <style>
+        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        /* Stats Bar */
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 8px; border-left: 5px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stat-card h4 { margin: 0; font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; }
+        .stat-card .val { font-size: 1.5rem; font-weight: bold; margin-top: 5px; }
+
+        /* Filter Section */
+        .filters { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; }
+        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+
+        /* Table */
+        .log-container { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8f9fa; padding: 12px 15px; text-align: left; font-size: 0.85rem; border-bottom: 2px solid #eee; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        
+        /* Status Badges */
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .bg-success { background: #d4edda; color: #155724; }
+        .bg-warning { background: #fff3e0; color: #e67e22; }
+        .bg-danger { background: #f8d7da; color: #721c24; }
+
+        .btn-action { background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .text-detail { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-header">
+    <h2>Mobile Submission Audit Logs</h2>
+    <span>Welcome, <strong>Axion Operations Team</strong></span>
+</div>
+
+<div class="stats-bar">
+    <div class="stat-card"><h4>Success Rate</h4><div class="val">92.4%</div></div>
+    <div class="stat-card" style="border-left-color: var(--warning)"><h4>Partial Syncs</h4><div class="val">14</div></div>
+    <div class="stat-card" style="border-left-color: var(--danger)"><h4>Blocked (Quota)</h4><div class="val">3</div></div>
+    <div class="stat-card"><h4>Active Shoppers</h4><div class="val">42</div></div>
+</div>
+
+<div class="filters">
+    <input type="text" placeholder="Search Order ID (e.g. 273569)">
+    <select><option>All Statuses</option><option>Failed</option><option>Partial</option></select>
+    <input type="date">
+    <button class="btn-action">Filter Results</button>
+</div>
+
+<div class="log-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Order ID</th>
+                <th>Shopper</th>
+                <th>Status</th>
+                <th>Details / Error Reason</th>
+                <th>Resolution Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2026-02-12 14:20</td>
+                <td><strong>273569</strong></td>
+                <td>FATEEN (220151)</td>
+                <td><span class="badge bg-warning">Incomplete</span></td>
+                <td>
+                    25 items not received. 
+                    <span class="text-detail">Shopper likely closed app before sync finished.</span>
+                </td>
+                <td><button class="btn-action">Notify Shopper</button></td>
+            </tr>
+            <tr>
+                <td>2026-02-12 13:45</td>
+                <td><strong>1758308</strong></td>
+                <td>PameCaro94</td>
+                <td><span class="badge bg-danger">Rejected</span></td>
+                <td>
+                    Invalid file type: .mp4
+                    <span class="text-detail">QuestionID: 680588 requires .jpg only.</span>
+                </td>
+                <td><button class="btn-action">View Question</button></td>
+            </tr>
+            <tr>
+                <td>2026-02-12 12:10</td>
+                <td><strong>255965</strong></td>
+                <td>nathali</td>
+                <td><span class="badge bg-danger">System Block</span></td>
+                <td>
+                    No storage quota remaining.
+                    <span class="text-detail">Account limit reached.</span>
+                </td>
+                <td><button class="btn-action" style="background:var(--success)">Upgrade Storage</button></td>
+            </tr>
+            <tr>
+                <td>2026-02-12 11:30</td>
+                <td><strong>288412</strong></td>
+                <td>Shopper_X</td>
+                <td><span class="badge bg-danger">Restricted</span></td>
+                <td>
+                    Attempt to upload Cancelled Order.
+                    <span class="text-detail">API blocked submission of inactive job.</span>
+                </td>
+                <td><button class="btn-action">Archive Attempt</button></td>
+            </tr>
+             <tr>
+                <td>2026-02-12 10:05</td>
+                <td><strong>1758308</strong></td>
+                <td>FATEEN</td>
+                <td><span class="badge bg-success">Success</span></td>
+                <td>
+                    Data & Attachments synced.
+                    <span class="text-detail">Device: Google Pixel 7 (Android 14)</span>
+                </td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
