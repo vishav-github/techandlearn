@@ -4,55 +4,87 @@
     <meta charset="UTF-8">
     <title>Mobile Submission Audit Logs</title>
     <style>
-        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --capi: #8e44ad; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
         
-        /* Stats Bar */
-        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 8px; border-left: 5px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .stat-card h4 { margin: 0; font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; }
-        .stat-card .val { font-size: 1.5rem; font-weight: bold; margin-top: 5px; }
+        /* Dashboard Header & Stats */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stat-card h4 { margin: 0; font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .val { font-size: 1.8rem; font-weight: bold; margin-top: 8px; }
 
-        /* Filter Section */
-        .filters { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; }
-        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        /* Filter Panel */
+        .filter-panel { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-size: 0.75rem; font-weight: bold; color: var(--primary); }
+        .filter-group input, .filter-group select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem; min-width: 150px; }
+        .btn-filter { background: var(--primary); color: white; border: none; padding: 9px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        .btn-filter:hover { opacity: 0.9; }
 
-        /* Table */
-        .log-container { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        /* Results Table */
+        .log-container { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f8f9fa; padding: 12px 15px; text-align: left; font-size: 0.85rem; border-bottom: 2px solid #eee; }
-        td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { background: #f8f9fa; padding: 15px; text-align: left; font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; border-bottom: 2px solid #eee; }
+        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: top; }
         
-        /* Status Badges */
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
-        .bg-success { background: #d4edda; color: #155724; }
-        .bg-warning { background: #fff3e0; color: #e67e22; }
-        .bg-danger { background: #f8d7da; color: #721c24; }
+        /* Indicators */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; display: inline-block; }
+        .type-ms { background: #ebf5fb; color: #2980b9; }
+        .type-capi { background: #f5eef8; color: var(--capi); }
+        .st-success { background: #d4edda; color: #155724; }
+        .st-partial { background: #fff3e0; color: #e67e22; }
+        .st-danger { background: #f8d7da; color: #721c24; }
 
-        .btn-action { background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .text-detail { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 4px; }
+        /* Resolution Text Styles */
+        .instruction-box { font-size: 0.85rem; line-height: 1.4; color: #2c3e50; background: #f9f9f9; padding: 8px; border-radius: 4px; border-left: 3px solid #ddd; }
+        .instruction-box strong { color: var(--primary); display: block; margin-bottom: 3px; }
+        .text-meta { font-size: 0.75rem; color: #95a5a6; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="dashboard-header">
-    <h2>Mobile Submission Audit Logs</h2>
-    <span>Welcome, <strong>Vishav Deep Singh</strong></span>
+    <div>
+        <h1 style="margin:0; font-size: 1.5rem;">Mobile Submission Audit Logs</h1>
+        <p style="margin:5px 0 0; color:#7f8c8d;">Operational View: Mystery Shopping & CAPI Intercepts</p>
+    </div>
 </div>
 
 <div class="stats-bar">
-    <div class="stat-card"><h4>Success Rate</h4><div class="val">92.4%</div></div>
-    <div class="stat-card" style="border-left-color: var(--warning)"><h4>Partial Syncs</h4><div class="val">14</div></div>
-    <div class="stat-card" style="border-left-color: var(--danger)"><h4>Blocked (Quota)</h4><div class="val">3</div></div>
-    <div class="stat-card"><h4>Active Shoppers</h4><div class="val">42</div></div>
+    <div class="stat-card"><h4>Success Rate</h4><div class="val">91.4%</div></div>
+    <div class="stat-card" style="border-left-color: var(--capi)"><h4>CAPI Interviews</h4><div class="val">142</div></div>
+    <div class="stat-card" style="border-left-color: var(--warning)"><h4>Partial Syncs</h4><div class="val">18</div></div>
+    <div class="stat-card" style="border-left-color: var(--danger)"><h4>Blocked (Quota)</h4><div class="val">7</div></div>
 </div>
 
-<div class="filters">
-    <input type="text" placeholder="Search Order ID (e.g. 273569)">
-    <select><option>All Statuses</option><option>Failed</option><option>Partial</option></select>
-    <input type="date">
-    <button class="btn-action">Filter Results</button>
+<div class="filter-panel">
+    <div class="filter-group">
+        <label>Order ID</label>
+        <input type="text" placeholder="e.g. 273569">
+    </div>
+    <div class="filter-group">
+        <label>Survey ID (CAPI)</label>
+        <input type="text" placeholder="e.g. 12">
+    </div>
+    <div class="filter-group">
+        <label>Shopper Name/ID</label>
+        <input type="text" placeholder="e.g. umar1">
+    </div>
+    <div class="filter-group">
+        <label>Submission Status</label>
+        <select>
+            <option>All Statuses</option>
+            <option>Success</option>
+            <option>Partial</option>
+            <option>Rejected/Blocked</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label>Date Range</label>
+        <input type="date">
+    </div>
+    <button class="btn-filter">Apply Filters</button>
 </div>
 
 <div class="log-container">
@@ -60,68 +92,63 @@
         <thead>
             <tr>
                 <th>Timestamp</th>
-                <th>Order ID</th>
+                <th>Type</th>
+                <th>Reference IDs</th>
                 <th>Shopper</th>
-                <th>Status</th>
-                <th>Details / Error Reason</th>
-                <th>Resolution Action</th>
+                <th>Submission Status</th>
+                <th>Detail / Error</th>
+                <th style="width: 250px;">Resolution Instructions</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>2026-02-12 14:20</td>
-                <td><strong>273569</strong></td>
+                <td>2026-02-13 11:11</td>
+                <td><span class="badge type-capi">CAPI Interview</span></td>
+                <td><strong>Survey ID: 12</strong><br><span class="text-meta">CritID: 800951</span></td>
+                <td>umar1 (122437)</td>
+                <td><span class="badge st-success">Success</span></td>
+                <td>Data processed successfully. <span class="text-meta">Device: iPhone 17 Pro (iOS 26.2)</span></td>
+                <td><div class="instruction-box"><strong>No Action Required</strong>Review is finalized. You can view the data in the Review Panel.</div></td>
+            </tr>
+
+            <tr>
+                <td>2026-02-13 10:45</td>
+                <td><span class="badge type-ms">Mystery Shop</span></td>
+                <td><strong>Order ID: 273569</strong></td>
                 <td>FATEEN (220151)</td>
-                <td><span class="badge bg-warning">Incomplete</span></td>
-                <td>
-                    25 items not received. 
-                    <span class="text-detail">Shopper likely closed app before sync finished.</span>
-                </td>
-                <td><button class="btn-action">Questionnaire updated</button></td>
+                <td><span class="badge st-partial">Partial Sync</span></td>
+                <td>25 questions not received. <span class="text-meta">TotalAnswersSent: 3 / Expected: 28</span></td>
+                <td><div class="instruction-box"><strong>Instruction to Shopper:</strong>Ask shopper to open the 'Completed' tab in the app and manually trigger a 'Retry Sync'.</div></td>
             </tr>
+
             <tr>
-                <td>2026-02-12 13:45</td>
-                <td><strong>1758308</strong></td>
+                <td>2026-02-13 09:20</td>
+                <td><span class="badge type-ms">Mystery Shop</span></td>
+                <td><strong>Order ID: 1758308</strong></td>
                 <td>PameCaro94</td>
-                <td><span class="badge bg-danger">Rejected</span></td>
-                <td>
-                    Invalid file type: .mp4
-                    <span class="text-detail">QuestionID: 680588 requires .jpg only.</span>
-                </td>
-                <td><button class="btn-action">View Question</button></td>
+                <td><span class="badge st-danger">Blocked</span></td>
+                <td>Storage quota exceeded. <span class="text-meta">Upload failed for '20260212_122922.jpg'</span></td>
+                <td><div class="instruction-box"><strong>Management Action:</strong>Increase the account storage quota or delete old media attachments to allow new uploads.</div></td>
             </tr>
+
             <tr>
-                <td>2026-02-12 12:10</td>
-                <td><strong>255965</strong></td>
-                <td>nathali</td>
-                <td><span class="badge bg-danger">System Block</span></td>
-                <td>
-                    No storage quota remaining.
-                    <span class="text-detail">Account limit reached.</span>
-                </td>
-                <td><button class="btn-action" style="background:var(--success)">Upgrade Storage</button></td>
+                <td>2026-02-13 08:15</td>
+                <td><span class="badge type-capi">CAPI Interview</span></td>
+                <td><strong>Survey ID: 12</strong></td>
+                <td>umar1 (122437)</td>
+                <td><span class="badge st-danger">Blocked</span></td>
+                <td>Survey credits depleted. <span class="text-meta">Ref: 'Oh snap! Reviews limit reached'</span></td>
+                <td><div class="instruction-box"><strong>Management Action:</strong>Purchase additional survey credits for this company to re-enable CAPI submissions.</div></td>
             </tr>
+
             <tr>
-                <td>2026-02-12 11:30</td>
-                <td><strong>288412</strong></td>
+                <td>2026-02-13 07:30</td>
+                <td><span class="badge type-ms">Mystery Shop</span></td>
+                <td><strong>Order ID: 288412</strong></td>
                 <td>Shopper_X</td>
-                <td><span class="badge bg-danger">Restricted</span></td>
-                <td>
-                    Attempt to upload Cancelled Order.
-                    <span class="text-detail">API blocked submission of inactive job.</span>
-                </td>
-                <td><button class="btn-action">Archive Attempt</button></td>
-            </tr>
-             <tr>
-                <td>2026-02-12 10:05</td>
-                <td><strong>1758308</strong></td>
-                <td>FATEEN</td>
-                <td><span class="badge bg-success">Success</span></td>
-                <td>
-                    Data & Attachments synced.
-                    <span class="text-detail">Device: Google Pixel 7 (Android 14)</span>
-                </td>
-                <td>-</td>
+                <td><span class="badge st-danger">Rejected</span></td>
+                <td>Upload attempt for Cancelled Order. <span class="text-meta">API restricted submission.</span></td>
+                <td><div class="instruction-box"><strong>No Action Required:</strong>Order was cancelled in the admin panel. Shopper's offline data cannot be synced.</div></td>
             </tr>
         </tbody>
     </table>
