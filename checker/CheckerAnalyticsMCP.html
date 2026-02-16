@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checker Analytics MCP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide-static/0.321.0/lucide.min.js"></script>
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .card-hover:hover { transform: translateY(-2px); transition: all 0.2s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+    <aside class="fixed left-0 top-0 h-full w-64 bg-slate-900 text-white p-6 z-50">
+        <div class="flex items-center gap-3 mb-10">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center font-bold">C</div>
+            <h1 class="text-xl font-bold tracking-tight">Checker MCP</h1>
+        </div>
+        
+        <nav class="space-y-1">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Analysis</p>
+            <a href="#" class="flex items-center gap-3 p-3 bg-blue-600 rounded-lg text-sm">Overview</a>
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-lg text-sm text-slate-400">Branch Scores</a>
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-lg text-sm text-slate-400">Trends & Usage</a>
+            
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Management</p>
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-lg text-sm text-slate-400">Tasks & Assignments</a>
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-lg text-sm text-slate-400">Client List</a>
+        </nav>
+    </aside>
+
+    <main class="ml-64 p-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-2xl font-bold">Evaluation Summary</h2>
+                <p class="text-slate-500">Data compiled from 21 integrated MCP tools</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="location.reload()" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 shadow-sm">Refresh Data</button>
+                <button class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800 shadow-sm">Create Task</button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm card-hover">
+                <p class="text-sm font-medium text-slate-500">Global Avg Score</p>
+                <div class="flex items-end gap-2 mt-2">
+                    <span class="text-3xl font-bold">84.2%</span>
+                    <span class="text-green-500 text-sm font-medium mb-1">↑ 2.4%</span>
+                </div>
+            </div>
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm card-hover">
+                <p class="text-sm font-medium text-slate-500">Active Branches</p>
+                <div class="flex items-end gap-2 mt-2">
+                    <span class="text-3xl font-bold" id="branch-count">12</span>
+                </div>
+            </div>
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm card-hover">
+                <p class="text-sm font-medium text-slate-500">Pending Tasks</p>
+                <div class="flex items-end gap-2 mt-2">
+                    <span class="text-3xl font-bold">48</span>
+                    <span class="text-slate-400 text-sm font-medium mb-1">Assigned</span>
+                </div>
+            </div>
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm card-hover">
+                <p class="text-sm font-medium text-slate-500">Total Usage</p>
+                <div class="flex items-end gap-2 mt-2">
+                    <span class="text-3xl font-bold">1.2k</span>
+                    <span class="text-slate-400 text-sm font-medium mb-1">calls</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 glass p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Score Distribution</h3>
+                    <select class="text-sm border-none bg-slate-100 rounded-md px-2 py-1">
+                        <option>Last 30 Days</option>
+                        <option>Last 7 Days</option>
+                    </select>
+                </div>
+                <div class="h-64 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-slate-400">
+                    [Chart Area: Map get_score_distribution data here]
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-lg mb-4">Rankings</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium">North Branch</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">98%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium">East Branch</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">92%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium">South Branch</span>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">74%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium">West Branch</span>
+                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">58%</span>
+                    </div>
+                </div>
+                <button class="w-full mt-6 py-2 text-blue-600 text-sm font-semibold border border-blue-100 rounded-lg hover:bg-blue-50">
+                    View All Branches
+                </button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
