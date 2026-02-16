@@ -106,34 +106,37 @@
          * Update Dashboard Statistics
          */
         async function loadDashboardData() {
-    document.getElementById('dashboard-content').classList.add('loading');
-    
-    // 1. Get Summary
-    const summary = await callTool('get_evaluation_summary');
-    if (summary) {
-        document.getElementById('stat-score').innerText = (summary.score || summary.avg || 0) + "%";
-    }
+            document.getElementById('dashboard-content').classList.add('loading');
+            document.getElementById('connection-status').innerText = "Status: Syncing...";
 
-    // 2. Get Usage (One of your 21 tools)
-    const usage = await callTool('get_usage');
-    if (usage) {
-        document.getElementById('stat-usage').innerText = usage.total_calls || 0;
-    }
+            // 1. Get Global Summary
+            const summary = await callTool('get_evaluation_summary');
+            if (summary) {
+                document.getElementById('stat-score').innerText = (summary.average_score || summary.score || 0) + "%";
+            }
 
-    // 3. Populate the Recent Evaluations List
-    const tasks = await callTool('list_tasks');
-    if (tasks && tasks.length > 0) {
-        const listContainer = document.getElementById('evaluation-list');
-        listContainer.innerHTML = tasks.slice(0, 5).map(task => `
-            <div class="flex justify-between p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
-                <span><strong>${task.type || 'Task'}:</strong> ${task.title || task.id}</span>
-                <span class="text-blue-500 font-mono">${task.status || 'Active'}</span>
-            </div>
-        `).join('');
-    }
+            // 2. Get Branch Count
+            const branches = await callTool('list_branches');
+            if (branches) {
+                document.getElementById('stat-branches').innerText = branches.length;
+            }
 
-    document.getElementById('dashboard-content').classList.remove('loading');
-}
+            // 3. Get Usage
+            const usage = await callTool('get_usage');
+            if (usage) {
+                document.getElementById('stat-usage').innerText = usage.total_calls || usage.count || 0;
+            }
+
+            // 4. Get Tasks
+            const tasks = await callTool('list_tasks');
+            if (tasks) {
+                document.getElementById('stat-tasks').innerText = tasks.length;
+            }
+
+            document.getElementById('connection-status').innerText = "Status: Live (Connected to 6274)";
+            document.getElementById('connection-status').className = "text-green-600 text-sm font-medium";
+            document.getElementById('dashboard-content').classList.remove('loading');
+        }
 
         /**
          * Update Branch Rankings
