@@ -1242,7 +1242,7 @@
                     <button id="start-processing" class="button primary">Start Processing</button>
                     
                     <a href="javascript:void(0)" onclick="runPreFlightCheck()" style="font-size: 0.85rem; color: #555; text-decoration: underline; display: flex; align-items: center; gap: 5px;">
-                        <i class="fas fa-search"></i> Analyze 100 Selected Reviews
+                        <i class="fas fa-search"></i> Preview Job Impact Selected Reviews
                     </a>
                 </div>
             
@@ -2120,8 +2120,67 @@
                 cell.closest('tr').querySelector('td:last-child .editable-cell-controls').innerHTML = ``;
                 updateXaiInfoDisplayInTable(); // Refresh XAI display if needed
             }
-
+            function runPreFlightCheck() {
+                // 1. Show a loading state (optional but professional)
+                const link = event.currentTarget;
+                const originalText = link.innerHTML;
+                link.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            
+                // 2. Simulate the database check for Ghost Syncs
+                setTimeout(() => {
+                    link.innerHTML = originalText; // Reset link text
+                    
+                    // Open the Modal (Ensure you have the Modal HTML in your page)
+                    document.getElementById('preFlightModal').style.display = 'block';
+                }, 800); 
+            }
+            
+            function closePreFlight() {
+                document.getElementById('preFlightModal').style.display = 'none';
+            }
+            
+            function proceedToQueue() {
+                closePreFlight();
+                // Trigger your existing Step 3 logic here
+                alert("Tasks Queued: 95 New, 5 Ghost Synced.");
+            }
         </script>
+
+<div id="preFlightModal" style="display:none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); font-family: sans-serif;">
+    <div style="background-color: #fff; margin: 10% auto; padding: 0; border-radius: 12px; width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden;">
+        
+        <div style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #eee;">
+            <h3 style="margin: 0; color: #333; font-size: 1.25rem;">Mapping Pre-Check Summary</h3>
+            <p style="margin: 5px 0 0 0; color: #666; font-size: 0.85rem;">Reviewing 100 selected records</p>
+        </div>
+
+        <div style="padding: 25px;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div style="width: 30px; color: #28a745;"><i class="fas fa-check-circle fa-lg"></i></div>
+                <div style="flex: 1;"><strong>85 Ready</strong></div>
+                <div style="color: #666; font-size: 0.85rem;">New AI tasks</div>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div style="width: 30px; color: #007bff;"><i class="fas fa-bolt fa-lg"></i></div>
+                <div style="flex: 1;"><strong>15 Synced</strong></div>
+                <div style="color: #666; font-size: 0.85rem;">Active/Ghost jobs</div>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #ccc; font-size: 0.9rem; color: #444;">
+                <p>Total items to be processed: <strong>100</strong></p>
+                <p style="font-size: 0.8rem; color: #888; line-height: 1.4;">
+                    *Synced items use existing AI results to save processing time and credits.
+                </p>
+            </div>
+        </div>
+
+        <div style="background: #f8f9fa; padding: 15px 20px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+            <button onclick="closePreFlight()" style="padding: 8px 16px; border: 1px solid #ccc; background: #fff; border-radius: 6px; cursor: pointer;">Cancel</button>
+            <button onclick="proceedToQueue()" style="padding: 8px 20px; border: none; background: #28a745; color: #fff; border-radius: 6px; cursor: pointer; font-weight: bold;">Confirm & Start</button>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>
