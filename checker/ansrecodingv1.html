@@ -1243,7 +1243,16 @@
                         <button class="button" id="save-template-button">Save Configuration as Template</button>
                     </div>
                 </div>
-
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-primary btn-lg" onclick="showPreFlightModal()">
+                        <i class="fas fa-play"></i> Start Processing
+                    </button>
+                
+                    <a href="javascript:void(0)" onclick="runPreFlightCheck()" style="font-size: 0.9rem; color: #666; text-decoration: underline;">
+                        <i class="fas fa-search"></i> Analyze 100 Selected Reviews
+                    </a>
+                </div>
+                
             </div>
 
             <!-- Modal Structure -->
