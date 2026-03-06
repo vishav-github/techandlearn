@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Comparison Viewer</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:#f4f6fb;
+      color:#243447;
+    }
+    .topbar{
+      background:#1f2a38;
+      color:#fff;
+      padding:14px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .topbar h1{
+      margin:0;
+      font-size:22px;
+      font-weight:600;
+    }
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:none;
+      border-radius:6px;
+      padding:9px 14px;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn-light{background:#e9eef5;color:#1f2a38}
+    .btn-primary{background:#3498db;color:#fff}
+    .btn-success{background:#2ecc71;color:#fff}
+    .btn-warning{background:#f39c12;color:#fff}
+    .btn-danger{background:#e74c3c;color:#fff}
+
+    .page{
+      padding:18px;
+    }
+
+    .summary-bar{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1fr;
+      gap:15px;
+      margin-bottom:18px;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 1px 6px rgba(0,0,0,0.08);
+      padding:15px;
+    }
+
+    .card h3{
+      margin:0 0 10px 0;
+      font-size:14px;
+      color:#6c7a89;
+      font-weight:600;
+    }
+
+    .meta-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:8px 18px;
+      font-size:13px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:6px;
+      color:#fff;
+      font-size:12px;
+      font-weight:600;
+    }
+    .high{background:#e74c3c}
+    .medium{background:#f39c12}
+    .low{background:#2ecc71}
+
+    .main-layout{
+      display:grid;
+      grid-template-columns:2.2fr 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .compare-panel{
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 1px 6px rgba(0,0,0,0.08);
+      padding:15px;
+    }
+
+    .compare-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .compare-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+    }
+
+    .image-box{
+      border:1px solid #e5eaf2;
+      border-radius:10px;
+      overflow:hidden;
+      background:#fafbfd;
+    }
+
+    .image-box .label{
+      background:#eef2f7;
+      padding:10px 12px;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    .image-stage{
+      height:340px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fff;
+      border-top:1px solid #e5eaf2;
+      border-bottom:1px solid #e5eaf2;
+    }
+
+    .image-stage img{
+      max-width:100%;
+      max-height:320px;
+      display:block;
+    }
+
+    .image-info{
+      padding:12px;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .side-stack{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .match-table,
+    .thumb-strip{
+      margin-top:18px;
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 1px 6px rgba(0,0,0,0.08);
+      overflow:hidden;
+    }
+
+    .section-title{
+      padding:14px 15px;
+      background:#eef2f7;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th, td{
+      padding:11px 12px;
+      border-top:1px solid #edf1f6;
+      text-align:left;
+      font-size:13px;
+      vertical-align:top;
+    }
+
+    th{
+      background:#fafbfd;
+      color:#5f6f82;
+      font-weight:600;
+    }
+
+    .row-link{
+      color:#3498db;
+      font-weight:600;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    .shopper-stats{
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .thumbs{
+      display:flex;
+      gap:12px;
+      overflow-x:auto;
+      padding:15px;
+      background:#fff;
+    }
+
+    .thumb{
+      min-width:110px;
+      border:2px solid transparent;
+      border-radius:8px;
+      background:#fafbfd;
+      padding:8px;
+      text-align:center;
+      font-size:12px;
+      color:#566574;
+    }
+
+    .thumb.active{
+      border-color:#3498db;
+      background:#eef7ff;
+    }
+
+    .thumb img{
+      width:90px;
+      height:70px;
+      object-fit:cover;
+      border-radius:6px;
+      display:block;
+      margin:0 auto 8px auto;
+    }
+
+    .mini-note{
+      margin-top:6px;
+      color:#7b8794;
+      font-size:12px;
+    }
+
+    @media (max-width: 1100px){
+      .summary-bar{grid-template-columns:1fr 1fr}
+      .main-layout{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 760px){
+      .compare-grid{grid-template-columns:1fr}
+      .summary-bar{grid-template-columns:1fr}
+      .meta-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <h1>Image Comparison Viewer</h1>
+    <div class="top-actions">
+      <button class="btn btn-light">Back to Dashboard</button>
+      <button class="btn btn-primary">Open Full Review</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div class="summary-bar">
+      <div class="card">
+        <h3>Current Review Context</h3>
+        <div class="meta-grid">
+          <div><strong>Review ID:</strong> RV-58291</div>
+          <div><strong>Shopper:</strong> John D (SH-1042)</div>
+          <div><strong>Project:</strong> Burger Audit</div>
+          <div><strong>Location:</strong> BK #103</div>
+          <div><strong>Visit Date:</strong> 2026-03-06</div>
+          <div><strong>Image Source:</strong> Question Attachment</div>
+          <div><strong>Question:</strong> Q12 - Upload Receipt</div>
+          <div><strong>Image:</strong> 2 of 5</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Risk Level</h3>
+        <div><span class="badge high">High</span></div>
+        <div class="mini-note">Main signal: Similar image reuse by same shopper</div>
+      </div>
+
+      <div class="card">
+        <h3>Matches Found</h3>
+        <div style="font-size:28px;font-weight:700;">4</div>
+        <div class="mini-note">All matches above configured threshold</div>
+      </div>
+
+      <div class="card">
+        <h3>Current Decision</h3>
+        <div style="font-size:20px;font-weight:700;">Pending</div>
+        <div class="mini-note">No image-level decision recorded yet</div>
+      </div>
+    </div>
+
+    <div class="main-layout">
+      <div>
+        <div class="compare-panel">
+          <div class="compare-header">
+            <div>
+              <strong>Selected Match:</strong> Review RV-48112 &nbsp;|&nbsp; Similarity 94%
+            </div>
+            <div>
+              <span class="badge high">Same Shopper</span>
+              <span class="badge medium">Different Location</span>
+            </div>
+          </div>
+
+          <div class="compare-grid">
+            <div class="image-box">
+              <div class="label">Current Image</div>
+              <div class="image-stage">
+                <img src="https://via.placeholder.com/500x320?text=Current+Receipt" alt="Current Image">
+              </div>
+              <div class="image-info">
+                <div><strong>Uploaded:</strong> 2026-03-06 14:42</div>
+                <div><strong>Source:</strong> Question Attachment</div>
+                <div><strong>Question:</strong> Q12 - Upload Receipt</div>
+                <div><strong>Risk Flags:</strong> similar_image_found, same_shopper_reuse</div>
+              </div>
+            </div>
+
+            <div class="image-box">
+              <div class="label">Matched Historical Image</div>
+              <div class="image-stage">
+                <img src="https://via.placeholder.com/500x320?text=Matched+Receipt" alt="Matched Image">
+              </div>
+              <div class="image-info">
+                <div><strong>Review ID:</strong> RV-48112</div>
+                <div><strong>Shopper:</strong> John D (SH-1042)</div>
+                <div><strong>Project:</strong> Burger Audit</div>
+                <div><strong>Location:</strong> BK #205</div>
+                <div><strong>Visit Date:</strong> 2026-03-02</div>
+                <div><strong>Match Type:</strong> Similar Image</div>
+                <div><strong>Similarity:</strong> 94%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="match-table">
+          <div class="section-title">All Matches Above Threshold</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Similarity</th>
+                <th>Match Type</th>
+                <th>Review</th>
+                <th>Shopper</th>
+                <th>Location</th>
+                <th>Visit Date</th>
+                <th>Context</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>94%</strong></td>
+                <td>Similar</td>
+                <td>RV-48112</td>
+                <td>John D</td>
+                <td>BK #205</td>
+                <td>2026-03-02</td>
+                <td>Same shopper, different location</td>
+                <td><a class="row-link" href="#">View Match</a></td>
+              </tr>
+              <tr>
+                <td><strong>91%</strong></td>
+                <td>Similar</td>
+                <td>RV-47220</td>
+                <td>John D</td>
+                <td>BK #118</td>
+                <td>2026-02-24</td>
+                <td>Same shopper, same project</td>
+                <td><a class="row-link" href="#">View Match</a></td>
+              </tr>
+              <tr>
+                <td><strong>88%</strong></td>
+                <td>Similar</td>
+                <td>RV-46901</td>
+                <td>Maria S</td>
+                <td>BK #103</td>
+                <td>2026-02-20</td>
+                <td>Different shopper, same location</td>
+                <td><a class="row-link" href="#">View Match</a></td>
+              </tr>
+              <tr>
+                <td><strong>86%</strong></td>
+                <td>Exact Duplicate</td>
+                <td>RV-46088</td>
+                <td>John D</td>
+                <td>BK #205</td>
+                <td>2026-02-11</td>
+                <td>Same shopper, repeat evidence</td>
+                <td><a class="row-link" href="#">View Match</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="thumb-strip">
+          <div class="section-title">Current Review Images</div>
+          <div class="thumbs">
+            <div class="thumb">
+              <img src="https://via.placeholder.com/90x70?text=1" alt="thumb">
+              Q12 - Image 1
+              <div class="mini-note">Medium risk</div>
+            </div>
+            <div class="thumb active">
+              <img src="https://via.placeholder.com/90x70?text=2" alt="thumb">
+              Q12 - Image 2
+              <div class="mini-note">High risk</div>
+            </div>
+            <div class="thumb">
+              <img src="https://via.placeholder.com/90x70?text=3" alt="thumb">
+              Q12 - Image 3
+              <div class="mini-note">No alerts</div>
+            </div>
+            <div class="thumb">
+              <img src="https://via.placeholder.com/90x70?text=4" alt="thumb">
+              Gallery Image
+              <div class="mini-note">Low risk</div>
+            </div>
+            <div class="thumb">
+              <img src="https://via.placeholder.com/90x70?text=5" alt="thumb">
+              Gallery Image
+              <div class="mini-note">Medium risk</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-stack">
+        <div class="card">
+          <h3>Shopper Risk Profile</h3>
+          <div class="shopper-stats">
+            <div><strong>Shopper:</strong> John D (SH-1042)</div>
+            <div><strong>Current Risk Level:</strong> High</div>
+            <div><strong>Similar Image Alerts (30d):</strong> 5</div>
+            <div><strong>Exact Duplicates (30d):</strong> 2</div>
+            <div><strong>High Risk Reviews (30d):</strong> 2</div>
+            <div><strong>Projects Affected:</strong> 3</div>
+            <div><strong>Last Alert:</strong> 2026-03-02</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>QA Actions</h3>
+          <div class="actions">
+            <button class="btn btn-success">Mark Acceptable</button>
+            <button class="btn btn-warning">Mark Suspicious</button>
+            <button class="btn btn-danger">Reject Evidence</button>
+          </div>
+          <div class="mini-note" style="margin-top:12px;">
+            Image-level action only. Final review decision can still be made on the full review page.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Match Summary</h3>
+          <div class="shopper-stats">
+            <div><strong>Strongest Match:</strong> 94%</div>
+            <div><strong>Match Type:</strong> Similar Image</div>
+            <div><strong>Same Shopper:</strong> Yes</div>
+            <div><strong>Same Project:</strong> Yes</div>
+            <div><strong>Same Location:</strong> No</div>
+            <div><strong>Recommended Priority:</strong> Immediate QA review</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
