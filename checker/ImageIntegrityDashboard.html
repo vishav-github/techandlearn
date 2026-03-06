@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Image Integrity Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f6fb;
+}
+
+.header{
+background:#1f2a38;
+color:white;
+padding:15px;
+font-size:22px;
+}
+
+.container{
+padding:20px;
+}
+
+.cards{
+display:flex;
+gap:15px;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:8px;
+flex:1;
+box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+.card h3{
+margin:0;
+font-size:14px;
+color:#777;
+}
+
+.card p{
+font-size:22px;
+margin:5px 0 0;
+}
+
+.table-container{
+background:white;
+border-radius:8px;
+box-shadow:0 0 5px rgba(0,0,0,0.1);
+overflow:hidden;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:#eef2f7;
+text-align:left;
+padding:10px;
+font-size:13px;
+}
+
+td{
+padding:10px;
+border-top:1px solid #eee;
+font-size:13px;
+}
+
+.badge{
+padding:4px 8px;
+border-radius:5px;
+font-size:12px;
+color:white;
+}
+
+.low{background:#2ecc71;}
+.medium{background:#f39c12;}
+.high{background:#e74c3c;}
+
+button{
+padding:6px 10px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.open{
+background:#3498db;
+color:white;
+}
+
+.layout{
+display:flex;
+gap:20px;
+}
+
+.review-list{
+flex:3;
+}
+
+.side-panel{
+flex:1;
+background:white;
+border-radius:8px;
+padding:15px;
+box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+.side-panel h3{
+margin-top:0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Image Integrity Dashboard
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h3>High Risk Reviews</h3>
+<p>18</p>
+</div>
+
+<div class="card">
+<h3>Medium Risk Reviews</h3>
+<p>42</p>
+</div>
+
+<div class="card">
+<h3>Duplicate Images</h3>
+<p>11</p>
+</div>
+
+<div class="card">
+<h3>Repeat Risk Shoppers</h3>
+<p>7</p>
+</div>
+
+</div>
+
+<div class="layout">
+
+<div class="review-list">
+
+<div class="table-container">
+
+<table>
+
+<tr>
+<th>Risk</th>
+<th>Review</th>
+<th>Shopper</th>
+<th>Project</th>
+<th>Location</th>
+<th>Date</th>
+<th>Images</th>
+<th>Alerts</th>
+<th>Main Signal</th>
+<th>Action</th>
+</tr>
+
+<tr>
+<td><span class="badge high">High</span></td>
+<td>RV-58291</td>
+<td>John D</td>
+<td>Burger Audit</td>
+<td>BK #103</td>
+<td>2026-03-06</td>
+<td>12</td>
+<td>3</td>
+<td>Similar Image Reuse</td>
+<td><button class="open">Open Review</button></td>
+</tr>
+
+<tr>
+<td><span class="badge medium">Medium</span></td>
+<td>RV-58288</td>
+<td>Maria S</td>
+<td>Store Visit</td>
+<td>BK #108</td>
+<td>2026-03-06</td>
+<td>9</td>
+<td>1</td>
+<td>Metadata Missing</td>
+<td><button class="open">Open Review</button></td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="side-panel">
+
+<h3>Shopper Risk Profile</h3>
+
+<b>Shopper:</b> John D<br><br>
+
+Similar Image Alerts: 5<br>
+Exact Duplicates: 2<br>
+Projects Affected: 3<br>
+High Risk Reviews: 2<br>
+Last Alert: 02 Mar 2026
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
