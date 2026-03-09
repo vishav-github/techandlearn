@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Assisted QA Review</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        h1,h2,h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Review Info Section Styling */
+        .review-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .review-info {
+            flex-grow: 1;
+            min-width: 280px;
+            border-right: 1px solid #eee;
+            padding-right: 15px;
+        }
+
+        .review-info p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        .review-info strong {
+            color: #555;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        /* Processing View Section */
+        .processing-view-section {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fdfdfd;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border-radius: 6px;
+        }
+        .processing-view-section p {
+            margin: 0;
+            font-size: 0.95em;
+        }
+        .processing-view-section p strong {
+            white-space: nowrap;
+            text-align: left;
+        }
+        .processing-view-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .processing-view-controls #progressBarContainer {
+            flex-grow: 1;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .processing-view-controls button {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+        .processing-view-controls button:hover {
+            background-color: #138496;
+        } 	
+
+        /* Filtering Options Section */
+        .filter-options-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fcfcfc;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .filter-options-section label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 10px;
+        }
+        .filter-options-section .filter-checkbox-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-options-section input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        /* Notification Section */
+        .notification {
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 16px;
+        margin: 10px 0;
+        color: #1a1a1a;
+        background-color: #e6f4ea; /* soft green for success */
+        border-left: 4px solid #34a853; /* Google green */
+        }
+
+        .notification.info {
+        background-color: #e8f0fe; /* soft blue */
+        border-left-color: #4285f4;
+        }
+
+        .notification.success {
+        background-color: #e6f4ea;
+        border-left-color: #34a853;
+        }
+
+        /* Sticky Footer (now at the top of the table) */
+        .sticky-footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .sticky-footer button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .sticky-footer button:hover {
+            background-color: #0056b3;
+        }
+
+        .sticky-footer button.secondary {
+            background-color: #6c757d;
+        }
+        .sticky-footer button.secondary:hover {
+            background-color: #545b62;
+        }
+
+        /* Main Table Styling */
+        .qa-table-container {
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+
+        .qa-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        .qa-table th, .qa-table td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .qa-table th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        /* Combined Answer/Comment Cell */
+        .answer-comment-cell {
+            width: 50%;
+        }
+        .answer-options {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .answer-options strong {
+            color: #333;
+        }
+
+        /* Input Fields */
+        .qa-table textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        .qa-table textarea.empty-highlight {
+            border: 2px solid orange !important;
+        }
+
+        /* QA Status Column */
+        .qa-status-cell {
+            position: relative;
+            text-align: center;
+            width: 120px;
+        }
+
+        .qa-status-icons {
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column; /* Stack issue indicators vertically */
+            align-items: center; /* Center horizontally */
+            gap: 5px; /* Space between each issue-indicator group */
+        }
+
+        .issue-indicator { /* New class to group icon and badge */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center them horizontally within the issue-indicator */
+            margin-bottom: 3px;
+            position: relative; /* For precise badge positioning */
+            min-width: 40px; /* Ensure enough space for the icon + badge */
+        }
+
+        .qa-status-icon {
+            cursor: pointer;
+            font-size: 1.6em; /* Slightly larger to make space for badge */
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .qa-status-icon:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* New AI Status Badges */
+        .ai-status-badge {
+            font-size: 0.7em; /* Smaller than the main issue icon */
+            margin-left: -8px; /* Pulls the badge slightly over the main icon for a "layered" look */
+            position: relative;
+            top: 5px; /* Adjust vertical position */
+            background-color: white; /* Give it a background to stand out */
+            border-radius: 50%; /* Make it round */
+            padding: 1px; /* Small padding */
+            box-shadow: 0 0 2px rgba(0,0,0,0.2); /* Subtle shadow for definition */
+        }
+
+        .ai-status-badge.badge-met {
+            color: #28a745; /* Green for meeting threshold */
+        }
+
+        .ai-status-badge.badge-below {
+            color: #ffc107; /* Orange for below threshold (needs review) */
+        }
+
+        /* Icon Colors (Adjusted slightly for consistency) */
+        .icon-coherence { color: #dc3545; /* Red */ }
+        .icon-grammar { color: #ffc107; /* Orange */ }
+        .icon-spelling { color: #007bff; /* Blue */ }
+        .icon-location { color: #327540; /* Green */ }
+        .icon-empty-comment { color: #800080; /* Purple for Empty Comment */ }
+
+
+        /* Expandable Detail Box */
+        .qa-detail-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e2e6ea;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+            font-size: 0.85em;
+            line-height: 1.4;
+            max-width: 250px;
+            word-wrap: break-word;
+        }
+
+        .qa-detail-box .reliability-display {
+            font-weight: bold;
+            color: #555;
+        }
+        .qa-detail-box .reliability-display.confidence-met {
+            color: #28a745; /* Green */
+        }
+        .qa-detail-box .reliability-display.confidence-below {
+            color: #ffc107; /* Orange */
+        }
+        .qa-detail-box .explanation-text {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 5px;
+            display: block;
+        }
+
+
+        .qa-detail-box button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .qa-detail-box button.go-to-comment {
+            background-color: #28a745;
+        }
+
+        /* Mark Reviewed Button */
+        .mark-reviewed-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.9em;
+            margin-top: 10px;
+            width: 90%;
+        }
+
+        .mark-reviewed-btn.resolved {
+            background-color: #28a745;
+        }
+        .mark-reviewed-btn.unresolved {
+            background-color: #dc3545;
+        }
+
+        /* Highlighted row for "Jump to Next" */
+        .current-highlighted-row {
+            background-color: #e6f7ff !important;
+            transition: background-color 0.5s ease-in-out;
+            box-shadow: inset 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>AI-Assisted QA Review at edit-entire-crit</h2>
+
+        <div class="review-item"
+             id="mainReviewItem"
+             data-review-id="R001"
+             data-assignment-time="2025-06-15T10:00:00Z"
+             data-start-time="2025-06-15T10:30:00Z"
+             data-finish-time="2025-06-15T11:00:00Z">
+            <div class="review-info">
+                <p><strong>Review ID:</strong> <span class="review-id-display"></span></p>
+                <p><strong>Assignment Time:</strong> <span class="assignment-time-display"></span></p>
+                <p><strong>Start Time:</strong> <span class="start-time-display"></span></p>
+                <p><strong>Finish Time:</strong> <span class="finish-time-display"></span></p>
+            </div>
+            <div class="qa-flags-summary" id="qaFlagsSummary">
+                <p class="status-title">Operational QA Status:</p>
+                <ul class="status-detail-list">
+                    </ul>
+            </div>
+        </div>
+
+        <br>
+        <div class="filter-options-section">
+            <label>Show Only Issues:</label>
+            <div class="filter-checkbox-group" id="issueFilters">
+                <input type="checkbox" id="filterCoherence" value="coherence">
+                <label for="filterCoherence"><i class="fas fa-times icon-coherence"></i> Coherence</label>
+                
+                <input type="checkbox" id="filterGrammar" value="grammar">
+                <label for="filterGrammar"><i class="fas fa-exclamation-triangle icon-grammar"></i> Grammar</label>
+                
+                <input type="checkbox" id="filterSpelling" value="spelling">
+                <label for="filterSpelling"><i class="fas fa-lightbulb icon-spelling"></i> Spelling</label>
+
+                <input type="checkbox" id="filterlocation" value="location">
+                <label for="filterlocation"><i class="fas fa-map-marker-alt icon-location"></i> Location Anomaly</label>
+
+                <input type="checkbox" id="filterEmptyComment" value="empty_comment">
+                <label for="filterEmptyComment"><i class="fas fa-comment-slash icon-empty-comment"></i> Empty Comment</label>
+            </div>
+            <div class="notification info">
+            This review was processed with a AI confidence threshold of <strong>90%</strong>.
+            </div>
+        </div>
+
+        <div class="sticky-footer">
+            <button id="jumpToNextIssueBtn" class="secondary">Jump to Next Issue</button>
+            <button id="saveDraftBtn" class="secondary">Save Draft</button>
+            <button id="finalizeQABtn">Apply All Fixes</button>
+        </div>
+
+        <div class="qa-table-container">
+            <table class="qa-table" id="qaTable">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Answer / Comment Box</th> <th>QA Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-row-id="1" data-qa-status="unreviewed" data-original-issues='{"coherence": true, "grammar": true}'>
+                        <td>1. Would you recommend this branch to a friend?</td>
+                        <td class="answer-comment-cell">
+                            <div class="answer-options"><strong>Selected:</strong> Yes, absolutely!</div>
+                            <textarea id="comment-1">This was a horrible experience. I will never come back here again. The staff were rude and unhelpful.</textarea>
+                        </td>
+                        <td class="qa-status-cell">
+                            <div class="qa-status-icons" data-row-id="1">
+                                </div>
+                            <button class="mark-reviewed-btn" data-row-id="1">Mark Reviewed</button>
+                        </td>
+                    </tr>
+                    
+                    <tr data-row-id="2" data-qa-status="unreviewed" data-original-issues='{"grammar": true, "spelling": true}'>
+                        <td>2. Describe your experience with the staff.</td>
+                        <td class="answer-comment-cell">
+                            <div class="answer-options"><strong>Selected:</strong> Very Good</div>
+                            <textarea id="comment-2">They're service was good, but there was a long wait time for their manager.</textarea>
+                        </td>
+                        <td class="qa-status-cell">
+                            <div class="qa-status-icons" data-row-id="2">
+                            </div>
+                            <button class="mark-reviewed-btn" data-row-id="2">Mark Reviewed</button>
+                        </td>
+                    </tr>
+
+                    <tr data-row-id="3" data-qa-status="unreviewed" data-original-issues='{"spelling": true}'>
+                        <td>3. How would you rate the cleanliness of the premises?</td>
+                        <td class="answer-comment-cell">
+                            <div class="answer-options"><strong>Selected:</strong> Excellent</div>
+                            <textarea id="comment-3">The premesis was very clean and I recieved prompt service.</textarea>
+                        </td>
+                        <td class="qa-status-cell">
+                            <div class="qa-status-icons" data-row-id="3">
+                            </div>
+                            <button class="mark-reviewed-btn" data-row-id="3">Mark Reviewed</button>
+                        </td>
+                    </tr>
+
+                    <tr data-row-id="4" data-qa-status="unreviewed" data-original-issues='{"location": true}'>
+                        <td>4. Would you recommend this branch to a friend?</td>
+                        <td class="answer-comment-cell">
+                            <div class="answer-options"><strong>Selected:</strong> Yes, May be!</div>
+                            <textarea id="comment-4">This was a wow experience at Navi Mumbai Mall. I will come back here again. The staff were helpful.</textarea>
+                        </td>
+                        <td class="qa-status-cell">
+                            <div class="qa-status-icons" data-row-id="4">
+                            </div>
+                            <button class="mark-reviewed-btn" data-row-id="4">Mark Reviewed</button>
+                        </td>
+                    </tr>
+
+                    <tr data-row-id="5" data-qa-status="unreviewed" data-original-issues='{}'>
+                        <td>5. Was the issue resolved to your satisfaction?</td>
+                        <td class="answer-comment-cell">
+                            <div class="answer-options"><strong>Selected:</strong> Yes</div>
+                            <textarea id="comment-5">The problem was quickly identified and resolved by the friendly support team. I am very satisfied with the outcome.</textarea>
+                        </td>
+                        <td class="qa-status-cell">
+                            <div class="qa-status-icons" data-row-id="5"></div>
+                            <button class="mark-reviewed-btn" data-row-id="5">Mark Reviewed</button>
+                        </td>
+                    </tr>
+                    
+                    <tr data-row-id="6" data-qa-status="unreviewed" data-original-issues='{"empty_comment": true}'>
+                        <td>6. Any additional comments?</td>
+                        <td class="answer-comment-cell">
+                            <div class="answer-options"><strong>Selected:</strong> No additional comments.</div>
+                            <textarea id="comment-6" class="empty-highlight"></textarea>
+                        </td>
+                        <td class="qa-status-cell">
+                            <div class="qa-status-icons" data-row-id="6"></div> <button class="mark-reviewed-btn" data-row-id="6">Mark Reviewed</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Operational QA Thresholds (from first file) ---
+            const OPERATIONAL_QA_CONFIG = {
+                timeliness: {
+                    deadlineHours: 24
+                },
+                duration: {
+                    minMinutes: 10,
+                    maxMinutes: 90
+                }
+            };
+            // Helper function to format dates for display (from first file)
+            function formatDateTime(isoString) {
+                if (!isoString) return 'N/A';
+                const date = new Date(isoString);
+                if (isNaN(date.getTime())) return 'Invalid Date';
+                return date.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+            }
+
+            // Function to calculate Operational QA status for a review (from first file)
+            function getOperationalQAStatus(assignmentTimeStr, startTimeStr, finishTimeStr) {
+                const assignmentTime = new Date(assignmentTimeStr);
+                const startTime = new Date(startTimeStr);
+                const finishTime = new Date(finishTimeStr);
+                const status = {
+                    timeliness: 'ok',
+                    duration: 'ok',
+                    details: []
+                };
+                if (isNaN(assignmentTime.getTime()) || isNaN(startTime.getTime()) || isNaN(finishTime.getTime())) {
+                    status.details.push('Invalid time data provided.');
+                    return status;
+                }
+
+                // 1. Check Timeliness
+                const deadline = new Date(assignmentTime.getTime() + OPERATIONAL_QA_CONFIG.timeliness.deadlineHours * 60 * 60 * 1000);
+                if (finishTime > deadline) {
+                    status.timeliness = 'delayed';
+                    const delayMs = finishTime.getTime() - deadline.getTime();
+                    const delayHours = (delayMs / (1000 * 60 * 60)).toFixed(1);
+                    status.details.push(`<i class="fas fa-clock icon-status flag-delayed"></i> Submission delayed by approx ${delayHours} hours.`);
+                } else {
+                    status.details.push(`<i class="fas fa-check-circle icon-status flag-ok"></i> Submission on time.`);
+                }
+
+                // 2. Check Duration
+                const reviewDurationMs = finishTime.getTime() - startTime.getTime();
+                const reviewDurationMinutes = reviewDurationMs / (1000 * 60);
+
+                if (reviewDurationMinutes < OPERATIONAL_QA_CONFIG.duration.minMinutes) {
+                    status.duration = 'too-short';
+                    status.details.push(`<i class="fas fa-hourglass-end icon-status flag-too-short"></i> Review completed in ${reviewDurationMinutes.toFixed(1)} minutes (below min ${OPERATIONAL_QA_CONFIG.duration.minMinutes}).`);
+                } else if (reviewDurationMinutes > OPERATIONAL_QA_CONFIG.duration.maxMinutes) {
+                    status.duration = 'too-long';
+                    status.details.push(`<i class="fas fa-hourglass-start icon-status flag-too-long"></i> Review took ${reviewDurationMinutes.toFixed(1)} minutes (above max ${OPERATIONAL_QA_CONFIG.duration.maxMinutes}).`);
+                } else {
+                    status.details.push(`<i class="fas fa-check-circle icon-status flag-ok"></i> Review duration: ${reviewDurationMinutes.toFixed(1)} minutes (within acceptable range).`);
+                }
+
+                return status;
+            }
+
+            // --- Consolidated Review Info Display ---
+            const mainReviewItem = document.getElementById('mainReviewItem');
+            const qaFlagsSummary = document.getElementById('qaFlagsSummary').querySelector('.status-detail-list');
+
+            const reviewIdDisplay = mainReviewItem.querySelector('.review-id-display');
+            const assignmentTimeDisplay = mainReviewItem.querySelector('.assignment-time-display');
+            const startTimeDisplay = mainReviewItem.querySelector('.start-time-display');
+            const finishTimeDisplay = mainReviewItem.querySelector('.finish-time-display');
+            const reviewId = mainReviewItem.dataset.reviewId;
+            const assignmentTime = mainReviewItem.dataset.assignmentTime;
+            const startTime = mainReviewItem.dataset.startTime;
+            const finishTime = mainReviewItem.dataset.finishTime;
+
+            reviewIdDisplay.textContent = reviewId;
+            assignmentTimeDisplay.textContent = formatDateTime(assignmentTime);
+            startTimeDisplay.textContent = formatDateTime(startTime);
+            finishTimeDisplay.textContent = formatDateTime(finishTime);
+
+            const operationalStatus = getOperationalQAStatus(assignmentTime, startTime, finishTime);
+            qaFlagsSummary.innerHTML = operationalStatus.details.map(detail => `<li>${detail}</li>`).join('');
+            const qaTable = document.getElementById('qaTable');
+            const jumpToNextIssueBtn = document.getElementById('jumpToNextIssueBtn');
+            const issueFilters = document.getElementById('issueFilters');
+            
+            // --- GLOBAL AI CONFIDENCE THRESHOLD (Placeholder - In a real app, this would be fetched from Admin Settings) ---
+            const GLOBAL_AI_CONFIDENCE_THRESHOLD = 85; // This value comes from Admin Settings
+
+            // Simulate AI suggestions/issues for demonstration
+            const aiSuggestions = {
+                '1': { // Row 1: Coherence & Grammar
+                    coherence: {
+                        description: "Coherence Conflict: 'Yes, absolutely!' rating contradicts 'horrible experience' in comments.",
+                        action: "Go to Comment",
+                        targetId: "comment-1", // Target textarea ID
+                        confidence: 78 // AI confidence for this issue
+                    },
+                    grammar: {
+                        description: "Grammar Issue: Missing punctuation/run-on sentence.",
+                        suggestions: [{ original: "horrible experience", corrected: "horrible experience." }],
+                        action: "Apply Fix",
+                        targetId: "comment-1",
+                        confidence: 92 // AI confidence for this issue
+                    }
+                },
+                '2': { // Row 2: Grammar & Spelling
+                    grammar: {
+                        description: "Grammar Issue: 'They're' should be 'Their' in 'They're service was good...'",
+                        suggestions: [{ original: "They're", corrected: "Their" }], // Array for multiple replacements
+                        action: "Apply Fix",
+                        targetId: "comment-2",
+                        confidence: 95
+                    },
+                    spelling: {
+                        description: "Spelling Suggestion: 'there' should be 'their' in '...for there manager.'",
+                        suggestions: [{ original: "there", corrected: "their" }],
+                        action: "Apply Fix",
+                        targetId: "comment-2",
+                        confidence: 88
+                    }
+                },
+                '3': { // Row 3: Spelling
+                    spelling: {
+                        description: "Spelling Suggestion: 'premesis' -> 'premises'; 'recieved' -> 'received'.",
+                        suggestions: [{ original: "premesis", corrected: "premises" }, { original: "recieved", corrected: "received" }],
+                        action: "Apply Fix",
+                        targetId: "comment-3",
+                        confidence: 82
+                    }
+                },
+                '4': { // Row 4: Location
+                    location: {
+                        description: "'Navi Mumbai Mall' contradicts with actual review branch 'New Delhi' in comments.",
+                        action: "Go to Comment",
+                        targetId: "comment-4", // Target textarea ID
+                        confidence: 90
+                    }
+                },
+                '5': { // Row 5: No issues
+                    // No issues for this row in example
+                },
+                '6': { // Row 6: Empty Comment
+                    empty_comment: {
+                        description: "Comment box is empty. Please provide details or confirm 'No additional comments'.",
+                        action: "Go to Comment",
+                        targetId: "comment-6",
+                        confidence: 100 // System-defined high confidence for this rule
+                    }
+                }
+            };
+
+            // --- Function to render icons and badges based on original issues ---
+            function renderIcons(rowElement) {
+                const iconContainer = rowElement.querySelector('.qa-status-icons');
+                const rowId = rowElement.dataset.rowId;
+                const originalIssues = JSON.parse(rowElement.dataset.originalIssues || '{}');
+                iconContainer.innerHTML = ''; // Clear existing icons
+
+                const issueOrder = ['coherence', 'grammar', 'spelling', 'location', 'empty_comment'];
+
+                issueOrder.forEach(issueType => {
+                    if (originalIssues[issueType]) {
+                        const suggestion = aiSuggestions[rowId]?.[issueType];
+                        if (suggestion) {
+                            const confidence = suggestion.confidence;
+                            const badgeClass = (confidence >= GLOBAL_AI_CONFIDENCE_THRESHOLD) ? 'badge-met' : 'badge-below';
+                            const badgeIcon = (confidence >= GLOBAL_AI_CONFIDENCE_THRESHOLD) ? 'fa-check-circle' : 'fa-exclamation-triangle';
+                            const tooltipStatusText = (confidence >= GLOBAL_AI_CONFIDENCE_THRESHOLD) ? 'AI Reliable' : 'AI Review Recommended';
+
+                            const iconHtml = `
+                                <div class="issue-indicator">
+                                    <i class="fas ${getIconClass(issueType)} qa-status-icon icon-${issueType}" 
+                                       data-issue="${issueType}" 
+                                       title="${getIssueTitle(issueType)} (${tooltipStatusText})"></i>
+                                    <i class="fas ${badgeIcon} ai-status-badge ${badgeClass}"></i>
+                                </div>
+                            `;
+                            iconContainer.innerHTML += iconHtml;
+                        }
+                    }
+                });
+            }
+
+            // Helper to get font-awesome icon class based on issue type
+            function getIconClass(issueType) {
+                switch (issueType) {
+                    case 'coherence': return 'fa-times';
+                    case 'grammar': return 'fa-exclamation-triangle';
+                    case 'spelling': return 'fa-lightbulb';
+                    case 'location': return 'fa-map-marker-alt';
+                    case 'empty_comment': return 'fa-comment-slash';
+                    default: return '';
+                }
+            }
+
+            // Helper to get base title for the issue type
+            function getIssueTitle(issueType) {
+                switch (issueType) {
+                    case 'coherence': return 'Coherence Issue';
+                    case 'grammar': return 'Grammar Issue';
+                    case 'spelling': return 'Spelling Issue';
+                    case 'location': return 'Location Anomaly';
+                    case 'empty_comment': return 'Empty Comment';
+                    default: return 'Unknown Issue';
+                }
+            }
+
+
+            // Initial rendering of icons for all rows
+            document.querySelectorAll('tr[data-row-id]').forEach(row => {
+                renderIcons(row);
+            });
+
+            // --- Filtering Logic ---
+            issueFilters.addEventListener('change', applyFilters);
+
+            function applyFilters() {
+                const selectedFilters = Array.from(issueFilters.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+                const allRows = qaTable.querySelectorAll('tbody tr');
+
+                allRows.forEach(row => {
+                    const rowId = row.dataset.rowId;
+                    const originalIssues = JSON.parse(row.dataset.originalIssues || '{}');
+                    
+                    let showRow = false;
+
+                    if (selectedFilters.length === 0) {
+                        showRow = true; 
+                    } else {
+                        showRow = selectedFilters.some(filter => originalIssues[filter]);
+                    }
+
+                    row.style.display = showRow ? '' : 'none';
+                });
+            }
+
+            // Initial application of filters (to show all by default or based on pre-checked boxes)
+            applyFilters();
+
+            // --- QA Status Icon Click to show Detail Box ---
+            qaTable.addEventListener('click', function(event) {
+                const icon = event.target.closest('.qa-status-icon');
+                if (icon) {
+                    const rowElement = icon.closest('tr');
+                    const rowId = rowElement.dataset.rowId;
+                    const issueType = icon.dataset.issue;
+
+                    const detailContainer = rowElement.querySelector('.qa-status-cell');
+                    let detailBox = detailContainer.querySelector('.qa-detail-box');
+
+                    if (detailBox && detailBox.dataset.issueType === issueType) {
+                        // If clicking the same icon again, hide the box
+                        detailBox.remove();
+                        return;
+                    }
+
+                    // Remove any existing detail box to show only one at a time
+                    if (detailBox) {
+                        detailBox.remove();
+                    }
+
+                    const suggestion = aiSuggestions[rowId] ? aiSuggestions[rowId][issueType] : null;
+
+                    if (suggestion) {
+                        detailBox = document.createElement('div');
+                        detailBox.className = 'qa-detail-box';
+                        detailBox.dataset.issueType = issueType; // Store current issue type
+
+                        let detailContent = `<p><strong>${getIssueTitle(issueType)}:</strong> ${suggestion.description}</p>`;
+                        
+                        // Add contextual AI Reliability to the detail box
+                        if (suggestion.confidence !== undefined) {
+                            const confidenceClass = (suggestion.confidence >= GLOBAL_AI_CONFIDENCE_THRESHOLD) ? 'confidence-met' : 'confidence-below';
+                            detailContent += `
+                                <p>
+                                    <span class="reliability-display ${confidenceClass}">AI Suggestion Reliability: ${suggestion.confidence}%</span>
+                                    <span class="explanation-text">(Based on Admin Settings. Suggestions below ${GLOBAL_AI_CONFIDENCE_THRESHOLD}% may require more review.)</span>
+                                </p>
+                            `;
+                        }
+
+                        if (suggestion.suggestions && suggestion.suggestions.length > 0) {
+                            detailContent += '<p>Suggestions:</p><ul>';
+                            suggestion.suggestions.forEach(s => {
+                                detailContent += `<li>"${s.original}" &rarr; "${s.corrected}"</li>`;
+                            });
+                            detailContent += '</ul>';
+                        }
+
+                        detailBox.innerHTML = detailContent;
+                        if (suggestion.action) {
+                            const actionButton = document.createElement('button');
+                            actionButton.textContent = suggestion.action;
+                            if (suggestion.action === "Go to Comment") {
+                                actionButton.className = 'go-to-comment';
+                                actionButton.addEventListener('click', function() {
+                                    const targetTextarea = document.getElementById(suggestion.targetId);
+                                    if (targetTextarea) {
+                                        targetTextarea.focus();
+                                        targetTextarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    }
+                                });
+                            } else if (suggestion.action === "Apply Fix" && suggestion.suggestions) {
+                                actionButton.addEventListener('click', function() {
+                                    const targetTextarea = document.getElementById(suggestion.targetId);
+                                    if (targetTextarea) {
+                                        let text = targetTextarea.value;
+                                        suggestion.suggestions.forEach(s => {
+                                            const regex = new RegExp(s.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                                            text = text.replace(regex, s.corrected);
+                                        });
+                                        targetTextarea.value = text;
+                                        
+                                        // Remove the icon for the fixed issue and update row's original-issues dataset
+                                        const issues = JSON.parse(rowElement.dataset.originalIssues);
+                                        delete issues[issueType]; // Remove the fixed issue
+                                        rowElement.dataset.originalIssues = JSON.stringify(issues);
+                                        detailBox.remove(); // Close detail box
+
+                                        // Re-render icons to reflect changes (if any other issues remain)
+                                        renderIcons(rowElement);
+                                        // If all issues are resolved for this row, mark as resolved
+                                        if (Object.keys(issues).length === 0) {
+                                            updateMarkReviewedButton(rowElement, 'resolved');
+                                            rowElement.dataset.qaStatus = 'resolved'; // Update the status directly
+                                        }
+                                    }
+                                });
+                            }
+                            detailBox.appendChild(actionButton);
+                        }
+                        detailContainer.appendChild(detailBox);
+                    }
+                }
+            });
+            // --- Mark Reviewed Button Logic ---
+            qaTable.addEventListener('click', function(event) {
+                const markBtn = event.target.closest('.mark-reviewed-btn');
+                if (markBtn) {
+                    const rowElement = markBtn.closest('tr');
+                    const rowId = markBtn.dataset.rowId;
+                    const currentStatus = rowElement.dataset.qaStatus;
+                    
+                    const originalIssues = JSON.parse(rowElement.dataset.originalIssues || '{}');
+                    const hasRemainingAiIssues = Object.keys(originalIssues).length > 0;
+                    const commentTextarea = rowElement.querySelector(`#comment-${rowId}`);
+                    const isEmptyComment = commentTextarea.classList.contains('empty-highlight');
+
+                    let newStatus;
+                    // If no issues (AI or empty comment), allow marking as resolved directly
+                    if (!hasRemainingAiIssues && !isEmptyComment) {
+                        newStatus = (currentStatus === 'resolved') ? 'unreviewed' : 'resolved';
+                    } else {
+                        // If there are issues, it can only be 'unreviewed' or 'unresolved' (indicating user reviewed but issues remain)
+                        // Toggle between 'unreviewed' and 'unresolved' if issues present
+                        newStatus = (currentStatus === 'unreviewed' || currentStatus === 'resolved') ? 'unresolved' : 'unreviewed';
+                    }
+                    
+                    rowElement.dataset.qaStatus = newStatus;
+                    updateMarkReviewedButton(rowElement, newStatus);
+                }
+            });
+            function updateMarkReviewedButton(rowElement, status) {
+                const markBtn = rowElement.querySelector('.mark-reviewed-btn');
+                markBtn.classList.remove('resolved', 'unresolved');
+                if (status === 'resolved') {
+                    markBtn.textContent = 'Reviewed (Resolved)';
+                    markBtn.classList.add('resolved');
+                } else if (status === 'unresolved') {
+                    markBtn.textContent = 'Reviewed (Issues Remain)';
+                    markBtn.classList.add('unresolved');
+                } else {
+                    markBtn.textContent = 'Mark Reviewed';
+                }
+            }
+
+            // Initial button states
+            document.querySelectorAll('tr[data-row-id]').forEach(row => {
+                updateMarkReviewedButton(row, row.dataset.qaStatus);
+            });
+            // --- Jump to Next Issue Button ---
+            let lastJumpedRowIndex = -1;
+            // Initialize to -1, meaning no row has been jumped to yet
+
+            jumpToNextIssueBtn.addEventListener('click', function() {
+                const allRows = Array.from(qaTable.querySelectorAll('tbody tr'));
+                const visibleRows = allRows.filter(row => row.style.display !== 'none');
+
+                if (visibleRows.length === 0) {
+                    alert('No visible rows to check for issues.');
+                    // Remove any existing highlight if no rows
+                    document.querySelectorAll('.current-highlighted-row').forEach(el => el.classList.remove('current-highlighted-row'));
+                    lastJumpedRowIndex = -1; // Reset
+                    return;
+                }
+
+                let foundNextIssue = false;
+                // Start search from the row after the last jumped, or from the beginning if no previous jump or end reached
+                let startIndex = (lastJumpedRowIndex === -1 || lastJumpedRowIndex >= visibleRows.length - 1) ? 0 : lastJumpedRowIndex + 1;
+                // Loop through rows starting from startIndex, wrapping around if needed
+                for (let i = 0; i < visibleRows.length; i++) {
+                    const currentRowIndex = (startIndex + i) % visibleRows.length;
+                    const row = visibleRows[currentRowIndex];
+
+                    const rowId = row.dataset.rowId;
+                    const currentStatus = row.dataset.qaStatus;
+                    const originalIssues = JSON.parse(row.dataset.originalIssues || '{}');
+                    const hasRemainingAiIssues = Object.keys(originalIssues).length > 0;
+                    const commentTextarea = row.querySelector(`#comment-${rowId}`);
+                    const isEmptyComment = commentTextarea && commentTextarea.value.trim() === '';
+                    const hasIssue = hasRemainingAiIssues || (originalIssues.empty_comment && isEmptyComment);
+
+                    if (currentStatus !== 'resolved' && hasIssue) {
+                        // Remove highlight from previously active row
+                        document.querySelectorAll('.current-highlighted-row').forEach(el => el.classList.remove('current-highlighted-row'));
+                        // Add highlight to the current row
+                        row.classList.add('current-highlighted-row');
+                        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        lastJumpedRowIndex = currentRowIndex; // Update the last jumped index
+                        foundNextIssue = true;
+                        break;
+                    }
+                }
+
+                if (!foundNextIssue) {
+                    alert('No more unresolved issues found in the current view.');
+                    // Remove any existing highlight if no issues found
+                    document.querySelectorAll('.current-highlighted-row').forEach(el => el.classList.remove('current-highlighted-row'));
+                    lastJumpedRowIndex = -1; // Reset if no issues found
+                }
+            });
+            // --- Save Draft & Finalize QA Buttons ---
+            document.getElementById('saveDraftBtn').addEventListener('click', function() {
+                alert('Draft Saved! (Placeholder)');
+                // In a real app, collect all textbox values and their review status, then send to backend
+            });
+            document.getElementById('finalizeQABtn').addEventListener('click', function() {
+                const unresolvedCount = Array.from(qaTable.querySelectorAll('tbody tr')).filter(row => {
+                    const rowId = row.dataset.rowId;
+                    const status = row.dataset.qaStatus;
+                    const originalIssues = JSON.parse(row.dataset.originalIssues || '{}');
+                    const hasRemainingAiIssues = Object.keys(originalIssues).length > 0;
+                    const commentTextarea = row.querySelector(`#comment-${rowId}`);
+                    const isEmptyComment = commentTextarea && commentTextarea.value.trim() === '';
+
+                    // An item is unresolved if its status is not 'resolved' AND it still has an issue (AI or empty comment)
+                    return status !== 'resolved' && (hasRemainingAiIssues || (originalIssues.empty_comment && isEmptyComment));
+                }).length;
+
+                if (unresolvedCount > 0) {
+                    alert(`There are still ${unresolvedCount} questions with unresolved issues. Please review them before finalizing.`);
+                } else {
+                    alert('QA Finalized! (Placeholder)');
+                    // In a real app, send final data to backend
+                }
+            });
+            // --- Initial highlighting for existing rules (Empty Comment) ---
+            qaTable.querySelectorAll('textarea.empty-highlight').forEach(textarea => {
+                if (textarea.value.trim() === '') {
+                    textarea.placeholder = 'Comment is empty. Please add details.';
+                }
+            });
+            // Update empty-highlight class on input
+            qaTable.addEventListener('input', function(event) {
+                if (event.target.tagName === 'TEXTAREA') {
+                    const textarea = event.target;
+                    const rowElement = textarea.closest('tr');
+                    const originalIssues = JSON.parse(rowElement.dataset.originalIssues || '{}');
+
+                    // If empty_comment was an original issue and textarea is no longer empty, remove highlight and issue
+                    if (originalIssues.empty_comment) {
+                        if (textarea.value.trim() !== '') {
+                            textarea.classList.remove('empty-highlight');
+                            delete originalIssues.empty_comment;
+                            rowElement.dataset.originalIssues = JSON.stringify(originalIssues);
+                            renderIcons(rowElement); // Re-render to remove the empty_comment icon
+                            if (Object.keys(originalIssues).length === 0 && rowElement.dataset.qaStatus !== 'resolved') {
+                                // Only auto-resolve if no other issues and not already manually marked as resolved
+                                updateMarkReviewedButton(rowElement, 'resolved');
+                                rowElement.dataset.qaStatus = 'resolved';
+                            } else if (Object.keys(originalIssues).length > 0 && rowElement.dataset.qaStatus === 'resolved') {
+                                // If issues reappear but row was resolved, revert to unreviewed/unresolved
+                                updateMarkReviewedButton(rowElement, 'unreviewed');
+                                rowElement.dataset.qaStatus = 'unreviewed';
+                            }
+                        }
+                    } else {
+                        // If empty_comment was NOT an original issue but textarea becomes empty, add highlight and issue
+                        if (textarea.value.trim() === '') {
+                            textarea.classList.add('empty-highlight');
+                            originalIssues.empty_comment = true;
+                            rowElement.dataset.originalIssues = JSON.stringify(originalIssues);
+                            renderIcons(rowElement); // Re-render to add the empty_comment icon
+                            updateMarkReviewedButton(rowElement, 'unreviewed');
+                            // Revert to unreviewed if an issue reappears
+                            rowElement.dataset.qaStatus = 'unreviewed';
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
