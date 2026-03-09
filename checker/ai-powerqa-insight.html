@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My QA Reviews &amp; AI Insights</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 95%; /* Wider to accommodate more columns */
+            max-width: 1400px; /* Max width for large screens */
+            margin: 20px auto;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Filter Section Styling */
+        .filter-section {
+            background-color: #fcfcfc;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid for filters */
+            gap: 15px;
+            align-items: end; /* Align items to the bottom */
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .filter-group select,
+        .filter-group input[type="text"],
+        .filter-group input[type="date"],
+        .filter-group input[type="number"] { /* Added number type */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9em;
+            width: 100%; /* Make inputs take full width of their group */
+            box-sizing: border-box; /* Include padding/border in width */
+        }
+
+        .filter-group .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-top: 5px; /* Space from label */
+        }
+        .filter-group .checkbox-group label {
+            font-weight: normal; /* Checkbox labels are not bold */
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            white-space: nowrap; /* Prevent wrapping for individual checkboxes */
+        }
+        .filter-group .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto; /* Override 100% width for checkboxes */
+        }
+
+        /* Styling for AI Acceptance Rate Inputs to keep them side by side if possible */
+        .filter-group.ai-acceptance-rate-group {
+            flex-direction: row;
+            gap: 10px;
+            align-items: center; /* Vertically align label and inputs */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .filter-group.ai-acceptance-rate-group label {
+            flex-basis: 100%; /* Make label take full width */
+            margin-bottom: 0;
+        }
+        .filter-group.ai-acceptance-rate-group .input-wrapper {
+            flex: 1; /* Distribute space evenly */
+            min-width: 80px; /* Ensure inputs don't get too small */
+        }
+        .filter-group.ai-acceptance-rate-group .input-wrapper label {
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+
+
+        .filter-section button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+            align-self: flex-end; /* Align button to bottom of its grid cell */
+            min-width: 100px;
+        }
+
+        .filter-section button:hover {
+            background-color: #0056b3;
+        }
+
+        /* My Reviews Table Styling */
+        .ai-insights-table-container {
+            overflow-x: auto; /* Ensures table is scrollable on small screens */
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .ai-insights-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            min-width: 1200px; /* Minimum width to prevent excessive squishing of columns */
+        }
+
+        .ai-insights-table th, .ai-insights-table td {
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+            vertical-align: top; /* Align content to top for multi-line cells */
+            font-size: 0.9em;
+        }
+
+        .ai-insights-table th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: bold;
+            cursor: pointer; /* Indicates sortable */
+            white-space: nowrap; /* Prevent wrapping of column headers */
+        }
+
+        .ai-insights-table th:hover {
+            background-color: #e2e6ea;
+        }
+
+        .ai-insights-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .ai-insights-table tbody tr:hover {
+            background-color: #f0f8ff;
+        }
+
+        .review-id-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .review-id-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em; /* Slightly smaller for compactness */
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-badge.fully-resolved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-badge.issues-remaining {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-badge.in-progress {
+            background-color: #e2e6ea;
+            color: #6c757d;
+        }
+        .status-badge.ai-dismissed-entirely {
+            background-color: #cfe2ff;
+            color: #0a58ca;
+        }
+
+        .status-badge i {
+            margin-right: 5px;
+            font-size: 1em;
+        }
+
+        /* Sorting Icons */
+        .sort-icon {
+            margin-left: 5px;
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        /* AI Issue Summary Cell Styling */
+        .ai-issue-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 2px; /* Small gap between issue types */
+            min-width: 150px; /* Ensure enough space for content */
+        }
+        .ai-issue-type-summary {
+            font-size: 0.85em;
+            line-height: 1.3;
+            border-bottom: 1px dotted #e0e0e0; /* Separator for clarity */
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+        }
+        .ai-issue-type-summary:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        .ai-issue-type-summary strong {
+            font-size: 0.9em;
+            display: block; /* Make issue type name bold and on its own line */
+            margin-bottom: 2px;
+            color: #555;
+        }
+        .ai-issue-type-summary span {
+            display: inline-block;
+            margin-right: 8px;
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+<h1>My QA Reviews &amp; AI Insights</h1>
+<div class="filter-section">
+<div class="filter-group">
+<label for="filterClient">Client:</label>
+<select id="filterClient">
+<option value="">All Clients</option>
+<option value="Client A">Client A</option>
+<option value="Client B">Client B</option>
+<option value="Client C">Client C</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="filterBranch">Branch:</label>
+<select id="filterBranch">
+<option value="">All Branches</option>
+<option value="Branch A">Branch A</option>
+<option value="Branch B">Branch B</option>
+<option value="Branch C">Branch C</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="filterStartDate">Start Date:</label>
+<input id="filterStartDate" type="date"/>
+</div>
+<div class="filter-group">
+<label for="filterEndDate">End Date:</label>
+<input id="filterEndDate" type="date"/>
+</div>
+<div class="filter-group">
+<label for="filterProject">Project:</label>
+<select id="filterProject">
+<option value="">All Projects</option>
+<option value="Project X">Project X</option>
+<option value="Project Y">Project Y</option>
+<option value="Project Z">Project Z</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="filterQuestionnaire">Questionnaire:</label>
+<select id="filterQuestionnaire">
+<option value="">All Questionnaires</option>
+<option value="Q1">Questionnaire 1</option>
+<option value="Q2">Questionnaire 2</option>
+<option value="Q3">Questionnaire 3</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="filterReviewStatus">Review Status:</label>
+<select id="filterReviewStatus">
+<option value="">Finished awaiting approval</option>
+<option value="Q1">Apporved</option>
+<option value="Q2">Disapproved</option>
+</select>
+</div>
+<div class="filter-group">
+<label>Issue Type:</label>
+<div class="checkbox-group">
+<label><input name="issueType" type="checkbox" value="Grammar"/> Grammar</label>
+<label><input name="issueType" type="checkbox" value="Spelling"/> Spelling</label>
+<label><input name="issueType" type="checkbox" value="Coherence"/> Coherence</label>
+<label><input name="issueType" type="checkbox" value="Location"/> Location</label>
+</div>
+</div>
+<div class="filter-group ai-acceptance-rate-group">
+<label>AI Acceptance Rate (%):</label>
+<div class="input-wrapper">
+<label for="minAIAcceptance">Min:</label>
+<input id="minAIAcceptance" max="100" min="0" placeholder="0" type="number"/>
+</div>
+<div class="input-wrapper">
+<label for="maxAIAcceptance">Max:</label>
+<input id="maxAIAcceptance" max="100" min="0" placeholder="100" type="number"/>
+</div>
+</div>
+<div class="filter-group">
+<label for="filterAutoResolved">Auto-Resolved Issues:</label>
+<select id="filterAutoResolved">
+<option value="">All</option>
+<option value="Yes">Yes</option>
+<option value="No">No</option>
+</select>
+</div>
+<div class="filter-group">
+<label for="filterStatus">Final QA Status:</label>
+<select id="filterStatus">
+<option value="">All Statuses</option>
+<option value="Fully Resolved">Fully Resolved</option>
+<option value="Issues Remaining">Issues Remaining</option>
+<option value="In Progress">In Progress</option>
+<option value="AI Dismissed Entirely">AI Dismissed Entirely</option>
+</select>
+</div>
+<button id="applyFiltersBtn">Apply Filters</button>
+</div>
+<div class="ai-insights-table-container">
+<table class="ai-insights-table" id="myAIIssueReportTable">
+<thead>
+<tr>
+<th data-sort-key="reviewId">Review ID <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="branch">Branch <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="finishDate">Finish Date <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="totalQuestions">Flagged Questions <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="grammarAI" title="AI insights for Grammar issues">Grammar AI <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="spellingAI" title="AI insights for Spelling issues">Spelling AI <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="coherenceAI" title="AI insights for Coherence issues">Coherence AI <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="locationAI" title="AI insights for Location issues">Location AI <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="globalThreshold">Threshold Used<i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="totalAutoResolve">Total Auto-Resolved<i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="overallAIAcceptanceRate">Overall AI Acceptance Rate <i class="fas fa-sort sort-icon"></i></th>
+<th data-sort-key="finalStatus">Final QA Status <i class="fas fa-sort sort-icon"></i></th>
+</tr>
+</thead>
+<tbody>
+<tr data-ai-acceptance-rate="75" data-auto-resolved-present="Yes" data-branch="Branch A" data-client="Client A" data-final-status="Fully Resolved" data-finish-date="2024-07-25" data-issue-types="Grammar,Spelling,Coherence" data-project="Project X" data-questionnaire="Q1" data-review-id="R001">
+<td><a class="review-id-link" href="/review-detail/R001">R001</a></td>
+<td>Branch A</td>
+<td>2024-07-25 14:30</td>
+<td>5</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 3</span><span>🟢 Accepted: 2</span><span>🔵 Auto: 1</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 2</span><span>🟢 Accepted: 1</span><span>🔵 Auto: 1</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 1</span><span>🟢 Accepted: 1</span><span>🔵 Auto: 0</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>N/A</td>
+<td>80%</td>
+<td>2</td>
+<td>75%</td>
+<td><span class="status-badge fully-resolved"><i class="fas fa-check-circle"></i> Fully Resolved</span></td>
+</tr>
+<tr data-ai-acceptance-rate="50" data-auto-resolved-present="No" data-branch="Branch B" data-client="Client B" data-final-status="Issues Remaining" data-finish-date="2024-07-25" data-issue-types="Grammar,Coherence" data-project="Project Y" data-questionnaire="Q2" data-review-id="R002">
+<td><a class="review-id-link" href="/review-detail/R002">R002</a></td>
+<td>Branch B</td>
+<td>2024-07-25 10:15</td>
+<td>3</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 1</span><span>🟢 Accepted: 0</span><span>🔵 Auto: 0</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>N/A</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 1</span><span>🟢 Accepted: 1</span><span>🔵 Auto: 0</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>N/A</td>
+<td>80%</td>
+<td>0</td>
+<td>50%</td>
+<td><span class="status-badge issues-remaining"><i class="fas fa-exclamation-triangle"></i> Issues Remaining</span></td>
+</tr>
+<tr data-ai-acceptance-rate="80" data-auto-resolved-present="Yes" data-branch="Branch A" data-client="Client A" data-final-status="Fully Resolved" data-finish-date="2024-07-24" data-issue-types="Grammar,Spelling,Location" data-project="Project X" data-questionnaire="Q1" data-review-id="R003">
+<td><a class="review-id-link" href="/review-detail/R003">R003</a></td>
+<td>Branch A</td>
+<td>2024-07-24 16:00</td>
+<td>7</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 2</span><span>🟢 Accepted: 0</span><span>🔵 Auto: 2</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 1</span><span>🟢 Accepted: 1</span><span>🔵 Auto: 0</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>N/A</td>
+<td>
+<div class="ai-issue-summary">
+<div class="ai-issue-type-summary"><span>🔴 Flagged: 1</span><span>🟢 Accepted: 1</span><span>🔵 Auto: 0</span><span>⚫ Dismissed: 0</span></div>
+</div>
+</td>
+<td>90%</td>
+<td>2</td>
+<td>80%</td>
+<td><span class="status-badge fully-resolved"><i class="fas fa-check-circle"></i> Fully Resolved</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const table = document.getElementById('myAIIssueReportTable');
+            const headers = table.querySelectorAll('th');
+            const tbody = table.querySelector('tbody');
+            const allRows = Array.from(tbody.rows); // Store all rows for filtering
+
+            const filterClient = document.getElementById('filterClient');
+            const filterBranch = document.getElementById('filterBranch');
+            const filterStartDate = document.getElementById('filterStartDate');
+            const filterEndDate = document.getElementById('filterEndDate');
+            const filterProject = document.getElementById('filterProject');
+            const filterQuestionnaire = document.getElementById('filterQuestionnaire');
+            const issueTypeCheckboxes = document.querySelectorAll('input[name="issueType"]');
+            const minAIAcceptance = document.getElementById('minAIAcceptance');
+            const maxAIAcceptance = document.getElementById('maxAIAcceptance');
+            const filterAutoResolved = document.getElementById('filterAutoResolved');
+            const filterStatus = document.getElementById('filterStatus');
+            const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+
+            // --- Sorting Logic (remains the same) ---
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortKey = header.dataset.sortKey;
+                    if (!sortKey) return;
+
+                    const currentSortOrder = header.dataset.sortOrder === 'asc' ? 'desc' : 'asc';
+
+                    headers.forEach(h => {
+                        if (h !== header) {
+                            h.dataset.sortOrder = '';
+                            const icon = h.querySelector('.sort-icon');
+                            if (icon) {
+                                icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                                icon.classList.add('fa-sort');
+                            }
+                        }
+                    });
+
+                    header.dataset.sortOrder = currentSortOrder;
+                    const icon = header.querySelector('.sort-icon');
+                    if (icon) {
+                        icon.classList.remove('fa-sort', 'fa-sort-up', 'fa-sort-down');
+                        icon.classList.add(currentSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
+                    }
+
+                    sortTable(sortKey, currentSortOrder);
+                });
+            });
+
+            function sortTable(key, order) {
+                let rows = Array.from(tbody.rows);
+
+                rows.sort((a, b) => {
+                    let valA, valB;
+
+                    const getCellContent = (row, k) => {
+                        const cellIndex = Array.from(headers).findIndex(th => th.dataset.sortKey === k);
+                        return cellIndex !== -1 ? row.cells[cellIndex].textContent.trim() : '';
+                    };
+
+                    if (key === 'finishDate') {
+                        valA = new Date(getCellContent(a, key)).getTime();
+                        valB = new Date(getCellContent(b, key)).getTime();
+                    } else if (key === 'totalQuestions') {
+                        valA = parseInt(getCellContent(a, key)) || 0;
+                        valB = parseInt(getCellContent(b, key)) || 0;
+                    } else if (key === 'totalAutoResolve') {
+                        valA = parseInt(getCellContent(a, key)) || 0;
+                        valB = parseInt(getCellContent(b, key)) || 0;    
+                    } else if (key === 'globalThreshold') {
+                        valA = parseInt(getCellContent(a, key)) || 0;
+                        valB = parseInt(getCellContent(b, key)) || 0;     
+                    } else if (key.endsWith('AI')) { // For AI Issue Summary columns
+                        const cellA = a.cells[Array.from(headers).findIndex(th => th.dataset.sortKey === key)];
+                        const cellB = b.cells[Array.from(headers).findIndex(th => th.dataset.sortKey === key)];
+                        
+                        // Sort by Average Confidence for AI issue columns
+                        const avgConfA = parseFloat(cellA.querySelector('.avg-confidence')?.textContent.replace('Avg. Conf: ', '').replace('%', '')) || 0;
+                        const avgConfB = parseFloat(cellB.querySelector('.avg-confidence')?.textContent.replace('Avg. Conf: ', '').replace('%', '')) || 0;
+                        
+                        valA = avgConfA;
+                        valB = avgConfB;
+
+                    } else if (key === 'overallAIAcceptanceRate') {
+                        let textA = getCellContent(a, key);
+                        let textB = getCellContent(b, key);
+                        valA = (textA === 'N/A') ? -1 : parseFloat(textA) || 0; // Treat N/A as lowest for sorting
+                        valB = (textB === 'N/A') ? -1 : parseFloat(textB) || 0;
+                    } else if (key === 'finalStatus') {
+                        valA = getCellContent(a, key);
+                        valB = getCellContent(b, key);
+                    } else { // Default to string comparison for other keys
+                        valA = getCellContent(a, key);
+                        valB = getCellContent(b, key);
+                    }
+
+                    if (valA < valB) {
+                        return order === 'asc' ? -1 : 1;
+                    }
+                    if (valA > valB) {
+                        return order === 'asc' ? 1 : -1;
+                    }
+                    return 0;
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+            }
+
+            // Initial sort (e.g., by Finish Date descending)
+            const finishDateHeader = table.querySelector('th[data-sort-key="finishDate"]');
+            if (finishDateHeader) {
+                finishDateHeader.dataset.sortOrder = 'desc';
+                finishDateHeader.querySelector('.sort-icon').classList.remove('fa-sort');
+                finishDateHeader.querySelector('.sort-icon').classList.add('fa-sort-down');
+                sortTable('finishDate', 'desc');
+            }
+
+
+            // --- Filtering Logic ---
+            applyFiltersBtn.addEventListener('click', applyFilters);
+
+            function applyFilters() {
+                const selectedClient = filterClient.value;
+                const selectedBranch = filterBranch.value;
+                const startDate = filterStartDate.value ? new Date(filterStartDate.value + 'T00:00:00') : null;
+                const endDate = filterEndDate.value ? new Date(filterEndDate.value + 'T23:59:59') : null;
+                const selectedProject = filterProject.value;
+                const selectedQuestionnaire = filterQuestionnaire.value;
+                const selectedIssueTypes = Array.from(issueTypeCheckboxes)
+                                                .filter(cb => cb.checked)
+                                                .map(cb => cb.value);
+                const minAccRate = parseFloat(minAIAcceptance.value);
+                const maxAccRate = parseFloat(maxAIAcceptance.value);
+                const autoResolvedFilter = filterAutoResolved.value;
+                const selectedStatus = filterStatus.value;
+
+                allRows.forEach(row => {
+                    const rowClient = row.dataset.client;
+                    const rowBranch = row.dataset.branch;
+                    const rowFinishDateStr = row.dataset.finishDate; // Format 'YYYY-MM-DD'
+                    const rowFinishDate = rowFinishDateStr ? new Date(rowFinishDateStr + 'T00:00:00') : null;
+                    const rowProject = row.dataset.project;
+                    const rowQuestionnaire = row.dataset.questionnaire;
+                    const rowIssueTypes = row.dataset.issueTypes ? row.dataset.issueTypes.split(',') : [];
+                    const rowAIAcceptanceRate = parseFloat(row.dataset.aiAcceptanceRate);
+                    const rowAutoResolvedPresent = row.dataset.autoResolvedPresent; // "Yes" or "No"
+                    const rowFinalStatus = row.dataset.finalStatus;
+
+                    let showRow = true;
+
+                    // Client filter
+                    if (selectedClient && rowClient !== selectedClient) {
+                        showRow = false;
+                    }
+                    // Branch filter
+                    if (showRow && selectedBranch && rowBranch !== selectedBranch) {
+                        showRow = false;
+                    }
+                    // Date range filter
+                    if (showRow && startDate && rowFinishDate && rowFinishDate < startDate) {
+                        showRow = false;
+                    }
+                    if (showRow && endDate && rowFinishDate && rowFinishDate > endDate) {
+                        showRow = false;
+                    }
+                    // Project filter
+                    if (showRow && selectedProject && rowProject !== selectedProject) {
+                        showRow = false;
+                    }
+                    // Questionnaire filter
+                    if (showRow && selectedQuestionnaire && rowQuestionnaire !== selectedQuestionnaire) {
+                        showRow = false;
+                    }
+                    // Issue Type filter (AND logic: show if ALL selected types are present OR if no types selected)
+                    if (showRow && selectedIssueTypes.length > 0) {
+                        const hasAllSelectedIssues = selectedIssueTypes.every(issue => rowIssueTypes.includes(issue));
+                        if (!hasAllSelectedIssues) {
+                            showRow = false;
+                        }
+                    }
+                    // AI Acceptance Rate filter
+                    if (showRow && !isNaN(minAccRate) && rowAIAcceptanceRate < minAccRate) {
+                        showRow = false;
+                    }
+                    if (showRow && !isNaN(maxAccRate) && rowAIAcceptanceRate > maxAccRate) {
+                        showRow = false;
+                    }
+                    // Auto-Resolved Presence filter
+                    if (showRow && autoResolvedFilter && autoResolvedFilter !== rowAutoResolvedPresent) {
+                        showRow = false;
+                    }
+                    // Final QA Status filter
+                    if (showRow && selectedStatus && rowFinalStatus !== selectedStatus) {
+                        showRow = false;
+                    }
+
+                    row.style.display = showRow ? '' : 'none';
+                });
+            }
+
+            // You might want to apply filters on initial load if there are default filter values
+            // applyFilters();
+        });
+    </script>
+</body>
+</html>
