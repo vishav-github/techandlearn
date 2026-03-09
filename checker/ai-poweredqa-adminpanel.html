@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings - AI QA Configuration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .settings-container {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 850px;
+            margin: 30px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .setting-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            background-color: #fdfdff;
+        }
+
+        .setting-section h2 {
+            color: #34495e;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            cursor: pointer; /* Indicate it's clickable */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e9ecef; /* Keep border for visual separation */
+        }
+
+        .setting-section h2 .collapse-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .setting-section h2 .collapse-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            padding-top: 10px; /* Space between header and content */
+        }
+
+        .section-content.collapsed {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        .form-group label {
+            flex-basis: 100%;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+            //flex-shrink: 0; /* Prevent label from shrinking */
+        }
+
+        .form-group input[type="number"],
+        .form-group input[type="range"],
+        .form-group select {
+            flex-grow: 1;
+            min-width: 150px; /* Minimum width for inputs */
+            padding: 8px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .form-group input[type="range"] {
+            -webkit-appearance: none;
+            //width: calc(100% - 240px); /* Adjust width to make room for label and value */
+            flex-grow: 1;
+            min-width: 150px;
+            height: 8px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+
+        .form-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #007bff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .form-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #007bff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .range-value {
+            min-width: 40px;
+            text-align: right;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap; /* Allow wrapping */
+        }
+
+        .checkbox-group input[type="checkbox"],
+        .radio-group input[type="radio"] {
+            transform: scale(1.2);
+            margin-right: 5px; /* Add some space next to checkbox */
+        }
+        .checkbox-group label,
+        .radio-group label {
+            margin-bottom: 0; /* Override default label margin */
+        }
+
+        .dropdown-group {
+            display: none; /* Hidden by default */
+            margin-left: 24px; /* or use padding-left if preferred */
+            margin-top: 8px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select {
+            width: 60%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1em;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .tooltip-icon {
+            font-size: 0.9em;
+            color: #888;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .qa-question-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px dashed #dee2e6;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .qa-question-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        /* Styling for disabled content */
+        .disabled-content {
+            opacity: 0.6;
+            pointer-events: none; /* Prevent clicks on disabled section */
+        }
+
+    #strategyNote {
+      font-size: 14px;
+      color: #555;
+      display: none;
+      margin-top: 6px;
+      margin-left: 230px;
+      padding: 8px;
+      }
+    </style>
+</head>
+<body>
+
+    <div class="settings-container">
+        <h1><i class="fas fa-cogs"></i> Admin Settings: AI QA Automation</h1>
+
+        <form>
+            <div class="setting-section">
+                <h2 class="section-toggle" data-target="confidenceThresholdContent">
+                    AI Confidence Threshold
+                    
+                </h2>
+                <div id="confidenceThresholdContent" class="section-content">
+                    <div class="form-group">
+                        <label for="confidenceThreshold">Global AI Confidence Threshold:</label>
+                        <input type="range" id="confidenceThreshold" min="0" max="100" value="85">
+                        <span id="confidenceValue" class="range-value">85%</span>
+                        <i class="fas fa-info-circle tooltip-icon" title="AI recommendations with confidence below this threshold will not be auto-applied or prevent full auto-resolve."></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-section">
+                <h2 class="section-toggle" data-target="autoConfigContent">
+                    Auto-Apply / Auto-Resolve Configuration & Review Actions
+                    <i class="fas fa-chevron-down collapse-icon"></i>
+                </h2>
+                <div id="autoConfigContent" class="section-content">
+                    <h3>Individual Issue Types:</h3>
+                    <p>Select which types of AI-detected issues are eligible for automatic application/resolution if the confidence threshold is met.</p>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="autoGrammar" checked>
+                        <label for="autoGrammar">Enable AI-Correction for Grammar Suggestions</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="Automatically corrects grammar issues in comments when confidence threshold is met."></i>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="autoSpelling" checked>
+                        <label for="autoSpelling">Enable AI-Correction for Spelling Suggestions</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="Automatically corrects spelling errors in comments when confidence threshold is met."></i>
+                    </div>        
+                    
+                   
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="autoCoherence">
+                        <label for="autoCoherence">Enable AI-Resolve for Coherence Conflicts</label>
+                    </div>
+
+                    <div class="dropdown-group" id="strategyDropdown">
+                        <label for="coherenceStrategy">Select Coherence Strategy:</label>
+                        <select id="coherenceStrategy" name="coherenceStrategy">
+                        <option value="all_ratings">Comprehensive Coherence Check</option>
+                        <option value="ratings_with_comments">Targeted Coherence Check</option>
+                        </select>
+                    </div>
+
+                    <div id="strategyNote">
+                        The AI will combine all available comments to create an overall sentiment profile. It will then check every single question's rating for consistency against this sentiment, even for questions without comments. This provides the most comprehensive check and may flag inconsistencies that are not immediately obvious.
+                    </div>
+
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="autoLocation">
+                        <label for="autoLocation">Enable AI-Resolve for Location Anomaly Detection</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="Automatically flags or corrects location data based on detected anomalies when confidence threshold is met."></i>
+                    </div>
+
+                    <h3 style="margin-top: 25px;">Review-Level Auto Actions:</h3>
+                    <p>Define the final action for a review based on the overall AI QA outcome.</p>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="actionResolve" checked>
+                        <label for="actionResolve">Automatically Resolve Review if all eligible conditions are met</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="If all AI issues that are enabled for auto-resolution meet the global confidence threshold, the entire review will be automatically resolved."></i>
+                    </div>
+
+                    <h4 style="margin-top: 20px;">If Auto-Resolve Conditions NOT Met:</h4>
+                    <p>Choose the action to take if the review cannot be automatically resolved (i.e., if any issue fails to meet thresholds or is not configured for auto-resolution).</p>
+                    <div class="radio-group">
+                        <input type="radio" id="failActionManualQA" name="failAction" value="manual_qa" checked>
+                        <label for="failActionManualQA">Leave for Manual QA Queue</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="The review will be routed to a human QA editor for manual review and resolution."></i>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" id="failActionSendBack" name="failAction" value="send_back_shopper">
+                        <label for="failActionSendBack">Send Back to Shopper with QA Summary</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="The review will be returned to the original shopper for correction, along with an AI-generated quality assurance summary."></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-section">
+                <h2 class="section-toggle" data-target="qaOutcomesSection">
+                    Quality Assurance Outcomes (on Auto-Resolve)
+                    <i class="fas fa-chevron-down collapse-icon"></i>
+                </h2>
+                <div id="qaOutcomesSection" class="section-content">
+                    <div class="checkbox-group" style="margin-bottom: 20px;">
+                        <input type="checkbox" id="enableQaOutcomes" checked>
+                        <label for="enableQaOutcomes">Enable Default QA Question Answers and Note Template for Auto-Resolved Reviews</label>
+                        <i class="fas fa-info-circle tooltip-icon" title="If enabled, AI auto-resolved reviews will populate these default answers and use the specified note template."></i>
+                    </div>
+
+                    <div id="qaOutcomesSectionContent">
+                        <h3>Default Answers for Quality Assurance Questions:</h3>
+                        <p>These answers will be automatically set for the corresponding QA questions when a review is fully auto-resolved by AI.</p>
+                        <div class="qa-question-item">
+                            <label for="qaQ1">QA Question 1: Is the report free from major grammatical errors?</label>
+                            <select id="qaQ1">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                                <option value="not_applicable">N/A</option>
+                            </select>
+                        </div>
+                        <div class="qa-question-item">
+                            <label for="qaQ2">QA Question 2: Is the report content coherent and logical?</label>
+                            <select id="qaQ2">
+                                <option value="excellent">Excellent</option>
+                                <option value="good">Good</option>
+                                <option value="average">Average</option>
+                                <option value="poor">Poor</option>
+                            </select>
+                        </div>
+                        <div class="qa-question-item">
+                            <label for="qaQ3">QA Question 3: Are all required fields filled accurately?</label>
+                            <select id="qaQ3">
+                                <option value="all_filled">All filled</option>
+                                <option value="some_missing">Some missing</option>
+                            </select>
+                        </div>
+
+                        <h3 style="margin-top: 25px;">AI Suggested Quality Assurance Note:</h3>
+                        <div class="checkbox-group" style="margin-bottom: 15px;">
+                            <input type="checkbox" id="useCustomQaNoteTemplate" checked>
+                            <label for="useCustomQaNoteTemplate">Use Custom Note Template</label>
+                            <i class="fas fa-info-circle tooltip-icon" title="If unchecked, an internal AI-generated summary will be used. If checked, the template below will be applied."></i>
+                        </div>
+                        
+                        <div id="customQaNoteTemplateContainer">
+                            <p>Define your template for the note added to automatically resolved reviews. Use placeholders like `{shopper_name}` or `{avg_confidence_score}` for dynamic content.</p>
+                            <textarea id="qaNoteTemplate">
+This report submitted by {shopper_name} was automatically resolved by AI QA.
+AI confidence for resolved issues averaged {avg_confidence_score}%. This indicates excellent content quality and attention to detail.
+This shopper is highly recommended for future assignments.
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit"><i class="fas fa-save"></i> Save Settings</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confidenceThreshold = document.getElementById('confidenceThreshold');
+            const confidenceValue = document.getElementById('confidenceValue');
+            const enableQaOutcomesCheckbox = document.getElementById('enableQaOutcomes');
+            const qaOutcomesSectionContent = document.getElementById('qaOutcomesSectionContent');
+            const useCustomQaNoteTemplateCheckbox = document.getElementById('useCustomQaNoteTemplate');
+            const customQaNoteTemplateContainer = document.getElementById('customQaNoteTemplateContainer');
+            const qaNoteTemplateTextarea = document.getElementById('qaNoteTemplate');
+
+
+            // Update the displayed percentage as the slider moves
+            confidenceThreshold.addEventListener('input', function() {
+                confidenceValue.textContent = this.value + '%';
+            });
+
+            // Function to enable/disable child elements of a container
+            function setChildrenDisabled(container, disabled) {
+                const formElements = container.querySelectorAll('input, select, textarea, button');
+                formElements.forEach(element => {
+                    element.disabled = disabled;
+                });
+            }
+            
+            // Coherence Strategy visibility
+
+            const autoCoherenceCheckbox = document.getElementById('autoCoherence');
+            const strategyDropdown = document.getElementById('strategyDropdown');
+            const strategyNote = document.getElementById('strategyNote');
+            const strategySelect = document.getElementById('coherenceStrategy');
+
+            const notes = {
+            all_ratings: "The AI will combine all available comments to create an overall sentiment profile. It will then check every single question's rating for consistency against this sentiment, even for questions without comments. This provides the most comprehensive check and may flag inconsistencies that are not immediately obvious.",
+            ratings_with_comments: "The AI will only check the coherence of the ratings for questions that have an accompanying comment. The AI will ignore questions without comments. This check is useful for directly validating the feedback provided by the shopper."
+            };
+
+            autoCoherenceCheckbox.addEventListener('change', function () {
+            const show = this.checked;
+            strategyDropdown.style.display = show ? 'block' : 'none';
+            strategyNote.style.display = show ? 'block' : 'none';
+            });
+
+            strategySelect.addEventListener('change', function () {
+            strategyNote.textContent = notes[this.value] || "";
+            });
+
+            // Toggle visibility and disabled state of QA Outcomes section
+            function toggleQaOutcomesSection() {
+                const isDisabled = !enableQaOutcomesCheckbox.checked;
+                qaOutcomesSectionContent.classList.toggle('disabled-content', isDisabled);
+                setChildrenDisabled(qaOutcomesSectionContent, isDisabled);
+
+                // If QA Outcomes section is disabled, ensure custom note template is also logically disabled
+                if (isDisabled) {
+                    useCustomQaNoteTemplateCheckbox.checked = false; // Uncheck the custom template option
+                    toggleCustomQaNoteTemplate(); // Apply the visual/functional disable
+                }
+            }
+
+            // Toggle visibility and disabled state of Custom QA Note Template
+            function toggleCustomQaNoteTemplate() {
+                const isDisabled = !useCustomQaNoteTemplateCheckbox.checked;
+                customQaNoteTemplateContainer.classList.toggle('disabled-content', isDisabled);
+                qaNoteTemplateTextarea.disabled = isDisabled;
+            }
+
+            // Initial state setup for toggles
+            toggleQaOutcomesSection();
+            toggleCustomQaNoteTemplate();
+
+            // Event Listeners for toggles
+            enableQaOutcomesCheckbox.addEventListener('change', toggleQaOutcomesSection);
+            useCustomQaNoteTemplateCheckbox.addEventListener('change', toggleCustomQaNoteTemplate);
+
+            // Section Collapse/Expand Logic
+            document.querySelectorAll('.section-toggle').forEach(header => {
+                header.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const content = document.getElementById(targetId);
+                    const icon = this.querySelector('.collapse-icon');
+
+                    if (content && icon) {
+                        content.classList.toggle('collapsed');
+                        icon.classList.toggle('collapsed');
+                    }
+                });
+            });
+
+
+            // Handle form submission (for mockup, just an alert)
+            document.querySelector('form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent actual form submission
+
+                const settings = {
+                    globalConfidenceThreshold: confidenceThreshold.value,
+                    autoApply: {
+                        grammar: document.getElementById('autoGrammar').checked,
+                        spelling: document.getElementById('autoSpelling').checked,
+                        coherence: document.getElementById('autoCoherence').checked,
+                        location: document.getElementById('autoLocation').checked
+                    },
+                    autoReviewActions: {
+                        resolveIfMet: document.getElementById('actionResolve').checked,
+                        // Get the value of the selected radio button for failAction
+                        failAction: document.querySelector('input[name="failAction"]:checked').value
+                    },
+                    qaOutcomesEnabled: enableQaOutcomesCheckbox.checked, // Store if QA Outcomes is enabled
+                };
+
+                // Only include QA specific settings if enabled
+                if (settings.qaOutcomesEnabled) {
+                    settings.qaDefaultAnswers = {
+                        qaQ1: document.getElementById('qaQ1').value,
+                        qaQ2: document.getElementById('qaQ2').value,
+                        qaQ3: document.getElementById('qaQ3').value
+                        // Add more QA questions here
+                    };
+                    settings.useCustomQaNoteTemplate = useCustomQaNoteTemplateCheckbox.checked;
+                    if (settings.useCustomQaNoteTemplate) {
+                         settings.qaNoteTemplate = qaNoteTemplateTextarea.value.trim();
+                    } else {
+                        settings.qaNoteTemplate = null; // Or 'AI_GENERATED', to indicate no custom template
+                    }
+                } else {
+                    settings.qaDefaultAnswers = null;
+                    settings.useCustomQaNoteTemplate = false;
+                    settings.qaNoteTemplate = null;
+                }
+                
+                console.log('Saved Settings:', settings);
+                alert('Settings saved successfully! (Check console for values)');
+                // In a real application, you would send these settings to a backend API
+            });
+        });
+    </script>
+</body>
+</html>
