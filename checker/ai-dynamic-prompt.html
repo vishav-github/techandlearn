@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic AI QA Prompt Generator</title>
+    <style>
+        body { font-family: sans-serif; max-width: 1000px; margin: auto; padding: 20px; line-height: 1.6; }
+        h1, h2 { color: #333; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .control-group { margin-bottom: 15px; }
+        label { font-weight: bold; margin-bottom: 5px; display: block; }
+        textarea, input[type="text"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        pre { background-color: #f4f4f4; padding: 15px; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <h1>Dynamic QA Prompt Generator</h1>
+    <p>Select the QA checks you want to perform and see the final prompt and JSON payload that would be sent to the AI.</p>
+
+    <div class="controls">
+        <div class="control-group">
+            <h2>Select Checks</h2>
+            <label><input type="checkbox" id="checkGrammar" checked> Grammar Check</label>
+            <label><input type="checkbox" id="checkSpelling" checked> Spelling Check</label>
+            <label><input type="checkbox" id="checkCoherence"> Coherence Check</label>
+            <label><input type="checkbox" id="checkLocation"> Location Anomaly Check</label>
+            <label><input type="checkbox" id="includeSummary"> Include QA Summary</label>
+        </div>
+        <div class="control-group">
+            <h2>Input Data</h2>
+            <label for="reportData">Report Questions & Comments (JSON Array)</label>
+            <textarea id="reportData" rows="10">
+[
+    {
+        "DataLink": "Q1",
+        "Question": "How was your stay?",
+        "SelectedAnswer": "Fair",
+        "TheText": "The room was clean and the check-in was quick.",
+        "AvailableAnswerOptions": ["Poor", "Fair", "Excellent"]
+    },
+    {
+        "DataLink": "Q2",
+        "Question": "How was the breakfast?",
+        "SelectedAnswer": "Fair",
+        "TheText": "The breakfast was a bit cold.",
+        "AvailableAnswerOptions": ["Poor", "Fair", "Excellent"]
+    },
+    {
+        "DataLink": "Q3",
+        "Question": "Overall, how would you rate our staff?",
+        "SelectedAnswer": "Excellent",
+        "TheText": "The staff were helpful and always had a smile. I am very happy with my visit.",
+        "AvailableAnswerOptions": ["Poor", "Fair", "Excellent"]
+    }
+]
+            </textarea>
+            <label for="locationData">Actual Report Location (for Location Anomaly Check)</label>
+            <input type="text" id="locationData" value="Los Angeles, CA">
+        </div>
+    </div>
+
+    <button onclick="generatePrompt()">Generate Prompt & Payload</button>
+
+    <h2>Assembled Prompt</h2>
+    <pre id="outputPrompt">Click "Generate" to see the prompt.</pre>
+
+    <h2>Assembled Payload</h2>
+    <pre id="outputPayload">Click "Generate" to see the payload.</pre>
+
+    <script>
+        function generatePrompt() {
+            const enabledIssueTypes = [];
+            if (document.getElementById('checkGrammar').checked) enabledIssueTypes.push('grammar');
+            if (document.getElementById('checkSpelling').checked) enabledIssueTypes.push('spelling');
+            if (document.getElementById('checkCoherence').checked) enabledIssueTypes.push('coherence');
+            if (document.getElementById('checkLocation').checked) enabledIssueTypes.push('location');
+            const includeSummary = document.getElementById('includeSummary').checked;
+            const reportDataText = document.getElementById('reportData').value;
+            const locationData = document.getElementById('locationData').value;
+            
+            let reportData;
+            try {
+                reportData = JSON.parse(reportDataText);
+            } catch (e) {
+                alert("Invalid JSON in Report Data. Please correct it.");
+                return;
+            }
+
+            const result = getDynamicPromptAndPayload(enabledIssueTypes, reportData, locationData, includeSummary);
+            
+            document.getElementById('outputPrompt').textContent = result.prompt;
+            document.getElementById('outputPayload').textContent = JSON.stringify(result.payload, null, 2);
+        }
+
+        function getDynamicPromptAndPayload(enabled_issue_types, report_data, actual_report_location, include_summary) {
+            let process_instructions = "";
+            const output_fields = {};
+            const input_payload = {};
+
+            const is_coherence_enabled = enabled_issue_types.includes('coherence');
+            const is_location_enabled = enabled_issue_types.includes('location');
+            const is_basic_check_enabled = enabled_issue_types.includes('grammar') || enabled_issue_types.includes('spelling');
+
+            if (is_coherence_enabled) {
+                process_instructions += "* Read the `combinedComments` to understand the user's overall feedback.\n";
+                process_instructions += "* For each question, find the `AvailableAnswerOption` that best matches the sentiment.\n";
+                output_fields['coherenceCorrect'] = "A JSON array of recommended changes.";
+                output_fields['coherenceThreshold'] = "A percentage value for confidence.";
+
+                const combined_comments = report_data.map(q => q.TheText).join(" ");
+                const questions_for_ai = report_data.map(q => {
+                    const { TheText, ...rest } = q;
+                    return rest;
+                });
+                input_payload["questions"] = questions_for_ai;
+                input_payload["combinedComments"] = combined_comments.trim();
+            }
+
+            if (is_location_enabled) {
+                process_instructions += "* Read all comments to identify locations and compare against the `ActualReportLocation`. Flag conflicts as a **Location Anomaly**.\n";
+                output_fields['locationAnomalyCorrect'] = "A JSON object mapping the conflicting location to the correct one.";
+                output_fields['locationAnomalyThreshold'] = "A percentage value for confidence.";
+                input_payload["ActualReportLocation"] = actual_report_location;
+                input_payload["reviews"] = report_data.map(item => ({ DataLink: item.DataLink, TheText: item.TheText }));
+            }
+            
+            if (is_basic_check_enabled) {
+                process_instructions += "* For each comment, identify the following mistakes:\n";
+                if (enabled_issue_types.includes('grammar')) {
+                    process_instructions += "  - **Grammar** mistakes.\n";
+                    output_fields['grammarCorrect'] = `A JSON object mapping wrong to correct values.`;
+                    output_fields['grammarThreshold'] = `A percentage value for confidence.`;
+                }
+                if (enabled_issue_types.includes('spelling')) {
+                    process_instructions += "  - **Spelling** mistakes.\n";
+                    output_fields['spellingCorrect'] = `A JSON object mapping wrong to correct values.`;
+                    output_fields['spellingThreshold'] = `A percentage value for confidence.`;
+                }
+                if (enabled_issue_types.includes('grammar') && enabled_issue_types.includes('spelling')) {
+                    process_instructions += "* Prioritize grammar over spelling.\n";
+                }
+                if (!input_payload.reviews) {
+                    input_payload["reviews"] = report_data.map(item => ({ DataLink: item.DataLink, TheText: item.TheText }));
+                }
+            }
+            
+            if (include_summary) {
+                process_instructions += "\n* Based on all findings, create a high-level summary of the QA results.\n";
+                output_fields['qaSummary'] = "A JSON object with `totalIssuesFound` (integer), `issuesByType` (object mapping issue type to count), and a `summaryStatement` (string).";
+            }
+            
+            let final_output_fields = "";
+            for (const key in output_fields) {
+                if (Object.hasOwnProperty.call(output_fields, key)) {
+                    final_output_fields += `    - \`${key}\`: ${output_fields[key]}\n`;
+                }
+            }
+            if (final_output_fields.trim() === "") {
+                final_output_fields = "    * Return a valid JSON object only. The fields will be determined by the selected checks.";
+            }
+
+            const prompt = `You are a QA AI assistant. Your task is to analyze a JSON payload and return a corrected JSON output.
+
+1.  **Input:** I will provide a JSON payload.
+2.  **Process:**
+${process_instructions}
+
+3.  **Output:**
+    * Return a single JSON object. This object must contain the following fields based on the checks performed:
+${final_output_fields}
+    * Note: For any field where no issues are found, return an empty object (\`{}\`) or empty array (\`[]\`). Do not omit the field.
+
+4.  **Formatting Rules:**
+    * Return a valid JSON object only.
+    * Do not include any conversational text or explanations.
+    * The output must be strictly in the requested JSON format.`;
+
+            return { prompt: prompt, payload: input_payload };
+        }
+    </script>
+</body>
+</html>
