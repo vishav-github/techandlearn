@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Collateral Export</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h3 { color: #1e7bd8; margin-bottom: 20px; border-bottom: 2px solid #e0e6e9; padding-bottom: 10px; }
+        .profile-list, .profile-form { margin-top: 20px; }
+        .button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
+        .button-primary { background-color: #1e7bd8; color: white; }
+        .button-secondary { background-color: #e0e6e9; color: #555; margin-left: 10px; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        tr:hover { background-color: #f9f9f9; }
+        .link-style { color: #1e7bd8; text-decoration: none; cursor: pointer; }
+        .link-style:hover { text-decoration: underline; }
+        .status-active { color: #4CAF50; font-weight: bold; }
+        .status-inactive { color: #f44336; font-weight: bold; }
+        
+        /* Corrected CSS for alignment */
+        .profile-form .form-group {
+            display: grid;
+            grid-template-columns: minmax(180px, max-content) 1fr; /* Fixed width for label, rest for control */
+            gap: 20px; /* Spacing between label and control */
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+        
+        .form-control {
+            max-width: 350px; /* Consistent width for inputs */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group input[type="checkbox"] { margin-right: 8px; }
+        
+        /* Multi-select and button-specific styles */
+        .multi-select-container { position: relative; width: 100%; }
+        .multi-select-button { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff; text-align: left; cursor: pointer; }
+        .multi-select-dropdown { position: absolute; top: 100%; left: 0; right: 0; background-color: #fff; border: 1px solid #ccc; border-top: none; z-index: 1000; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: none; }
+        .multi-select-dropdown label { display: block; margin: 5px 0; font-weight: normal; }
+        
+        /* The buttons will now align with the inputs */
+        .button-group {
+            display: flex;
+            justify-content: flex-end; /* Aligns buttons to the right side of the grid */
+            grid-column: 2 / 3; /* Positions the button group in the second column */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Automated Collateral Export</h1>
+
+        <div class="profile-list">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <button class="button button-primary">Create New Profile</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Profile Name</th>
+                            <th>Active</th>
+                            <th>Last Run</th>
+                            <th>Check Connection</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#" class="link-style">Daily QA Transcripts</a></td>
+                            <td class="status-active">Yes</td>
+                            <td>2025-09-14 02:00 AM</td>
+                            <td><button class="button button-secondary">Test</button></td>
+                            <td><button class="button button-primary">Run Now</button></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#" class="link-style">Client X - Monthly Backup</a></td>
+                            <td class="status-inactive">No</td>
+                            <td>N/A</td>
+                            <td><button class="button button-secondary">Test</button></td>
+                            <td><button class="button button-primary">Run Now</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr style="margin: 40px 0;">
+
+        <div class="profile-form">
+            <h2>New Export Profile</h2>
+            <form>
+                <div class="form-group">
+                    <label for="profileName">Profile Name</label>
+                    <input type="text" id="profileName" class="form-control" placeholder="e.g., Daily Transcripts Export" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="activeStatus">Active?</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="activeStatus" checked>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="autoExportDate">Date for Auto Export</label>
+                    <input type="date" id="autoExportDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Export Type</label>
+                    <div class="multi-select-container form-control">
+                        <button class="multi-select-button" type="button">Select Export Types</button>
+                        <div class="multi-select-dropdown">
+                            <label><input type="checkbox" value="collateral"> Collateral</label>
+                            <label><input type="checkbox" value="pdf"> PDF</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="clients">Client</label>
+                    <select id="clients" class="form-control">
+                        <option>Client A</option>
+                        <option>Client B</option>
+                        <option>Client C</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Questionnaires</label>
+                    <div class="multi-select-container form-control">
+                        <button class="multi-select-button" type="button">Select Questionnaires</button>
+                        <div class="multi-select-dropdown">
+                            <label><input type="checkbox" value="standard-qa"> Standard QA</label>
+                            <label><input type="checkbox" value="compliance-audit"> Compliance Audit</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Review Statuses</label>
+                    <div class="multi-select-container form-control">
+                        <button class="multi-select-button" type="button">Select Statuses</button>
+                        <div class="multi-select-dropdown">
+                            <label><input type="checkbox" value="finished"> Finished</label>
+                            <label><input type="checkbox" value="approved"> Approved</label>
+                            <label><input type="checkbox" value="disapproved"> Disapproved</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fileName">File Name for Export</label>
+                    <input type="text" id="fileName" class="form-control" placeholder="%bn_%cid_%fn" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="singleExport">Export each attachment only once?</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="singleExport" checked>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="defaultDays">Default amount of days for export</label>
+                    <input type="text" id="defaultDays" class="form-control" placeholder="Maximum 45 days" required>
+                </div>
+
+            <h2>Remote connection detail</h2>
+                <div class="form-group">
+                    <label for="serverHost">Server Host</label>
+                    <input type="text" id="serverHost" class="form-control" placeholder="e.g., sftp://ftp.serviz.com:22" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="remotePath">Remote Path</label>
+                    <input type="text" id="remotePath" class="form-control" placeholder="/transcripts/qa/" required>
+                </div>
+                
+                <div class="form-group">
+                    <label></label>
+                    <div class="button-group">
+                        <button class="button button-secondary" type="button">Test Connection</button>
+                    </div>
+                </div>
+
+                
+                <div class="form-group">
+                    <label></label>
+                    <div class="button-group">
+                        <button type="submit" class="button button-primary">Save Profile</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const multiSelectButtons = document.querySelectorAll('.multi-select-button');
+
+            multiSelectButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    const dropdown = this.nextElementSibling;
+                    const isDisplayed = dropdown.style.display === 'block';
+
+                    document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+                        d.style.display = 'none';
+                    });
+
+                    dropdown.style.display = isDisplayed ? 'none' : 'block';
+                    event.stopPropagation();
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.multi-select-container')) {
+                    document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+                        d.style.display = 'none';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
