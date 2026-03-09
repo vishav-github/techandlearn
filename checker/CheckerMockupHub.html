@@ -8,25 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #f4f6fb;
-    --surface:  #ffffff;
-    --surface2: #f0f3fa;
-    --border:   #e2e7f0;
-    --border2:  #d0d7e8;
-    --accent:   #2563eb;
-    --accent-lt:#eff4ff;
-    --text:     #111827;
-    --sub:      #374151;
-    --muted:    #6b7280;
-    --faint:    #9ca3af;
+    --bg:        #f4f6fb;
+    --surface:   #ffffff;
+    --surface2:  #f0f3fa;
+    --border:    #e2e7f0;
+    --border2:   #d0d7e8;
+    --accent:    #2563eb;
+    --accent-lt: #eff4ff;
+    --text:      #111827;
+    --sub:       #374151;
+    --muted:     #6b7280;
+    --faint:     #9ca3af;
 
-    --c-billing: #d97706;  --bg-billing: #fffbeb;  --br-billing: #fde68a;
-    --c-fraud:   #dc2626;  --bg-fraud:   #fff5f5;  --br-fraud:   #fecaca;
-    --c-ops:     #2563eb;  --bg-ops:     #eff6ff;  --br-ops:     #bfdbfe;
-    --c-api:     #7c3aed;  --bg-api:     #f5f3ff;  --br-api:     #ddd6fe;
-    --c-ai:      #059669;  --bg-ai:      #ecfdf5;  --br-ai:      #a7f3d0;
-    --c-notify:  #ea580c;  --bg-notify:  #fff7ed;  --br-notify:  #fed7aa;
-    --c-ui:      #0891b2;  --bg-ui:      #ecfeff;  --br-ui:      #a5f3fc;
+    --c-billing:#d97706; --bg-billing:#fffbeb; --br-billing:#fde68a;
+    --c-fraud:  #dc2626; --bg-fraud:  #fff5f5; --br-fraud:  #fecaca;
+    --c-ops:    #2563eb; --bg-ops:    #eff6ff; --br-ops:    #bfdbfe;
+    --c-api:    #7c3aed; --bg-api:    #f5f3ff; --br-api:    #ddd6fe;
+    --c-ai:     #059669; --bg-ai:     #ecfdf5; --br-ai:     #a7f3d0;
+    --c-notify: #ea580c; --bg-notify: #fff7ed; --br-notify: #fed7aa;
+    --c-ui:     #0891b2; --bg-ui:     #ecfeff; --br-ui:     #a5f3fc;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,63 +54,60 @@
   }
   .logo-icon {
     width: 28px; height: 28px; border-radius: 7px;
-    background: var(--accent);
-    color: #fff;
+    background: var(--accent); color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
+    font-size: 13px; font-weight: 800;
   }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
   .topbar-pill {
-    background: var(--accent-lt);
-    color: var(--accent);
-    border: 1px solid #bfdbfe;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px; font-weight: 600;
+    background: var(--accent-lt); color: var(--accent);
+    border: 1px solid #bfdbfe; border-radius: 20px;
+    padding: 4px 12px; font-size: 12px; font-weight: 600;
   }
 
   /* ── Hero ── */
   .hero {
     background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
-    padding: 52px 48px 48px;
-    color: #fff;
+    padding: 52px 48px 48px; color: #fff;
     position: relative; overflow: hidden;
   }
   .hero::after {
-    content: '';
-    position: absolute; right: -60px; top: -60px;
+    content: ''; position: absolute; right: -60px; top: -60px;
     width: 360px; height: 360px; border-radius: 50%;
     background: rgba(255,255,255,0.05); pointer-events: none;
   }
   .hero::before {
-    content: '';
-    position: absolute; right: 120px; bottom: -80px;
+    content: ''; position: absolute; right: 120px; bottom: -80px;
     width: 220px; height: 220px; border-radius: 50%;
     background: rgba(255,255,255,0.04); pointer-events: none;
   }
+  .hero-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .hero-left {}
   .hero-label {
     display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 11px; font-weight: 600;
-    letter-spacing: .8px; text-transform: uppercase;
-    margin-bottom: 18px; color: rgba(255,255,255,.9);
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; font-weight: 600; letter-spacing: .8px;
+    text-transform: uppercase; margin-bottom: 18px; color: rgba(255,255,255,.9);
   }
   .hero h1 {
-    font-size: clamp(26px, 4vw, 42px);
-    font-weight: 800; letter-spacing: -.6px; line-height: 1.15;
-    margin-bottom: 12px;
+    font-size: clamp(26px, 4vw, 42px); font-weight: 800;
+    letter-spacing: -.6px; line-height: 1.15; margin-bottom: 12px;
   }
-  .hero p {
-    font-size: 15px; color: rgba(255,255,255,.75);
-    max-width: 520px; line-height: 1.7;
+  .hero p { font-size: 15px; color: rgba(255,255,255,.75); max-width: 520px; line-height: 1.7; }
+  .hero-stats {
+    display: flex; gap: 16px; flex-wrap: wrap; align-self: flex-end; position: relative; z-index: 1;
   }
+  .hero-stat {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px; padding: 14px 20px; text-align: center; min-width: 90px;
+  }
+  .hero-stat-num { font-size: 26px; font-weight: 800; line-height: 1; }
+  .hero-stat-label { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; font-weight: 500; }
 
   /* ── Toolbar ── */
   .toolbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    background: var(--surface); border-bottom: 1px solid var(--border);
     padding: 14px 48px;
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   }
@@ -120,8 +117,7 @@
     transform: translateY(-50%); color: var(--faint); pointer-events: none;
   }
   #searchInput {
-    width: 100%;
-    background: var(--surface2);
+    width: 100%; background: var(--surface2);
     border: 1px solid var(--border); border-radius: 8px;
     padding: 8px 12px 8px 36px;
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -130,23 +126,21 @@
   }
   #searchInput:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
-    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1); background: #fff;
   }
   #searchInput::placeholder { color: var(--faint); }
 
   .divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
   .filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border); border-radius: 7px;
-    padding: 6px 12px; font-size: 12px; font-weight: 500;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 7px; padding: 6px 12px;
+    font-size: 12px; font-weight: 500;
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: var(--sub); cursor: pointer; transition: all .15s; white-space: nowrap;
   }
   .filter-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
   .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
   .count-badge { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
   .count-badge strong { color: var(--text); font-weight: 700; }
 
@@ -160,17 +154,15 @@
 
   /* ── Card ── */
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border); border-radius: 14px;
-    padding: 22px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px; cursor: pointer;
     transition: transform .2s ease, border-color .2s, box-shadow .2s;
     text-decoration: none; color: inherit;
     display: flex; flex-direction: column; gap: 12px;
     animation: fadeUp .35s ease both;
   }
   .card:hover {
-    transform: translateY(-3px);
-    border-color: #93c5fd;
+    transform: translateY(-3px); border-color: #93c5fd;
     box-shadow: 0 8px 32px rgba(37,99,235,.10), 0 2px 8px rgba(0,0,0,.06);
   }
   .card:hover .card-arrow { opacity: 1; color: var(--accent); transform: translate(2px,-2px); }
@@ -179,16 +171,22 @@
     from { opacity:0; transform: translateY(12px); }
     to   { opacity:1; transform: translateY(0); }
   }
-  .card:nth-child(1)  { animation-delay:.03s } .card:nth-child(2)  { animation-delay:.06s }
-  .card:nth-child(3)  { animation-delay:.09s } .card:nth-child(4)  { animation-delay:.12s }
-  .card:nth-child(5)  { animation-delay:.15s } .card:nth-child(6)  { animation-delay:.18s }
-  .card:nth-child(7)  { animation-delay:.21s } .card:nth-child(8)  { animation-delay:.24s }
-  .card:nth-child(9)  { animation-delay:.27s } .card:nth-child(10) { animation-delay:.30s }
-  .card:nth-child(11) { animation-delay:.33s } .card:nth-child(12) { animation-delay:.36s }
-  .card:nth-child(13) { animation-delay:.39s } .card:nth-child(14) { animation-delay:.42s }
-  .card:nth-child(15) { animation-delay:.45s } .card:nth-child(16) { animation-delay:.48s }
-  .card:nth-child(17) { animation-delay:.51s } .card:nth-child(18) { animation-delay:.54s }
-  .card:nth-child(19) { animation-delay:.57s }
+  /* stagger first 29 cards */
+  .card:nth-child(1)  { animation-delay:.02s } .card:nth-child(2)  { animation-delay:.04s }
+  .card:nth-child(3)  { animation-delay:.06s } .card:nth-child(4)  { animation-delay:.08s }
+  .card:nth-child(5)  { animation-delay:.10s } .card:nth-child(6)  { animation-delay:.12s }
+  .card:nth-child(7)  { animation-delay:.14s } .card:nth-child(8)  { animation-delay:.16s }
+  .card:nth-child(9)  { animation-delay:.18s } .card:nth-child(10) { animation-delay:.20s }
+  .card:nth-child(11) { animation-delay:.22s } .card:nth-child(12) { animation-delay:.24s }
+  .card:nth-child(13) { animation-delay:.26s } .card:nth-child(14) { animation-delay:.28s }
+  .card:nth-child(15) { animation-delay:.30s } .card:nth-child(16) { animation-delay:.32s }
+  .card:nth-child(17) { animation-delay:.34s } .card:nth-child(18) { animation-delay:.36s }
+  .card:nth-child(19) { animation-delay:.38s } .card:nth-child(20) { animation-delay:.40s }
+  .card:nth-child(21) { animation-delay:.42s } .card:nth-child(22) { animation-delay:.44s }
+  .card:nth-child(23) { animation-delay:.46s } .card:nth-child(24) { animation-delay:.48s }
+  .card:nth-child(25) { animation-delay:.50s } .card:nth-child(26) { animation-delay:.52s }
+  .card:nth-child(27) { animation-delay:.54s } .card:nth-child(28) { animation-delay:.56s }
+  .card:nth-child(29) { animation-delay:.58s }
 
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .card-icon {
@@ -212,26 +210,39 @@
     padding: 2px 9px; border-radius: 20px;
     letter-spacing: .3px; border: 1px solid;
   }
-  .tag-billing { color: var(--c-billing); background: var(--bg-billing); border-color: var(--br-billing); }
-  .tag-fraud   { color: var(--c-fraud);   background: var(--bg-fraud);   border-color: var(--br-fraud); }
-  .tag-ops     { color: var(--c-ops);     background: var(--bg-ops);     border-color: var(--br-ops); }
-  .tag-api     { color: var(--c-api);     background: var(--bg-api);     border-color: var(--br-api); }
-  .tag-ai      { color: var(--c-ai);      background: var(--bg-ai);      border-color: var(--br-ai); }
-  .tag-notify  { color: var(--c-notify);  background: var(--bg-notify);  border-color: var(--br-notify); }
-  .tag-ui      { color: var(--c-ui);      background: var(--bg-ui);      border-color: var(--br-ui); }
+  .tag-billing { color:var(--c-billing); background:var(--bg-billing); border-color:var(--br-billing); }
+  .tag-fraud   { color:var(--c-fraud);   background:var(--bg-fraud);   border-color:var(--br-fraud); }
+  .tag-ops     { color:var(--c-ops);     background:var(--bg-ops);     border-color:var(--br-ops); }
+  .tag-api     { color:var(--c-api);     background:var(--bg-api);     border-color:var(--br-api); }
+  .tag-ai      { color:var(--c-ai);      background:var(--bg-ai);      border-color:var(--br-ai); }
+  .tag-notify  { color:var(--c-notify);  background:var(--bg-notify);  border-color:var(--br-notify); }
+  .tag-ui      { color:var(--c-ui);      background:var(--bg-ui);      border-color:var(--br-ui); }
 
-  .icon-billing { background: var(--bg-billing); } .icon-fraud { background: var(--bg-fraud); }
-  .icon-ops     { background: var(--bg-ops); }     .icon-api   { background: var(--bg-api); }
-  .icon-ai      { background: var(--bg-ai); }      .icon-notify{ background: var(--bg-notify); }
-  .icon-ui      { background: var(--bg-ui); }
+  .icon-billing{background:var(--bg-billing)} .icon-fraud{background:var(--bg-fraud)}
+  .icon-ops{background:var(--bg-ops)}         .icon-api{background:var(--bg-api)}
+  .icon-ai{background:var(--bg-ai)}           .icon-notify{background:var(--bg-notify)}
+  .icon-ui{background:var(--bg-ui)}
+
+  /* ── Section divider ── */
+  .section-divider {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 0 4px;
+  }
+  .section-divider-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--faint); white-space: nowrap;
+  }
+  .section-divider-line { flex: 1; height: 1px; background: var(--border); }
 
   /* ── Add card ── */
   .card-add {
-    background: var(--surface); border: 2px dashed var(--border2); border-radius: 14px;
-    padding: 22px; display: flex; flex-direction: column;
+    background: var(--surface); border: 2px dashed var(--border2);
+    border-radius: 14px; padding: 22px;
+    display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 10px; text-align: center; min-height: 160px;
-    animation: fadeUp .35s ease both; animation-delay: .60s;
+    animation: fadeUp .35s ease both; animation-delay:.60s;
   }
   .card-add-icon {
     width: 38px; height: 38px; border-radius: 9px;
@@ -247,10 +258,10 @@
   }
 
   /* ── Empty state ── */
-  .empty { display: none; grid-column: 1/-1; text-align: center; padding: 72px 0; color: var(--muted); }
-  .empty-icon { font-size: 40px; margin-bottom: 14px; opacity: .4; }
-  .empty h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--sub); }
-  .empty p { font-size: 13px; }
+  .empty { display:none; grid-column:1/-1; text-align:center; padding:72px 0; color:var(--muted); }
+  .empty-icon { font-size:40px; margin-bottom:14px; opacity:.4; }
+  .empty h3 { font-size:18px; font-weight:700; margin-bottom:6px; color:var(--sub); }
+  .empty p  { font-size:13px; }
 
   /* ── Footer ── */
   footer {
@@ -261,29 +272,44 @@
   footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
   @media (max-width: 640px) {
-    .topbar, .hero, .toolbar, .grid-wrap, footer { padding-left: 16px; padding-right: 16px; }
-    .hero h1 { font-size: 24px; }
-    .search-wrap { width: 100%; }
-    .count-badge { display: none; }
+    .topbar,.hero,.toolbar,.grid-wrap,footer { padding-left:16px; padding-right:16px; }
+    .hero h1 { font-size:24px; }
+    .search-wrap { width:100%; }
+    .count-badge { display:none; }
+    .hero-stats { display:none; }
   }
 </style>
 </head>
 <body>
 
+<!-- Top bar -->
 <div class="topbar">
   <div class="logo">
     <div class="logo-icon">✔</div>
     Checker
   </div>
-  <span class="topbar-pill">Mockup Hub &nbsp;·&nbsp; <span id="totalCount">19</span> pages</span>
+  <div class="topbar-right">
+    <span class="topbar-pill">Mockup Hub &nbsp;·&nbsp; <span id="totalCount">29</span> pages</span>
+  </div>
 </div>
 
+<!-- Hero -->
 <div class="hero">
-  <div class="hero-label">⚡ Design &amp; Prototype</div>
-  <h1>UI Mockup Library</h1>
-  <p>All Checker platform mockup pages in one place. Browse by category, search by name, and open any page in a new tab instantly.</p>
+  <div class="hero-top">
+    <div class="hero-left">
+      <div class="hero-label">⚡ Design &amp; Prototype</div>
+      <h1>UI Mockup Library</h1>
+      <p>All Checker platform mockup pages in one place. Browse by category, search by name, and open any page in a new tab instantly.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num" id="statTotal">29</div><div class="hero-stat-label">Total Mockups</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">7</div><div class="hero-stat-label">Categories</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="statVisible">29</div><div class="hero-stat-label">Showing</div></div>
+    </div>
+  </div>
 </div>
 
+<!-- Toolbar -->
 <div class="toolbar">
   <div class="search-wrap">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -292,81 +318,55 @@
   <div class="divider"></div>
   <div class="filter-btns">
     <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('ai',this)">🤖 AI</button>
     <button class="filter-btn" onclick="setFilter('billing',this)">💳 Billing</button>
     <button class="filter-btn" onclick="setFilter('fraud',this)">🛡 Fraud &amp; QA</button>
     <button class="filter-btn" onclick="setFilter('ops',this)">⚙️ Operations</button>
     <button class="filter-btn" onclick="setFilter('api',this)">🔑 API &amp; Settings</button>
-    <button class="filter-btn" onclick="setFilter('ai',this)">🤖 AI</button>
     <button class="filter-btn" onclick="setFilter('notify',this)">🔔 Notifications</button>
     <button class="filter-btn" onclick="setFilter('ui',this)">🎨 UI / UX</button>
   </div>
-  <div class="count-badge">Showing <strong id="visibleCount">19</strong> mockups</div>
+  <div class="count-badge">Showing <strong id="visibleCount">29</strong> mockups</div>
 </div>
 
+<!-- Grid -->
 <div class="grid-wrap">
 <div class="grid" id="cardGrid">
 
-  <a class="card" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" data-tags="billing notify" data-name="billing reminder schedule invoice">
-    <div class="card-top"><div class="card-icon icon-billing">🗓️</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Billing Reminder Schedule</div><div class="card-desc">Visual timeline of the full invoice reminder cycle — Gentle → Follow-up → Final → Suspension — calculated in business days, skipping weekends and public holidays.</div></div>
-    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
-  </a>
+  <!-- ───── AI ───── -->
+  <div class="section-divider"><span class="section-divider-label">🤖 AI Features</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" data-tags="billing notify" data-name="billing reminders v2 invoice">
-    <div class="card-top"><div class="card-icon icon-billing">📆</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Billing Reminder Schedule V2</div><div class="card-desc">Alternate version of the billing reminder timeline. Explores a different visual layout or extended scenario for the invoice notification flow.</div></div>
-    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" data-tags="fraud ops" data-name="image comparison viewer similarity">
-    <div class="card-top"><div class="card-icon icon-fraud">🔍</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Image Comparison Viewer</div><div class="card-desc">Side-by-side viewer comparing a shopper's submitted image against historical matches. Shows similarity scores, risk flags, and lets reviewers accept or reject matches.</div></div>
-    <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" data-tags="fraud ops" data-name="image integrity dashboard duplicate">
-    <div class="card-top"><div class="card-icon icon-fraud">🖼️</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Image Integrity Dashboard</div><div class="card-desc">QA intelligence dashboard for monitoring image-level fraud. Flags duplicate, reused, or suspicious images submitted by shoppers across projects and branches.</div></div>
-    <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" data-tags="ops" data-name="mobile audit logs submission CAPI media">
-    <div class="card-top"><div class="card-icon icon-ops">📱</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Mobile Submission Audit Logs</div><div class="card-desc">Detailed log table of mobile survey submissions. Tracks partial media uploads, CAPI intercepts, quota blocks, and provides resolution instructions per entry.</div></div>
-    <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/oops" target="_blank" data-tags="ops" data-name="branch visit report scores">
-    <div class="card-top"><div class="card-icon icon-ops">📋</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Branch Visit Report</div><div class="card-desc">Tabular report for a mystery shopping visit to a branch. Sortable by time and exportable, showing scores and comments per question across multiple venue visits.</div></div>
-    <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/registration%20form" target="_blank" data-tags="ui ops" data-name="registration form shopper onboarding">
-    <div class="card-top"><div class="card-icon icon-ui">📝</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Shopper Registration Form</div><div class="card-desc">Multi-step form for onboarding new mystery shoppers. Covers basic info, address, contact details, experience level, and account settings with field validation.</div></div>
-    <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
-    <div class="card-top"><div class="card-icon icon-fraud">🛡️</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Shopper Fraud Intelligence</div><div class="card-desc">Long-term shopper behaviour analytics. Filters by client, project, branch, date range, and risk level to surface fraudulent or suspicious shopper patterns over time.</div></div>
-    <div class="card-footer"><span class="tag tag-fraud">Fraud</span></div>
-  </a>
-
-  <a class="card" href="https://techandlearn.in/checker/supportanalytics" target="_blank" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
-    <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Support Channel ROI Report</div><div class="card-desc">Analytics comparing human ticket support vs AI agent. Tracks AI deflection rate, query volume, estimated cost savings, and audit correctness scores per channel.</div></div>
+  <a class="card" href="https://techandlearn.in/checker/ai-dynamic-prompt.html" target="_blank" data-tags="ai ops" data-name="dynamic QA prompt generator AI JSON grammar spelling coherence">
+    <div class="card-top"><div class="card-icon icon-ai">⚙️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Dynamic QA Prompt Generator</div><div class="card-desc">Select which QA checks to run (grammar, spelling, coherence, location anomaly) and preview the exact AI prompt and JSON payload that would be sent to the AI model in real time.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/alert.html" target="_blank" data-tags="notify ui" data-name="alert notification component banner">
-    <div class="card-top"><div class="card-icon icon-notify">🔔</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Alert Notification</div><div class="card-desc">UI mockup for system alert and notification components. Demonstrates styling, dismissal behaviour, and message hierarchy for platform-wide alerts.</div></div>
-    <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ui">UI / UX</span></div>
+  <a class="card" href="https://techandlearn.in/checker/ai-poweredqa-adminpanel.html" target="_blank" data-tags="ai ops" data-name="AI QA admin panel confidence threshold auto-apply grammar spelling coherence">
+    <div class="card-top"><div class="card-icon icon-ai">🎛️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">AI QA Admin Panel</div><div class="card-desc">Admin settings for the AI-powered QA automation engine. Configure global confidence thresholds, choose which issue types (grammar, spelling, coherence, location) are auto-resolved, and set review-level auto-actions.</div></div>
+    <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence">
+  <a class="card" href="https://techandlearn.in/checker/ai-powerqa-editreview.html" target="_blank" data-tags="ai fraud ops" data-name="AI QA edit review coherence grammar spelling location anomaly checker">
+    <div class="card-top"><div class="card-icon icon-ai">✏️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">AI QA — Edit Review</div><div class="card-desc">In-line review editing screen powered by AI QA. Shows each question with AI-detected issues (coherence, grammar, spelling, location), allows one-click fix application, draft saving, and per-question mark-reviewed actions.</div></div>
+    <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-fraud">Fraud &amp; QA</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/ai-powerqa-insight.html" target="_blank" data-tags="ai ops" data-name="AI QA insights reviews acceptance rate auto-resolved filter">
+    <div class="card-top"><div class="card-icon icon-ai">📈</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">AI QA Insights Dashboard</div><div class="card-desc">Filterable dashboard for reviewing AI QA results across all reviews. Filter by client, branch, project, issue type, AI acceptance rate range, auto-resolution status, and final QA outcome.</div></div>
+    <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/ai-supportagent.html" target="_blank" data-tags="ai ops notify" data-name="AI support agent tickets instant chat deflection">
+    <div class="card-top"><div class="card-icon icon-ai">💬</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">AI-Assisted Support Tickets</div><div class="card-desc">Support ticket list enhanced with an AI instant support button. Clients can get immediate AI-powered answers before opening a human ticket, reducing support load through intelligent deflection.</div></div>
+    <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence mapping">
     <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-arrow">↗</div></div>
     <div><div class="card-title">AI Answer Recoding V2</div><div class="card-desc">Wizard-style tool for AI-assisted recoding of open-ended survey answers. Supports data source mapping, confidence thresholds, processing dashboard, and human review queue.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
@@ -378,22 +378,58 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/apikeyemails" target="_blank" data-tags="api" data-name="API key email configuration sender reply-to">
-    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">API Key Email Config</div><div class="card-desc">Interface for configuring email-related settings tied to API keys. Manages sender addresses, reply-to settings, and notification email behaviour per API token.</div></div>
-    <div class="card-footer"><span class="tag tag-api">API</span></div>
+  <a class="card" href="https://techandlearn.in/checker/supportanalytics" target="_blank" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
+    <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Support Channel ROI Report</div><div class="card-desc">Analytics comparing human ticket support vs AI agent. Tracks AI deflection rate, query volume, estimated cost savings, and audit correctness scores per channel.</div></div>
+    <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" data-tags="api" data-name="API key management generate revoke expiry">
-    <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">API Key Management</div><div class="card-desc">Dashboard for managing all API access keys across clients. Generate new keys, set expiry, view masked secrets, and revoke or regenerate existing keys.</div></div>
-    <div class="card-footer"><span class="tag tag-api">API</span></div>
+  <!-- ───── Billing ───── -->
+  <div class="section-divider"><span class="section-divider-label">💳 Billing</span><div class="section-divider-line"></div></div>
+
+  <a class="card" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" data-tags="billing notify" data-name="billing reminder schedule invoice business days">
+    <div class="card-top"><div class="card-icon icon-billing">🗓️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Billing Reminder Schedule</div><div class="card-desc">Visual timeline of the full invoice reminder cycle — Gentle → Follow-up → Final → Suspension — calculated in business days, skipping weekends and public holidays.</div></div>
+    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" data-tags="ui ops" data-name="main menu dashboard checker home overview">
-    <div class="card-top"><div class="card-icon icon-ui">🏠</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Main Menu / Dashboard</div><div class="card-desc">Primary Checker platform dashboard. Shows active shoppers, clients, assignment counts, urgent items, and quick-action buttons for orders, reports, and settings.</div></div>
-    <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
+  <a class="card" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" data-tags="billing notify" data-name="billing reminders v2 invoice">
+    <div class="card-top"><div class="card-icon icon-billing">📆</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Billing Reminder Schedule V2</div><div class="card-desc">Alternate version of the billing reminder timeline. Explores a different visual layout or extended scenario for the invoice notification flow.</div></div>
+    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/specialservice" target="_blank" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
+    <div class="card-top"><div class="card-icon icon-billing">📜</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Special Service Notifications</div><div class="card-desc">Four-stage flow for custom service requests (CSS, training, dev): Agreement offer → Client acceptance → AM approval &amp; billing notice → Cancellation confirmation.</div></div>
+    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/services-removal.html" target="_blank" data-tags="billing notify" data-name="service removal confirmation billing invoice monthly postpaid">
+    <div class="card-top"><div class="card-icon icon-billing">🗑️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Service Removal Confirmation</div><div class="card-desc">Email notification confirming a service has been removed from the client's account. Includes removal date, who actioned it, and billing note explaining pro-rated charge on the next monthly invoice.</div></div>
+    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
+  </a>
+
+  <!-- ───── Fraud & QA ───── -->
+  <div class="section-divider"><span class="section-divider-label">🛡 Fraud &amp; QA</span><div class="section-divider-line"></div></div>
+
+  <a class="card" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" data-tags="fraud ops" data-name="image comparison viewer similarity shopper receipt">
+    <div class="card-top"><div class="card-icon icon-fraud">🔍</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Image Comparison Viewer</div><div class="card-desc">Side-by-side viewer comparing a shopper's submitted image against historical matches. Shows similarity scores, risk flags, and lets reviewers accept or reject flagged matches.</div></div>
+    <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" data-tags="fraud ops" data-name="image integrity dashboard duplicate reuse suspicious">
+    <div class="card-top"><div class="card-icon icon-fraud">🖼️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Image Integrity Dashboard</div><div class="card-desc">QA intelligence dashboard for monitoring image-level fraud across the platform. Flags duplicate, reused, or suspicious images submitted by shoppers across projects and branches.</div></div>
+    <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
+    <div class="card-top"><div class="card-icon icon-fraud">🛡️</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Shopper Fraud Intelligence</div><div class="card-desc">Long-term shopper behaviour analytics. Filters by client, project, branch, date range, and risk level to surface fraudulent or suspicious shopper patterns over time.</div></div>
+    <div class="card-footer"><span class="tag tag-fraud">Fraud</span></div>
   </a>
 
   <a class="card" href="https://techandlearn.in/checker/returnreview" target="_blank" data-tags="notify ops" data-name="return review QA shopper notification email correction">
@@ -402,29 +438,103 @@
     <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/specialservice" target="_blank" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
-    <div class="card-top"><div class="card-icon icon-billing">📜</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Special Service Notifications</div><div class="card-desc">Four-stage flow for custom service requests (CSS, training, development): Agreement offer → Client acceptance → AM approval &amp; billing → Cancellation confirmation.</div></div>
-    <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
+  <!-- ───── Operations ───── -->
+  <div class="section-divider"><span class="section-divider-label">⚙️ Operations</span><div class="section-divider-line"></div></div>
+
+  <a class="card" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" data-tags="ops" data-name="mobile audit logs submission CAPI media partial">
+    <div class="card-top"><div class="card-icon icon-ops">📱</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Mobile Submission Audit Logs</div><div class="card-desc">Detailed log table of mobile survey submissions. Tracks partial media uploads, CAPI intercepts, quota blocks, and provides step-by-step resolution instructions per log entry.</div></div>
+    <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility">
-    <div class="card-top"><div class="card-icon icon-api">💬</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">WhatsApp Template Manager</div><div class="card-desc">Business API manager for creating and managing WhatsApp message templates. Syncs with Meta, tracks approval status, and supports marketing, utility, and authentication categories.</div></div>
-    <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-notify">Notifications</span></div>
+  <a class="card" href="https://techandlearn.in/checker/oops" target="_blank" data-tags="ops" data-name="branch visit report scores mystery shopping">
+    <div class="card-top"><div class="card-icon icon-ops">📋</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Branch Visit Report</div><div class="card-desc">Tabular report for a mystery shopping visit to a branch. Sortable by time and exportable, showing scores and comments per question across multiple venue visits.</div></div>
+    <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/export-collateral.html" target="_blank" data-tags="ops api" data-name="export collateral automated PDF SFTP profile schedule">
+    <div class="card-top"><div class="card-icon icon-ops">📤</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Automated Collateral Export</div><div class="card-desc">Configure scheduled export profiles for QA transcripts and PDFs to a remote server via SFTP. Set active schedules, export types, review statuses, file naming, and test remote connections.</div></div>
+    <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-api">API</span></div>
   </a>
 
   <a class="card" href="https://techandlearn.in/checker/checkerpartner" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
     <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-arrow">↗</div></div>
-    <div><div class="card-title">Checker Partner Network</div><div class="card-desc">B2B partner collaboration workflow. Allows Checker companies to post research projects, browse partner replies, negotiate deals, and manage agreed partner projects across countries.</div></div>
+    <div><div class="card-title">Checker Partner Network</div><div class="card-desc">B2B partner collaboration workflow. Allows Checker companies to post research projects, browse partner replies, negotiate deals, and manage agreed partner projects across countries and regions.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
+  <a class="card" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" data-tags="ui ops" data-name="main menu dashboard checker home overview assignments">
+    <div class="card-top"><div class="card-icon icon-ui">🏠</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Main Menu / Dashboard</div><div class="card-desc">Primary Checker platform dashboard. Shows active shoppers, clients, assignment counts, urgent items, and quick-action buttons for orders, reports, and settings.</div></div>
+    <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <!-- ───── Shoppers ───── -->
+  <div class="section-divider"><span class="section-divider-label">👤 Shoppers</span><div class="section-divider-line"></div></div>
+
+  <a class="card" href="https://techandlearn.in/checker/interested-shopper-adminpanel.html" target="_blank" data-tags="ops ui" data-name="interested shoppers admin panel management leads invite registration">
+    <div class="card-top"><div class="card-icon icon-ops">👥</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Interested Shoppers — Admin Panel</div><div class="card-desc">Admin panel for managing pre-registered shopper leads. Filter by status (Interested, Invited, Registered, Expired, Declined), track invitation counts, record admin notes, and manage the conversion pipeline.</div></div>
+    <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/interested-shopper-form.html" target="_blank" data-tags="ui" data-name="interested shopper form express interest become shopper public">
+    <div class="card-top"><div class="card-icon icon-ui">🙋</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Interested Shopper — Public Form</div><div class="card-desc">Public-facing landing form for prospective mystery shoppers. Captures name, email, and phone number with a simple "Express My Interest" CTA and links to social profiles.</div></div>
+    <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/registration%20form" target="_blank" data-tags="ui ops" data-name="registration form shopper onboarding multi-step">
+    <div class="card-top"><div class="card-icon icon-ui">📝</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Shopper Registration Form</div><div class="card-desc">Full multi-step registration form for onboarding new mystery shoppers. Covers basic info, address, contact details, experience level, and account settings with field validation.</div></div>
+    <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
+  </a>
+
+  <!-- ───── API & Settings ───── -->
+  <div class="section-divider"><span class="section-divider-label">🔑 API &amp; Settings</span><div class="section-divider-line"></div></div>
+
+  <a class="card" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" data-tags="api" data-name="API key management generate revoke expiry secrets">
+    <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">API Key Management</div><div class="card-desc">Dashboard for managing all API access keys across clients. Generate new keys, set expiry dates, view masked secrets, and revoke or regenerate existing keys.</div></div>
+    <div class="card-footer"><span class="tag tag-api">API</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/apikeyemails" target="_blank" data-tags="api" data-name="API key email configuration sender reply-to">
+    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">API Key Email Config</div><div class="card-desc">Interface for configuring email-related settings tied to API keys. Manages sender addresses, reply-to settings, and notification email behaviour per API access token.</div></div>
+    <div class="card-footer"><span class="tag tag-api">API</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility authentication">
+    <div class="card-top"><div class="card-icon icon-api">💬</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">WhatsApp Template Manager</div><div class="card-desc">Business API manager for WhatsApp message templates. Syncs with Meta, tracks approval status (approved/pending/rejected), and supports marketing, utility, and authentication categories.</div></div>
+    <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-notify">Notifications</span></div>
+  </a>
+
+  <!-- ───── UI / UX ───── -->
+  <div class="section-divider"><span class="section-divider-label">🎨 UI / UX Components</span><div class="section-divider-line"></div></div>
+
+  <a class="card" href="https://techandlearn.in/checker/alert.html" target="_blank" data-tags="notify ui" data-name="alert notification component banner dismiss">
+    <div class="card-top"><div class="card-icon icon-notify">🔔</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Alert Notification</div><div class="card-desc">UI mockup for system alert and notification components. Demonstrates styling, dismissal behaviour, and message hierarchy for platform-wide alert banners.</div></div>
+    <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ui">UI / UX</span></div>
+  </a>
+
+  <a class="card" href="https://techandlearn.in/checker/toggledemo.html" target="_blank" data-tags="ui" data-name="toggle demo accordion slide show hide component">
+    <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-arrow">↗</div></div>
+    <div><div class="card-title">Toggle &amp; Accordion Demo</div><div class="card-desc">Component library demo showing various toggle and accordion patterns: basic accordion, slide toggle, show/hide content blocks, and multi-panel toggle layouts for reuse across the platform.</div></div>
+    <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
+  </a>
+
+  <!-- ── Add new placeholder ── -->
   <div class="card-add">
     <div class="card-add-icon">＋</div>
-    <p>To add a new mockup, copy any <code>&lt;a class="card"&gt;</code> block inside <code>#cardGrid</code> and update the link, title, description, and tags.</p>
+    <p>To add a new mockup, copy any <code>&lt;a class="card"&gt;</code> block and update the link, title, description, and tags. Add a <code>.section-divider</code> for new categories.</p>
   </div>
 
+  <!-- Empty state -->
   <div class="empty" id="emptyState">
     <div class="empty-icon">🔍</div>
     <h3>No mockups found</h3>
@@ -434,22 +544,27 @@
 </div>
 </div>
 
+<!-- Footer -->
 <footer>
-  Checker Mockup Hub &nbsp;·&nbsp; <a href="https://techandlearn.in" target="_blank">techandlearn.in</a> &nbsp;·&nbsp; Add new mockups directly in the HTML source
+  Checker Mockup Hub &nbsp;·&nbsp; <a href="https://techandlearn.in" target="_blank">techandlearn.in</a> &nbsp;·&nbsp; 29 mockups across 7 categories
 </footer>
 
 <script>
   let activeFilter = 'all';
+
   function setFilter(tag, btn) {
     activeFilter = tag;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     filterCards();
   }
+
   function filterCards() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
     const cards = document.querySelectorAll('.card[data-tags]');
+    const dividers = document.querySelectorAll('.section-divider');
     let visible = 0;
+
     cards.forEach(card => {
       const name  = (card.dataset.name  || '').toLowerCase();
       const tags  = (card.dataset.tags  || '').toLowerCase();
@@ -460,7 +575,22 @@
       if (matchesFilter && matchesSearch) { card.style.display = ''; visible++; }
       else card.style.display = 'none';
     });
+
+    // Hide section dividers if no visible cards follow them
+    dividers.forEach(divider => {
+      let next = divider.nextElementSibling;
+      let hasVisible = false;
+      while (next && !next.classList.contains('section-divider')) {
+        if (next.classList.contains('card') && next.style.display !== 'none') {
+          hasVisible = true; break;
+        }
+        next = next.nextElementSibling;
+      }
+      divider.style.display = hasVisible ? '' : 'none';
+    });
+
     document.getElementById('visibleCount').textContent = visible;
+    document.getElementById('statVisible').textContent  = visible;
     document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
   }
 </script>
