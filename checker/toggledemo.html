@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Examples</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .accordion {
+            width: 80%;
+            margin: 40px auto;
+        }
+
+        .accordion-item {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .accordion-header {
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .accordion-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .accordion-header i {
+            float: right;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .slide-content {
+            height: 0;
+            overflow: hidden;
+            transition: height 0.5s ease-in-out;
+        }
+
+        .toggleIcon {
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .toggleIcon:hover {
+            color: #007bff;
+        }
+
+        .contentToToggle {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Toggle Examples</h1>
+
+    <!-- Accordion Example -->
+    <div class="accordion">
+        <div class="accordion-item">
+            <div class="accordion-header">
+                Accordion Section 1
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+                <p>This is the content of accordion section 1.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                Accordion Section 2
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+                <p>This is the content of accordion section 2.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple Toggle Button Example -->
+    <button id="toggle-button">Toggle Content</button>
+    <div id="content" class="content">
+        <p>This is the content that will be toggled.</p>
+    </div>
+<br>
+<br>
+    <!-- Toggle with Slide Effect Example -->
+    <button id="slide-toggle-button">Toggle Content with Slide Effect</button>
+    <div id="slide-content" class="slide-content">
+        <p>This is the content that will be a slide toggle.</p>
+    </div>
+<br>
+<br>
+    <!-- Icon Toggle Example -->
+    <div>
+        <i id="toggleIcon1" class="fa-solid fa-chevron-down toggleIcon"></i>
+        <div id="contentToToggle1" class="contentToToggle">
+            <p>This is the first content that will be hidden or shown.</p>
+            <p>You can put any HTML elements inside this div, like text, images, videos, or other interactive components.</p>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+        <i id="toggleIcon2" class="fa-solid fa-eye toggleIcon"></i>
+        <div id="contentToToggle2" class="contentToToggle">
+            <p>This is the second content that will be hidden or shown.</p>
+            <p>You can put any HTML elements inside this div, like text, images, videos, or other interactive components.</p>
+        </div>
+    </div>
+
+    <script>
+        // Accordion Script
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('i');
+
+                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+        });
+
+        // Simple Toggle Button Script
+        const toggleButton = document.getElementById('toggle-button');
+        const content = document.getElementById('content');
+
+        toggleButton.addEventListener('click', () => {
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Toggle with Slide Effect Script
+        const slideToggleButton = document.getElementById('slide-toggle-button');
+        const slideContent = document.getElementById('slide-content');
+        slideToggleButton.addEventListener('click', () => {
+            if (slideContent.style.height === '0px' || slideContent.style.height === '') {
+                slideContent.style.height = slideContent.scrollHeight + 'px';
+            } else {
+                slideContent.style.height = '0px';
+            }
+        });
+
+        // Icon Toggle Script
+        const toggleIcon1 = document.getElementById('toggleIcon1');
+        const contentToToggle1 = document.getElementById('contentToToggle1');
+
+        const toggleIcon2 = document.getElementById('toggleIcon2');
+        const contentToToggle2 = document.getElementById('contentToToggle2');
+
+        toggleIcon1.addEventListener('click', function() {
+            contentToToggle1.classList.toggle('hidden');
+
+            if (contentToToggle1.classList.contains('hidden')) {
+                toggleIcon1.classList.remove('fa-chevron-down');
+                toggleIcon1.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon1.classList.remove('fa-chevron-right');
+                toggleIcon1.classList.add('fa-chevron-down');
+            }
+        });
+
+        toggleIcon2.addEventListener('click', function() {
+            contentToToggle2.classList.toggle('hidden');
+
+            if (contentToToggle2.classList.contains('hidden')) {
+                toggleIcon2.classList.remove('fa-eye');
+                toggleIcon2.classList.add('fa-eye-slash');
+            } else {
+                toggleIcon2.classList.remove('fa-eye-slash');
+                toggleIcon2.classList.add('fa-eye');
+            }
+        });
+    </script>
+
+</body>
+</html>
