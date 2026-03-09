@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Tickets - AI Assisted</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* Define fixed widths and brand colors for easy modification */
+        :root {
+            --ai-pane-width: 450px;      /* Width for the AI chat pane */
+            --ai-pane-height: 550px;     /* Height for the AI chat pane */
+            --minimized-pane-size: 60px; /* Size for the minimized AI pane */
+
+            /* Brand Colors (Vibrant and Professional) */
+            --brand-primary: #007bff;        /* A strong, common brand blue */
+            --brand-primary-dark: #0056b3;   /* Darker for hover/accents */
+            --brand-secondary: #28a745;       /* For New Ticket button (green) and main title underline */
+            --brand-secondary-dark: #218838;
+            --brand-accent: #ffc107;         /* A warm accent color */
+
+            --user-bubble-bg: #e0f7fa;    /* Very light cyan for user messages */
+            --ai-bubble-bg: #ffffff;      /* White for AI messages */
+            --border-color: #e9ecef;      /* Light gray border */
+            --text-color-dark: #343a40;   /* Darker gray for primary text */
+            --text-color-medium: #6c757d; /* Medium gray for labels/secondary */
+            --text-color-light: #adb5bd;  /* Lighter gray */
+            --background-light: #f8f9fa;  /* Lightest background for sections */
+            --background-lighter: #f0f2f5; /* Page background */
+        }
+
+        /* Basic Reset & Body Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-lighter);
+            color: var(--text-color-dark);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative; /* Needed for positioning the AI pane relative to body */
+        }
+
+        /* Main Container for the Page - now occupies full width */
+        .page-container {
+            width: 100%; /* Full width */
+            max-width: 1200px; /* Still have a max-width for readability */
+            background-color: var(--ai-bubble-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            box-sizing: border-box; /* Include padding in width */
+            padding: 25px; /* Add padding here for main content */
+        }
+
+        /* Main Content Area (Left Side) - Now within page-container's padding */
+        .main-content {
+            width: 100%; /* Takes full width of its parent */
+            padding: 0; /* No extra padding here, parent takes care of it */
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Utility Buttons in the top-right of the main content */
+        .utility-buttons {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            gap: 10px;
+            z-index: 2;
+        }
+        .utility-buttons button {
+            background-color: var(--text-color-medium);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        .utility-buttons button:hover {
+            background-color: var(--text-color-dark);
+        }
+
+        /* Support Section Header */
+        h2 {
+            margin-top: 0;
+            color: var(--text-color-dark);
+            font-size: 1.8em;
+            font-weight: 700;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: var(--brand-secondary);
+            border-radius: 2px;
+        }
+        h2 .breadcrumbs {
+            font-size: 0.6em;
+            color: var(--text-color-medium);
+            font-weight: 400;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-color-medium);
+            font-size: 0.9em;
+        }
+        .filter-group select {
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--ai-bubble-bg);
+            font-size: 0.95em;
+            min-width: 150px;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.2%208.1-3.9%204.9-4.8%2011.6-2.6%2017.4l139.7%20227.3c4.6%207.5%2012.7%2012%2021.5%2012s16.9-4.5%2021.5-12L290.4%2091.8c2.2-5.8%201.3-12.5-2.6-17.4z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px auto;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .new-ticket-button {
+            background-color: var(--brand-secondary);
+            color: white;
+        }
+        .new-ticket-button:hover {
+            background-color: var(--brand-secondary-dark);
+        }
+
+        /* AI Support Button in main content - now just a regular button */
+        .ai-support-button {
+            background-color: var(--brand-primary);
+            color: white;
+        }
+        .ai-support-button:hover {
+            background-color: var(--brand-primary-dark);
+        }
+
+        /* Ticket Table */
+        .ticket-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--ai-bubble-bg);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .ticket-table th, .ticket-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9em;
+        }
+        .ticket-table th {
+            background-color: var(--background-light);
+            font-weight: 500;
+            color: var(--text-color-medium);
+            position: relative;
+        }
+        .ticket-table tr:hover {
+            background-color: var(--background-light);
+        }
+
+        /* Right Side (AI Assistant Pane) - Floats from bottom right */
+        .ai-assistant-pane {
+            position: fixed; /* Fixed position relative to viewport */
+            bottom: 20px; /* 20px from bottom */
+            right: 20px; /* 20px from right */
+            width: var(--ai-pane-width);
+            height: var(--ai-pane-height);
+            background-color: var(--background-light);
+            border-radius: 12px; /* Slightly more rounded corners for floating pane */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); /* Stronger, more prominent shadow */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content stays within border-radius */
+
+            /* Initial hidden state - slide up from bottom and fade in */
+            transform: translateY(calc(100% + 20px)); /* Move fully below the screen + bottom offset */
+            opacity: 0;
+            pointer-events: none; /* Disable interaction when hidden */
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Combined transition */
+            z-index: 1000; /* Ensure it's above everything else */
+        }
+
+        /* State when the pane is fully open */
+        .ai-assistant-pane.open {
+            transform: translateY(0); /* Slide up to its original position */
+            opacity: 1;
+            pointer-events: all; /* Enable interaction */
+            width: var(--ai-pane-width); /* Ensure full size */
+            height: var(--ai-pane-height); /* Ensure full size */
+            border-radius: 12px; /* Ensure full size border-radius */
+        }
+
+        /* NEW: Minimized state */
+        .ai-assistant-pane.minimized {
+            width: var(--minimized-pane-size);
+            height: var(--minimized-pane-size);
+            border-radius: 50%; /* Make it circular */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Smaller shadow when minimized */
+            overflow: hidden; /* Hide internal content */
+            cursor: pointer; /* Indicate it's clickable to restore */
+            opacity: 1; /* Always visible when minimized */
+            pointer-events: all; /* Still interactive */
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark)); /* Use header gradient */
+            display: flex; /* Keep flex for centering content */
+            justify-content: center; /* Center logo */
+            align-items: center; /* Center logo */
+            /* Crucial change: Reset transform when minimized to ensure it stays at bottom: 20px, right: 20px */
+            transform: none; 
+            transition: all 0.3s ease-out; /* Smoother transition for minimize/maximize */
+        }
+
+        /* Hide internal elements when minimized */
+        .ai-assistant-pane.minimized .ai-pane-header,
+        .ai-assistant-pane.minimized .ai-chat-messages,
+        .ai-assistant-pane.minimized .ai-chat-input,
+        .ai-assistant-pane.minimized .ai-typing-indicator,
+        .ai-assistant-pane.minimized .copied-message {
+            display: none !important; /* Force hide these elements */
+        }
+
+        /* Show a central icon/logo when minimized */
+        .ai-assistant-pane.minimized .minimized-icon {
+            display: block; /* Show the icon */
+            height: 70%; /* Size it relative to the button */
+            width: 70%;
+            filter: brightness(1.5) drop-shadow(0 0 5px rgba(255,255,255,0.5)); /* Make it pop */
+            transition: all 0.3s ease;
+        }
+
+        .ai-assistant-pane.minimized:hover .minimized-icon {
+            transform: scale(1.1); /* Slight hover effect */
+        }
+
+        /* --- Chat Pane Internal Styling (when not minimized) --- */
+        .ai-pane-header {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark)); /* Gradient for branding */
+            color: white;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            border-top-left-radius: 12px; /* Match container border-radius */
+            border-top-right-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-family: 'Poppins', sans-serif; /* A slightly different font for the header */
+            position: relative; /* For positioning the copied message */
+        }
+        .ai-pane-header .logo {
+            height: 30px; /* Adjust as needed */
+            margin-right: 10px;
+            vertical-align: middle;
+            filter: brightness(1.2); /* Make logo stand out on dark background */
+        }
+        .ai-pane-header .title-group {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Header Actions Container */
+        .ai-pane-header .header-actions {
+            display: flex;
+            gap: 8px; /* Space between buttons */
+            align-items: center;
+        }
+
+        .ai-pane-header .close-btn,
+        .ai-pane-header .minimize-btn, /* NEW: Minimize button styling */
+        .ai-pane-header .copy-chat-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0 5px;
+            line-height: 1;
+            transition: opacity 0.2s, transform 0.2s;
+            opacity: 0.8; /* Slightly less prominent */
+        }
+        .ai-pane-header .close-btn { font-size: 1.6em; }
+        .ai-pane-header .minimize-btn { font-size: 1.4em; } /* Slightly smaller for minimize */
+        .ai-pane-header .copy-chat-btn { font-size: 1.2em; }
+
+        .ai-pane-header .close-btn:hover { opacity: 1; transform: rotate(90deg); }
+        .ai-pane-header .minimize-btn:hover,
+        .ai-pane-header .copy-chat-btn:hover { opacity: 1; transform: scale(1.1); }
+
+
+        /* Copied Message Visual Feedback */
+        .copied-message {
+            position: absolute;
+            bottom: -30px; /* Position below the header, adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            opacity: 0;
+            pointer-events: none; /* Allows clicks to pass through */
+            transition: opacity 0.3s ease-out, bottom 0.3s ease-out;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .copied-message.show {
+            opacity: 1;
+            bottom: -20px; /* Animate up slightly */
+        }
+
+        .ai-chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: var(--background-light);
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-size: 0.95em;
+            animation: fadeIn 0.3s ease-out; /* Fade in animation for new messages */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background-color: var(--user-bubble-bg);
+            align-self: flex-end;
+            text-align: right;
+            color: var(--text-color-dark);
+            border-bottom-right-radius: 2px; /* Tweak bubble shape */
+        }
+        .message.ai {
+            background-color: var(--ai-bubble-bg);
+            align-self: flex-start;
+            text-align: left;
+            color: var(--text-color-dark);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 2px; /* Tweak bubble shape */
+        }
+        /* AI Typing Indicator - Positioned above input */
+        .ai-typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background-color: var(--ai-bubble-bg); /* Match AI bubble background */
+            padding: 10px 15px;
+            border-radius: 20px;
+            width: fit-content; /* Make it fit content */
+            max-width: 85%;
+            align-self: flex-start; /* Like an AI message */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-top: 5px; /* Add space above it */
+            margin-left: 20px; /* Align with AI messages */
+            margin-bottom: 10px; /* Space between indicator and input */
+            flex-shrink: 0; /* Prevent it from shrinking */
+        }
+        .ai-typing-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--brand-primary);
+            border-radius: 50%;
+            animation: dot-blink 1.4s infinite ease-in-out both;
+        }
+        .ai-typing-indicator .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .ai-typing-indicator .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-blink {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+
+        .ai-chat-input {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+            background-color: var(--ai-bubble-bg);
+            flex-shrink: 0;
+            border-bottom-left-radius: 12px; /* Match container border-radius */
+            border-bottom-right-radius: 12px;
+        }
+        .ai-chat-input textarea {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 1em;
+            resize: none;
+            min-height: 40px;
+            max-height: 120px;
+            box-sizing: border-box;
+            line-height: 1.5;
+            overflow-y: auto;
+        }
+        .ai-chat-input textarea:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        .ai-chat-input button {
+            background-color: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: 0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            line-height: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .ai-chat-input button:hover {
+            background-color: var(--brand-primary-dark);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Tooltip styling */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: pre-wrap; /* Allows text to wrap */
+            text-align: center;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .ai-chat-input button .tooltip {
+            right: 100%; /* Position to the left of the button */
+            top: 50%;
+            transform: translateY(-50%) translateX(-5px); /* Adjust position */
+            padding: 6px 12px;
+        }
+        .suggestion-button .tooltip {
+            top: unset;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            padding: 6px 12px;
+        }
+        /* Show tooltip on hover */
+        .ai-chat-input button:hover .tooltip,
+        .suggestion-button:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Suggestion Buttons within chat */
+        .suggestion-button {
+            background-color: var(--border-color);
+            color: var(--text-color-dark);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .suggestion-button:hover {
+            background-color: #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        /* Utility Icons */
+        .icon {
+            margin-right: 5px;
+        }
+
+/* Styles for the feedback buttons container */
+.ai-feedback-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    //padding: 10px 20px;
+    background-color: var(--background-light);
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.ai-feedback-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 1.5em;
+    opacity: 0.7;
+    transition: opacity 0.2s, transform 0.2s;
+    color: var(--text-color-medium);
+}
+
+.ai-feedback-actions button:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.good-response-btn:hover {
+    color: var(--brand-secondary); /* or a specific green color */
+}
+
+.bad-response-btn:hover {
+    color: #dc3545; /* A standard red for bad feedback */
+}
+
+.report-btn:hover {
+    color: var(--brand-accent); /* or a specific yellow/amber color */
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="page-container" id="pageContainer">
+        <div class="main-content" id="mainContent">
+            <div class="utility-buttons">
+                <button>Failed email report</button>
+                <button>OP1</button>
+                <button>OP2</button>
+            </div>
+
+            <h2>
+                <span class="main-title">Support tickets</span>
+                <span class="breadcrumbs">(Support tickets > General)</span>
+            </h2>
+
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="priority-filter">Priority</label>
+                    <select id="priority-filter">
+                        <option>(All)</option>
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="status-filter">Status</label>
+                    <select id="status-filter">
+                        <option>(All)</option>
+                        <option>New</option>
+                        <option>Open</option>
+                        <option>Pending</option>
+                        <option>Closed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="new-ticket-button">
+                    <span class="icon">+</span> New ticket
+                </button>
+                <button class="ai-support-button" id="openAiAgentBtn">
+                    <span class="icon">✨</span> Get Instant Support
+                </button>
+            </div>
+
+            <table class="ticket-table" id="ticketTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Creation date <span class="sort-icon">▼</span></th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Order Status</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    <tr><td>Issue with login</td><td>25.07.2025 09:30:00</td><td>High</td><td>Open</td><td>-</td></tr>
+                    <tr><td>Payment processing error</td><td>24.07.2025 14:15:20</td><td>Medium</td><td>New</td><td>Processing</td></tr>
+                    <tr><td>Account update required</td><td>23.07.2025 11:05:10</td><td>Low</td><td>Closed</td><td>Completed</td></tr>
+                    <tr><td>Forgot password link not working</td><td>22.07.2025 16:45:30</td><td>High</td><td>Open</td><td>-</td></tr>
+                    <tr><td>Query about service plan</td><td>21.07.2025 10:00:00</td><td>Medium</td><td>New</td><td>-</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="ai-assistant-pane" id="aiAssistantPane">
+        <div class="ai-pane-header">
+            <div class="title-group">
+                <img src="https://techandlearn.in/images/techandlearnlogo.jpeg" alt="Company Logo" class="logo">
+                AI Support Agent
+            </div>
+            <div class="header-actions">
+                <button class="minimize-btn" id="minimizeAiBtn" title="Minimize chat">―</button> <button class="copy-chat-btn" id="copyChatBtn" title="Copy conversation">📋</button>
+                <button class="close-btn" id="closeAiAgentBtn" title="Close chat">&times;</button>
+            </div>
+            <div class="copied-message" id="copiedMessage">Copied!</div>
+        </div>
+
+        <img src="https://techandlearn.in/images/techandlearnlogo.jpeg" alt="AI Active" class="minimized-icon" style="display: none;">
+
+        <div class="ai-chat-messages" id="aiChatMessages">
+            </div>
+
+        <div class="ai-typing-indicator" id="aiTypingIndicator" style="display: none;">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <div class="ai-chat-input">
+            <textarea id="userMessageInput" placeholder="Type your question..." rows="1"></textarea>
+            <button id="sendMessageBtn">
+                ➤ <span class="tooltip">Send message</span>
+            </button>
+            <button class="good-response-btn" title="Good response">&#x1F44D;</button>
+            <button class="bad-response-btn" title="Bad response">&#x1F44E;</button>
+        </div>
+        
+    </div>
+
+    <script>
+        const openAiAgentBtn = document.getElementById('openAiAgentBtn');
+        const closeAiAgentBtn = document.getElementById('closeAiAgentBtn');
+        const minimizeAiBtn = document.getElementById('minimizeAiBtn');
+        const copyChatBtn = document.getElementById('copyChatBtn');
+        const aiAssistantPane = document.getElementById('aiAssistantPane');
+        const userMessageInput = document.getElementById('userMessageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const aiChatMessages = document.getElementById('aiChatMessages');
+        const aiTypingIndicator = document.getElementById('aiTypingIndicator');
+        const copiedMessage = document.getElementById('copiedMessage');
+        const minimizedIcon = document.querySelector('.minimized-icon');
+
+        let conversationHistory = [];
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.innerHTML = text;
+            
+            aiChatMessages.appendChild(messageDiv);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+
+            conversationHistory.push({ sender: sender, text: text });
+        }
+
+        function showTypingIndicator() {
+            aiTypingIndicator.style.display = 'flex';
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            aiTypingIndicator.style.display = 'none';
+        }
+
+        function showCopiedMessage() {
+            copiedMessage.classList.add('show');
+            setTimeout(() => {
+                copiedMessage.classList.remove('show');
+            }, 1500);
+        }
+
+        function initializeChatPane() {
+            // Only add welcome message if the chat is not already active (open or minimized)
+            // and if there's no conversation history yet.
+            if (!aiAssistantPane.classList.contains('open') && !aiAssistantPane.classList.contains('minimized') || conversationHistory.length === 0) {
+                aiChatMessages.innerHTML = ''; // Clear existing messages
+                conversationHistory = []; // Clear history on new session
+                addMessage(
+                    "Hello! 👋 I'm <b>Checker Software System</b> AI Support. How can I assist you today? Feel free to ask about products, services, or common issues.",
+                    'ai'
+                );
+            }
+            hideTypingIndicator(); // Ensure it's hidden initially
+        }
+
+        function addOpenSupportTicketButton() {
+            const buttonHtml = `
+                <button class="suggestion-button" onclick="handleSuggestionClick('create_ticket')">
+                    <span class="icon">🎟️</span> Open a Support Ticket
+                    <span class="tooltip">Create a new support ticket automatically<br>from our conversation history.</span>
+                </button>
+            `;
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'ai');
+            messageDiv.innerHTML = buttonHtml;
+            aiChatMessages.appendChild(messageDiv);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        }
+
+        // Function to open the AI pane (from closed state or minimized state)
+        openAiAgentBtn.addEventListener('click', () => {
+            aiAssistantPane.classList.remove('minimized'); // Ensure it's not in minimized state
+            aiAssistantPane.classList.add('open');
+            minimizedIcon.style.display = 'none'; // Hide the minimized icon
+            userMessageInput.focus();
+            initializeChatPane(); // This will only add welcome message if not already opened/restored and no history
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        });
+
+        // Function to close the AI pane completely
+        closeAiAgentBtn.addEventListener('click', () => {
+            aiAssistantPane.classList.remove('open', 'minimized'); // Remove both states
+            minimizedIcon.style.display = 'none'; // Ensure icon is hidden
+            // Clear history when fully closed
+            conversationHistory = [];
+        });
+
+        // NEW: Function to minimize the AI pane
+        minimizeAiBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // <--- IMPORTANT: Stop event from bubbling up to aiAssistantPane
+            if (aiAssistantPane.classList.contains('open')) {
+                aiAssistantPane.classList.remove('open');
+                aiAssistantPane.classList.add('minimized');
+                minimizedIcon.style.display = 'block'; // Show the minimized icon
+            }
+        });
+
+        // NEW: Click listener for the minimized pane itself to restore the pane
+        aiAssistantPane.addEventListener('click', () => {
+            if (aiAssistantPane.classList.contains('minimized')) {
+                aiAssistantPane.classList.remove('minimized');
+                aiAssistantPane.classList.add('open');
+                minimizedIcon.style.display = 'none'; // Hide the minimized icon
+                userMessageInput.focus();
+                aiChatMessages.scrollTop = aiChatMessages.scrollHeight; // Scroll to bottom on restore
+            }
+        });
+
+        copyChatBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent clicks on copy button from affecting minimize/restore
+            const messages = Array.from(aiChatMessages.children);
+            let conversationText = '';
+
+            messages.forEach(messageDiv => {
+                if (!messageDiv.classList.contains('ai-typing-indicator') &&
+                    !messageDiv.querySelector('.suggestion-button') &&
+                    !messageDiv.textContent.includes("Hello! 👋 I'm **[Your Company Name]** AI Support.")) {
+                    
+                    const sender = messageDiv.classList.contains('user') ? 'You' : 'AI Agent';
+                    const text = messageDiv.textContent.trim();
+                    conversationText += `${sender}: ${text}\n\n`;
+                }
+            });
+
+            navigator.clipboard.writeText(conversationText.trim())
+                .then(() => {
+                    showCopiedMessage();
+                })
+                .catch(err => {
+                    console.error('Failed to copy conversation: ', err);
+                    alert('Failed to copy conversation. Please try again or copy manually.');
+                });
+        });
+
+        function isThankYouMessage(message) {
+            const lowerCaseMessage = message.toLowerCase();
+            return lowerCaseMessage.includes("thanks") ||
+                   lowerCaseMessage.includes("thank you") ||
+                   lowerCaseMessage.includes("cheers") ||
+                   lowerCaseMessage.includes("appreciate it") ||
+                   lowerCaseMessage.includes("goodbye") ||
+                   lowerCaseMessage.includes("bye") ||
+                   lowerCaseMessage.includes("that's all") ||
+                   lowerCaseMessage === "hi" ||
+                   lowerCaseMessage === "hello" ||
+                   lowerCaseMessage === "hey";
+        }
+
+        sendMessageBtn.addEventListener('click', () => {
+            const messageText = userMessageInput.value.trim();
+            if (messageText !== '') {
+                addMessage(messageText, 'user');
+                userMessageInput.value = '';
+                adjustTextareaHeight(userMessageInput);
+
+                showTypingIndicator();
+                
+                if (isThankYouMessage(messageText)) {
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        const farewellMessage = "You're most welcome! Is there anything else I can help you with today, or are we good to close this chat?";
+                        addMessage(farewellMessage, 'ai');
+                    }, 1000);
+                    return;
+                }
+
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const aiResponse = `I'm looking into your question regarding "${messageText}". Please bear with me for a moment.`;
+                    addMessage(aiResponse, 'ai');
+
+                    setTimeout(() => {
+                         addMessage("I'm sorry, I couldn't find a direct answer to your question in our knowledge base. Would you like to open a support ticket from this conversation?", 'ai');
+                         addOpenSupportTicketButton();
+                    }, 2000);
+
+                }, 1500);
+            }
+        });
+
+        userMessageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessageBtn.click();
+            }
+        });
+
+        userMessageInput.addEventListener('input', () => {
+            adjustTextareaHeight(userMessageInput);
+        });
+
+        function adjustTextareaHeight(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+            if (textarea.scrollHeight > parseInt(getComputedStyle(textarea).maxHeight)) {
+                textarea.style.overflowY = 'auto';
+            } else {
+                textarea.style.overflowY = 'hidden';
+            }
+        }
+
+        function handleSuggestionClick(action) {
+            let userIntent = '';
+            let aiResponse = '';
+            switch (action) {
+                case 'create_ticket':
+                    userIntent = "Yes, please open a support ticket.";
+                    addMessage(userIntent, 'user');
+
+                    const formattedHistory = conversationHistory.map(msg => `${msg.sender.toUpperCase()}: ${msg.text}`).join('\n');
+                    console.log("Creating ticket with conversation history:\n", formattedHistory);
+
+                    showTypingIndicator();
+
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        aiResponse = "Understood. I'm now compiling our conversation history to create a new support ticket for you. You'll receive a confirmation email shortly. A human agent will get back to you as soon as possible.";
+                        addMessage(aiResponse, 'ai');
+                        setTimeout(() => {
+                            alert("Support Ticket Created Successfully! (Simulation)");
+                            closeAiAgentBtn.click();
+                        }, 1500);
+                    }, 1000);
+                    break;
+                default:
+                    userIntent = "I clicked a suggestion button with action: " + action;
+                    aiResponse = "I'm sorry, I couldn't process that request.";
+                    addMessage(userIntent, 'user');
+                    addMessage(aiResponse, 'ai');
+                    break;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            adjustTextareaHeight(userMessageInput);
+        });
+
+// Get the feedback buttons
+const goodResponseBtn = document.querySelector('.good-response-btn');
+const badResponseBtn = document.querySelector('.bad-response-btn');
+const reportBtn = document.querySelector('.report-btn');
+
+// Add event listeners for the global feedback buttons
+goodResponseBtn.addEventListener('click', () => {
+    // You can replace this alert with your own logic (e.g., sending data to a server)
+    alert('Thanks for the feedback!');
+});
+
+badResponseBtn.addEventListener('click', () => {
+    // You can replace this alert with your own logic
+    alert('Thanks for the feedback! We will review this conversation.');
+});
+
+reportBtn.addEventListener('click', () => {
+    // You can replace this alert with your own logic
+    alert('Thank you for reporting. This conversation will be reviewed.');
+});
+
+    </script>
+</body>
+</html>
