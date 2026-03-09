@@ -1,0 +1,786 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Interested Shoppers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .filters-grid input[type="text"],
+        .filters-grid input[type="email"],
+        .filters-grid input[type="tel"],
+        .filters-grid select,
+        .filters-grid input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .date-inputs {
+            display: flex;
+            gap: 5px;
+        }
+        .filter-buttons {
+            grid-column: span 1;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding-top: 10px;
+        }
+        .filter-buttons button {
+            padding: 10px 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.2s ease;
+        }
+        .filter-buttons .apply-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .filter-buttons .apply-btn:hover {
+            background-color: #0056b3;
+        }
+        .filter-buttons .reset-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        .filter-buttons .reset-btn:hover {
+            background-color: #5a6268;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #eee;
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer; /* Indicate sortable columns */
+        }
+        th:hover {
+            background-color: #e8e8e8; /* Hover effect for sortable columns */
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .status-tag {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            display: inline-block;
+        }
+        .status-interested { background-color: #ffc107; color: #333;} /* Yellow */
+        .status-invited { background-color: #17a2b8; } /* Cyan */
+        .status-registered { background-color: #28a745; } /* Green */
+        .status-expired { background-color: #dc3545; } /* Red */
+        .status-declined { background-color: #6c757d; } /* Gray for declined */
+
+
+        .actions button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            transition: background-color 0.2s ease;
+        }
+        .actions button.btn-secondary {
+            background-color: #6c757d;
+        }
+        /* New style for decline button */
+        .actions button.btn-decline {
+            background-color: #ffc107; /* Use yellow for decline to distinguish from permanent delete */
+            color: #333;
+        }
+        .actions button.btn-decline:hover {
+            background-color: #e0a800;
+        }
+
+        .actions button:hover {
+            background-color: #0056b3;
+        }
+        .actions button.btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .actions button.btn-decline:hover {
+            background-color: #e0a800; /* Darker yellow for hover */
+        }
+        .actions button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .admin-notes textarea {
+            width: calc(100% - 10px);
+            min-height: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+            resize: vertical;
+        }
+        .admin-notes .save-notes-btn {
+            display: block;
+            width: 100%;
+            margin-top: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background-color 0.2s ease;
+        }
+        .admin-notes .save-notes-btn:hover {
+            background-color: #218838;
+        }
+        .admin-notes .notes-read-only {
+            background-color: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            padding: 5px;
+            border-radius: 4px;
+            color: #555;
+            font-size: 0.9em;
+            min-height: 60px;
+            overflow-y: auto;
+        }
+
+        .bulk-actions-group {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .bulk-actions-group select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            min-width: 180px;
+        }
+        .bulk-actions-group button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background-color 0.2s ease;
+        }
+        .bulk-actions-group button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        .bulk-actions-group button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .settings-link {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .settings-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .settings-link a:hover {
+            text-decoration: underline;
+        }
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .pagination-controls button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background-color 0.2s ease;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        .pagination-controls button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .pagination-controls span {
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Interested Shoppers Management</h1>
+        <div class="settings-link">
+            <a href="#">Manage Self-Registration Settings & Expiration Policy</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label for="nameFilter">Name:</label>
+                <input type="text" id="nameFilter" placeholder="e.g., John Doe">
+            </div>
+
+            <div class="filter-group">
+                <label for="emailFilter">Email:</label>
+                <input type="email" id="emailFilter" placeholder="e.g., john@example.com">
+            </div>
+
+            <div class="filter-group">
+                <label for="phoneFilter">Phone:</label>
+                <input type="tel" id="phoneFilter" placeholder="e.g., +91 9876543210">
+            </div>
+
+            <div class="filter-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All Statuses</option>
+                    <option value="interested">Interested</option>
+                    <option value="invited">Invited</option>
+                    <option value="registered">Registered</option>
+                    <option value="expired_lead">Expired Lead</option>
+                    <option value="declined">Declined</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="dateAddedFilter">Date Added:</label>
+                <select id="dateAddedFilter">
+                    <option value="today">Today</option> <option value="last7days">Last 7 Days</option>
+                    <option value="last30days">Last 30 Days</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+                <div class="date-inputs" id="customDateAddedInputs" style="display: none;">
+                    <input type="date" id="startDateAdded" placeholder="Start Date">
+                    <input type="date" id="endDateAdded" placeholder="End Date">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="lastInviteFilter">Last Invite Sent:</label>
+                <select id="lastInviteFilter">
+                    <option value="all">Any Time</option>
+                    <option value="not_sent">Never Sent</option>
+                    <option value="last7days">Last 7 Days</option>
+                    <option value="last30days">Last 30 Days</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+                <div class="date-inputs" id="customLastInviteInputs" style="display: none;">
+                    <input type="date" id="startDateInvite" placeholder="Start Date">
+                    <input type="date" id="endDateInvite" placeholder="End Date">
+                </div>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="apply-btn">Apply Filters</button>
+                <button class="reset-btn">Reset Filters</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th data-sort-by="shopperId">Shopper ID</th> <th data-sort-by="fullName">Full Name</th>
+                    <th data-sort-by="email">Email</th>
+                    <th data-sort-by="phone">Phone</th>
+                    <th data-sort-by="status">Status</th>
+                    <th data-sort-by="inviteCount">Invitation Count</th>
+                    <th data-sort-by="dateAdded">Date Added</th>
+                    <th data-sort-by="lastInviteSent">Last Invite Sent</th>
+                    <th>Admin Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-001</td>
+                    <td>Jane Doe</td>
+                    <td>jane.doe@example.com</td>
+                    <td>+91 9876543210</td>
+                    <td><span class="status-tag status-interested">Interested</span></td>
+                    <td>0</td>
+                    <td>2025-07-11</td>
+                    <td>N/A</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-001">Discussed potential for high-end mystery shopping. Needs follow-up in 2 days.</textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-001">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                        <button class="btn-decline decline-action-btn">Decline</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-002</td>
+                    <td>John Smith</td>
+                    <td>john.smith@example.com</td>
+                    <td>+91 9876543211</td>
+                    <td><span class="status-tag status-invited">Invited</span></td>
+                    <td>1</td>
+                    <td>2025-07-10</td>
+                    <td>2025-07-10</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-002">Invited. Sent personalized email template. Awaiting response.</textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-002">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                        <button class="btn-decline decline-action-btn">Decline</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-003</td>
+                    <td>Emily White</td>
+                    <td>emily.white@example.com</td>
+                    <td>+91 9876543212</td>
+                    <td><span class="status-tag status-interested">Interested</span></td>
+                    <td>0</td>
+                    <td>2025-07-09</td>
+                    <td>N/A</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-003"></textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-003">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                        <button class="btn-decline decline-action-btn">Decline</button>
+                    </td>
+                </tr>
+                 <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-004</td>
+                    <td>David Brown</td>
+                    <td>david.brown@example.com</td>
+                    <td>+91 9876543213</td>
+                    <td><span class="status-tag status-expired">Expired Lead</span></td>
+                    <td>2</td>
+                    <td>2025-06-15</td>
+                    <td>2025-06-16</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-004">Lead expired as per policy. No response after 2 invites.</textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-004">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                        <button class="btn-decline decline-action-btn">Decline</button>
+                    </td>
+                </tr>
+                 <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-005</td>
+                    <td>Sarah Green</td>
+                    <td>sarah.green@example.com</td>
+                    <td>+91 9876543214</td>
+                    <td><span class="status-tag status-registered">Registered</span></td>
+                    <td>1</td>
+                    <td>2025-07-01</td>
+                    <td>2025-07-02</td>
+                    <td class="admin-notes">
+                        <div class="notes-read-only">Fully registered and active. No further notes needed for lead management.</div>
+                    </td>
+                    <td class="actions">
+                        <span>Account Active</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-006</td>
+                    <td>Michael Lee</td>
+                    <td>michael.lee@example.com</td>
+                    <td>+91 9876543215</td>
+                    <td><span class="status-tag status-invited">Invited</span></td>
+                    <td>3</td>
+                    <td>2025-06-10</td>
+                    <td>2025-06-11</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-006">Follow up with a phone call next week. This is the 3rd invite, consider proactive decline if no response soon.</textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-006">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                        <button class="btn-decline decline-action-btn">Decline</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-007</td>
+                    <td>Robert Johnson</td>
+                    <td>robert.j@example.com</td>
+                    <td>+91 9876543217</td>
+                    <td><span class="status-tag status-declined">Declined</span></td>
+                    <td>2</td>
+                    <td>2025-06-29</td>
+                    <td>2025-06-30</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-007">Declined proactively after 2 invites, low engagement from this profile.</textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-007">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-008</td>
+                    <td>Maria Garcia</td>
+                    <td>maria.g@example.com</td>
+                    <td>+91 9876543218</td>
+                    <td><span class="status-tag status-interested">Interested</span></td>
+                    <td>0</td>
+                    <td>2025-07-11</td>
+                    <td>N/A</td>
+                    <td class="admin-notes">
+                        <textarea placeholder="Add internal notes here..." data-shopper-id="S-008">Potential issue with email delivery, check logs.</textarea>
+                        <button class="save-notes-btn" data-shopper-id="S-008">Save Notes</button>
+                    </td>
+                    <td class="actions">
+                        <button class="invite-action-btn">Send Invitation</button>
+                        <button class="btn-decline decline-action-btn">Decline</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>S-009</td>
+                    <td>Kevin Nguyen</td>
+                    <td>kevin.n@example.com</td>
+                    <td>+91 9876543219</td>
+                    <td><span class="status-tag status-registered">Registered</span></td>
+                    <td>1</td>
+                    <td>2025-05-20</td>
+                    <td>2025-05-21</td>
+                    <td class="admin-notes">
+                        <div class="notes-read-only">Registered and active. Transferred to Shopper Operations team.</div>
+                    </td>
+                    <td class="actions">
+                        <span>Account Active</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bulk-actions-group">
+            <input type="checkbox" id="bulkSelectAll"> <label for="bulkSelectAll">Select All on Page</label>
+            <select id="bulkActionSelect">
+                <option value="">Choose Bulk Action...</option>
+                <option value="send_invitation">Send Invitation</option> <option value="decline">Decline Selected</option> <option value="savenote">Save Notes</option>
+            </select>
+            <button id="applyBulkActionButton" disabled>Apply Action</button>
+        </div>
+
+        <div class="pagination-controls">
+            <button id="prevPageBtn" disabled>Previous Page</button>
+            <span id="pageInfo">Page 1 of X</span>
+            <button id="nextPageBtn">Next Page</button>
+            </div>
+    </div>
+
+    <script>
+        // --- Filter and Date Input Logic ---
+        function toggleCustomDateInputs(selectElementId, customInputsId) {
+            const selectElement = document.getElementById(selectElementId);
+            const customInputs = document.getElementById(customInputsId);
+            if (selectElement.value === 'custom') {
+                customInputs.style.display = 'flex';
+            } else {
+                customInputs.style.display = 'none';
+            }
+        }
+
+        document.getElementById('dateAddedFilter').addEventListener('change', function() {
+            toggleCustomDateInputs('dateAddedFilter', 'customDateAddedInputs');
+        });
+        document.getElementById('lastInviteFilter').addEventListener('change', function() {
+            toggleCustomDateInputs('lastInviteFilter', 'customLastInviteInputs');
+        });
+
+        // --- Bulk Actions Logic ---
+        const bulkActionSelect = document.getElementById('bulkActionSelect');
+        const applyBulkActionButton = document.getElementById('applyBulkActionButton');
+
+        applyBulkActionButton.disabled = true; // Disable button initially
+
+        bulkActionSelect.addEventListener('change', function() {
+            applyBulkActionButton.disabled = this.value === '';
+        });
+
+        applyBulkActionButton.addEventListener('click', function() {
+            const selectedAction = bulkActionSelect.value;
+            const selectedCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+            const selectedCount = selectedCheckboxes.length;
+
+            if (selectedCount === 0) {
+                alert('Please select at least one shopper to perform a bulk action.');
+                return;
+            }
+
+            let confirmationMessage = '';
+            switch (selectedAction) {
+                case 'send_invitation': // Combined action
+                    confirmationMessage = `Are you sure you want to send/resend invitations to ${selectedCount} selected shopper(s)?`;
+                    break;
+                case 'decline':
+                    confirmationMessage = `Are you sure you want to decline ${selectedCount} selected shopper lead(s)? They can be reinvited later.`;
+                    break;
+                default:
+                    confirmationMessage = 'Are you sure you want to perform this action?';
+                    break;
+            }
+
+            if (confirm(confirmationMessage)) {
+                // --- SIMULATED REAL-TIME UPDATE (Backend required for actual updates) ---
+                console.log(`Simulating bulk action "${selectedAction}" for ${selectedCount} shoppers.`);
+                alert(`Bulk action "${selectedAction}" confirmed for ${selectedCount} shoppers. (This is a mockup action)`);
+
+                selectedCheckboxes.forEach(checkbox => {
+                    const row = checkbox.closest('tr');
+                    const shopperId = row.children[1].textContent; // Shopper ID is now the second column
+                    const statusCell = row.querySelector('.status-tag');
+                    const inviteCountCell = row.children[6]; // Invitation Count is now the 7th column (index 6)
+                    const actionsCell = row.querySelector('.actions');
+
+                    if (selectedAction === 'decline') {
+                        statusCell.className = 'status-tag status-declined';
+                        statusCell.textContent = 'Declined';
+                        // Update action buttons for declined leads
+                        actionsCell.innerHTML = `<button class="invite-action-btn">Send Invitation</button>`;
+                        console.log(`Shopper ${shopperId}: Status updated to Declined.`);
+                    } else if (selectedAction === 'send_invitation') {
+                        if (statusCell.textContent !== 'Registered') { // Don't change status for registered
+                            statusCell.className = 'status-tag status-invited';
+                            statusCell.textContent = 'Invited';
+                            let currentCount = parseInt(inviteCountCell.textContent) || 0;
+                            inviteCountCell.textContent = currentCount + 1;
+                            // Update action buttons for invited leads
+                            actionsCell.innerHTML = `<button class="invite-action-btn">Send Invitation</button><button class="btn-decline decline-action-btn">Decline</button>`;
+                            console.log(`Shopper ${shopperId}: Invitation sent/resent. Count: ${inviteCountCell.textContent}`);
+                        } else {
+                             console.log(`Shopper ${shopperId}: Already Registered. Invitation not sent.`);
+                        }
+                    }
+                });
+
+                // Re-attach event listeners after DOM manipulation (important for dynamic content)
+                attachIndividualActionListeners();
+
+                // Reset UI after action
+                bulkActionSelect.value = '';
+                applyBulkActionButton.disabled = true;
+                document.getElementById('selectAll').checked = false; // Uncheck select all
+                document.querySelectorAll('tbody input[type="checkbox"]').forEach(cb => cb.checked = false); // Uncheck all rows
+            } else {
+                alert('Bulk action cancelled.');
+                console.log('Bulk action cancelled.');
+            }
+        });
+
+        // Select All / Deselect All functionality
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+
+        // --- Individual Action Buttons (Save Notes, Invite, Decline) ---
+        function attachIndividualActionListeners() {
+            document.querySelectorAll('.save-notes-btn').forEach(button => {
+                button.onclick = null; // Remove old listeners to prevent duplicates
+                button.addEventListener('click', function() {
+                    const shopperId = this.dataset.shopperId;
+                    const textarea = this.previousElementSibling;
+                    const notes = textarea.value;
+                    // --- SIMULATED REAL-TIME UPDATE ---
+                    alert(`Saving notes for Shopper ID: ${shopperId}\nNotes: "${notes}"\n(In a real app, this would be an AJAX call to the backend.)`);
+                    console.log(`Saving notes for Shopper ID: ${shopperId} - "${notes}"`);
+                });
+            });
+
+            document.querySelectorAll('.invite-action-btn').forEach(button => {
+                 button.onclick = null; // Remove old listeners
+                 button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const shopperId = row.children[1].textContent;
+                    const statusCell = row.querySelector('.status-tag');
+                    const inviteCountCell = row.children[6];
+                    const actionsCell = row.querySelector('.actions');
+
+                    if (statusCell.textContent === 'Registered') {
+                         alert(`Shopper ${shopperId} is already Registered. Cannot send invitation.`);
+                         console.log(`Shopper ${shopperId} is already Registered. Cannot send invitation.`);
+                         return;
+                    }
+
+                    // --- SIMULATED REAL-TIME UPDATE ---
+                    alert(`Sending invitation to Shopper ID: ${shopperId}.`);
+                    console.log(`Sending invitation to Shopper ID: ${shopperId}.`);
+
+                    // Simulate status update and increment count
+                    statusCell.className = 'status-tag status-invited';
+                    statusCell.textContent = 'Invited';
+                    let currentCount = parseInt(inviteCountCell.textContent) || 0;
+                    inviteCountCell.textContent = currentCount + 1;
+                    
+                    // Update actions for invited status
+                    actionsCell.innerHTML = `<button class="invite-action-btn">Send Invitation</button><button class="btn-decline decline-action-btn">Decline</button>`;
+                    attachIndividualActionListeners(); // Re-attach listeners after DOM change
+                 });
+            });
+
+            document.querySelectorAll('.decline-action-btn').forEach(button => {
+                 button.onclick = null; // Remove old listeners
+                 button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const shopperId = row.children[1].textContent;
+                    const statusCell = row.querySelector('.status-tag');
+                    const actionsCell = row.querySelector('.actions');
+
+                    // --- SIMULATED REAL-TIME UPDATE ---
+                    if (confirm(`Are you sure you want to decline Shopper ID: ${shopperId}?`)) {
+                        alert(`Declining Shopper ID: ${shopperId}.`);
+                        console.log(`Declining Shopper ID: ${shopperId}.`);
+
+                        statusCell.className = 'status-tag status-declined';
+                        statusCell.textContent = 'Declined';
+                        // Update actions for declined status
+                        actionsCell.innerHTML = `<button class="invite-action-btn">Send Invitation</button>`;
+                        attachIndividualActionListeners(); // Re-attach listeners after DOM change
+                    } else {
+                        console.log(`Decline action for Shopper ID: ${shopperId} cancelled.`);
+                    }
+                 });
+            });
+        }
+        attachIndividualActionListeners(); // Initial attachment of listeners
+
+
+        // --- Pagination Logic (Conceptual) ---
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const pageInfo = document.getElementById('pageInfo');
+        let currentPage = 1;
+        const totalPages = 5; // Mock total pages for demonstration
+
+        function updatePaginationControls() {
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevPageBtn.disabled = (currentPage === 1);
+            nextPageBtn.disabled = (currentPage === totalPages);
+        }
+
+        prevPageBtn.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePaginationControls();
+                // --- SIMULATED DATA LOAD ---
+                alert(`Loading data for Page ${currentPage}. (Requires Backend)`);
+                console.log(`Loading data for Page ${currentPage}.`);
+                // In a real app: fetch(`/api/shoppers?page=${currentPage}&limit=20`)
+            }
+        });
+
+        nextPageBtn.addEventListener('click', function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePaginationControls();
+                // --- SIMULATED DATA LOAD ---
+                alert(`Loading data for Page ${currentPage}. (Requires Backend)`);
+                console.log(`Loading data for Page ${currentPage}.`);
+                // In a real app: fetch(`/api/shoppers?page=${currentPage}&limit=20`)
+            }
+        });
+        updatePaginationControls(); // Initial call to set state
+
+
+        // --- Sorting Logic (Conceptual) ---
+        document.querySelectorAll('th[data-sort-by]').forEach(header => {
+            header.addEventListener('click', function() {
+                const sortBy = this.dataset.sortBy;
+                const currentOrder = this.dataset.sortOrder === 'asc' ? 'desc' : 'asc';
+                
+                // Reset other headers
+                document.querySelectorAll('th[data-sort-by]').forEach(otherHeader => {
+                    if (otherHeader !== this) {
+                        otherHeader.removeAttribute('data-sort-order');
+                    }
+                });
+
+                this.dataset.sortOrder = currentOrder; // Update attribute for visual indication if needed
+                
+                // --- SIMULATED DATA LOAD ---
+                alert(`Sorting by ${sortBy} in ${currentOrder.toUpperCase()} order. (Requires Backend)`);
+                console.log(`Sorting by ${sortBy} in ${currentOrder.toUpperCase()} order.`);
+                // In a real app: fetch(`/api/shoppers?sort_by=${sortBy}&order=${currentOrder}&page=${currentPage}`)
+            });
+        });
+    </script>
+</body>
+</html>
