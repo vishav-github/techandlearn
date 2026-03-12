@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>API Platform — Email Notification Mockups</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -19,18 +19,18 @@
     --green:   #166534;
     --green-bg:#F0FDF4;
     --green-a: #16A34A;
-    --gray1:   #F5F7FA;
-    --gray2:   #E1E6ED;
-    --gray3:   #6b7a99;
-    --gray4:   #969FB5;
-    --gray5:   #4A5060;
+    --gray1:   #F8F9FC;
+    --gray2:   #EDF0F7;
+    --gray3:   #C8D0E0;
+    --gray4:   #6B7A99;
+    --gray5:   #374162;
     --white:   #FFFFFF;
   }
 
   body {
     background: #F0F4FA;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    color: #1A2235;
     min-height: 100vh;
     padding: 48px 20px 80px;
   }
@@ -41,8 +41,8 @@
     letter-spacing: 3.5px; color: #4A6FA5; text-transform: uppercase; margin-bottom: 14px;
   }
   .page-header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(24px, 3vw, 38px); color: #0F1F3D; line-height: 1.15; margin-bottom: 10px;
+    font-family: 'Lora', serif;
+    font-size: clamp(24px, 3vw, 36px); color: #1A2235; line-height: 1.2; margin-bottom: 10px;
   }
   .page-header p { font-size: 13px; color: #6B7A99; font-weight: 300; }
 
@@ -58,16 +58,16 @@
   }
   .tabs-group-label {
     font-family: 'DM Mono', monospace; font-size: 9px;
-    letter-spacing: 2px; text-transform: uppercase; color: #9AAAC4; padding: 8px 10px 5px;
+    letter-spacing: 0.5px; text-transform: uppercase; color: #A0AEC0; font-weight: 700; font-size: 10px; padding: 10px 10px 5px; font-family: 'Inter', sans-serif;
   }
   .tab-btn {
     display: flex; align-items: center; gap: 8px; width: 100%;
     padding: 9px 11px; border-radius: 8px; border: none; background: transparent;
-    color: #6B7A99; font-family: 'DM Sans', sans-serif; font-size: 12px;
+    color: #4A5568; font-family: 'Inter', sans-serif; font-size: 12.5px;
     font-weight: 400; cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.3;
   }
   .tab-btn:hover { background: #F0F4FA; color: #1A56DB; }
-  .tab-btn.active { background: #EEF4FF; color: #1A56DB; font-weight: 600; }
+  .tab-btn.active { background: #EEF4FF; color: #1A56DB; font-weight: 600; border-left: 3px solid #1A56DB; }
   .tab-icon { font-size: 13px; flex-shrink: 0; }
   .tab-divider { height: 1px; background: #EDF0F7; margin: 6px 0; }
   .tab-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-left: auto; }
@@ -96,12 +96,12 @@
   .chrome-dots span:nth-child(2) { background: #FFBD2E; }
   .chrome-dots span:nth-child(3) { background: #28CA41; }
   .chrome-subject {
-    font-family: 'DM Mono', monospace; font-size: 10.5px; color: #6B7A99;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: #2D3748;
     flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .cbadge {
-    font-family: 'DM Mono', monospace; font-size: 9px;
-    padding: 3px 8px; border-radius: 100px; font-weight: 500; white-space: nowrap;
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    padding: 3px 10px; border-radius: 100px; font-weight: 700; white-space: nowrap; letter-spacing: 0.3px;
   }
   .cbadge-w { background: rgba(230,168,23,0.12); color: #E6A817; border: 1px solid rgba(230,168,23,0.25); }
   .cbadge-r { background: rgba(185,28,28,0.12);  color: #F87171; border: 1px solid rgba(185,28,28,0.25); }
@@ -112,23 +112,23 @@
     background: #F8F9FC; padding: 13px 22px; border-bottom: 1px solid #EDF0F7;
     display: grid; grid-template-columns: auto 1fr; gap: 4px 13px; align-items: baseline;
   }
-  .ml { font-family: 'DM Mono', monospace; font-size: 9.5px; color: #9AAAC4; text-transform: uppercase; letter-spacing: 1px; }
-  .mv { font-size: 12px; color: #374162; font-weight: 300; }
-  .mv strong { color: #0F1F3D; font-weight: 500; }
+  .ml { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+  .mv { font-size: 12.5px; color: #2D3748; font-weight: 400; }
+  .mv strong { color: #1A202C; font-weight: 600; }
 
   /* EMAIL BODY */
   .email-body { background: var(--white); }
-  .et { max-width: 560px; margin: 0 auto; font-family: 'DM Sans', sans-serif; }
+  .et { max-width: 560px; margin: 0 auto; font-family: 'Inter', sans-serif; }
 
   .ehb {
     padding: 22px 34px 18px; display: flex;
     align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gray2);
   }
-  .elogo { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); }
+  .elogo { font-family: 'Lora', serif; font-size: 18px; color: #1A202C; font-weight: 600; }
   .elogo span { color: var(--blue); }
   .etbadge {
-    font-family: 'DM Mono', monospace; font-size: 9px;
-    padding: 3px 9px; border-radius: 100px; font-weight: 500; letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    padding: 4px 11px; border-radius: 100px; font-weight: 700; letter-spacing: 0.2px;
   }
 
   .ehero { padding: 26px 34px 20px; }
@@ -137,11 +137,11 @@
     display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 13px;
   }
   .ehero h2 {
-    font-family: 'DM Serif Display', serif; font-size: 19px;
-    color: var(--navy); line-height: 1.25; margin-bottom: 8px;
+    font-family: 'Lora', serif; font-size: 20px; font-weight: 600;
+    color: #1A202C; line-height: 1.3; margin-bottom: 10px;
   }
-  .ehero p { font-size: 13px; color: var(--gray4); line-height: 1.65; font-weight: 300; }
-  .ehero p strong { color: var(--gray5); font-weight: 500; }
+  .ehero p { font-size: 14px; color: #4A5568; line-height: 1.7; font-weight: 400; }
+  .ehero p strong { color: #2D3748; font-weight: 600; }
 
   .esec { padding: 0 34px 20px; }
 
@@ -151,14 +151,14 @@
     border-radius: 10px; padding: 16px 18px; margin-bottom: 13px;
   }
   .uctitle {
-    font-family: 'DM Mono', monospace; font-size: 9px;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-bottom: 12px;
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase; color: #718096; margin-bottom: 12px;
   }
   .urow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px; }
   .urow:last-child { margin-bottom: 0; }
   .urowl { flex: 1; margin-right: 13px; }
-  .ulabel { font-size: 12px; color: var(--gray5); margin-bottom: 5px; }
-  .unums { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--gray5); white-space: nowrap; }
+  .ulabel { font-size: 12.5px; color: #2D3748; font-weight: 500; margin-bottom: 5px; }
+  .unums { font-family: 'Inter', monospace; font-size: 12.5px; font-weight: 500; color: #2D3748; white-space: nowrap; }
   .unums .used { font-weight: 500; }
   .ptrack { width: 100%; height: 5px; background: var(--gray2); border-radius: 100px; overflow: hidden; }
   .pfill  { height: 100%; border-radius: 100px; }
@@ -167,11 +167,11 @@
   .igrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
   .icell { background: var(--gray1); border: 1px solid var(--gray2); border-radius: 9px; padding: 12px 14px; }
   .iclabel {
-    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--gray3); margin-bottom: 4px;
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+    text-transform: uppercase; color: #A0AEC0; margin-bottom: 5px;
   }
-  .icval  { font-size: 14px; font-weight: 600; color: var(--navy); }
-  .icsub  { font-size: 10.5px; color: var(--gray4); margin-top: 2px; }
+  .icval  { font-size: 15px; font-weight: 700; color: #1A202C; }
+  .icsub  { font-size: 11.5px; color: #718096; font-weight: 400; margin-top: 3px; }
 
   /* alert */
   .ab {
@@ -179,8 +179,8 @@
     display: flex; gap: 10px; align-items: flex-start;
   }
   .abi { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-  .abt { font-size: 12px; line-height: 1.6; }
-  .abt strong { display: block; font-weight: 600; margin-bottom: 2px; }
+  .abt { font-size: 13px; line-height: 1.65; font-weight: 400; }
+  .abt strong { display: block; font-weight: 700; margin-bottom: 3px; font-size: 13px; }
   .ab-w { background: var(--amber);  border: 1px solid rgba(230,168,23,0.3); }
   .ab-w .abt { color: #78450A; }
   .ab-r { background: var(--red-bg); border: 1px solid rgba(185,28,28,0.2); }
@@ -204,32 +204,32 @@
   .pcomp { border: 1px solid var(--gray2); border-radius: 10px; overflow: hidden; margin-bottom: 14px; font-size: 12px; }
   .pcrow { display: grid; border-bottom: 1px solid var(--gray2); }
   .pcrow:last-child { border-bottom: none; }
-  .pcc { padding: 9px 12px; color: var(--gray5); border-right: 1px solid var(--gray2); }
+  .pcc { padding: 10px 13px; color: #2D3748; font-size: 12.5px; font-weight: 400; border-right: 1px solid var(--gray2); }
   .pcc:last-child { border-right: none; }
-  .pcc.hd { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray4); background:var(--gray1); }
-  .pcc.hl { background:#EEF4FF; color:var(--blue); font-weight:600; }
-  .pcc.dm { color:var(--gray4); }
+  .pcc.hd { font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:0.3px; text-transform:uppercase; color:#718096; background:#F7F9FC; }
+  .pcc.hl { background:#EEF4FF; color:#1A56DB; font-weight:700; }
+  .pcc.dm { color:#718096; font-weight:400; }
 
   /* timeline */
   .tl { margin-bottom: 16px; }
   .tli { display:flex; gap:11px; align-items:flex-start; padding-bottom:14px; position:relative; }
   .tli:not(:last-child)::before { content:''; position:absolute; left:13px; top:28px; bottom:0; width:1px; background:var(--gray2); }
   .tldot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
-  .tldate { font-family:'DM Mono',monospace; font-size:9.5px; color:var(--gray4); margin-bottom:2px; }
-  .tlevent { font-size:12.5px; color:var(--gray5); font-weight:500; }
-  .tlsub { font-size:11px; color:var(--gray4); margin-top:2px; font-weight:300; }
+  .tldate { font-family:'Inter',sans-serif; font-size:10.5px; font-weight:600; color:#718096; margin-bottom:3px; letter-spacing:0.2px; }
+  .tlevent { font-size:13.5px; color:#1A202C; font-weight:600; }
+  .tlsub { font-size:12px; color:#718096; margin-top:3px; font-weight:400; }
 
   /* nudge box */
   .nudge { background:var(--amber); border:1px solid rgba(230,168,23,0.35); border-radius:10px; padding:15px 17px; margin-bottom:14px; }
   .nudge-h { display:flex; gap:9px; align-items:flex-start; margin-bottom:11px; }
   .nudge-ni { font-size:16px; flex-shrink:0; }
-  .nudge-t { font-size:12.5px; font-weight:600; color:#78450A; margin-bottom:3px; }
-  .nudge-b { font-size:12px; color:#92400E; line-height:1.55; font-weight:300; }
+  .nudge-t { font-size:13.5px; font-weight:700; color:#78450A; margin-bottom:4px; }
+  .nudge-b { font-size:13px; color:#92400E; line-height:1.65; font-weight:400; }
   .nudge-b strong { font-weight:600; }
 
   /* footer */
   .efooter { background:var(--gray1); border-top:1px solid var(--gray2); padding:16px 34px; text-align:center; }
-  .efooter p { font-size:10.5px; color:var(--gray4); line-height:1.65; font-weight:300; }
+  .efooter p { font-size:12px; color:#718096; line-height:1.7; font-weight:400; }
   .efooter a { color:var(--blue); text-decoration:none; }
 
   @media(max-width:720px) {
@@ -284,8 +284,8 @@
           <span class="cbadge cbadge-w">CALL WARNING</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3859545d4a4c4b784854594c5e574a55165b5755">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6e0f06030b0a2e0f0d030b0d011c1e400d0103">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 09:14 AM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -331,8 +331,8 @@
           <span class="cbadge cbadge-w">VOLUME WARNING</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e5848980979196a595898491838a9788cb868a88">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="22434a4f47466243414f47414d50520c414d4f">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 02:30 PM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -379,8 +379,8 @@
           <span class="cbadge cbadge-r">CALLS BLOCKED</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="42232e2730363102322e2336242d302f6c212d2f">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0d1d8ddd5d4f0d1d3ddd5d3dfc2c09ed3dfdd">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Monday, March 16, 2026 — 11:42 AM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -424,8 +424,8 @@
           <span class="cbadge cbadge-r">VOLUME BLOCKED</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cdaca1a8bfb9be8dbda1acb9aba2bfa0e3aea2a0">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8feee7e2eaebcfeeece2eaece0fdffa1ece0e2">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Wednesday, March 18, 2026 — 04:15 PM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -469,8 +469,8 @@
           <span class="cbadge cbadge-w">KEY ALERT</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0f6e636a7d7b7c4f7f636e7b69607d62216c6062">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e3828b8e8687a382808e86808c9193cd808c8e">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Tuesday, March 10, 2026 — 11:07 AM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -513,8 +513,8 @@
           <span class="cbadge cbadge-g">TOP-UP ACTIVE</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="53313a3f3f3a3d3413233f3227353c213e7d303c3e">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f5e57525a5b7f5e5c525a5c504d4f115c5052">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Monday, March 16, 2026 — 12:03 PM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -577,8 +577,8 @@
           <span class="cbadge cbadge-g">UPGRADED</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c8aaa1a4a4a1a6af88b8a4a9bcaea7baa5e6aba7a5">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2c3cacfc7c6e2c3c1cfc7c1cdd0d28cc1cdcf">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 03:18 PM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -623,8 +623,8 @@
           <span class="cbadge cbadge-b">SCHEDULED</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4e2c2722222720290e3e222f3a28213c23602d2123">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b4d5dcd9d1d0f4d5d7d9d1d7dbc6c49ad7dbd9">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 10:45 AM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -661,8 +661,8 @@
           <span class="cbadge cbadge-r">CANCELLING</span>
         </div>
         <div class="email-meta">
-          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
-          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e88a81848481868fa89884899c8e879a85c68b8785">[email&#160;protected]</a>&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="16777e7b73725677757b73757964663875797b">[email&#160;protected]</a>&gt;</span>
           <span class="ml">Date</span><span class="mv">Wednesday, March 11, 2026 — 09:00 AM</span>
         </div>
         <div class="email-body"><div class="et">
@@ -677,33 +677,3 @@
           </div>
           <div class="esec">
             <div class="tl">
-              <div class="tli"><div class="tldot" style="background:#EEF4FF">📅</div><div><div class="tldate">TODAY — March 11, 2026</div><div class="tlevent">Cancellation requested</div><div class="tlsub">Auto-renew disabled — no future charges</div></div></div>
-              <div class="tli"><div class="tldot" style="background:#FFF3CD">⏳</div><div><div class="tldate">Until March 31, 2026</div><div class="tlevent">Full API access continues</div><div class="tlsub">All keys and modules remain active</div></div></div>
-              <div class="tli"><div class="tldot" style="background:#FEF2F2">🔒</div><div><div class="tldate">April 1, 2026 — 00:00 UTC</div><div class="tlevent">All API access terminated</div><div class="tlsub">All keys deactivated · Reactivation requires new key setup</div></div></div>
-            </div>
-            <div class="igrid">
-              <div class="icell"><div class="iclabel">Final Invoice</div><div class="icval">$199.00</div><div class="icsub">Current cycle · No future charges</div></div>
-              <div class="icell"><div class="iclabel">Access Until</div><div class="icval">Mar 31, 2026</div><div class="icsub">20 days remaining</div></div>
-            </div>
-            <div class="ab ab-b"><div class="abi">ℹ️</div><div class="abt"><strong>Changed your mind?</strong> You can reverse this cancellation anytime before March 31st. After April 1st, reactivation requires a full new API key setup — existing keys cannot be reused.</div></div>
-            <div class="crow"><a href="#" class="cp">Keep My Subscription</a></div>
-          </div>
-          <div class="ediv"></div>
-          <div class="efooter"><p>We're sorry to see you go. <a href="#">Contact our support team</a> if we can help.<br><a href="#">Manage subscription</a></p></div>
-        </div></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-function showTab(id, btn) {
-  document.querySelectorAll('.email-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-}
-</script>
-</body>
-</html>
