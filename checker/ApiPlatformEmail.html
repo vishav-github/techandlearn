@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Platform — Email Notification Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0F1F3D;
+    --blue:    #1A56DB;
+    --sky:     #E8F0FE;
+    --amber:   #FFFBEB;
+    --amber-b: #E6A817;
+    --red:     #B91C1C;
+    --red-bg:  #FEF2F2;
+    --green:   #166534;
+    --green-bg:#F0FDF4;
+    --green-a: #16A34A;
+    --gray1:   #F8F9FC;
+    --gray2:   #EDF0F7;
+    --gray3:   #C8D0E0;
+    --gray4:   #6B7A99;
+    --gray5:   #374162;
+    --white:   #FFFFFF;
+  }
+
+  body {
+    background: #080E1E;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 20px 80px;
+  }
+
+  .page-header { text-align: center; margin-bottom: 48px; }
+  .page-header .label {
+    font-family: 'DM Mono', monospace; font-size: 10.5px;
+    letter-spacing: 3.5px; color: #2D4A8A; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(24px, 3vw, 38px); color: #D8E4F8; line-height: 1.15; margin-bottom: 10px;
+  }
+  .page-header p { font-size: 13px; color: #2D4A8A; font-weight: 300; }
+
+  .main-layout {
+    max-width: 980px; margin: 0 auto;
+    display: grid; grid-template-columns: 210px 1fr; gap: 24px; align-items: start;
+  }
+
+  /* SIDEBAR */
+  .tabs-sidebar {
+    background: #0C1428; border: 1px solid #1A2640;
+    border-radius: 14px; padding: 12px; position: sticky; top: 24px;
+  }
+  .tabs-group-label {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase; color: #1E3060; padding: 8px 10px 5px;
+  }
+  .tab-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 9px 11px; border-radius: 8px; border: none; background: transparent;
+    color: #4A6FA5; font-family: 'DM Sans', sans-serif; font-size: 12px;
+    font-weight: 400; cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.3;
+  }
+  .tab-btn:hover { background: #111D35; color: #8AA8D8; }
+  .tab-btn.active { background: #152848; color: #C8DCF8; font-weight: 500; }
+  .tab-icon { font-size: 13px; flex-shrink: 0; }
+  .tab-divider { height: 1px; background: #0F1A2E; margin: 6px 0; }
+  .tab-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-left: auto; }
+  .dot-w { background: #E6A817; }
+  .dot-r { background: #F87171; }
+  .dot-g { background: #4ADE80; }
+  .dot-b { background: #60A5FA; }
+
+  /* EMAIL CHROME */
+  .email-stage { min-width: 0; }
+  .email-panel { display: none; animation: fu 0.25s ease; }
+  .email-panel.active { display: block; }
+  @keyframes fu { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .email-chrome {
+    background: #0C1428; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px #1A2640;
+  }
+  .chrome-bar {
+    background: #080E1E; padding: 11px 18px;
+    display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #111D35;
+  }
+  .chrome-dots { display: flex; gap: 5px; }
+  .chrome-dots span { width: 9px; height: 9px; border-radius: 50%; }
+  .chrome-dots span:nth-child(1) { background: #FF6058; }
+  .chrome-dots span:nth-child(2) { background: #FFBD2E; }
+  .chrome-dots span:nth-child(3) { background: #28CA41; }
+  .chrome-subject {
+    font-family: 'DM Mono', monospace; font-size: 10.5px; color: #2D4A8A;
+    flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .cbadge {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    padding: 3px 8px; border-radius: 100px; font-weight: 500; white-space: nowrap;
+  }
+  .cbadge-w { background: rgba(230,168,23,0.12); color: #E6A817; border: 1px solid rgba(230,168,23,0.25); }
+  .cbadge-r { background: rgba(185,28,28,0.12);  color: #F87171; border: 1px solid rgba(185,28,28,0.25); }
+  .cbadge-b { background: rgba(26,86,219,0.12);  color: #60A5FA; border: 1px solid rgba(26,86,219,0.25); }
+  .cbadge-g { background: rgba(22,163,74,0.12);  color: #4ADE80; border: 1px solid rgba(22,163,74,0.25); }
+
+  .email-meta {
+    background: #0A1020; padding: 13px 22px; border-bottom: 1px solid #111D35;
+    display: grid; grid-template-columns: auto 1fr; gap: 4px 13px; align-items: baseline;
+  }
+  .ml { font-family: 'DM Mono', monospace; font-size: 9.5px; color: #1E3060; text-transform: uppercase; letter-spacing: 1px; }
+  .mv { font-size: 12px; color: #7A98C8; font-weight: 300; }
+  .mv strong { color: #A8C0E0; font-weight: 500; }
+
+  /* EMAIL BODY */
+  .email-body { background: var(--white); }
+  .et { max-width: 560px; margin: 0 auto; font-family: 'DM Sans', sans-serif; }
+
+  .ehb {
+    padding: 22px 34px 18px; display: flex;
+    align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gray2);
+  }
+  .elogo { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); }
+  .elogo span { color: var(--blue); }
+  .etbadge {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    padding: 3px 9px; border-radius: 100px; font-weight: 500; letter-spacing: 0.5px;
+  }
+
+  .ehero { padding: 26px 34px 20px; }
+  .eicon {
+    width: 42px; height: 42px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 13px;
+  }
+  .ehero h2 {
+    font-family: 'DM Serif Display', serif; font-size: 19px;
+    color: var(--navy); line-height: 1.25; margin-bottom: 8px;
+  }
+  .ehero p { font-size: 13px; color: var(--gray4); line-height: 1.65; font-weight: 300; }
+  .ehero p strong { color: var(--gray5); font-weight: 500; }
+
+  .esec { padding: 0 34px 20px; }
+
+  /* usage card */
+  .ucard {
+    background: var(--gray1); border: 1px solid var(--gray2);
+    border-radius: 10px; padding: 16px 18px; margin-bottom: 13px;
+  }
+  .uctitle {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-bottom: 12px;
+  }
+  .urow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px; }
+  .urow:last-child { margin-bottom: 0; }
+  .urowl { flex: 1; margin-right: 13px; }
+  .ulabel { font-size: 12px; color: var(--gray5); margin-bottom: 5px; }
+  .unums { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--gray5); white-space: nowrap; }
+  .unums .used { font-weight: 500; }
+  .ptrack { width: 100%; height: 5px; background: var(--gray2); border-radius: 100px; overflow: hidden; }
+  .pfill  { height: 100%; border-radius: 100px; }
+
+  /* info grid */
+  .igrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .icell { background: var(--gray1); border: 1px solid var(--gray2); border-radius: 9px; padding: 12px 14px; }
+  .iclabel {
+    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gray3); margin-bottom: 4px;
+  }
+  .icval  { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .icsub  { font-size: 10.5px; color: var(--gray4); margin-top: 2px; }
+
+  /* alert */
+  .ab {
+    border-radius: 9px; padding: 12px 15px; margin-bottom: 14px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .abi { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .abt { font-size: 12px; line-height: 1.6; }
+  .abt strong { display: block; font-weight: 600; margin-bottom: 2px; }
+  .ab-w { background: var(--amber);  border: 1px solid rgba(230,168,23,0.3); }
+  .ab-w .abt { color: #78450A; }
+  .ab-r { background: var(--red-bg); border: 1px solid rgba(185,28,28,0.2); }
+  .ab-r .abt { color: var(--red); }
+  .ab-g { background: var(--green-bg); border: 1px solid rgba(22,163,74,0.2); }
+  .ab-g .abt { color: var(--green); }
+  .ab-b { background: var(--sky);    border: 1px solid rgba(26,86,219,0.15); }
+  .ab-b .abt { color: #1E3A8A; }
+
+  /* CTA */
+  .crow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .cp { display:inline-block; padding:10px 20px; background:var(--blue); color:#fff; border-radius:7px; font-size:12.5px; font-weight:600; text-decoration:none; }
+  .cs { display:inline-block; padding:10px 20px; background:transparent; color:var(--blue); border:1.5px solid var(--blue); border-radius:7px; font-size:12.5px; font-weight:500; text-decoration:none; }
+  .cd { display:inline-block; padding:10px 20px; background:var(--red); color:#fff; border-radius:7px; font-size:12.5px; font-weight:600; text-decoration:none; }
+  .cg { display:inline-block; padding:10px 20px; background:transparent; color:var(--gray5); border:1.5px solid var(--gray3); border-radius:7px; font-size:12.5px; font-weight:500; text-decoration:none; }
+
+  /* divider */
+  .ediv { height: 1px; background: var(--gray2); margin: 0 34px 18px; }
+
+  /* plan compare */
+  .pcomp { border: 1px solid var(--gray2); border-radius: 10px; overflow: hidden; margin-bottom: 14px; font-size: 12px; }
+  .pcrow { display: grid; border-bottom: 1px solid var(--gray2); }
+  .pcrow:last-child { border-bottom: none; }
+  .pcc { padding: 9px 12px; color: var(--gray5); border-right: 1px solid var(--gray2); }
+  .pcc:last-child { border-right: none; }
+  .pcc.hd { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray4); background:var(--gray1); }
+  .pcc.hl { background:#EEF4FF; color:var(--blue); font-weight:600; }
+  .pcc.dm { color:var(--gray4); }
+
+  /* timeline */
+  .tl { margin-bottom: 16px; }
+  .tli { display:flex; gap:11px; align-items:flex-start; padding-bottom:14px; position:relative; }
+  .tli:not(:last-child)::before { content:''; position:absolute; left:13px; top:28px; bottom:0; width:1px; background:var(--gray2); }
+  .tldot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+  .tldate { font-family:'DM Mono',monospace; font-size:9.5px; color:var(--gray4); margin-bottom:2px; }
+  .tlevent { font-size:12.5px; color:var(--gray5); font-weight:500; }
+  .tlsub { font-size:11px; color:var(--gray4); margin-top:2px; font-weight:300; }
+
+  /* nudge box */
+  .nudge { background:var(--amber); border:1px solid rgba(230,168,23,0.35); border-radius:10px; padding:15px 17px; margin-bottom:14px; }
+  .nudge-h { display:flex; gap:9px; align-items:flex-start; margin-bottom:11px; }
+  .nudge-ni { font-size:16px; flex-shrink:0; }
+  .nudge-t { font-size:12.5px; font-weight:600; color:#78450A; margin-bottom:3px; }
+  .nudge-b { font-size:12px; color:#92400E; line-height:1.55; font-weight:300; }
+  .nudge-b strong { font-weight:600; }
+
+  /* footer */
+  .efooter { background:var(--gray1); border-top:1px solid var(--gray2); padding:16px 34px; text-align:center; }
+  .efooter p { font-size:10.5px; color:var(--gray4); line-height:1.65; font-weight:300; }
+  .efooter a { color:var(--blue); text-decoration:none; }
+
+  @media(max-width:720px) {
+    .main-layout { grid-template-columns:1fr; }
+    .tabs-sidebar { position:static; display:flex; flex-wrap:wrap; gap:4px; padding:10px; }
+    .tabs-group-label,.tab-divider { display:none; }
+    .tab-btn { width:auto; padding:6px 11px; font-size:11px; }
+    .tab-dot { display:none; }
+    .ehb,.ehero,.esec { padding-left:18px; padding-right:18px; }
+    .ediv { margin-left:18px; margin-right:18px; }
+    .igrid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="label">Section 11.2 — Notification Events & Triggers</div>
+  <h1>Email Notification Mockups</h1>
+  <p>All 9 emails · Sent to Checker Master only · Email delivery</p>
+</div>
+
+<div class="main-layout">
+
+  <div class="tabs-sidebar">
+    <div class="tabs-group-label">Usage Warnings</div>
+    <button class="tab-btn active" onclick="showTab('t1',this)"><span class="tab-icon">⚠️</span>80% Call Usage Warning<span class="tab-dot dot-w"></span></button>
+    <button class="tab-btn" onclick="showTab('t2',this)"><span class="tab-icon">⚠️</span>80% Volume Warning<span class="tab-dot dot-w"></span></button>
+    <div class="tab-divider"></div>
+    <div class="tabs-group-label">Hard-Stops</div>
+    <button class="tab-btn" onclick="showTab('t3',this)"><span class="tab-icon">🚨</span>Calls Blocked<span class="tab-dot dot-r"></span></button>
+    <button class="tab-btn" onclick="showTab('t4',this)"><span class="tab-icon">🚨</span>Volume Blocked<span class="tab-dot dot-r"></span></button>
+    <div class="tab-divider"></div>
+    <div class="tabs-group-label">Key Alerts</div>
+    <button class="tab-btn" onclick="showTab('t5',this)"><span class="tab-icon">🔑</span>Key Soft Limit<span class="tab-dot dot-w"></span></button>
+    <div class="tab-divider"></div>
+    <div class="tabs-group-label">Commercial</div>
+    <button class="tab-btn" onclick="showTab('t6',this)"><span class="tab-icon">⚡</span>Top-Up Purchased<span class="tab-dot dot-g"></span></button>
+    <button class="tab-btn" onclick="showTab('t7',this)"><span class="tab-icon">⬆️</span>Plan Upgraded<span class="tab-dot dot-g"></span></button>
+    <button class="tab-btn" onclick="showTab('t8',this)"><span class="tab-icon">⬇️</span>Downgrade Scheduled<span class="tab-dot dot-b"></span></button>
+    <button class="tab-btn" onclick="showTab('t9',this)"><span class="tab-icon">❌</span>Cancellation Scheduled<span class="tab-dot dot-r"></span></button>
+  </div>
+
+  <div class="email-stage">
+
+    <!-- T1 — 80% CALL USAGE -->
+    <div class="email-panel active" id="t1">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">Action Required — You have used 80% of your monthly API call quota</div>
+          <span class="cbadge cbadge-w">CALL WARNING</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 09:14 AM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#FFF3CD;color:#78450A;border:1px solid rgba(230,168,23,0.35)">GROWTH PLAN</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#FFF3CD">⚠️</div>
+            <h2>You've used 80% of your monthly API calls</h2>
+            <p>Hi <strong>Ahmed</strong>, <strong>Acme Corp</strong> is approaching its monthly API call limit. At your current rate, you may exhaust your quota before the cycle resets on April 1st.</p>
+          </div>
+          <div class="esec">
+            <div class="ucard">
+              <div class="uctitle">API Call Usage — March 2026</div>
+              <div class="urow">
+                <div class="urowl">
+                  <div class="ulabel">API Calls</div>
+                  <div class="ptrack"><div class="pfill" style="width:80%;background:#E6A817"></div></div>
+                </div>
+                <div class="unums"><span class="used" style="color:#E6A817">4,000</span> / 5,000</div>
+              </div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Calls Remaining</div><div class="icval" style="color:#E6A817">1,000</div><div class="icsub">20% of monthly quota</div></div>
+              <div class="icell"><div class="iclabel">Cycle Resets</div><div class="icval">Apr 1, 2026</div><div class="icsub">19 days away</div></div>
+            </div>
+            <div class="ab ab-w"><div class="abi">💡</div><div class="abt"><strong>Estimated exhaustion in ~4 days</strong> at your current rate of ~210 calls/day. Once the limit is reached, all keys return 403 errors.</div></div>
+            <div class="crow"><a href="#" class="cp">Upgrade to Professional</a><a href="#" class="cs">Buy Top-Up (+1,000 calls · $39)</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>Sent to account administrators of <strong>Acme Corp</strong>. This alert fires once per cycle.<br><a href="#">Manage notifications</a> · <a href="#">View billing dashboard</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T2 — 80% VOLUME WARNING -->
+    <div class="email-panel" id="t2">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">Action Required — You have used 80% of your monthly data transfer quota</div>
+          <span class="cbadge cbadge-w">VOLUME WARNING</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 02:30 PM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#FFF3CD;color:#78450A;border:1px solid rgba(230,168,23,0.35)">GROWTH PLAN</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#EFF6FF">📦</div>
+            <h2>You've used 80% of your monthly data transfer quota</h2>
+            <p>Hi <strong>Ahmed</strong>, <strong>Acme Corp</strong> is approaching its monthly data volume limit. This tracks total uncompressed size of all API request and response payloads combined.</p>
+          </div>
+          <div class="esec">
+            <div class="ucard">
+              <div class="uctitle">Data Volume Usage — March 2026</div>
+              <div class="urow">
+                <div class="urowl">
+                  <div class="ulabel">Data Transfer (uncompressed)</div>
+                  <div class="ptrack"><div class="pfill" style="width:80%;background:#3B82F6"></div></div>
+                </div>
+                <div class="unums"><span class="used" style="color:#3B82F6">4.0 GB</span> / 5 GB</div>
+              </div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Volume Remaining</div><div class="icval" style="color:#3B82F6">1.0 GB</div><div class="icsub">~200 MB/day budget</div></div>
+              <div class="icell"><div class="iclabel">Cycle Resets</div><div class="icval">Apr 1, 2026</div><div class="icsub">19 days away</div></div>
+            </div>
+            <div class="ab ab-w"><div class="abi">⚠️</div><div class="abt"><strong>Top-Up cannot help with data volume.</strong> Top-Ups add extra API calls only. To increase your data limit you must upgrade your plan.</div></div>
+            <div class="ab ab-b"><div class="abi">💡</div><div class="abt"><strong>Reduce volume usage</strong> by requesting only needed fields, reducing export-heavy operations, or compressing payloads on your end.</div></div>
+            <div class="crow"><a href="#" class="cp">Upgrade to Professional (25 GB)</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>Sent to account administrators of <strong>Acme Corp</strong>. This alert fires once per cycle.<br><a href="#">Manage notifications</a> · <a href="#">View billing dashboard</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T3 — HARD STOP: CALLS -->
+    <div class="email-panel" id="t3">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">URGENT — API access paused. Monthly call limit reached.</div>
+          <span class="cbadge cbadge-r">CALLS BLOCKED</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Monday, March 16, 2026 — 11:42 AM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#FEF2F2;color:#B91C1C;border:1px solid rgba(185,28,28,0.3)">ACCESS PAUSED</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#FEF2F2">🚨</div>
+            <h2>All API calls are blocked — call limit reached</h2>
+            <p>Hi <strong>Ahmed</strong>, <strong>Acme Corp</strong> has exhausted its monthly call quota. Every API key is returning <strong>403 monthly_quota_exceeded</strong>. Your integrations are not processing requests.</p>
+          </div>
+          <div class="esec">
+            <div class="ab ab-r"><div class="abi">⛔</div><div class="abt"><strong>Hard-Stop Active since March 16, 11:42 AM</strong> — 5,000 / 5,000 calls used. All keys blocked.</div></div>
+            <div class="ucard">
+              <div class="uctitle">Usage at Time of Block</div>
+              <div class="urow">
+                <div class="urowl"><div class="ulabel">API Calls</div><div class="ptrack"><div class="pfill" style="width:100%;background:#B91C1C"></div></div></div>
+                <div class="unums"><span class="used" style="color:#B91C1C">5,000</span> / 5,000</div>
+              </div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Auto-Restore</div><div class="icval">Apr 1, 2026</div><div class="icsub">15 days away</div></div>
+              <div class="icell"><div class="iclabel">Immediate Fix</div><div class="icval" style="color:var(--blue);font-size:12px">Top-Up or Upgrade</div><div class="icsub">Restores access instantly</div></div>
+            </div>
+            <div class="crow"><a href="#" class="cd">Upgrade Plan</a><a href="#" class="cs">Buy Top-Up (+1,000 calls · $39)</a></div>
+            <div class="ab ab-b"><div class="abi">ℹ️</div><div class="abt"><strong>Top-Up restores call access only.</strong> If your data volume is also exhausted, only a plan upgrade will fully unblock your account.</div></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>You're receiving this because you're the account administrator for <strong>Acme Corp</strong>.<br><a href="#">Contact support</a> · <a href="#">View dashboard</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T4 — HARD STOP: VOLUME -->
+    <div class="email-panel" id="t4">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">URGENT — API access paused. Monthly data transfer limit reached.</div>
+          <span class="cbadge cbadge-r">VOLUME BLOCKED</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Wednesday, March 18, 2026 — 04:15 PM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#FEF2F2;color:#B91C1C;border:1px solid rgba(185,28,28,0.3)">ACCESS PAUSED</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#FEF2F2">🚨</div>
+            <h2>All API calls are blocked — data transfer limit reached</h2>
+            <p>Hi <strong>Ahmed</strong>, <strong>Acme Corp</strong> has exhausted its monthly data transfer quota. Every API key is returning <strong>403 data_volume_exceeded</strong>. Your integrations are not processing requests.</p>
+          </div>
+          <div class="esec">
+            <div class="ab ab-r"><div class="abi">⛔</div><div class="abt"><strong>Hard-Stop Active since March 18, 4:15 PM</strong> — 5.02 GB / 5 GB transferred. All keys blocked.</div></div>
+            <div class="ucard">
+              <div class="uctitle">Usage at Time of Block</div>
+              <div class="urow">
+                <div class="urowl"><div class="ulabel">Data Transfer (uncompressed)</div><div class="ptrack"><div class="pfill" style="width:100%;background:#B91C1C"></div></div></div>
+                <div class="unums"><span class="used" style="color:#B91C1C">5.02 GB</span> / 5 GB</div>
+              </div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Auto-Restore</div><div class="icval">Apr 1, 2026</div><div class="icsub">13 days away</div></div>
+              <div class="icell"><div class="iclabel">Immediate Fix</div><div class="icval" style="color:var(--blue);font-size:12px">Upgrade Only</div><div class="icsub">Top-Up cannot help here</div></div>
+            </div>
+            <div class="ab ab-w"><div class="abi">⚠️</div><div class="abt"><strong>Top-Up is not available for data volume.</strong> Top-Ups add extra calls only. The only way to restore access immediately is a plan upgrade.</div></div>
+            <div class="crow"><a href="#" class="cd">Upgrade to Professional (25 GB)</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>You're receiving this because you're the account administrator for <strong>Acme Corp</strong>.<br><a href="#">Contact support</a> · <a href="#">View dashboard</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T5 — KEY SOFT LIMIT -->
+    <div class="email-panel" id="t5">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">API Key Paused — "Mobile App" has reached its configured soft limit</div>
+          <span class="cbadge cbadge-w">KEY ALERT</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Alerts</strong> &lt;alerts@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Tuesday, March 10, 2026 — 11:07 AM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#EEF4FF;color:#1A56DB;border:1px solid rgba(26,86,219,0.3)">GROWTH PLAN</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#FFF3CD">🔑</div>
+            <h2>One API key has been soft-blocked</h2>
+            <p>Hi <strong>Ahmed</strong>, the key <strong>"Mobile App"</strong> has hit its configured per-key soft limit and has been automatically paused. Your other keys are <strong>fully unaffected</strong>.</p>
+          </div>
+          <div class="esec">
+            <div class="ucard">
+              <div class="uctitle">Affected Key — Mobile App (sk_mo••••)</div>
+              <div class="urow">
+                <div class="urowl"><div class="ulabel">Key Calls vs Soft Limit</div><div class="ptrack"><div class="pfill" style="width:100%;background:#E6A817"></div></div></div>
+                <div class="unums"><span class="used" style="color:#E6A817">2,000</span> / 2,000</div>
+              </div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Key Status</div><div class="icval" style="color:#B91C1C;font-size:12px">Soft-Blocked</div><div class="icsub">This key only</div></div>
+              <div class="icell"><div class="iclabel">Company Quota</div><div class="icval" style="color:var(--green-a)">3,000 left</div><div class="icsub">Other keys still active</div></div>
+            </div>
+            <div class="ab ab-b"><div class="abi">ℹ️</div><div class="abt"><strong>What is a soft limit?</strong> A per-key cap that protects your shared quota. Only this key is paused — "Website Sync" and "Backend Service" are fully operational.</div></div>
+            <div class="crow"><a href="#" class="cp">Raise This Key's Limit</a><a href="#" class="cg">View All Keys</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>Sent to account administrators of <strong>Acme Corp</strong>. Fires once per key per cycle.<br><a href="#">Manage API keys</a> · <a href="#">View dashboard</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T6 — TOP-UP PURCHASED -->
+    <div class="email-panel" id="t6">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">Top-Up Activated — 1,000 extra API calls added to your account</div>
+          <span class="cbadge cbadge-g">TOP-UP ACTIVE</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Monday, March 16, 2026 — 12:03 PM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#F0FDF4;color:#166534;border:1px solid rgba(22,163,74,0.3)">GROWTH PLAN</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#F0FDF4">⚡</div>
+            <h2>Top-Up active — access restored immediately</h2>
+            <p>Hi <strong>Ahmed</strong>, your one-time Top-Up of <strong>1,000 extra API calls</strong> has been applied to <strong>Acme Corp</strong>. Any hard-stop has been lifted.</p>
+          </div>
+          <div class="esec">
+            <div class="ab ab-g"><div class="abi">✅</div><div class="abt"><strong>Hard-stop lifted</strong> — API calls are processing normally across all your keys.</div></div>
+            <div class="ucard">
+              <div class="uctitle">Updated Quota — March 2026</div>
+              <div class="urow">
+                <div class="urowl"><div class="ulabel">API Calls (including Top-Up)</div><div class="ptrack"><div class="pfill" style="width:83%;background:var(--green-a)"></div></div></div>
+                <div class="unums"><span class="used" style="color:var(--green-a)">5,000</span> / 6,000</div>
+              </div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Extra Calls Added</div><div class="icval" style="color:var(--green-a)">+1,000</div><div class="icsub">Expires Mar 31 · No rollover</div></div>
+              <div class="icell"><div class="iclabel">Top-Up Charge</div><div class="icval">$39.00</div><div class="icsub">Added to March invoice</div></div>
+            </div>
+            <div class="nudge">
+              <div class="nudge-h">
+                <div class="nudge-ni">💡</div>
+                <div><div class="nudge-t">You've spent $39 on Top-Ups this month</div><div class="nudge-b">At your current rate you may need another Top-Up before April 1st — bringing extra spend to <strong>$78</strong>. Compare the two paths:</div></div>
+              </div>
+              <div class="pcomp" style="margin-bottom:13px">
+                <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr">
+                  <div class="pcc hd"></div><div class="pcc hd">Top-Up path</div><div class="pcc hd">Upgrade path</div>
+                </div>
+                <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr">
+                  <div class="pcc" style="font-weight:500">Monthly cost</div><div class="pcc dm">$199 + $78 = $277</div><div class="pcc hl">$399 flat</div>
+                </div>
+                <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr">
+                  <div class="pcc" style="font-weight:500">Calls</div><div class="pcc dm">7,000 (w/ 2 top-ups)</div><div class="pcc hl">15,000</div>
+                </div>
+                <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr">
+                  <div class="pcc" style="font-weight:500">Data volume</div><div class="pcc dm">5 GB (no change)</div><div class="pcc hl">25 GB</div>
+                </div>
+              </div>
+              <a href="#" class="cp" style="font-size:12px;padding:9px 18px">Upgrade to Professional →</a>
+            </div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>Top-Up calls expire March 31, 2026 and do not roll over to the next cycle.<br><a href="#">View billing dashboard</a> · <a href="#">Manage subscription</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T7 — PLAN UPGRADED -->
+    <div class="email-panel" id="t7">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">Subscription Upgraded — Professional Plan is now active</div>
+          <span class="cbadge cbadge-g">UPGRADED</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 03:18 PM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#F0FDF4;color:#166534;border:1px solid rgba(22,163,74,0.3)">PROFESSIONAL PLAN</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#F0FDF4">⬆️</div>
+            <h2>Your plan has been upgraded</h2>
+            <p>Hi <strong>Ahmed</strong>, <strong>Acme Corp</strong> is now on the <strong>Professional Plan</strong>. New limits are active immediately. Any previous hard-stop has been lifted.</p>
+          </div>
+          <div class="esec">
+            <div class="ab ab-g"><div class="abi">✅</div><div class="abt"><strong>Upgrade effective immediately</strong> — All integrations are unblocked and operating under new limits.</div></div>
+            <div class="pcomp">
+              <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr">
+                <div class="pcc hd"></div><div class="pcc hd">Previous — Growth</div><div class="pcc hd">New — Professional</div>
+              </div>
+              <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr"><div class="pcc" style="font-weight:500">API Calls / Month</div><div class="pcc dm">5,000</div><div class="pcc hl">15,000</div></div>
+              <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr"><div class="pcc" style="font-weight:500">Data Volume</div><div class="pcc dm">5 GB</div><div class="pcc hl">25 GB</div></div>
+              <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr"><div class="pcc" style="font-weight:500">Rate Limit</div><div class="pcc dm">50 RPM</div><div class="pcc hl">100 RPM</div></div>
+              <div class="pcrow" style="grid-template-columns:1.2fr 1fr 1fr"><div class="pcc" style="font-weight:500">Monthly Price</div><div class="pcc dm">$199/mo</div><div class="pcc hl">$399/mo</div></div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Prorated Credit</div><div class="icval" style="color:var(--green-a)">−$99.67</div><div class="icsub">Unused Growth days</div></div>
+              <div class="icell"><div class="iclabel">Prorated Charge</div><div class="icval">+$199.50</div><div class="icsub">Remaining Pro days</div></div>
+            </div>
+            <div class="crow"><a href="#" class="cp">View New Dashboard</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>Prorated charges appear on your end-of-month postpaid invoice.<br><a href="#">View invoice details</a> · <a href="#">Manage subscription</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T8 — DOWNGRADE SCHEDULED -->
+    <div class="email-panel" id="t8">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">Subscription Change Scheduled — Growth Plan effective April 1, 2026</div>
+          <span class="cbadge cbadge-b">SCHEDULED</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Thursday, March 12, 2026 — 10:45 AM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#EEF4FF;color:#1A56DB;border:1px solid rgba(26,86,219,0.3)">CHANGE SCHEDULED</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#EEF4FF">⬇️</div>
+            <h2>Your plan will downgrade at the end of this cycle</h2>
+            <p>Hi <strong>Ahmed</strong>, a downgrade has been scheduled for <strong>Acme Corp</strong>. Your Professional Plan limits remain fully active until March 31st. The switch happens on April 1st.</p>
+          </div>
+          <div class="esec">
+            <div class="tl">
+              <div class="tli"><div class="tldot" style="background:#EEF4FF">📅</div><div><div class="tldate">TODAY — March 12, 2026</div><div class="tlevent">Downgrade scheduled</div><div class="tlsub">Professional Plan active — full limits</div></div></div>
+              <div class="tli"><div class="tldot" style="background:#FFF3CD">⏳</div><div><div class="tldate">March 13 – March 31</div><div class="tlevent">Continue on Professional Plan</div><div class="tlsub">15,000 calls · 25 GB · 100 RPM</div></div></div>
+              <div class="tli"><div class="tldot" style="background:#F0FDF4">✅</div><div><div class="tldate">April 1, 2026 — 00:00 UTC</div><div class="tlevent">Growth Plan becomes active</div><div class="tlsub">5,000 calls · 5 GB · 50 RPM · $199/mo</div></div></div>
+            </div>
+            <div class="ab ab-w"><div class="abi">⚠️</div><div class="abt"><strong>Modules lost on April 1st:</strong> Shoppers, Sample, Questionnaire, Users, Custom Scale will return <strong>403 feature_restricted</strong> on Growth plan. Review your integrations before the switch.</div></div>
+            <div class="crow"><a href="#" class="cs">Cancel Downgrade</a><a href="#" class="cg">Review My Plan</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>You can cancel this change anytime before March 31, 2026.<br><a href="#">Manage subscription</a> · <a href="#">Contact support</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- T9 — CANCELLATION SCHEDULED -->
+    <div class="email-panel" id="t9">
+      <div class="email-chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-subject">Cancellation Confirmed — API access ends March 31, 2026</div>
+          <span class="cbadge cbadge-r">CANCELLING</span>
+        </div>
+        <div class="email-meta">
+          <span class="ml">From</span><span class="mv"><strong>Platform Billing</strong> &lt;billing@platform.com&gt;</span>
+          <span class="ml">To</span><span class="mv"><strong>Ahmed Al-Rashidi</strong> &lt;ahmed@acmecorp.com&gt;</span>
+          <span class="ml">Date</span><span class="mv">Wednesday, March 11, 2026 — 09:00 AM</span>
+        </div>
+        <div class="email-body"><div class="et">
+          <div class="ehb">
+            <div class="elogo">API<span>Platform</span></div>
+            <span class="etbadge" style="background:#FEF2F2;color:#B91C1C;border:1px solid rgba(185,28,28,0.3)">CANCELLING</span>
+          </div>
+          <div class="ehero">
+            <div class="eicon" style="background:#FEF2F2">❌</div>
+            <h2>Your API subscription is scheduled to cancel</h2>
+            <p>Hi <strong>Ahmed</strong>, we've received your cancellation request for <strong>Acme Corp</strong>. Full API access continues until the end of the current billing cycle.</p>
+          </div>
+          <div class="esec">
+            <div class="tl">
+              <div class="tli"><div class="tldot" style="background:#EEF4FF">📅</div><div><div class="tldate">TODAY — March 11, 2026</div><div class="tlevent">Cancellation requested</div><div class="tlsub">Auto-renew disabled — no future charges</div></div></div>
+              <div class="tli"><div class="tldot" style="background:#FFF3CD">⏳</div><div><div class="tldate">Until March 31, 2026</div><div class="tlevent">Full API access continues</div><div class="tlsub">All keys and modules remain active</div></div></div>
+              <div class="tli"><div class="tldot" style="background:#FEF2F2">🔒</div><div><div class="tldate">April 1, 2026 — 00:00 UTC</div><div class="tlevent">All API access terminated</div><div class="tlsub">All keys deactivated · Reactivation requires new key setup</div></div></div>
+            </div>
+            <div class="igrid">
+              <div class="icell"><div class="iclabel">Final Invoice</div><div class="icval">$199.00</div><div class="icsub">Current cycle · No future charges</div></div>
+              <div class="icell"><div class="iclabel">Access Until</div><div class="icval">Mar 31, 2026</div><div class="icsub">20 days remaining</div></div>
+            </div>
+            <div class="ab ab-b"><div class="abi">ℹ️</div><div class="abt"><strong>Changed your mind?</strong> You can reverse this cancellation anytime before March 31st. After April 1st, reactivation requires a full new API key setup — existing keys cannot be reused.</div></div>
+            <div class="crow"><a href="#" class="cp">Keep My Subscription</a></div>
+          </div>
+          <div class="ediv"></div>
+          <div class="efooter"><p>We're sorry to see you go. <a href="#">Contact our support team</a> if we can help.<br><a href="#">Manage subscription</a></p></div>
+        </div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.email-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
