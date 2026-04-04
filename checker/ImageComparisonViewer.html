@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Integrity Dashboard V4 — Revised Professional Mockup</title>
+  <title>Image Comparison Viewer V4 - Professional</title>
   <style>
     :root{
       --bg:#f5f7fb;
-      --bg2:#eef3fb;
       --card:#ffffff;
       --line:#e6ebf2;
       --text:#0f172a;
@@ -21,471 +20,618 @@
       --warn-soft:#fff7ed;
       --success:#16a34a;
       --success-soft:#ecfdf5;
-      --shadow:0 14px 34px rgba(15,23,42,.07);
+      --shadow:0 12px 30px rgba(15,23,42,.07);
       --radius:20px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
+      background:linear-gradient(180deg,#f7f9fc 0%, #f4f7fb 100%);
       font-family:Inter,Segoe UI,Arial,sans-serif;
       color:var(--text);
-      background:linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
     }
-    .page{max-width:1560px;margin:0 auto;padding:24px}
-    .topbar{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}
-    .title h1{margin:0;font-size:28px;line-height:1.1;letter-spacing:-.02em}
-    .title p{margin:8px 0 0;color:var(--muted);font-size:14px;max-width:780px;line-height:1.6}
-    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-    .search{min-width:340px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-size:14px;box-shadow:var(--shadow)}
-    .btn{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:14px;padding:11px 14px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
-    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .page{
+      max-width:1560px;
+      margin:0 auto;
+      padding:24px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .title h1{
+      margin:0;
+      font-size:28px;
+      line-height:1.1;
+      letter-spacing:-.02em;
+    }
+    .title p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      max-width:820px;
+      line-height:1.55;
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:14px;
+      padding:11px 14px;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+    }
+    .btn.primary{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:#fff;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:1.15fr 1.15fr .85fr;
+      gap:18px;
+      margin-bottom:18px;
+      align-items:start;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .card-head{
+      padding:18px 18px 0;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .card-head h3{
+      margin:0;
+      font-size:17px;
+    }
+    .card-head p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    .tooltip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+      cursor:help;
+      position:relative;
+      flex:0 0 auto;
+    }
+    .tooltip:hover::after{
+      content:attr(data-tip);
+      position:absolute;
+      right:0;
+      top:26px;
+      width:250px;
+      background:#0f172a;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:500;
+      line-height:1.5;
+      z-index:20;
+      box-shadow:0 12px 28px rgba(15,23,42,.24);
+      text-align:left;
+    }
+    .image-wrap{
+      padding:12px 18px 18px;
+    }
+    .image-box{
+      height:410px;
+      border:1px dashed #cbd5e1;
+      border-radius:18px;
+      background:linear-gradient(180deg,#fbfdff,#f1f5f9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .zoom-chip{
+      position:absolute;
+      top:14px;
+      right:14px;
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:700;
+      box-shadow:var(--shadow);
+    }
+    .meta{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .meta-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      padding:11px 12px;
+    }
+    .meta-card label{
+      display:block;
+      font-size:10px;
+      text-transform:uppercase;
+      color:var(--muted2);
+      margin-bottom:6px;
+      font-weight:700;
+      letter-spacing:.05em;
+    }
+    .meta-card strong{
+      font-size:13px;
+      line-height:1.5;
+      display:block;
+    }
+    .context{
+      padding:12px 18px 18px;
+    }
+    .score-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .score{
+      font-size:38px;
+      font-weight:800;
+      letter-spacing:-.03em;
+      line-height:1;
+    }
+    .badges{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+    }
+    .high{background:var(--danger-soft);color:var(--danger)}
+    .med{background:var(--warn-soft);color:var(--warn)}
+    .low{background:var(--success-soft);color:var(--success)}
+    .pattern{background:var(--primary-soft);color:var(--primary)}
+    .why{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:#fbfdff;
+      margin-bottom:12px;
+    }
+    .why h4{
+      margin:0 0 10px;
+      font-size:14px;
+    }
+    .why ul{
+      margin:0;
+      padding-left:18px;
+      color:#334155;
+      line-height:1.65;
+      font-size:13px;
+    }
+    .quick-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .stat{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      padding:11px 12px;
+    }
+    .stat label{
+      display:block;
+      font-size:10px;
+      text-transform:uppercase;
+      color:var(--muted2);
+      margin-bottom:6px;
+      font-weight:700;
+      letter-spacing:.05em;
+    }
+    .stat strong{
+      display:block;
+      font-size:18px;
+    }
+    .mid{
+      display:grid;
+      grid-template-columns:1.7fr .95fr;
+      gap:18px;
+    }
+    .table-wrap{
+      padding:12px 18px 18px;
+      overflow:auto;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      min-width:980px;
+    }
+    th,td{
+      text-align:left;
+      padding:14px 12px;
+      border-bottom:1px solid #eef2f7;
+      vertical-align:top;
+      font-size:13px;
+    }
+    th{
+      font-size:12px;
+      color:var(--muted);
+      background:#fbfcff;
+      font-weight:700;
+      position:sticky;
+      top:0;
+    }
+    .action-link{
+      color:var(--primary);
+      text-decoration:none;
+      font-weight:700;
+      white-space:nowrap;
+      font-size:13px;
+      margin-right:12px;
+    }
+    .history-scroll{
+      max-height:560px;
+      overflow:auto;
+      padding:12px 18px 18px;
+    }
+    .history-item{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      margin-bottom:12px;
+      background:#fbfdff;
+    }
+    .history-item h4{
+      margin:0 0 6px;
+      font-size:14px;
+    }
+    .history-item p{
+      margin:0;
+      color:#475569;
+      font-size:13px;
+      line-height:1.6;
+    }
+    .actions-panel{
+      margin-top:14px;
+      border-top:1px solid #eef2f7;
+      padding-top:14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .act-btn{
+      border-radius:12px;
+      padding:10px 13px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    .accept{background:#ecfdf5;border-color:#bbf7d0}
+    .suspicious{background:#fff7ed;border-color:#fed7aa}
+    .reject{background:#fef2f2;border-color:#fecaca}
+    .locked{
+      margin-top:12px;
+      padding:12px;
+      border:1px dashed #c7d2fe;
+      border-radius:14px;
+      background:var(--primary-soft);
+      color:var(--primary);
+      font-size:13px;
+      line-height:1.55;
+    }
+    .small-note{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
 
-    .filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px}
-    .filter{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow)}
-    .filter label{display:flex;align-items:center;gap:6px;font-size:11px;text-transform:uppercase;color:var(--muted2);letter-spacing:.06em;margin-bottom:6px;font-weight:700}
-    .filter select,.filter input{width:100%;border:none;outline:none;background:transparent;font-size:14px;color:var(--text)}
-
-    .cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:18px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .metric{padding:18px;min-height:176px;position:relative;overflow:hidden}
-    .metric-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .metric .label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:700;margin:0}
-    .metric .value{margin-top:10px;font-size:34px;font-weight:800;letter-spacing:-.03em}
-    .metric .sub{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.5;max-width:72%}
-    .metric .trend{margin-top:8px;font-size:12px;font-weight:700}
-    .danger{color:var(--danger)} .warn{color:var(--warn)} .success{color:var(--success)}
-    .metric svg.illus{width:96px;height:96px;flex:0 0 auto}
-
-    .main{display:grid;grid-template-columns:2.15fr 1fr;gap:18px;margin-bottom:18px;align-items:start}
-    .card-head{padding:18px 18px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-    .card-head h3{margin:0;font-size:17px;display:flex;align-items:center;gap:8px}
-    .card-head p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
-    .mini-note{font-size:12px;color:var(--muted);max-width:330px;text-align:right;line-height:1.5}
-
-    .table-wrap{padding:12px 18px 18px;overflow:auto}
-    .table-wrap.vertical-limit{max-height:760px}
-    table{width:100%;border-collapse:separate;border-spacing:0;min-width:1240px}
-    th,td{text-align:left;padding:14px 12px;border-bottom:1px solid #eef2f7;vertical-align:top;font-size:13px}
-    th{font-size:12px;color:var(--muted);background:#fbfcff;font-weight:700;position:sticky;top:0;z-index:1}
-
-    .risk-badge,.trust-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
-    .risk-high,.trust-low{background:var(--danger-soft);color:var(--danger)}
-    .risk-med,.trust-med{background:var(--warn-soft);color:var(--warn)}
-    .risk-low,.trust-high{background:var(--success-soft);color:var(--success)}
-    .pattern{color:#334155;line-height:1.45;font-size:12px}
-    .action-link{color:var(--primary);text-decoration:none;font-weight:700;margin-right:12px;white-space:nowrap;font-size:13px}
-
-    .panel-scroll{max-height:760px;overflow-y:auto;overflow-x:hidden;padding:12px 14px 18px}
-    .shopper-card{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fff 0%, #fbfdff 100%);padding:14px;margin-bottom:12px}
-    .shopper-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-    .shopper-id{color:var(--muted);font-size:12px;margin-top:4px}
-    .trust-number{font-size:30px;font-weight:800;letter-spacing:-.03em}
-    .status-row{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-    .status-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
-    .chip-high{background:var(--danger-soft); color:var(--danger)}
-    .chip-medium{background:var(--warn-soft); color:var(--warn)}
-    .chip-low{background:var(--success-soft); color:var(--success)}
-    .chip-pattern{background:var(--primary-soft); color:var(--primary)}
-    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .stat{border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px}
-    .stat label{display:block;font-size:10px;text-transform:uppercase;color:var(--muted2);margin-bottom:6px;font-weight:700;letter-spacing:.05em}
-    .stat strong{font-size:17px}
-    .foot{margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #eef2f7;padding-top:10px}
-    .foot .small{font-size:12px;color:var(--muted);line-height:1.45}
-    .view-btn{border:1px solid var(--line);background:#fff;color:var(--primary);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:700;cursor:pointer}
-    .locked{margin-top:12px;padding:12px;border:1px dashed #c7d2fe;border-radius:14px;background:var(--primary-soft);color:var(--primary);font-size:13px;line-height:1.55}
-
-    .tooltip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f1f5f9;color:#64748b;font-size:11px;font-weight:800;cursor:help;flex:0 0 auto}
-    .tooltip .tip{position:absolute;left:50%;transform:translateX(-50%);bottom:125%;width:240px;background:#0f172a;color:#fff;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.5;box-shadow:0 12px 30px rgba(2,6,23,.22);opacity:0;visibility:hidden;transition:.18s ease;z-index:20;text-align:left;font-weight:500}
-    .tooltip .tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border-width:6px;border-style:solid;border-color:#0f172a transparent transparent transparent}
-    .tooltip:hover .tip{opacity:1;visibility:visible}
-
-    .investigation-drawer{position:fixed;right:24px;bottom:24px;width:380px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 50px rgba(15,23,42,.16);overflow:hidden;z-index:30}
-    .drawer-head{padding:16px 18px;background:linear-gradient(180deg,#f8faff 0%, #eef2ff 100%);border-bottom:1px solid var(--line)}
-    .drawer-head h4{margin:0;font-size:16px}
-    .drawer-head p{margin:6px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
-    .drawer-body{padding:16px 18px;max-height:420px;overflow:auto}
-    .drawer-section{margin-bottom:16px}
-    .drawer-section h5{margin:0 0 8px;font-size:13px}
-    .drawer-list{margin:0;padding-left:16px;color:#334155;font-size:13px;line-height:1.65}
-    .quick-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .quick-actions .btn-sm{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;font-size:12px;font-weight:700;color:var(--primary)}
-
-    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .legend .status-chip{font-weight:800}
-
-    @media (max-width:1450px){.filters{grid-template-columns:repeat(4,minmax(0,1fr))}.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    @media (max-width:1120px){.main{grid-template-columns:1fr}.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.investigation-drawer{position:static;width:auto;margin-top:18px}}
-    @media (max-width:760px){.topbar{flex-direction:column}.toolbar{justify-content:flex-start}.search{min-width:0;width:100%}.filters{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr}}
-    @media (max-width:560px){.filters{grid-template-columns:1fr}.page{padding:16px}}
+    @media (max-width:1280px){
+      .layout{grid-template-columns:1fr}
+      .mid{grid-template-columns:1fr}
+    }
+    @media (max-width:760px){
+      .topbar{flex-direction:column}
+      .toolbar{justify-content:flex-start}
+      .meta,.quick-grid{grid-template-columns:1fr}
+      .page{padding:16px}
+    }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="title">
-        <h1>Image Integrity Dashboard</h1>
-        <p>Professional plan workspace for QA to investigate suspicious image behavior, prioritize flagged reviews, and understand shopper trust patterns across enabled questionnaires only.</p>
+        <h1>Image Comparison Viewer</h1>
+        <p>Professional plan investigation workspace for visual evidence review, trust context, shopper behavior intelligence, and image-level QA decisions.</p>
       </div>
       <div class="toolbar">
-        <input class="search" type="text" placeholder="Search review, shopper, branch, project">
-        <button class="btn">Export</button>
-        <button class="btn">Refresh</button>
+        <button class="btn">Open Full Review</button>
+        <button class="btn">Back to Dashboard</button>
         <button class="btn primary">Professional Plan</button>
       </div>
     </div>
 
-    <div class="filters">
-      <div class="filter"><label>Client <span class="tooltip">i<span class="tip">Filter all dashboard sections by client. Only clients with Image Integrity-enabled questionnaires contribute data here.</span></span></label><select><option>All Clients</option><option>Burger Corp</option><option>Retail Group</option><option>Quick Serve Brands</option></select></div>
-      <div class="filter"><label>Project</label><select><option>All Projects</option><option>Burger Audit</option><option>Retail Visit Program</option><option>Receipt Verification Study</option></select></div>
-      <div class="filter"><label>Branch</label><select><option>All Branches</option><option>BK #103</option><option>BK #205</option><option>RG #14</option></select></div>
-      <div class="filter"><label>Questionnaire <span class="tooltip">i<span class="tip">Only questionnaires with AllowImageIntegrityAnalysis = enabled are relevant here. Disabled questionnaires do not create image analysis, dashboard records, or billing.</span></span></label><select><option>Only Enabled Questionnaires</option><option>Fast Food Receipt Audit</option><option>Retail Evidence Audit</option><option>Store Photo Compliance</option></select></div>
-      <div class="filter"><label>Date Range</label><select><option>Last 30 Days</option><option>Last 7 Days</option><option>Last 90 Days</option><option>Custom Range</option></select></div>
-      <div class="filter"><label>Risk Level</label><select><option>All Risk Levels</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-      <div class="filter"><label>Risk Signal</label><select><option>All Signals</option><option>Exact Duplicate</option><option>Similarity Match</option><option>Same Shopper Reuse</option><option>Cross-Location Reuse</option></select></div>
-      <div class="filter"><label>Shopper</label><input type="text" placeholder="Search shopper name or ID"></div>
-      <div class="filter"><label>Investigation Status <span class="tooltip">i<span class="tip">Use this to focus the queue on what QA has already reviewed versus what still requires action.</span></span></label><select><option>All</option><option>Unreviewed</option><option>Marked Suspicious</option><option>Rejected Evidence</option><option>Accepted</option></select></div>
-    </div>
-
-    <div class="cards">
-      <div class="card metric">
-        <div class="metric-top">
-          <div>
-            <p class="label">High Risk Reviews <span class="tooltip">i<span class="tip">Reviews with at least one image risk score at or above the High Risk threshold. Trend compares the current filtered date range with the previous equivalent period using the same filters.</span></span></p>
-            <div class="value">18</div>
-            <div class="sub">Reviews with at least one image risk score at or above 50 in the filtered result set.</div>
-            <div class="trend danger">▲ +4 vs previous period</div>
-          </div>
-          <svg class="illus" viewBox="0 0 96 96" fill="none" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#fef2f2"/><path d="M48 22L69 60H27L48 22Z" fill="#ef4444"/><rect x="46" y="37" width="4" height="14" rx="2" fill="white"/><rect x="46" y="54" width="4" height="4" rx="2" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="card metric">
-        <div class="metric-top">
-          <div>
-            <p class="label">Medium Risk Reviews <span class="tooltip">i<span class="tip">Reviews where the highest image risk is Medium and no image in the review is classified as High Risk.</span></span></p>
-            <div class="value">42</div>
-            <div class="sub">Reviews where the highest image risk is between 20 and 49, with no high-risk image present.</div>
-            <div class="trend warn">▲ +9 vs previous period</div>
-          </div>
-          <svg class="illus" viewBox="0 0 96 96" fill="none" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#fff7ed"/><circle cx="48" cy="48" r="22" fill="#f59e0b"/><rect x="46" y="34" width="4" height="18" rx="2" fill="white"/><rect x="46" y="56" width="4" height="4" rx="2" fill="white"/></svg>
-        </div>
-      </div>
-      <div class="card metric">
-        <div class="metric-top">
-          <div>
-            <p class="label">Duplicate Images <span class="tooltip">i<span class="tip">Exact file duplicates are identified through SHA256 fingerprint matches. This metric helps QA spot direct image reuse.</span></span></p>
-            <div class="value">11</div>
-            <div class="sub">Exact file fingerprint matches detected through SHA256 across enabled questionnaire data.</div>
-            <div class="trend danger">▲ +3 exact duplicates</div>
-          </div>
-          <svg class="illus" viewBox="0 0 96 96" fill="none" aria-hidden="true"><rect x="19" y="28" width="28" height="34" rx="8" fill="#c7d2fe"/><rect x="34" y="18" width="28" height="34" rx="8" fill="#818cf8"/><rect x="49" y="34" width="28" height="34" rx="8" fill="#4f46e5"/></svg>
-        </div>
-      </div>
-      <div class="card metric">
-        <div class="metric-top">
-          <div>
-            <p class="label">Repeat Risk Shoppers <span class="tooltip">i<span class="tip">Shoppers with two or more high-risk image alerts in the selected period. This is a behavior-focused metric, not just a single-review metric.</span></span></p>
-            <div class="value">7</div>
-            <div class="sub">Shoppers with repeated high-risk signals in the last 30 days, based on current filters.</div>
-            <div class="trend warn">● behavior intelligence active</div>
-          </div>
-          <svg class="illus" viewBox="0 0 96 96" fill="none" aria-hidden="true"><circle cx="33" cy="38" r="12" fill="#dbeafe"/><circle cx="50" cy="31" r="12" fill="#c7d2fe"/><circle cx="66" cy="38" r="12" fill="#fee2e2"/><path d="M22 66c0-9 22-9 22 0" fill="#93c5fd"/><path d="M39 60c0-10 22-10 22 0" fill="#818cf8"/><path d="M55 66c0-9 22-9 22 0" fill="#fca5a5"/></svg>
-        </div>
-      </div>
-      <div class="card metric">
-        <div class="metric-top">
-          <div>
-            <p class="label">Low Trust Shoppers <span class="tooltip">i<span class="tip">Shoppers whose Trust Score is below the configured low-trust threshold. Thresholds are admin-configurable in the final system.</span></span></p>
-            <div class="value">5</div>
-            <div class="sub">Shoppers whose Trust Score falls below the configured low-trust threshold in the filtered result set.</div>
-            <div class="trend danger">▼ 2 trust drops</div>
-          </div>
-          <svg class="illus" viewBox="0 0 96 96" fill="none" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="#eef2ff"/><path d="M48 24C35 24 24 35 24 48s11 24 24 24 24-11 24-24S61 24 48 24Z" fill="#4f46e5"/><path d="M48 36v14" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="48" cy="57" r="3" fill="white"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="main">
+    <div class="layout">
       <div class="card">
         <div class="card-head">
           <div>
-            <h3>Flagged Reviews <span class="tooltip">i<span class="tip">This is the primary QA work queue. Use the table to identify suspicious reviews, trust context, and the main pattern that triggered investigation.</span></span></h3>
-            <p>Main QA queue. Reviews are sorted by risk, recency, alert count, and shopper trust context.</p>
+            <h3>Current Image</h3>
+            <p>Image uploaded in the current review selected by QA for investigation.</p>
           </div>
-          <div class="mini-note">Horizontal scrolling is intentionally used here so QA can see more key fields on a single page without compressing the row content.</div>
+          <span class="tooltip" data-tip="This panel shows the currently selected shopper-uploaded image from the flagged review. QA can inspect image context before comparing it with historical matches.">i</span>
         </div>
-        <div class="table-wrap vertical-limit">
+        <div class="image-wrap">
+          <div class="image-box">
+            <span class="zoom-chip">Zoom Enabled</span>
+            Current uploaded receipt / store image preview
+          </div>
+          <div class="meta">
+            <div class="meta-card">
+              <label>Review</label>
+              <strong>RV-58291</strong>
+            </div>
+            <div class="meta-card">
+              <label>Shopper</label>
+              <strong>John D (SH-1042)</strong>
+            </div>
+            <div class="meta-card">
+              <label>Questionnaire</label>
+              <strong>Fast Food Receipt Audit</strong>
+            </div>
+            <div class="meta-card">
+              <label>Uploaded</label>
+              <strong>2026-03-06 14:12</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Strongest Historical Match</h3>
+            <p>Best qualifying historical image based on Professional-tier matching logic.</p>
+          </div>
+          <span class="tooltip" data-tip="This is the highest-priority historical match selected by similarity / duplicate logic. QA can switch to other matches in the table below if needed.">i</span>
+        </div>
+        <div class="image-wrap">
+          <div class="image-box">
+            <span class="zoom-chip">94% Similarity</span>
+            Best historical match preview
+          </div>
+          <div class="meta">
+            <div class="meta-card">
+              <label>Matched Review</label>
+              <strong>RV-48112</strong>
+            </div>
+            <div class="meta-card">
+              <label>Branch</label>
+              <strong>BK #205</strong>
+            </div>
+            <div class="meta-card">
+              <label>Project</label>
+              <strong>Burger Audit</strong>
+            </div>
+            <div class="meta-card">
+              <label>Match Type</label>
+              <strong>Similar Image</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Trust Context</h3>
+            <p>Trust score, pattern tags, and investigation explanation for the selected shopper and image.</p>
+          </div>
+          <span class="tooltip" data-tip="This area explains why the image was flagged and how the shopper's trust profile is affected. The long notes here are for end users, while deeper logic remains documented in the specification for developers.">i</span>
+        </div>
+        <div class="context">
+          <div class="score-row">
+            <div>
+              <div class="score">42</div>
+              <div class="badges">
+                <span class="badge high">Low Trust</span>
+                <span class="badge high">High Risk</span>
+                <span class="badge pattern">Repeated Pattern</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="why">
+            <h4>Why flagged?</h4>
+            <ul>
+              <li>94% similarity with previous evidence in another branch</li>
+              <li>Same shopper used related evidence more than once in the last 30 days</li>
+              <li>Recent QA decisions lowered trust after repeated suspicious image events</li>
+            </ul>
+          </div>
+
+          <div class="quick-grid">
+            <div class="stat">
+              <label>Pattern Type</label>
+              <strong>Cross-location reuse</strong>
+            </div>
+            <div class="stat">
+              <label>Trust Trend</label>
+              <strong>▼ Worsening</strong>
+            </div>
+            <div class="stat">
+              <label>Repeat Alerts (30d)</label>
+              <strong>5</strong>
+            </div>
+            <div class="stat">
+              <label>Projects Affected</label>
+              <strong>3</strong>
+            </div>
+          </div>
+
+          <div class="locked">
+            <strong>Plan note:</strong> In lower tiers, this trust and behavior explanation block should be visible structurally but partially locked or simplified, with an upgrade prompt to Professional.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mid">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>All Qualifying Matches</h3>
+            <p>Scrollable evidence list for QA to review alternate historical matches and compare context.</p>
+          </div>
+          <span class="tooltip" data-tip="Professional plan shows all qualifying matches. Growth may show a limited subset. The table should support horizontal scrolling to keep all important evidence columns visible on a single page.">i</span>
+        </div>
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Risk</th>
-                <th>Review</th>
+                <th>Similarity</th>
+                <th>Matched Review</th>
                 <th>Shopper</th>
-                <th>Trust</th>
-                <th>Project</th>
                 <th>Branch</th>
-                <th>Images</th>
-                <th>Alerts</th>
+                <th>Project</th>
+                <th>Match Type</th>
+                <th>Context</th>
                 <th>Pattern</th>
-                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="risk-badge risk-high">High</span></td>
-                <td>RV-58291</td>
-                <td><strong>John D</strong><br><span style="color:#64748b;font-size:12px;">SH-1042</span></td>
-                <td><span class="trust-badge trust-low">42 · Low</span></td>
-                <td>Burger Audit</td>
-                <td>BK #103</td>
-                <td>12</td>
-                <td>3</td>
-                <td class="pattern">Cross-location reuse<br>Repeat similar images</td>
-                <td>Unreviewed</td>
-                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
-              </tr>
-              <tr>
-                <td><span class="risk-badge risk-med">Medium</span></td>
-                <td>RV-58288</td>
-                <td><strong>Maria S</strong><br><span style="color:#64748b;font-size:12px;">SH-1891</span></td>
-                <td><span class="trust-badge trust-med">68 · Medium</span></td>
-                <td>Store Visit</td>
-                <td>BK #108</td>
-                <td>9</td>
-                <td>1</td>
-                <td class="pattern">Similarity match found<br>No repeat pattern</td>
-                <td>Marked Suspicious</td>
-                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
-              </tr>
-              <tr>
-                <td><span class="risk-badge risk-high">High</span></td>
-                <td>RV-58277</td>
-                <td><strong>Kevin L</strong><br><span style="color:#64748b;font-size:12px;">SH-2208</span></td>
-                <td><span class="trust-badge trust-low">39 · Low</span></td>
-                <td>Retail Audit</td>
-                <td>RG #14</td>
-                <td>14</td>
-                <td>2</td>
-                <td class="pattern">Exact duplicate<br>Multi-project spread</td>
-                <td>Rejected Evidence</td>
-                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
-              </tr>
-              <tr>
-                <td><span class="risk-badge risk-med">Medium</span></td>
-                <td>RV-58260</td>
-                <td><strong>Ravi S</strong><br><span style="color:#64748b;font-size:12px;">SH-3324</span></td>
-                <td><span class="trust-badge trust-high">79 · High</span></td>
-                <td>Burger Audit</td>
+                <td>94%</td>
+                <td>RV-48112</td>
+                <td>John D</td>
                 <td>BK #205</td>
-                <td>10</td>
-                <td>2</td>
-                <td class="pattern">Same-shopper reuse candidate</td>
-                <td>Unreviewed</td>
-                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
+                <td>Burger Audit</td>
+                <td>Similar Image</td>
+                <td>Same shopper, different branch</td>
+                <td>Repeated similar image use</td>
+                <td><a href="#" class="action-link">Select Match</a></td>
+              </tr>
+              <tr>
+                <td>91%</td>
+                <td>RV-47220</td>
+                <td>John D</td>
+                <td>BK #118</td>
+                <td>Burger Audit</td>
+                <td>Similar Image</td>
+                <td>Same shopper, same project</td>
+                <td>Likely evidence reuse</td>
+                <td><a href="#" class="action-link">Select Match</a></td>
+              </tr>
+              <tr>
+                <td>88%</td>
+                <td>RV-46010</td>
+                <td>John D</td>
+                <td>BK #110</td>
+                <td>Burger Audit</td>
+                <td>Similar Image</td>
+                <td>Different branch, same questionnaire</td>
+                <td>Cross-location suspicion</td>
+                <td><a href="#" class="action-link">Select Match</a></td>
+              </tr>
+              <tr>
+                <td>100%</td>
+                <td>RV-44044</td>
+                <td>John D</td>
+                <td>BK #103</td>
+                <td>Burger Audit</td>
+                <td>Exact Duplicate</td>
+                <td>Exact file fingerprint match</td>
+                <td>Strong duplicate evidence</td>
+                <td><a href="#" class="action-link">Select Match</a></td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="image-wrap" style="padding-top:0;">
+          <div class="actions-panel">
+            <button class="act-btn accept">Mark Acceptable</button>
+            <button class="act-btn suspicious">Mark Suspicious</button>
+            <button class="act-btn reject">Mark Rejected Evidence</button>
+          </div>
+          <p class="small-note" style="margin-top:12px;">Image-level QA decisions affect trust intelligence and dashboard filtering, but do not automatically reject the full review.</p>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head">
           <div>
-            <h3>Shopper Behavior Intelligence <span class="tooltip">i<span class="tip">This panel highlights suspicious shopper behavior patterns. In the final product, Starter and Growth may show locked/teaser states while Professional displays full detail.</span></span></h3>
-            <p>Highlights suspicious shopper behavior patterns and trust impact across currently filtered reviews.</p>
+            <h3>Shopper History Snapshot</h3>
+            <p>Quick drill-down context for repeat alerts, affected scope, and previous suspicious activity.</p>
           </div>
+          <span class="tooltip" data-tip="This panel summarizes shopper-level context to avoid making QA leave the comparison workflow. It should have its own vertical scroll where required.">i</span>
         </div>
-        <div class="panel-scroll">
-          <div class="legend">
-            <span class="status-chip chip-high">High Risk / Low Trust</span>
-            <span class="status-chip chip-medium">Medium Risk / Medium Trust</span>
-            <span class="status-chip chip-low">Low Risk / High Trust</span>
+        <div class="history-scroll">
+          <div class="history-item">
+            <h4>Recent suspicious activity</h4>
+            <p>Last suspicious event recorded 2 days ago in RV-58291. Similar evidence was also seen in BK #205 and BK #118 within the last 30 days.</p>
           </div>
-
-          <div class="shopper-card">
-            <div class="shopper-top">
-              <div>
-                <strong>John D</strong>
-                <div class="shopper-id">SH-1042</div>
-              </div>
-              <div class="trust-number">42</div>
-            </div>
-            <div class="status-row">
-              <span class="status-chip chip-high">High Risk</span>
-              <span class="status-chip chip-high">Low Trust</span>
-              <span class="status-chip chip-pattern">Repeated Pattern</span>
-            </div>
-            <div class="stats">
-              <div class="stat"><label>Duplicate Images</label><strong>2</strong></div>
-              <div class="stat"><label>Similar Matches</label><strong>5</strong></div>
-              <div class="stat"><label>Projects Affected</label><strong>3</strong></div>
-              <div class="stat"><label>Last Suspicious Activity</label><strong>2 days ago</strong></div>
-            </div>
-            <div class="foot">
-              <div class="small">Pattern detected: similar evidence reused across multiple branches within the same audit program.</div>
-              <button class="view-btn">View Investigation</button>
-            </div>
+          <div class="history-item">
+            <h4>Projects affected</h4>
+            <p>3 active projects affected. Pattern is not isolated to a single branch or assignment type.</p>
           </div>
-
-          <div class="shopper-card">
-            <div class="shopper-top">
-              <div>
-                <strong>Kevin L</strong>
-                <div class="shopper-id">SH-2208</div>
-              </div>
-              <div class="trust-number">39</div>
-            </div>
-            <div class="status-row">
-              <span class="status-chip chip-high">High Risk</span>
-              <span class="status-chip chip-high">Low Trust</span>
-              <span class="status-chip chip-pattern">Widespread Pattern</span>
-            </div>
-            <div class="stats">
-              <div class="stat"><label>Exact Duplicates</label><strong>3</strong></div>
-              <div class="stat"><label>Cross-Location Events</label><strong>2</strong></div>
-              <div class="stat"><label>Projects Affected</label><strong>4</strong></div>
-              <div class="stat"><label>Last Suspicious Activity</label><strong>Yesterday</strong></div>
-            </div>
-            <div class="foot">
-              <div class="small">Pattern detected: same evidence appears across multiple projects and locations, increasing fraud suspicion.</div>
-              <button class="view-btn">View Investigation</button>
-            </div>
+          <div class="history-item">
+            <h4>Repeat alerts</h4>
+            <p>5 alerts in the last 30 days. Majority are similarity and same-shopper reuse signals.</p>
           </div>
-
-          <div class="shopper-card">
-            <div class="shopper-top">
-              <div>
-                <strong>Ravi S</strong>
-                <div class="shopper-id">SH-3324</div>
-              </div>
-              <div class="trust-number">79</div>
-            </div>
-            <div class="status-row">
-              <span class="status-chip chip-low">Low Risk</span>
-              <span class="status-chip chip-low">High Trust</span>
-              <span class="status-chip chip-pattern">Isolated Pattern</span>
-            </div>
-            <div class="stats">
-              <div class="stat"><label>Similar Alerts</label><strong>1</strong></div>
-              <div class="stat"><label>Projects Affected</label><strong>1</strong></div>
-              <div class="stat"><label>High Risk Reviews</label><strong>0</strong></div>
-              <div class="stat"><label>Last Suspicious Activity</label><strong>5 days ago</strong></div>
-            </div>
-            <div class="foot">
-              <div class="small">Pattern detected: isolated alert only. Strong approval history keeps trust score high.</div>
-              <button class="view-btn">View Investigation</button>
-            </div>
+          <div class="history-item">
+            <h4>QA decision history</h4>
+            <p>Previous image evidence was marked suspicious twice and rejected once, which contributed to recent trust score decline.</p>
           </div>
-
-          <div class="locked">
-            <strong>Plan note:</strong> For Starter and Growth, this panel should remain present structurally but show a locked / teaser state instead of full behavior intelligence detail. Professional shows full intelligence with actionable investigation links.
+          <div class="history-item">
+            <h4>Performance context</h4>
+            <p>Approval history remains relatively strong, but trust is being reduced by repeated image integrity issues. This is why Trust Score and Performance Score should both be shown to QA.</p>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <h3>Recent Image Matches <span class="tooltip">i<span class="tip">This section helps QA quickly inspect the strongest supporting match evidence for the filtered dataset.</span></span></h3>
-          <p>Supporting evidence feed showing the strongest recent matches from the filtered dataset.</p>
-        </div>
-        <div class="mini-note">Horizontal scrolling is enabled here so match context can remain readable without forcing extra page height.</div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Similarity</th>
-              <th>Current Review</th>
-              <th>Matched Review</th>
-              <th>Shopper</th>
-              <th>Branch</th>
-              <th>Project</th>
-              <th>Match Type</th>
-              <th>Context</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>94%</td>
-              <td>RV-58291</td>
-              <td>RV-48112</td>
-              <td>John D</td>
-              <td>BK #205</td>
-              <td>Burger Audit</td>
-              <td>Similar Image</td>
-              <td>Same shopper, different branch</td>
-              <td><a href="#" class="action-link">View Match</a></td>
-            </tr>
-            <tr>
-              <td>100%</td>
-              <td>RV-58277</td>
-              <td>RV-46088</td>
-              <td>Kevin L</td>
-              <td>RG #19</td>
-              <td>Retail Audit</td>
-              <td>Exact Duplicate</td>
-              <td>Exact fingerprint match</td>
-              <td><a href="#" class="action-link">View Match</a></td>
-            </tr>
-            <tr>
-              <td>91%</td>
-              <td>RV-58260</td>
-              <td>RV-47220</td>
-              <td>Ravi S</td>
-              <td>BK #118</td>
-              <td>Burger Audit</td>
-              <td>Similar Image</td>
-              <td>Same shopper, same project</td>
-              <td><a href="#" class="action-link">View Match</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="investigation-drawer">
-      <div class="drawer-head">
-        <h4>View Investigation — Shopper Drill-Down</h4>
-        <p>This mock shows what opens when QA clicks <strong>View Investigation</strong> from the Shopper Behavior Intelligence panel.</p>
-      </div>
-      <div class="drawer-body">
-        <div class="drawer-section">
-          <h5>Shopper Summary</h5>
-          <ul class="drawer-list">
-            <li>Shopper: John D (SH-1042)</li>
-            <li>Trust Score: 42 · Low Trust</li>
-            <li>Risk Level: High</li>
-            <li>Pattern Type: Repeated / Cross-location reuse</li>
-            <li>Last suspicious activity: 2 days ago</li>
-          </ul>
-        </div>
-        <div class="drawer-section">
-          <h5>Risk Activity Timeline</h5>
-          <ul class="drawer-list">
-            <li>RV-58291 — Similar image across different branch</li>
-            <li>RV-48112 — Historical strongest match</li>
-            <li>Recent QA outcome: 1 marked suspicious, 1 rejected evidence</li>
-          </ul>
-        </div>
-        <div class="drawer-section">
-          <h5>Affected Scope</h5>
-          <ul class="drawer-list">
-            <li>Projects affected: 3</li>
-            <li>Branches affected: 4</li>
-            <li>Enabled questionnaires affected: 2</li>
-          </ul>
-        </div>
-        <div class="drawer-section">
-          <h5>Quick Actions</h5>
-          <div class="quick-actions">
-            <button class="btn-sm">Open Review</button>
-            <button class="btn-sm">Open Comparison Viewer</button>
-            <button class="btn-sm">Filter Dashboard by Shopper</button>
+          <div class="history-item">
+            <h4>Next action suggestion</h4>
+            <p>Review strongest duplicate/similarity evidence first, then open full review if image decision requires broader questionnaire context.</p>
           </div>
         </div>
       </div>
