@@ -3,369 +3,336 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Integrity Dashboard</title>
+  <title>Image Integrity Dashboard V4 - Professional</title>
   <style>
     :root{
-      --bg:#f8fafc;
+      --bg:#f5f7fb;
       --card:#ffffff;
-      --line:#e5e7eb;
-      --line-soft:#eef2f7;
+      --line:#e6ebf2;
       --text:#0f172a;
       --muted:#64748b;
-      --muted-2:#94a3b8;
+      --muted2:#94a3b8;
       --primary:#4f46e5;
       --primary-soft:#eef2ff;
-      --success:#22c55e;
-      --warning:#f59e0b;
       --danger:#ef4444;
-      --shadow:0 10px 30px rgba(15, 23, 42, 0.06);
-      --radius:18px;
+      --danger-soft:#fef2f2;
+      --warn:#f59e0b;
+      --warn-soft:#fff7ed;
+      --success:#16a34a;
+      --success-soft:#ecfdf5;
+      --shadow:0 12px 30px rgba(15,23,42,.07);
+      --radius:20px;
     }
 
     *{box-sizing:border-box}
-    html,body{
+    body{
       margin:0;
-      padding:0;
-      background:var(--bg);
-      font-family:Inter, Arial, sans-serif;
+      background:linear-gradient(180deg,#f7f9fc 0%, #f4f7fb 100%);
+      font-family:Inter,Segoe UI,Arial,sans-serif;
       color:var(--text);
     }
 
-    a{text-decoration:none;color:inherit}
-
-    .main{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-      min-height:100vh;
+    .page{
+      max-width:1560px;
+      margin:0 auto;
+      padding:24px;
     }
 
     .topbar{
-      background:#fff;
-      border-bottom:1px solid var(--line);
-      padding:18px 28px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:16px;
-      position:sticky;
-      top:0;
-      z-index:20;
-    }
-
-    .topbar-left{
-      display:flex;
-      align-items:center;
       gap:18px;
-      min-width:0;
-      flex:1;
+      align-items:flex-start;
+      margin-bottom:18px;
     }
 
-    .brand{
-      width:44px;
-      height:44px;
-      border-radius:14px;
-      background:linear-gradient(135deg, var(--primary), #7c3aed);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      box-shadow:var(--shadow);
-      flex:0 0 auto;
-    }
-
-    .page-title h2{
+    .title h1{
       margin:0;
-      font-size:22px;
-      line-height:1.2;
+      font-size:28px;
+      line-height:1.1;
+      letter-spacing:-.02em;
     }
 
-    .page-title p{
-      margin:4px 0 0;
-      font-size:13px;
+    .title p{
+      margin:8px 0 0;
       color:var(--muted);
-    }
-
-    .search-wrap{
-      flex:1;
-      max-width:460px;
-      position:relative;
-      margin-left:8px;
-    }
-
-    .search-wrap input{
-      width:100%;
-      border:1px solid var(--line);
-      background:#f8fafc;
-      border-radius:12px;
-      padding:12px 14px 12px 42px;
       font-size:14px;
-      outline:none;
+      max-width:760px;
+      line-height:1.55;
     }
 
-    .search-icon{
-      position:absolute;
-      left:14px;
-      top:50%;
-      transform:translateY(-50%);
-      color:var(--muted-2);
-      font-size:14px;
-    }
-
-    .topbar-right{
+    .toolbar{
       display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .chip-btn, .icon-btn{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:12px;
-      padding:10px 12px;
-      font-size:13px;
-      cursor:pointer;
-    }
-
-    .icon-btn{
-      width:40px;
-      height:40px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:0;
-    }
-
-    .user-pill{
-      display:flex;
-      align-items:center;
       gap:10px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:6px 8px 6px 6px;
-      background:#fff;
-    }
-
-    .avatar{
-      width:30px;
-      height:30px;
-      border-radius:50%;
-      background:linear-gradient(135deg, #1d4ed8, #4f46e5);
-      color:#fff;
-      display:flex;
       align-items:center;
-      justify-content:center;
-      font-size:12px;
-      font-weight:700;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
-    .content{
-      padding:24px 28px 32px;
+    .search{
+      min-width:340px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      box-shadow:var(--shadow);
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:14px;
+      padding:11px 14px;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+    }
+
+    .btn.primary{
+      background:var(--primary);
+      color:#fff;
+      border-color:var(--primary);
     }
 
     .filters{
       display:grid;
-      grid-template-columns:repeat(5, minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
-      margin-bottom:20px;
+      margin-bottom:18px;
     }
 
     .filter{
       background:#fff;
       border:1px solid var(--line);
-      border-radius:14px;
+      border-radius:16px;
       padding:10px 12px;
-      min-height:66px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
       box-shadow:var(--shadow);
     }
 
     .filter label{
+      display:block;
       font-size:11px;
       text-transform:uppercase;
+      color:var(--muted2);
       letter-spacing:.06em;
-      color:var(--muted-2);
       margin-bottom:6px;
+      font-weight:700;
     }
 
-    .filter select,
-    .filter input{
+    .filter select,.filter input{
+      width:100%;
       border:none;
       outline:none;
+      background:transparent;
       font-size:14px;
       color:var(--text);
-      background:transparent;
-      padding:0;
     }
 
     .cards{
       display:grid;
-      grid-template-columns:repeat(4, minmax(0,1fr));
-      gap:16px;
-      margin-bottom:20px;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:18px;
     }
 
     .card{
       background:var(--card);
-      border:1px solid rgba(226,232,240,.95);
+      border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
     }
 
-    .metric-card{
+    .metric{
       padding:18px;
-      overflow:hidden;
       position:relative;
+      overflow:hidden;
+      min-height:172px;
     }
 
     .metric-top{
       display:flex;
-      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
-      margin-bottom:10px;
+      align-items:flex-start;
     }
 
-    .metric-title{
-      font-size:13px;
+    .metric .label{
       color:var(--muted);
-      margin:0;
-      font-weight:600;
-    }
-
-    .metric-value{
-      font-size:30px;
-      line-height:1;
+      font-size:13px;
       font-weight:700;
-      margin:8px 0 10px;
+      margin:0;
     }
 
-    .metric-sub{
+    .metric .value{
+      margin-top:10px;
+      font-size:34px;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+
+    .metric .sub{
+      margin-top:10px;
       font-size:12px;
       color:var(--muted);
       line-height:1.5;
-      max-width:70%;
+      max-width:72%;
     }
 
-    .metric-trend{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      margin-top:10px;
+    .metric .trend{
+      margin-top:8px;
       font-size:12px;
-      font-weight:600;
+      font-weight:700;
     }
 
-    .trend-danger{color:var(--danger)}
-    .trend-warn{color:var(--warning)}
-    .trend-success{color:var(--success)}
+    .danger{color:var(--danger)}
+    .warn{color:var(--warn)}
+    .success{color:var(--success)}
 
-    .metric-visual{
-      width:108px;
-      height:88px;
+    .metric svg{
+      width:96px;
+      height:96px;
       flex:0 0 auto;
     }
 
-    .metric-visual svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-
-    .main-grid{
+    .main{
       display:grid;
       grid-template-columns:2.2fr 1fr;
-      gap:20px;
-      margin-bottom:20px;
+      gap:18px;
+      margin-bottom:18px;
       align-items:start;
     }
 
-    .table-card{
-      padding:0;
-      overflow:hidden;
-    }
-
-    .card-header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
+    .card-head{
       padding:18px 18px 0;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
     }
 
-    .card-header h3{
+    .card-head h3{
       margin:0;
-      font-size:16px;
+      font-size:17px;
     }
 
-    .card-header p{
-      margin:4px 0 0;
+    .card-head p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .mini-note{
       font-size:12px;
       color:var(--muted);
-    }
-
-    .segmented{
-      display:flex;
-      background:#f8fafc;
-      border:1px solid var(--line);
-      border-radius:12px;
-      overflow:hidden;
-    }
-
-    .segmented button{
-      border:none;
-      background:transparent;
-      padding:8px 12px;
-      font-size:12px;
-      color:#475569;
-      cursor:pointer;
-    }
-
-    .segmented button.active{
-      background:#fff;
-      color:var(--primary);
-      font-weight:600;
+      max-width:320px;
+      text-align:right;
+      line-height:1.5;
     }
 
     .table-wrap{
-      overflow:auto;
       padding:12px 18px 18px;
+      overflow:auto;
     }
 
     table{
       width:100%;
       border-collapse:separate;
       border-spacing:0;
-      min-width:1080px;
+      min-width:1220px;
+    }
+
+    th,td{
+      text-align:left;
+      padding:14px 12px;
+      border-bottom:1px solid #eef2f7;
+      vertical-align:top;
+      font-size:13px;
     }
 
     th{
-      text-align:left;
       font-size:12px;
-      color:#64748b;
-      font-weight:600;
-      padding:14px 12px;
-      border-bottom:1px solid var(--line);
-      background:#fcfdff;
+      color:var(--muted);
+      background:#fbfcff;
+      font-weight:700;
       position:sticky;
       top:0;
-      z-index:1;
+    }
+
+    .risk-badge,.trust-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
       white-space:nowrap;
     }
 
-    td{
-      padding:14px 12px;
-      border-bottom:1px solid var(--line-soft);
-      font-size:14px;
-      vertical-align:middle;
+    .risk-high,.trust-low{background:var(--danger-soft);color:var(--danger)}
+    .risk-med,.trust-med{background:var(--warn-soft);color:var(--warn)}
+    .risk-low,.trust-high{background:var(--success-soft);color:var(--success)}
+
+    .pattern{
+      color:#334155;
+      line-height:1.45;
+      font-size:12px;
     }
 
-    tr:hover td{background:#fbfcff}
+    .action-link{
+      color:var(--primary);
+      text-decoration:none;
+      font-weight:700;
+      margin-right:12px;
+      white-space:nowrap;
+      font-size:13px;
+    }
 
-    .risk-badge{
+    .panel-scroll{
+      max-height:785px;
+      overflow:auto;
+      padding:12px 14px 18px;
+    }
+
+    .shopper-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
+      padding:14px;
+      margin-bottom:12px;
+    }
+
+    .shopper-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .shopper-id{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .trust-number{
+      font-size:30px;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+
+    .status-row{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .status-chip{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -373,995 +340,525 @@
       border-radius:999px;
       font-size:12px;
       font-weight:700;
-      white-space:nowrap;
     }
 
-    .risk-low{background:rgba(34,197,94,.12); color:var(--success)}
-    .risk-medium{background:rgba(245,158,11,.14); color:var(--warning)}
-    .risk-high{background:rgba(239,68,68,.12); color:var(--danger)}
+    .chip-high{background:var(--danger-soft); color:var(--danger)}
+    .chip-medium{background:var(--warn-soft); color:var(--warn)}
+    .chip-low{background:var(--success-soft); color:var(--success)}
+    .chip-pattern{background:var(--primary-soft); color:var(--primary)}
 
-    .shopper-cell{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .mini-avatar{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      background:#e2e8f0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      color:#334155;
-      font-size:12px;
-    }
-
-    .shopper-meta strong{
-      display:block;
-      font-size:14px;
-    }
-
-    .shopper-meta span{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin-top:2px;
-    }
-
-    .signal-pill{
-      display:inline-block;
-      background:#f1f5f9;
-      color:#475569;
-      padding:5px 8px;
-      border-radius:999px;
-      font-size:12px;
-      margin-right:6px;
-      margin-bottom:4px;
-      white-space:nowrap;
-    }
-
-    .action-link{
-      color:var(--primary);
-      font-weight:600;
-      font-size:13px;
-      margin-right:12px;
-      white-space:nowrap;
-    }
-
-    .side-card{
-      padding:0;
-      overflow:hidden;
-    }
-
-    .shopper-panel-scroll{
-      max-height:760px;
-      overflow-y:auto;
-      padding:12px 14px 18px;
-    }
-
-    .shopper-risk-card{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-      margin-bottom:12px;
-      background:#fbfdff;
-    }
-
-    .shopper-risk-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:12px;
-    }
-
-    .shopper-risk-main{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-
-    .shopper-avatar{
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      background:linear-gradient(135deg, #0ea5e9, #4f46e5);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:13px;
-      font-weight:700;
-      flex:0 0 auto;
-    }
-
-    .shopper-risk-name{
-      min-width:0;
-    }
-
-    .shopper-risk-name strong{
-      display:block;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .shopper-risk-name span{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin-top:2px;
-    }
-
-    .shopper-stats{
+    .stats{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
-      margin-bottom:12px;
+      margin-top:12px;
     }
 
-    .stat-box{
+    .stat{
       border:1px solid var(--line);
       border-radius:12px;
-      padding:10px;
       background:#fff;
+      padding:10px;
     }
 
-    .stat-box label{
+    .stat label{
       display:block;
       font-size:10px;
       text-transform:uppercase;
+      color:var(--muted2);
+      margin-bottom:6px;
+      font-weight:700;
       letter-spacing:.05em;
-      color:var(--muted-2);
-      margin-bottom:4px;
     }
 
-    .stat-box strong{
-      display:block;
-      font-size:18px;
+    .stat strong{
+      font-size:17px;
     }
 
-    .shopper-footer{
+    .foot{
+      margin-top:12px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:10px;
-      border-top:1px solid var(--line);
+      border-top:1px solid #eef2f7;
       padding-top:10px;
+    }
+
+    .foot .small{
       font-size:12px;
       color:var(--muted);
+      line-height:1.45;
     }
 
-    .bottom-card{
-      padding:0;
-      overflow:hidden;
+    .view-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--primary);
+      border-radius:12px;
+      padding:9px 12px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
     }
 
-    .compact-table{
-      min-width:920px;
+    .bottom table{min-width:1020px}
+    .locked{
+      margin-top:12px;
+      padding:12px;
+      border:1px dashed #c7d2fe;
+      border-radius:14px;
+      background:var(--primary-soft);
+      color:var(--primary);
+      font-size:13px;
+      line-height:1.55;
     }
 
-    @media (max-width: 1450px){
-      .filters{grid-template-columns:repeat(4, minmax(0,1fr))}
-      .cards{grid-template-columns:repeat(2, minmax(0,1fr))}
+    @media (max-width:1450px){
+      .filters{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
-    @media (max-width: 1200px){
-      .main-grid{grid-template-columns:1fr}
-      .shopper-panel-scroll{max-height:none}
-      .filters{grid-template-columns:repeat(3, minmax(0,1fr))}
+    @media (max-width:1120px){
+      .main{grid-template-columns:1fr}
+      .filters{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width: 800px){
-      .topbar{padding:16px}
-      .content{padding:16px}
-      .filters{grid-template-columns:repeat(2, minmax(0,1fr))}
+    @media (max-width:760px){
+      .topbar{flex-direction:column}
+      .toolbar{justify-content:flex-start}
+      .search{min-width:0;width:100%}
+      .filters{grid-template-columns:1fr 1fr}
       .cards{grid-template-columns:1fr}
-      .topbar-left{flex-direction:column; align-items:stretch}
-      .search-wrap{max-width:none; margin-left:0}
     }
 
-    @media (max-width: 560px){
+    @media (max-width:560px){
       .filters{grid-template-columns:1fr}
+      .page{padding:16px}
     }
   </style>
 </head>
 <body>
-  <main class="main">
-    <header class="topbar">
-      <div class="topbar-left">
-        <div class="brand">II</div>
-
-        <div class="page-title">
-          <h2>Image Integrity Dashboard</h2>
-          <p>Review-level risk monitoring with filtered shopper intelligence</p>
-        </div>
-
-        <div class="search-wrap">
-          <span class="search-icon">⌕</span>
-          <input type="text" placeholder="Search review, shopper, branch, project">
-        </div>
+  <div class="page">
+    <div class="topbar">
+      <div class="title">
+        <h1>Image Integrity Dashboard</h1>
+        <p>Professional plan workspace for QA to investigate suspicious image behavior, prioritize flagged reviews, and understand shopper trust patterns across enabled questionnaires only.</p>
       </div>
-
-      <div class="topbar-right">
-        <button class="chip-btn">Export</button>
-        <button class="icon-btn">⟳</button>
-        <button class="icon-btn">🔔</button>
-        <div class="user-pill">
-          <div class="avatar">QA</div>
-          <span style="font-size:13px;font-weight:600;">QA User</span>
-        </div>
+      <div class="toolbar">
+        <input class="search" type="text" placeholder="Search review, shopper, branch, project">
+        <button class="btn">Export</button>
+        <button class="btn">Refresh</button>
+        <button class="btn primary">Professional Plan</button>
       </div>
-    </header>
+    </div>
 
-    <section class="content">
-      <div class="filters">
-        <div class="filter">
-          <label>Client</label>
-          <select>
-            <option>All Clients</option>
-            <option>Burger Corp</option>
-            <option>Retail Group</option>
-            <option>Quick Food Intl</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Project</label>
-          <select>
-            <option>All Projects</option>
-            <option>Burger Audit</option>
-            <option>KFC Audit</option>
-            <option>Retail Store Visit</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Branch</label>
-          <select>
-            <option>All Branches</option>
-            <option>BK #103</option>
-            <option>BK #205</option>
-            <option>KFC #41</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Questionnaire</label>
-          <select>
-            <option>All Questionnaires</option>
-            <option>Fast Food Receipt Audit</option>
-            <option>Retail Experience Survey</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Date Range</label>
-          <select>
-            <option>Last 30 Days</option>
-            <option>Last 7 Days</option>
-            <option>Last 90 Days</option>
-            <option>Custom Range</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Risk Level</label>
-          <select>
-            <option>All Risk Levels</option>
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Risk Signal</label>
-          <select>
-            <option>All Signals</option>
-            <option>Exact Duplicate</option>
-            <option>Similar Image Reuse</option>
-            <option>Cross-Location Reuse</option>
-            <option>Same Shopper Reuse</option>
-          </select>
-        </div>
-
-        <div class="filter">
-          <label>Shopper</label>
-          <input type="text" placeholder="Search shopper name or ID">
-        </div>
-
-        <div class="filter">
-          <label>Investigation Status</label>
-          <select>
-            <option>All</option>
-            <option>Unreviewed</option>
-            <option>Marked Suspicious</option>
-            <option>Rejected Evidence</option>
-            <option>Accepted</option>
-          </select>
-        </div>
+    <div class="filters">
+      <div class="filter">
+        <label>Client</label>
+        <select>
+          <option>All Clients</option>
+          <option>Burger Corp</option>
+          <option>Retail Group</option>
+          <option>Quick Serve Brands</option>
+        </select>
       </div>
-
-      <div class="cards">
-        <div class="card metric-card">
-          <div class="metric-top">
-            <div>
-              <p class="metric-title">High Risk Reviews</p>
-              <div class="metric-value">18</div>
-              <div class="metric-sub">
-                Reviews with at least one image risk score of 50 or more.
-              </div>
-              <div class="metric-trend trend-danger">▲ +4 in selected range</div>
-            </div>
-
-            <div class="metric-visual">
-              <svg viewBox="0 0 120 90">
-                <defs>
-                  <linearGradient id="gradRed" x1="0" x2="1">
-                    <stop offset="0%" stop-color="#fee2e2"/>
-                    <stop offset="100%" stop-color="#fecaca"/>
-                  </linearGradient>
-                </defs>
-                <rect x="10" y="16" width="70" height="50" rx="12" fill="url(#gradRed)" />
-                <rect x="22" y="28" width="46" height="6" rx="3" fill="#ef4444" opacity=".25"/>
-                <rect x="22" y="40" width="32" height="6" rx="3" fill="#ef4444" opacity=".25"/>
-                <circle cx="92" cy="28" r="16" fill="#ef4444"/>
-                <path d="M92 20 L94.8 26.5 L102 27.2 L96.6 31.8 L98.2 38.8 L92 35.2 L85.8 38.8 L87.4 31.8 L82 27.2 L89.2 26.5 Z" fill="#fff"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="card metric-card">
-          <div class="metric-top">
-            <div>
-              <p class="metric-title">Medium Risk Reviews</p>
-              <div class="metric-value">42</div>
-              <div class="metric-sub">
-                Reviews containing at least one image scored between 20 and 49.
-              </div>
-              <div class="metric-trend trend-warn">▲ +9 in selected range</div>
-            </div>
-
-            <div class="metric-visual">
-              <svg viewBox="0 0 120 90">
-                <defs>
-                  <linearGradient id="gradAmber" x1="0" x2="1">
-                    <stop offset="0%" stop-color="#fef3c7"/>
-                    <stop offset="100%" stop-color="#fde68a"/>
-                  </linearGradient>
-                </defs>
-                <rect x="12" y="18" width="74" height="48" rx="12" fill="url(#gradAmber)" />
-                <rect x="24" y="28" width="40" height="6" rx="3" fill="#f59e0b" opacity=".25"/>
-                <rect x="24" y="40" width="26" height="6" rx="3" fill="#f59e0b" opacity=".25"/>
-                <path d="M88 55 L102 25 L116 55 Z" fill="#f59e0b"/>
-                <rect x="100" y="36" width="4" height="10" rx="2" fill="#fff"/>
-                <rect x="100" y="48" width="4" height="4" rx="2" fill="#fff"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="card metric-card">
-          <div class="metric-top">
-            <div>
-              <p class="metric-title">Duplicate Images</p>
-              <div class="metric-value">11</div>
-              <div class="metric-sub">
-                Images where exact file fingerprint matched another uploaded image.
-              </div>
-              <div class="metric-trend trend-danger">▲ +3 exact duplicates</div>
-            </div>
-
-            <div class="metric-visual">
-              <svg viewBox="0 0 120 90">
-                <rect x="20" y="18" width="44" height="52" rx="12" fill="#e0e7ff"/>
-                <rect x="34" y="30" width="18" height="18" rx="5" fill="#818cf8"/>
-                <rect x="26" y="54" width="30" height="5" rx="2.5" fill="#818cf8" opacity=".35"/>
-                <rect x="50" y="10" width="44" height="52" rx="12" fill="#c7d2fe"/>
-                <rect x="64" y="22" width="18" height="18" rx="5" fill="#4f46e5"/>
-                <rect x="56" y="46" width="30" height="5" rx="2.5" fill="#4f46e5" opacity=".35"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="card metric-card">
-          <div class="metric-top">
-            <div>
-              <p class="metric-title">Repeat Risk Shoppers</p>
-              <div class="metric-value">7</div>
-              <div class="metric-sub">
-                Shoppers with two or more high-risk image alerts in the last 30 days.
-              </div>
-              <div class="metric-trend trend-success">● monitored across filters</div>
-            </div>
-
-            <div class="metric-visual">
-              <svg viewBox="0 0 120 90">
-                <circle cx="38" cy="34" r="14" fill="#dbeafe"/>
-                <circle cx="62" cy="28" r="14" fill="#c7d2fe"/>
-                <circle cx="86" cy="34" r="14" fill="#fee2e2"/>
-                <path d="M24 66 C24 55, 52 55, 52 66" fill="#93c5fd"/>
-                <path d="M48 62 C48 49, 76 49, 76 62" fill="#818cf8"/>
-                <path d="M72 66 C72 55, 100 55, 100 66" fill="#fca5a5"/>
-                <circle cx="88" cy="24" r="10" fill="#ef4444"/>
-                <rect x="86.4" y="18" width="3.2" height="8" rx="1.6" fill="#fff"/>
-                <rect x="86.4" y="28" width="3.2" height="3.2" rx="1.6" fill="#fff"/>
-              </svg>
-            </div>
-          </div>
-        </div>
+      <div class="filter">
+        <label>Project</label>
+        <select>
+          <option>All Projects</option>
+          <option>Burger Audit</option>
+          <option>Retail Visit Program</option>
+          <option>Receipt Verification Study</option>
+        </select>
       </div>
-
-      <div class="main-grid">
-        <div class="card table-card">
-          <div class="card-header">
-            <div>
-              <h3>Flagged Reviews</h3>
-              <p>Filtered review queue prioritized by risk level, alert volume, and recency</p>
-            </div>
-
-            <div class="segmented">
-              <button>All</button>
-              <button class="active">High + Medium</button>
-              <button>Unreviewed</button>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Risk</th>
-                  <th>Review</th>
-                  <th>Shopper</th>
-                  <th>Project</th>
-                  <th>Branch</th>
-                  <th>Visit Date</th>
-                  <th>Images</th>
-                  <th>Alerts</th>
-                  <th>Main Signal</th>
-                  <th>Shopper Pattern</th>
-                  <th>Investigation Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="risk-badge risk-high">● High</span></td>
-                  <td>RV-58291</td>
-                  <td>
-                    <div class="shopper-cell">
-                      <div class="mini-avatar">JD</div>
-                      <div class="shopper-meta">
-                        <strong>John D</strong>
-                        <span>SH-1042</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Burger Audit</td>
-                  <td>BK #103</td>
-                  <td>2026-03-06</td>
-                  <td>12</td>
-                  <td>3</td>
-                  <td><span class="signal-pill">Similar image reuse</span></td>
-                  <td><span class="signal-pill">Repeat alerts</span></td>
-                  <td>Unreviewed</td>
-                  <td>
-                    <a class="action-link" href="#">Open Review</a>
-                    <a class="action-link" href="#">Compare Images</a>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><span class="risk-badge risk-medium">● Medium</span></td>
-                  <td>RV-58288</td>
-                  <td>
-                    <div class="shopper-cell">
-                      <div class="mini-avatar">MS</div>
-                      <div class="shopper-meta">
-                        <strong>Maria S</strong>
-                        <span>SH-1891</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Store Visit</td>
-                  <td>BK #108</td>
-                  <td>2026-03-06</td>
-                  <td>9</td>
-                  <td>1</td>
-                  <td><span class="signal-pill">Metadata missing</span></td>
-                  <td><span class="signal-pill">None</span></td>
-                  <td>Marked Suspicious</td>
-                  <td>
-                    <a class="action-link" href="#">Open Review</a>
-                    <a class="action-link" href="#">Compare Images</a>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><span class="risk-badge risk-high">● High</span></td>
-                  <td>RV-58277</td>
-                  <td>
-                    <div class="shopper-cell">
-                      <div class="mini-avatar">KL</div>
-                      <div class="shopper-meta">
-                        <strong>Kevin L</strong>
-                        <span>SH-2208</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Retail Audit</td>
-                  <td>RG #14</td>
-                  <td>2026-03-05</td>
-                  <td>14</td>
-                  <td>2</td>
-                  <td><span class="signal-pill">Exact duplicate</span></td>
-                  <td><span class="signal-pill">Cross-location</span></td>
-                  <td>Rejected Evidence</td>
-                  <td>
-                    <a class="action-link" href="#">Open Review</a>
-                    <a class="action-link" href="#">Compare Images</a>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><span class="risk-badge risk-medium">● Medium</span></td>
-                  <td>RV-58260</td>
-                  <td>
-                    <div class="shopper-cell">
-                      <div class="mini-avatar">RS</div>
-                      <div class="shopper-meta">
-                        <strong>Ravi S</strong>
-                        <span>SH-3324</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Burger Audit</td>
-                  <td>BK #205</td>
-                  <td>2026-03-05</td>
-                  <td>10</td>
-                  <td>2</td>
-                  <td><span class="signal-pill">Same shopper reuse</span></td>
-                  <td><span class="signal-pill">Pattern emerging</span></td>
-                  <td>Unreviewed</td>
-                  <td>
-                    <a class="action-link" href="#">Open Review</a>
-                    <a class="action-link" href="#">Compare Images</a>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><span class="risk-badge risk-low">● Low</span></td>
-                  <td>RV-58244</td>
-                  <td>
-                    <div class="shopper-cell">
-                      <div class="mini-avatar">AP</div>
-                      <div class="shopper-meta">
-                        <strong>Anita P</strong>
-                        <span>SH-4103</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>KFC Audit</td>
-                  <td>KFC #41</td>
-                  <td>2026-03-04</td>
-                  <td>8</td>
-                  <td>1</td>
-                  <td><span class="signal-pill">Similar image</span></td>
-                  <td><span class="signal-pill">No repeat trend</span></td>
-                  <td>Accepted</td>
-                  <td>
-                    <a class="action-link" href="#">Open Review</a>
-                    <a class="action-link" href="#">Compare Images</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="card side-card">
-          <div class="card-header">
-            <div>
-              <h3>Filtered Shopper Risk Profiles</h3>
-              <p>Top shoppers sorted by highest risk, most alerts, then most recent alert</p>
-            </div>
-
-            <div class="segmented">
-              <button class="active">Top 10</button>
-              <button>High Only</button>
-            </div>
-          </div>
-
-          <div class="shopper-panel-scroll">
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">JD</div>
-                  <div class="shopper-risk-name">
-                    <strong>John D</strong>
-                    <span>SH-1042</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-high">● High</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>5</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>2</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>2</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>3</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-03-02</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">KL</div>
-                  <div class="shopper-risk-name">
-                    <strong>Kevin L</strong>
-                    <span>SH-2208</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-high">● High</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>4</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>3</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>3</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>4</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-03-01</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">RS</div>
-                  <div class="shopper-risk-name">
-                    <strong>Ravi S</strong>
-                    <span>SH-3324</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-medium">● Medium</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>4</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>2</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-02-27</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">MS</div>
-                  <div class="shopper-risk-name">
-                    <strong>Maria S</strong>
-                    <span>SH-1891</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-medium">● Medium</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>3</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>2</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-02-28</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">AP</div>
-                  <div class="shopper-risk-name">
-                    <strong>Anita P</strong>
-                    <span>SH-4103</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-low">● Low</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>1</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-02-24</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">VK</div>
-                  <div class="shopper-risk-name">
-                    <strong>Vikram K</strong>
-                    <span>SH-5017</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-low">● Low</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>1</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-02-22</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">NP</div>
-                  <div class="shopper-risk-name">
-                    <strong>Neha P</strong>
-                    <span>SH-6011</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-low">● Low</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>1</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-02-19</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-
-            <div class="shopper-risk-card">
-              <div class="shopper-risk-top">
-                <div class="shopper-risk-main">
-                  <div class="shopper-avatar">AM</div>
-                  <div class="shopper-risk-name">
-                    <strong>Aman M</strong>
-                    <span>SH-7120</span>
-                  </div>
-                </div>
-                <span class="risk-badge risk-low">● Low</span>
-              </div>
-
-              <div class="shopper-stats">
-                <div class="stat-box">
-                  <label>Similar Alerts</label>
-                  <strong>1</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Duplicate Images</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>High Risk Reviews</label>
-                  <strong>0</strong>
-                </div>
-                <div class="stat-box">
-                  <label>Projects Affected</label>
-                  <strong>1</strong>
-                </div>
-              </div>
-
-              <div class="shopper-footer">
-                <span>Last alert: 2026-02-17</span>
-                <a class="action-link" href="#">View Investigation</a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="filter">
+        <label>Branch</label>
+        <select>
+          <option>All Branches</option>
+          <option>BK #103</option>
+          <option>BK #205</option>
+          <option>RG #14</option>
+        </select>
       </div>
+      <div class="filter">
+        <label>Questionnaire</label>
+        <select>
+          <option>Only Enabled Questionnaires</option>
+          <option>Fast Food Receipt Audit</option>
+          <option>Retail Evidence Audit</option>
+          <option>Store Photo Compliance</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>Date Range</label>
+        <select>
+          <option>Last 30 Days</option>
+          <option>Last 7 Days</option>
+          <option>Last 90 Days</option>
+          <option>Custom Range</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>Risk Level</label>
+        <select>
+          <option>All Risk Levels</option>
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>Risk Signal</label>
+        <select>
+          <option>All Signals</option>
+          <option>Exact Duplicate</option>
+          <option>Similarity Match</option>
+          <option>Same Shopper Reuse</option>
+          <option>Cross-Location Reuse</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>Shopper</label>
+        <input type="text" placeholder="Search shopper name or ID">
+      </div>
+      <div class="filter">
+        <label>Investigation Status</label>
+        <select>
+          <option>All</option>
+          <option>Unreviewed</option>
+          <option>Marked Suspicious</option>
+          <option>Rejected Evidence</option>
+          <option>Accepted</option>
+        </select>
+      </div>
+    </div>
 
-      <div class="card bottom-card">
-        <div class="card-header">
+    <div class="cards">
+      <div class="card metric">
+        <div class="metric-top">
           <div>
-            <h3>Recent Image Matches</h3>
-            <p>Compact feed of the most relevant image matches from the current filtered result set</p>
+            <p class="label">High Risk Reviews</p>
+            <div class="value">18</div>
+            <div class="sub">Reviews with at least one image risk score at or above 50 in the filtered result set.</div>
+            <div class="trend danger">▲ +4 vs previous period</div>
           </div>
-
-          <div class="segmented">
-            <button class="active">Top Matches</button>
-            <button>Exact Duplicates</button>
-          </div>
+          <svg viewBox="0 0 96 96" fill="none" aria-hidden="true">
+            <circle cx="48" cy="48" r="40" fill="#fef2f2"/>
+            <path d="M48 22L69 60H27L48 22Z" fill="#ef4444"/>
+            <rect x="46" y="37" width="4" height="14" rx="2" fill="white"/>
+            <rect x="46" y="54" width="4" height="4" rx="2" fill="white"/>
+          </svg>
         </div>
+      </div>
 
+      <div class="card metric">
+        <div class="metric-top">
+          <div>
+            <p class="label">Medium Risk Reviews</p>
+            <div class="value">42</div>
+            <div class="sub">Reviews where the highest image risk is between 20 and 49, with no high-risk image present.</div>
+            <div class="trend warn">▲ +9 vs previous period</div>
+          </div>
+          <svg viewBox="0 0 96 96" fill="none" aria-hidden="true">
+            <circle cx="48" cy="48" r="40" fill="#fff7ed"/>
+            <circle cx="48" cy="48" r="22" fill="#f59e0b"/>
+            <rect x="46" y="34" width="4" height="18" rx="2" fill="white"/>
+            <rect x="46" y="56" width="4" height="4" rx="2" fill="white"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card metric">
+        <div class="metric-top">
+          <div>
+            <p class="label">Duplicate Images</p>
+            <div class="value">11</div>
+            <div class="sub">Exact file fingerprint matches detected through SHA256 across enabled questionnaire data.</div>
+            <div class="trend danger">▲ +3 exact duplicates</div>
+          </div>
+          <svg viewBox="0 0 96 96" fill="none" aria-hidden="true">
+            <rect x="19" y="28" width="28" height="34" rx="8" fill="#c7d2fe"/>
+            <rect x="34" y="18" width="28" height="34" rx="8" fill="#818cf8"/>
+            <rect x="49" y="34" width="28" height="34" rx="8" fill="#4f46e5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card metric">
+        <div class="metric-top">
+          <div>
+            <p class="label">Repeat Risk Shoppers</p>
+            <div class="value">7</div>
+            <div class="sub">Shoppers with repeated high-risk signals in the last 30 days, based on current filters.</div>
+            <div class="trend warn">● behavior intelligence active</div>
+          </div>
+          <svg viewBox="0 0 96 96" fill="none" aria-hidden="true">
+            <circle cx="33" cy="38" r="12" fill="#dbeafe"/>
+            <circle cx="50" cy="31" r="12" fill="#c7d2fe"/>
+            <circle cx="66" cy="38" r="12" fill="#fee2e2"/>
+            <path d="M22 66c0-9 22-9 22 0" fill="#93c5fd"/>
+            <path d="M39 60c0-10 22-10 22 0" fill="#818cf8"/>
+            <path d="M55 66c0-9 22-9 22 0" fill="#fca5a5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card metric">
+        <div class="metric-top">
+          <div>
+            <p class="label">Low Trust Shoppers</p>
+            <div class="value">5</div>
+            <div class="sub">Shoppers whose Trust Score falls below the configured low-trust threshold in the filtered result set.</div>
+            <div class="trend danger">▼ 2 trust drops</div>
+          </div>
+          <svg viewBox="0 0 96 96" fill="none" aria-hidden="true">
+            <circle cx="48" cy="48" r="40" fill="#eef2ff"/>
+            <path d="M48 24C35 24 24 35 24 48s11 24 24 24 24-11 24-24S61 24 48 24Z" fill="#4f46e5"/>
+            <path d="M48 36v14" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="48" cy="57" r="3" fill="white"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Flagged Reviews</h3>
+            <p>Main QA queue. Reviews are sorted by risk, recency, alert count, and shopper trust context.</p>
+          </div>
+          <div class="mini-note">This view reflects Professional plan logic: full matching, same-shopper reuse, cross-location reuse, and shopper behavior intelligence.</div>
+        </div>
         <div class="table-wrap">
-          <table class="compact-table">
+          <table>
             <thead>
               <tr>
-                <th>Similarity</th>
-                <th>Current Review</th>
-                <th>Matched Review</th>
+                <th>Risk</th>
+                <th>Review</th>
                 <th>Shopper</th>
-                <th>Branch</th>
+                <th>Trust</th>
                 <th>Project</th>
-                <th>Match Type</th>
-                <th>Context</th>
+                <th>Branch</th>
+                <th>Images</th>
+                <th>Alerts</th>
+                <th>Pattern</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>94%</td>
+                <td><span class="risk-badge risk-high">High</span></td>
                 <td>RV-58291</td>
-                <td>RV-48112</td>
-                <td>John D</td>
-                <td>BK #205</td>
+                <td><strong>John D</strong><br><span style="color:#64748b;font-size:12px;">SH-1042</span></td>
+                <td><span class="trust-badge trust-low">42 · Low</span></td>
                 <td>Burger Audit</td>
-                <td>Similar Image</td>
-                <td><span class="signal-pill">Same shopper, different branch</span></td>
-                <td><a class="action-link" href="#">View Match</a></td>
+                <td>BK #103</td>
+                <td>12</td>
+                <td>3</td>
+                <td class="pattern">Cross-location reuse<br>Repeat similar images</td>
+                <td>Unreviewed</td>
+                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
               </tr>
-
               <tr>
-                <td>91%</td>
-                <td>RV-58260</td>
-                <td>RV-47220</td>
-                <td>Ravi S</td>
-                <td>BK #118</td>
-                <td>Burger Audit</td>
-                <td>Similar Image</td>
-                <td><span class="signal-pill">Same project</span></td>
-                <td><a class="action-link" href="#">View Match</a></td>
+                <td><span class="risk-badge risk-med">Medium</span></td>
+                <td>RV-58288</td>
+                <td><strong>Maria S</strong><br><span style="color:#64748b;font-size:12px;">SH-1891</span></td>
+                <td><span class="trust-badge trust-med">68 · Medium</span></td>
+                <td>Store Visit</td>
+                <td>BK #108</td>
+                <td>9</td>
+                <td>1</td>
+                <td class="pattern">Similarity match found<br>No repeat pattern</td>
+                <td>Marked Suspicious</td>
+                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
               </tr>
-
               <tr>
-                <td>100%</td>
+                <td><span class="risk-badge risk-high">High</span></td>
                 <td>RV-58277</td>
-                <td>RV-46088</td>
-                <td>Kevin L</td>
-                <td>RG #19</td>
+                <td><strong>Kevin L</strong><br><span style="color:#64748b;font-size:12px;">SH-2208</span></td>
+                <td><span class="trust-badge trust-low">39 · Low</span></td>
                 <td>Retail Audit</td>
-                <td>Exact Duplicate</td>
-                <td><span class="signal-pill">Exact file fingerprint match</span></td>
-                <td><a class="action-link" href="#">View Match</a></td>
+                <td>RG #14</td>
+                <td>14</td>
+                <td>2</td>
+                <td class="pattern">Exact duplicate<br>Multi-project spread</td>
+                <td>Rejected Evidence</td>
+                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
               </tr>
-
               <tr>
-                <td>88%</td>
-                <td>RV-58244</td>
-                <td>RV-46901</td>
-                <td>Anita P</td>
-                <td>KFC #41</td>
-                <td>KFC Audit</td>
-                <td>Similar Image</td>
-                <td><span class="signal-pill">Different shopper, same branch</span></td>
-                <td><a class="action-link" href="#">View Match</a></td>
+                <td><span class="risk-badge risk-med">Medium</span></td>
+                <td>RV-58260</td>
+                <td><strong>Ravi S</strong><br><span style="color:#64748b;font-size:12px;">SH-3324</span></td>
+                <td><span class="trust-badge trust-high">79 · High</span></td>
+                <td>Burger Audit</td>
+                <td>BK #205</td>
+                <td>10</td>
+                <td>2</td>
+                <td class="pattern">Same-shopper reuse candidate</td>
+                <td>Unreviewed</td>
+                <td><a href="#" class="action-link">Open Review</a><a href="#" class="action-link">Compare Images</a></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </section>
-  </main>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Shopper Behavior Intelligence</h3>
+            <p>Highlights suspicious shopper behavior patterns and trust impact across currently filtered reviews.</p>
+          </div>
+        </div>
+        <div class="panel-scroll">
+          <div class="shopper-card">
+            <div class="shopper-top">
+              <div>
+                <strong>John D</strong>
+                <div class="shopper-id">SH-1042</div>
+              </div>
+              <div class="trust-number">42</div>
+            </div>
+            <div class="status-row">
+              <span class="status-chip chip-high">High Risk</span>
+              <span class="status-chip chip-high">Low Trust</span>
+              <span class="status-chip chip-pattern">Repeated Pattern</span>
+            </div>
+            <div class="stats">
+              <div class="stat"><label>Duplicate Images</label><strong>2</strong></div>
+              <div class="stat"><label>Similar Matches</label><strong>5</strong></div>
+              <div class="stat"><label>Projects Affected</label><strong>3</strong></div>
+              <div class="stat"><label>Last Suspicious Activity</label><strong>2 days ago</strong></div>
+            </div>
+            <div class="foot">
+              <div class="small">Pattern detected: similar evidence reused across multiple branches within the same audit program.</div>
+              <button class="view-btn">View Investigation</button>
+            </div>
+          </div>
+
+          <div class="shopper-card">
+            <div class="shopper-top">
+              <div>
+                <strong>Kevin L</strong>
+                <div class="shopper-id">SH-2208</div>
+              </div>
+              <div class="trust-number">39</div>
+            </div>
+            <div class="status-row">
+              <span class="status-chip chip-high">High Risk</span>
+              <span class="status-chip chip-high">Low Trust</span>
+              <span class="status-chip chip-pattern">Widespread Pattern</span>
+            </div>
+            <div class="stats">
+              <div class="stat"><label>Exact Duplicates</label><strong>3</strong></div>
+              <div class="stat"><label>Cross-Location Events</label><strong>2</strong></div>
+              <div class="stat"><label>Projects Affected</label><strong>4</strong></div>
+              <div class="stat"><label>Last Suspicious Activity</label><strong>Yesterday</strong></div>
+            </div>
+            <div class="foot">
+              <div class="small">Pattern detected: same evidence appears across multiple projects and locations, increasing fraud suspicion.</div>
+              <button class="view-btn">View Investigation</button>
+            </div>
+          </div>
+
+          <div class="shopper-card">
+            <div class="shopper-top">
+              <div>
+                <strong>Ravi S</strong>
+                <div class="shopper-id">SH-3324</div>
+              </div>
+              <div class="trust-number">79</div>
+            </div>
+            <div class="status-row">
+              <span class="status-chip chip-low">Low Risk</span>
+              <span class="status-chip chip-low">High Trust</span>
+              <span class="status-chip chip-pattern">Isolated Pattern</span>
+            </div>
+            <div class="stats">
+              <div class="stat"><label>Similar Alerts</label><strong>1</strong></div>
+              <div class="stat"><label>Projects Affected</label><strong>1</strong></div>
+              <div class="stat"><label>High Risk Reviews</label><strong>0</strong></div>
+              <div class="stat"><label>Last Suspicious Activity</label><strong>5 days ago</strong></div>
+            </div>
+            <div class="foot">
+              <div class="small">Pattern detected: isolated alert only. Strong approval history keeps trust score high.</div>
+              <button class="view-btn">View Investigation</button>
+            </div>
+          </div>
+
+          <div class="locked">
+            <strong>Plan note:</strong> For Starter and Growth, this panel should remain present structurally but show a locked / teaser state instead of full behavior intelligence detail. Professional shows full intelligence with actionable investigation links.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bottom">
+      <div class="card-head">
+        <div>
+          <h3>Recent Image Matches</h3>
+          <p>Supporting evidence feed showing the strongest recent matches from the filtered dataset.</p>
+        </div>
+        <div class="mini-note">Starter can show a locked teaser here. Growth and Professional show match evidence, with Professional showing deeper pattern context.</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Similarity</th>
+              <th>Current Review</th>
+              <th>Matched Review</th>
+              <th>Shopper</th>
+              <th>Branch</th>
+              <th>Project</th>
+              <th>Match Type</th>
+              <th>Context</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>94%</td>
+              <td>RV-58291</td>
+              <td>RV-48112</td>
+              <td>John D</td>
+              <td>BK #205</td>
+              <td>Burger Audit</td>
+              <td>Similar Image</td>
+              <td>Same shopper, different branch</td>
+              <td><a href="#" class="action-link">View Match</a></td>
+            </tr>
+            <tr>
+              <td>100%</td>
+              <td>RV-58277</td>
+              <td>RV-46088</td>
+              <td>Kevin L</td>
+              <td>RG #19</td>
+              <td>Retail Audit</td>
+              <td>Exact Duplicate</td>
+              <td>Exact fingerprint match</td>
+              <td><a href="#" class="action-link">View Match</a></td>
+            </tr>
+            <tr>
+              <td>91%</td>
+              <td>RV-58260</td>
+              <td>RV-47220</td>
+              <td>Ravi S</td>
+              <td>BK #118</td>
+              <td>Burger Audit</td>
+              <td>Similar Image</td>
+              <td>Same shopper, same project</td>
+              <td><a href="#" class="action-link">View Match</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
 </body>
 </html>
