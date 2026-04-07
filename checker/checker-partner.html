@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checker — Partner Network v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f1f5f9;--bgs:#fff;--bgc:#fff;--bgc2:#f8fafc;--bgin:#f1f5f9;
+  --bd:#e2e8f0;--bd2:#cbd5e1;
+  --blu:#1d6fbf;--blud:rgba(29,111,191,.09);--bludk:#155490;
+  --teal:#0d9488;--teald:rgba(13,148,136,.09);
+  --amb:#d97706;--ambd:rgba(217,119,6,.09);
+  --red:#dc2626;--redd:rgba(220,38,38,.08);
+  --pur:#7c3aed;--purd:rgba(124,58,237,.09);
+  --grn:#059669;--grnd:rgba(5,150,105,.09);
+  --t1:#0f1c2e;--t2:#4a6585;--t3:#8fa8c4;
+  --sw:228px;--r:10px;--rs:7px;
+  --sh:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
+  --sh2:0 20px 60px rgba(0,0,0,.16);--tr:.18s ease;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;font-size:14px;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+.layout{display:flex;min-height:100vh}
+
+/* ── SIDEBAR */
+.sb{width:var(--sw);background:#fff;border-right:1px solid var(--bd);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;box-shadow:1px 0 6px rgba(0,0,0,.03)}
+.sb-brand{padding:18px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.bmark{width:34px;height:34px;background:var(--blu);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;flex-shrink:0}
+.bname{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--t1)}
+.btag{font-size:9px;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-top:1px}
+.sb-nav{flex:1;padding:10px 9px;overflow-y:auto}
+.nlbl{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);padding:0 9px;margin:12px 0 4px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:var(--rs);cursor:pointer;transition:var(--tr);color:var(--t2);font-size:13px;font-weight:500;margin-bottom:1px;position:relative;user-select:none}
+.ni:hover{background:var(--bg);color:var(--t1)}
+.ni.active{background:var(--blud);color:var(--blu);font-weight:600}
+.ni.active::before{content:'';position:absolute;left:-9px;top:5px;bottom:5px;width:3px;background:var(--blu);border-radius:0 3px 3px 0}
+.ni-ic{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.ni.active .ni-ic{opacity:1}
+.nbdg{margin-left:auto;font-size:10px;font-weight:700;padding:2px 6px;border-radius:9px}
+.nbdg.b{background:var(--blud);color:var(--blu)}.nbdg.a{background:var(--ambd);color:var(--amb)}
+.pn-grp{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);margin:4px 0;padding:3px 0}
+.pn-lbl{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blu);padding:6px 11px 3px;display:flex;align-items:center;gap:5px}
+.ni.sub{padding-left:18px}
+
+/* ── MAIN */
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.hdr{height:54px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 22px;position:sticky;top:0;z-index:50;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.hdr-t{font-family:'Syne',sans-serif;font-size:14.5px;font-weight:700;flex:1;color:var(--t1)}
+.hdr-t span{font-family:'Plus Jakarta Sans',sans-serif;color:var(--t2);font-weight:400;font-size:13px;margin-left:5px}
+.hdr-acts{display:flex;align-items:center;gap:8px}
+.nb-btn{position:relative;width:36px;height:36px;border:1px solid var(--bd);border-radius:var(--rs);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr);color:var(--t2)}
+.nb-btn:hover{border-color:var(--blu);color:var(--blu);background:var(--blud)}
+.nb-cnt{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:9px;min-width:17px;text-align:center;border:2px solid #fff}
+
+/* ── PN HEADER + TABS */
+.pn-hdr{background:#fff;border-bottom:1px solid var(--bd);padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+.pn-hdr-t{font-family:'Syne',sans-serif;font-size:17px;font-weight:700}
+.pn-hdr-s{font-size:12.5px;color:var(--t2);margin-top:2px}
+.ptabs{display:flex;align-items:flex-end;gap:2px;padding:14px 22px 0;background:#fff;border-bottom:1px solid var(--bd)}
+.ptab{padding:8px 16px;border-radius:var(--rs) var(--rs) 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:13px;font-weight:500;transition:var(--tr);background:transparent;color:var(--t2);position:relative;margin-bottom:-1px;white-space:nowrap}
+.ptab:hover{color:var(--t1);background:var(--bg)}
+.ptab.active{background:#fff;border-color:var(--bd);color:var(--blu);font-weight:700;z-index:1}
+.ptab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:#fff}
+.ptab.active::before{content:'';position:absolute;bottom:0;left:16px;right:16px;height:2.5px;background:var(--blu);border-radius:2px 2px 0 0}
+.tcnt{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:17px;padding:0 5px;border-radius:8px;background:var(--bg);font-size:10px;font-weight:700;margin-left:6px;color:var(--t2)}
+.ptab.active .tcnt{background:var(--blud);color:var(--blu)}
+
+/* ── CONTENT */
+.pg{flex:1;padding:20px 22px;background:var(--bg)}
+.page{display:none;animation:fu .22s ease}
+.page.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── DASHBOARD PROJECT CARDS */
+.prj-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-bottom:0}
+.prj-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;transition:var(--tr)}
+.prj-card:hover{border-color:var(--bd2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.07)}
+.prj-card-hdr{padding:13px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;background:var(--bgc2)}
+.prj-card-id{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--t1)}
+.prj-card-partner{font-size:11.5px;color:var(--t2);margin-top:2px;display:flex;align-items:center;gap:5px}
+.prj-card-body{padding:14px 16px}
+.prj-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.prj-stat{text-align:center}
+.prj-stat-val{font-size:20px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.prj-stat-lbl{font-size:9.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-top:3px}
+.prj-card-footer{padding:10px 16px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;background:var(--bgc2)}
+.last-checked{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:5px}
+.last-checked.fresh{color:var(--grn)}
+.last-checked.stale{color:var(--amb)}
+.last-checked.never{color:var(--red)}
+.dash-note{background:var(--blud);border:1px solid rgba(29,111,191,.16);border-radius:var(--rs);padding:12px 16px;font-size:12.5px;color:var(--bludk);margin-bottom:16px;display:flex;gap:9px;align-items:flex-start;line-height:1.6}
+
+/* ── STATS (for other pages) */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;transition:var(--tr);box-shadow:var(--sh)}
+.stat:hover{border-color:var(--bd2);transform:translateY(-1px)}
+.stat-lbl{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:7px}
+.stat-val{font-size:24px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.stat-sub{font-size:11px;color:var(--t3);margin-top:4px}
+.bc{color:var(--blu)}.tc{color:var(--teal)}.ac{color:var(--amb)}.rc{color:var(--red)}.gc{color:var(--grn)}.pc{color:var(--pur)}
+
+/* ── TOOLBAR */
+.tb{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+.tbl{display:flex;align-items:center;gap:8px;flex:1}
+.tbr{display:flex;align-items:center;gap:8px}
+.srch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:7px 12px;width:200px;transition:var(--tr);box-shadow:var(--sh)}
+.srch:focus-within{border-color:var(--blu);box-shadow:0 0 0 3px var(--blud)}
+.srch input{background:transparent;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--t1);width:100%}
+.srch input::placeholder{color:var(--t3)}
+.flt{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:7px 26px 7px 11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:var(--t2);outline:none;cursor:pointer;transition:var(--tr);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%238fa8c4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;box-shadow:var(--sh)}
+.flt:focus{border-color:var(--blu)}
+
+/* ── BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:var(--rs);border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;transition:var(--tr);white-space:nowrap}
+.bp{background:var(--blu);color:#fff;box-shadow:0 2px 6px rgba(29,111,191,.22)}
+.bp:hover{background:var(--bludk);transform:translateY(-1px)}
+.bo{background:#fff;border:1px solid var(--bd);color:var(--t2);box-shadow:var(--sh)}
+.bo:hover{border-color:var(--blu);color:var(--blu);background:var(--blud)}
+.bg{background:transparent;color:var(--t2)}
+.bg:hover{background:var(--bg);color:var(--t1)}
+.bt{background:var(--teald);border:1px solid rgba(13,148,136,.2);color:var(--teal)}
+.bt:hover{background:var(--teal);color:#fff}
+.ba{background:var(--ambd);border:1px solid rgba(217,119,6,.2);color:var(--amb)}
+.ba:hover{background:var(--amb);color:#fff}
+.br{background:var(--redd);border:1px solid rgba(220,38,38,.18);color:var(--red)}
+.br:hover{background:var(--red);color:#fff}
+.sm{padding:5px 11px;font-size:12px}
+.xs{padding:4px 9px;font-size:11.5px}
+
+/* ── TABLE */
+.card{background:#fff;border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh)}
+.tw{background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+table{width:100%;border-collapse:collapse}
+thead th{background:#f8fafc;padding:10px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--bd);transition:var(--tr)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f8fafc}
+tbody td{padding:11px 14px;font-size:13px;color:var(--t1);vertical-align:middle}
+.tid{color:var(--t2);font-size:11px;font-weight:700;font-family:monospace;letter-spacing:.5px}
+.tacts{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+/* ── BADGES */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bdg-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.bdg.open{background:rgba(13,148,136,.1);color:var(--teal)}.bdg.open .bdg-dot{background:var(--teal)}
+.bdg.closed{background:#f1f5f9;color:var(--t2)}.bdg.closed .bdg-dot{background:var(--t3)}
+.bdg.inprog{background:var(--ambd);color:var(--amb)}.bdg.inprog .bdg-dot{background:var(--amb)}
+.bdg.done{background:var(--grnd);color:var(--grn)}.bdg.done .bdg-dot{background:var(--grn)}
+.bdg.pending{background:var(--redd);color:var(--red)}.bdg.pending .bdg-dot{background:var(--red)}
+.bdg.orig{background:var(--grnd);color:var(--grn)}.bdg.impl{background:var(--purd);color:var(--pur)}
+.bdg.country{background:#f1f5f9;color:var(--t2);border:1px solid var(--bd)}
+.bdg.srv{background:var(--blud);color:var(--blu)}
+.bdg.src-p{background:var(--purd);color:var(--pur);font-size:10px}.bdg.src-l{background:var(--bg);color:var(--t3);font-size:10px;border:1px solid var(--bd)}
+.apr-badge{display:inline-flex;align-items:center;gap:4px;background:#f0fdf4;color:var(--grn);border:1px solid rgba(5,150,105,.18);border-radius:6px;padding:2px 7px;font-family:monospace;font-size:11px;font-weight:700}
+.apr-nil{font-size:11px;color:var(--t3)}
+.rc-repl{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--t3);font-weight:500}
+.rc-repl.has{color:var(--blu)}
+.olnk{color:var(--blu);font-weight:600;cursor:pointer}.olnk:hover{text-decoration:underline}
+.pchip{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:3px 9px;font-size:11px;color:var(--t2)}
+.pav{width:15px;height:15px;border-radius:50%;background:linear-gradient(135deg,var(--pur),#4d9eff);display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0}
+.sync-stage{font-size:11.5px;font-weight:700}.sync-sub{font-size:10px;color:var(--t3)}
+
+/* ── OVERLAY + MODAL */
+.ov{position:fixed;inset:0;background:rgba(10,24,46,.45);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;padding:16px}
+.ov.show{opacity:1;pointer-events:all}
+.modal{background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh2);width:100%;max-height:92vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .25s ease}
+.ov.show .modal{transform:translateY(0) scale(1)}
+.msm{max-width:450px}.mmd{max-width:590px}.mlg{max-width:760px}.mxl{max-width:960px}
+.mh{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 22px 0}
+.mt{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+.ms{font-size:12px;color:var(--t2);margin-top:3px}
+.mc{width:28px;height:28px;border:1px solid var(--bd);border-radius:var(--rs);background:transparent;color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:var(--tr);flex-shrink:0}
+.mc:hover{border-color:var(--red);color:var(--red);background:var(--redd)}
+.mb{padding:18px 22px}.mf{display:flex;justify-content:flex-end;gap:8px;padding:0 22px 18px}
+
+/* ── FORM */
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
+.fl span{color:var(--red)}
+.fi,.fta,.fsl{width:100%;background:var(--bgin);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--t1);outline:none;transition:var(--tr)}
+.fi:focus,.fta:focus,.fsl:focus{border-color:var(--blu);box-shadow:0 0 0 3px var(--blud);background:#fff}
+.fta{resize:vertical;min-height:80px;line-height:1.6}
+.fsl{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%238fa8c4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.hdiv{border:none;border-top:1px solid var(--bd);margin:14px 0}
+.sec-hd{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.step-lbl{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--blu);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-title{font-size:13px;font-weight:700;color:var(--t1)}
+
+/* ── INFO BOXES */
+.ibox{background:var(--blud);border:1px solid rgba(29,111,191,.16);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--bludk);margin-bottom:13px;display:flex;gap:7px;align-items:flex-start;line-height:1.5}
+.wbox{background:var(--ambd);border:1px solid rgba(217,119,6,.18);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:#92400e;margin-bottom:13px;display:flex;gap:7px;align-items:flex-start;line-height:1.5}
+.sbox{background:var(--grnd);border:1px solid rgba(5,150,105,.18);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--grn);margin-bottom:13px;display:flex;gap:7px;align-items:flex-start;line-height:1.5}
+.rbox{background:var(--redd);border:1px solid rgba(220,38,38,.16);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:#991b1b;margin-bottom:13px;display:flex;gap:7px;align-items:flex-start;line-height:1.5}
+
+/* ── THREAD / BUBBLES */
+.cthread{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:13px;max-height:190px;overflow-y:auto;margin-bottom:12px}
+.ci{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.ci:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.ci-h{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.ci-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--blu),#4d9eff);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.ci-av.imp{background:linear-gradient(135deg,var(--pur),#4d9eff)}
+.ci-name{font-size:12px;font-weight:600}.ci-time{font-size:10px;color:var(--t3);margin-left:auto}
+.ci-txt{font-size:12px;color:var(--t2);line-height:1.6}
+.rbubble{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;margin-bottom:9px}
+.rthread{max-height:280px;overflow-y:auto;padding-right:3px}
+.r-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.r-auth{font-weight:600;font-size:12.5px;display:flex;align-items:center;gap:6px}
+.r-date{font-size:10.5px;color:var(--t3)}.r-body{font-size:12.5px;color:var(--t2);line-height:1.6}
+.r-acts{margin-top:8px;display:flex;gap:6px}
+
+/* ── AGREE BANNER */
+.agree-banner{background:linear-gradient(135deg,rgba(29,111,191,.06),rgba(13,148,136,.04));border:1px solid rgba(29,111,191,.18);border-radius:var(--r);padding:13px 15px;margin-bottom:14px;display:flex;gap:11px}
+.agree-icon{font-size:20px;flex-shrink:0}
+.agree-text strong{font-size:13px;display:block;color:var(--blu)}
+.agree-text p{font-size:12px;color:var(--t2);margin-top:3px;line-height:1.7}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+.succ-ic{font-size:44px;display:block;margin:0 auto 11px;text-align:center;animation:pop .4s ease}
+.succ-t{text-align:center;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--teal);margin-bottom:5px}
+.succ-s{text-align:center;font-size:12.5px;color:var(--t2)}
+
+/* ── RADIO GROUP */
+.ri{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer;transition:var(--tr);margin-bottom:7px}
+.ri:hover{border-color:var(--blu)}
+.ri.sel{border-color:var(--blu);background:var(--blud)}
+.ri input[type=radio]{accent-color:var(--blu);margin-top:3px;flex-shrink:0}
+.ri strong{font-size:13px;font-weight:600;display:block}
+.ri p{font-size:11.5px;color:var(--t2);margin-top:1px}
+
+/* ── PUBLISH CHECKLIST */
+.pub-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;transition:var(--tr);background:#fff}
+.pub-item:hover{border-color:var(--bd2)}
+.pub-item.checked{border-color:rgba(29,111,191,.3);background:var(--blud)}
+.pub-item.mandatory{border-color:rgba(29,111,191,.2)}
+.pub-item input[type=checkbox]{accent-color:var(--blu);margin-top:2px;flex-shrink:0;width:15px;height:15px}
+.pub-item-content{flex:1}
+.pub-item-title{font-size:13px;font-weight:600;color:var(--t1)}
+.pub-item-desc{font-size:11.5px;color:var(--t2);margin-top:2px;line-height:1.4}
+.pub-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
+.pub-tag.req{background:var(--blud);color:var(--blu)}
+.pub-tag.opt{background:var(--bg);color:var(--t3);border:1px solid var(--bd)}
+.pub-tag.freq{background:var(--redd);color:var(--red)}
+
+/* ── IMPORT MAPPING SECTION */
+.map-section{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.map-section-title{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.map-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:9px 11px;background:#fff;border:1px solid var(--bd);border-radius:var(--rs)}
+.map-row:last-child{margin-bottom:0}
+.map-arrow{color:var(--t3);font-size:14px;flex-shrink:0}
+.map-label{font-size:12.5px;color:var(--t2);min-width:130px;flex-shrink:0}
+.map-val{flex:1}
+
+/* ── NOTIFICATION DROPDOWN */
+.nd{position:fixed;top:62px;right:22px;width:350px;background:#fff;border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh2);z-index:200;opacity:0;pointer-events:none;transform:translateY(-7px);transition:all .22s ease}
+.nd.show{opacity:1;pointer-events:all;transform:translateY(0)}
+.nd-h{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--bd)}
+.nd-t{font-weight:700;font-size:13px}
+.nd-ar{font-size:11.5px;color:var(--blu);cursor:pointer;font-weight:600}
+.ndni{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border-bottom:1px solid var(--bd);cursor:pointer;transition:var(--tr)}
+.ndni:hover{background:var(--bg)}
+.ndni.unread{background:rgba(29,111,191,.03)}
+.ndni:last-child{border-bottom:none}
+.ndni-ic{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ndni-ic.bc{background:var(--blud)}.ndni-ic.ac{background:var(--ambd)}.ndni-ic.tc{background:var(--teald)}.ndni-ic.rc{background:var(--redd)}
+.ndni-b strong{font-size:12px;font-weight:600;display:block;color:var(--t1)}
+.ndni-b p{font-size:11px;color:var(--t2);margin-top:1px}
+.ndni-b time{font-size:10px;color:var(--t3);margin-top:2px;display:block}
+.nd-dot{width:7px;height:7px;background:var(--blu);border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* ── QUESTION FLAG */
+.qflag{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:7px;display:flex;align-items:flex-start;gap:9px}
+.qflag.flagged{border-color:rgba(220,38,38,.3);background:var(--redd)}
+.qflag input[type=checkbox]{accent-color:var(--red);margin-top:2px;flex-shrink:0}
+.qflag-q{font-size:12.5px;font-weight:600;color:var(--t1)}
+.qflag-note{margin-top:5px}
+.qflag-note input{width:100%;background:#fff;border:1px solid var(--bd2);border-radius:5px;padding:5px 8px;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;outline:none}
+.qflag-note input:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--redd)}
+
+/* ── TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#fff;border:1px solid var(--bd);border-left:3px solid var(--grn);border-radius:var(--r);padding:12px 16px;display:flex;align-items:center;gap:11px;box-shadow:var(--sh2);z-index:2000;transform:translateY(16px);opacity:0;transition:all .3s ease;max-width:330px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-t{font-size:13px;font-weight:700}.toast-s{font-size:11.5px;color:var(--t2);margin-top:2px}
+
+/* ── WARN POPUP */
+.warn-popup{position:fixed;inset:0;background:rgba(10,24,46,.5);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.warn-popup.show{opacity:1;pointer-events:all}
+.warn-box{background:#fff;border-radius:12px;padding:22px 24px;max-width:380px;width:100%;box-shadow:var(--sh2);border:1px solid var(--bd)}
+.warn-box-t{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--amb);margin-bottom:8px}
+.warn-box-s{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:16px}
+.warn-box-acts{display:flex;gap:9px;justify-content:flex-end}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="bmark">C</div>
+    <div><div class="bname">Checker</div><div class="btag">Field Intelligence</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nlbl">Workspace</div>
+    <div class="ni" id="nav-dashboard" onclick="showPage('dashboard')">
+      <svg class="ni-ic" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/></svg>
+      Dashboard
+    </div>
+    <div class="ni" id="nav-operations" onclick="showPage('operations')">
+      <svg class="ni-ic" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Operations <span class="nbdg b">14</span>
+    </div>
+    <div class="ni" id="nav-fieldwork" onclick="showPage('fieldwork')">
+      <svg class="ni-ic" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Field Work <span class="nbdg a">3</span>
+    </div>
+    <div class="nlbl">Partner Network</div>
+    <div class="pn-grp">
+      <div class="pn-lbl">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="2.5" cy="2.5" r="1.8" stroke="currentColor" stroke-width="1.1"/><circle cx="9.5" cy="2.5" r="1.8" stroke="currentColor" stroke-width="1.1"/><circle cx="6" cy="9.5" r="1.8" stroke="currentColor" stroke-width="1.1"/><path d="M4.3 2.5h3.4M3.5 4.1 5.2 7M8.5 4.1 6.8 7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Partner Network
+      </div>
+      <div class="ni sub active" id="nav-pn-posts" onclick="showPage('pn');switchTab('posts')">
+        <svg class="ni-ic" fill="none" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Opportunities <span class="nbdg b">12</span>
+      </div>
+      <div class="ni sub" id="nav-pn-deals" onclick="showPage('pn');switchTab('deals')">
+        <svg class="ni-ic" fill="none" viewBox="0 0 16 16"><path d="M1 8c0 3.866 3.134 7 7 7s7-3.134 7-7S11.866 1 8 1 1 4.134 1 8zm4-1l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Active Partnerships <span class="nbdg a">3</span>
+      </div>
+      <div class="ni sub" id="nav-pn-projects" onclick="showPage('pn');switchTab('projects')">
+        <svg class="ni-ic" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 5h6M5 8h4M5 11h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Partner Projects
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+<header class="hdr">
+  <div class="hdr-t" id="hdr-t">Partner Network <span>/ Opportunities Board</span></div>
+  <div class="hdr-acts">
+    <div class="nb-btn" id="nbBtn" onclick="toggleNotif()">
+      <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M8 1a5 5 0 0 0-5 5v2.5L1.5 11h13L13 8.5V6a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="1.4"/><path d="M6 13a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="nb-cnt" id="nbCnt">5</span>
+    </div>
+  </div>
+</header>
+
+<!-- NOTIF DROPDOWN -->
+<div class="nd" id="notifDrop">
+  <div class="nd-h"><span class="nd-t">Notifications</span><span class="nd-ar" onclick="markRead()">Mark all read</span></div>
+  <div class="ndni unread"><div class="ndni-ic bc">📬</div><div class="ndni-b"><strong>New reply on your post</strong><p>DataField Europe replied to "MS — France Luxury Retail"</p><time>2 min ago</time></div><div class="nd-dot"></div></div>
+  <div class="ndni unread"><div class="ndni-ic ac">⚠️</div><div class="ndni-b"><strong>Review returned for correction</strong><p>Order #48203 returned — 2 questions flagged with notes</p><time>45 min ago</time></div><div class="nd-dot"></div></div>
+  <div class="ndni unread"><div class="ndni-ic bc">📦</div><div class="ndni-b"><strong>Orders published — action required</strong><p>GlobalSurvey published 87 orders to PRJ-002. Confirm import.</p><time>2 hours ago</time></div><div class="nd-dot"></div></div>
+  <div class="ndni unread"><div class="ndni-ic ac">🤝</div><div class="ndni-b"><strong>Deal agreed — PRJ-003 auto-created</strong><p>Partnership confirmed with DataField Europe</p><time>Yesterday</time></div><div class="nd-dot"></div></div>
+  <div class="ndni"><div class="ndni-ic tc">✅</div><div class="ndni-b"><strong>Reviews pulled successfully</strong><p>48 reviews synced for PRJ-001</p><time>2 days ago</time></div></div>
+</div>
+
+<!-- ══════════════════════ DASHBOARD ══════════════════════ -->
+<div id="page-dashboard" style="display:none">
+  <div class="pg">
+    <div class="dash-note">
+      <span>💡</span>
+      <span>Dashboard shows the latest status of each Partner Project. Statistics are updated when you click <strong>Check Status</strong> on individual projects. Use the button on each card to get fresh data from your partner.</span>
+    </div>
+    <div class="prj-cards">
+
+      <!-- PRJ-001 card -->
+      <div class="prj-card">
+        <div class="prj-card-hdr">
+          <div>
+            <div class="prj-card-id">PRJ-001 <span class="bdg orig" style="font-size:10px;margin-left:4px">Originator</span></div>
+            <div class="prj-card-partner">
+              <div class="pav">M</div> MarketForce GmbH · <span class="bdg country" style="font-size:10px">🇩🇪 Germany</span>
+            </div>
+          </div>
+          <span class="bdg inprog"><span class="bdg-dot"></span>Active</span>
+        </div>
+        <div class="prj-card-body">
+          <div class="prj-stats">
+            <div class="prj-stat"><div class="prj-stat-val bc">120</div><div class="prj-stat-lbl">Published</div></div>
+            <div class="prj-stat"><div class="prj-stat-val gc">72</div><div class="prj-stat-lbl">Completed</div></div>
+            <div class="prj-stat"><div class="prj-stat-val ac">35</div><div class="prj-stat-lbl">In Progress</div></div>
+            <div class="prj-stat"><div class="prj-stat-val rc">3</div><div class="prj-stat-lbl">Returned</div></div>
+          </div>
+          <div style="background:var(--bg);border-radius:var(--rs);padding:8px 10px;display:flex;justify-content:space-between;align-items:center;font-size:12px">
+            <span style="color:var(--t2)">VW_MS_Q2_2025 · MS · <span class="olnk" onclick="showPage('pn');switchTab('projects')">View Project →</span></span>
+          </div>
+        </div>
+        <div class="prj-card-footer">
+          <div class="last-checked fresh" style="display:flex;flex-direction:column;gap:1px">
+            <span>✅ Checked: Today 09:14</span>
+            <span style="color:var(--pur);font-weight:600;font-size:11px">📥 44 reviews waiting to pull</span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn bt xs" onclick="checkStatusDash('PRJ-001')">🔄 Status</button>
+            <button class="btn xs" style="background:var(--pur);color:#fff;border:none;padding:5px 11px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer" onclick="openM('m-pull-reviews')">📥 Pull</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRJ-002 card -->
+      <div class="prj-card">
+        <div class="prj-card-hdr">
+          <div>
+            <div class="prj-card-id">PRJ-002 <span class="bdg impl" style="font-size:10px;margin-left:4px">Implementer</span></div>
+            <div class="prj-card-partner">
+              <div class="pav" style="background:linear-gradient(135deg,#d97706,#f59e0b)">S</div> SurveyNest India · <span class="bdg country" style="font-size:10px">🇮🇳 India</span>
+            </div>
+          </div>
+          <span class="bdg pending"><span class="bdg-dot"></span>Import Pending</span>
+        </div>
+        <div class="prj-card-body">
+          <div class="prj-stats">
+            <div class="prj-stat"><div class="prj-stat-val bc">87</div><div class="prj-stat-lbl">Published</div></div>
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">—</div><div class="prj-stat-lbl">Completed</div></div>
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">—</div><div class="prj-stat-lbl">In Progress</div></div>
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">—</div><div class="prj-stat-lbl">Returned</div></div>
+          </div>
+          <div class="wbox" style="margin-bottom:0;padding:7px 10px;font-size:11.5px">
+            <span>⏳</span><span>Awaiting Implementer to confirm import. Stats will update after import is confirmed.</span>
+          </div>
+        </div>
+        <div class="prj-card-footer">
+          <div class="last-checked stale" style="display:flex;flex-direction:column;gap:1px">
+            <span>⚠ 2 reviews returned by Originator</span>
+            <span style="color:var(--grn);font-size:11px;font-weight:600">54 reviews ready to push</span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn br xs" onclick="openM('m-push-corrected')">↩ Corrected</button>
+            <button class="btn bp xs" onclick="openM('m-push-reviews')">📤 Push</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRJ-003 card -->
+      <div class="prj-card">
+        <div class="prj-card-hdr">
+          <div>
+            <div class="prj-card-id">PRJ-003 <span class="bdg orig" style="font-size:10px;margin-left:4px">Originator</span></div>
+            <div class="prj-card-partner">
+              <div class="pav" style="background:linear-gradient(135deg,#7c3aed,#4d9eff)">D</div> DataField Europe · <span class="bdg country" style="font-size:10px">🇫🇷 France</span>
+            </div>
+          </div>
+          <span class="bdg closed"><span class="bdg-dot"></span>Pending Setup</span>
+        </div>
+        <div class="prj-card-body">
+          <div class="prj-stats">
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">0</div><div class="prj-stat-lbl">Published</div></div>
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">—</div><div class="prj-stat-lbl">Completed</div></div>
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">—</div><div class="prj-stat-lbl">In Progress</div></div>
+            <div class="prj-stat"><div class="prj-stat-val" style="color:var(--t3)">—</div><div class="prj-stat-lbl">Returned</div></div>
+          </div>
+          <div class="ibox" style="margin-bottom:0;padding:7px 10px;font-size:11.5px">
+            <span>📤</span><span>Project created. Publish your first batch of orders to get started.</span>
+          </div>
+        </div>
+        <div class="prj-card-footer">
+          <div class="last-checked never">— No data published yet</div>
+          <button class="btn bp xs" onclick="openM('m-publish')">📤 Publish Orders</button>
+        </div>
+      </div>
+
+    </div><!-- /prj-cards -->
+  </div>
+</div>
+
+<!-- ══════════════════════ OPERATIONS ══════════════════════ -->
+<div id="page-operations" style="display:none">
+  <div class="pg">
+    <div class="stats">
+      <div class="stat"><div class="stat-lbl">Total Orders</div><div class="stat-val bc">1,842</div><div class="stat-sub">All projects</div></div>
+      <div class="stat"><div class="stat-lbl">Completed</div><div class="stat-val gc">1,284</div><div class="stat-sub">69.7% rate</div></div>
+      <div class="stat"><div class="stat-lbl">In Progress</div><div class="stat-val ac">311</div><div class="stat-sub">Active field work</div></div>
+      <div class="stat"><div class="stat-lbl">Overdue</div><div class="stat-val rc">14</div><div class="stat-sub">Require attention</div></div>
+    </div>
+    <div class="tb"><div class="tbl"><div class="srch"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="m11 11 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><input placeholder="Search orders..."></div><select class="flt"><option>All Sources</option><option>Local</option><option>Partner</option></select><select class="flt"><option>All Status</option><option>In Progress</option><option>Completed</option></select></div></div>
+    <div class="tw"><table><thead><tr><th>Order ID</th><th>Source</th><th>Client</th><th>Branch</th><th>Status</th><th>Due Date</th></tr></thead><tbody>
+      <tr><td class="tid">ORD-48201</td><td><span class="bdg src-l">Local</span></td><td>Volkswagen DE</td><td>VW Munich Nord</td><td><span class="bdg done"><span class="bdg-dot"></span>Completed</span></td><td style="font-size:12px;color:var(--t2)">Apr 12</td></tr>
+      <tr><td class="tid">ORD-48203</td><td><span class="bdg src-p">Partner</span></td><td>Volkswagen DE</td><td>VW Berlin Mitte</td><td><span class="bdg pending"><span class="bdg-dot"></span>Returned to Implementer</span></td><td style="font-size:12px;color:var(--red)">Apr 10 ⚠</td></tr>
+      <tr><td class="tid">ORD-48204</td><td><span class="bdg src-p">Partner</span></td><td>RetailChain India</td><td>RC Bangalore HQ</td><td><span class="bdg inprog"><span class="bdg-dot"></span>In Progress</span></td><td style="font-size:12px;color:var(--t2)">Apr 25</td></tr>
+      <tr><td class="tid">ORD-48205</td><td><span class="bdg src-l">Local</span></td><td>Volkswagen DE</td><td>VW Frankfurt</td><td><span class="bdg closed"><span class="bdg-dot"></span>Awaiting Assignation</span></td><td style="font-size:12px;color:var(--t2)">Apr 30</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ FIELD WORK ══════════════════════ -->
+<div id="page-fieldwork" style="display:none">
+  <div class="pg">
+    <div class="stats">
+      <div class="stat"><div class="stat-lbl">Partner Orders</div><div class="stat-val bc">207</div><div class="stat-sub">Published to partners</div></div>
+      <div class="stat"><div class="stat-lbl">Completed</div><div class="stat-val gc">126</div></div>
+      <div class="stat"><div class="stat-lbl">In Progress</div><div class="stat-val ac">63</div></div>
+      <div class="stat"><div class="stat-lbl">Returned</div><div class="stat-val rc">3</div><div class="stat-sub">Awaiting correction</div></div>
+    </div>
+    <div class="ibox"><span>🔒</span><span>Shopper identities are protected. Field agents appear as <strong>APR codes</strong> only — a non-reversible anonymous reference generated by the Implementer's system. Same code = same agent across reviews.</span></div>
+    <div class="tw"><table><thead><tr><th>Order ID</th><th>Project</th><th>Branch</th><th>City</th><th>Status</th><th>APR Code</th><th>Last Updated</th><th>Actions</th></tr></thead><tbody>
+      <tr><td class="tid">ORD-48201</td><td><a class="olnk" onclick="showPage('pn');switchTab('projects')">PRJ-001</a></td><td>VW Munich Nord</td><td>Munich</td><td><span class="bdg done"><span class="bdg-dot"></span>Completed</span></td><td><span class="apr-badge">IMP-REF-A7X29F3C</span></td><td style="font-size:12px;color:var(--t2)">Apr 12</td><td></td></tr>
+      <tr><td class="tid">ORD-48202</td><td><a class="olnk" onclick="showPage('pn');switchTab('projects')">PRJ-001</a></td><td>VW Munich Süd</td><td>Munich</td><td><span class="bdg done"><span class="bdg-dot"></span>Completed</span></td><td><span class="apr-badge">IMP-REF-B2K91M7D</span></td><td style="font-size:12px;color:var(--t2)">Apr 13</td><td></td></tr>
+      <tr><td class="tid">ORD-48203</td><td><a class="olnk" onclick="showPage('pn');switchTab('projects')">PRJ-001</a></td><td>VW Berlin Mitte</td><td>Berlin</td><td><span class="bdg pending"><span class="bdg-dot"></span>Returned to Implementer</span></td><td><span class="apr-badge">IMP-REF-A7X29F3C</span></td><td style="font-size:12px;color:var(--t2)">Today</td><td class="tacts"><button class="btn bo xs" onclick="openM('m-return-review')">↩ Return Again</button></td></tr>
+      <tr><td class="tid">ORD-48204</td><td><a class="olnk" onclick="showPage('pn');switchTab('projects')">PRJ-002</a></td><td>RC Bangalore HQ</td><td>Bangalore</td><td><span class="bdg inprog"><span class="bdg-dot"></span>In Progress</span></td><td><span class="apr-nil">— not submitted</span></td><td style="font-size:12px;color:var(--t2)">Apr 19</td><td></td></tr>
+      <tr><td class="tid">ORD-48205</td><td><a class="olnk" onclick="showPage('pn');switchTab('projects')">PRJ-001</a></td><td>VW Frankfurt</td><td>Frankfurt</td><td><span class="bdg closed"><span class="bdg-dot"></span>Awaiting Assignation</span></td><td><span class="apr-nil">— not assigned</span></td><td style="font-size:12px;color:var(--t2)">—</td><td></td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PARTNER NETWORK ══════════════════════ -->
+<div id="page-pn" style="display:none;flex-direction:column">
+  <div class="pn-hdr">
+    <div><div class="pn-hdr-t">Partner Network</div><div class="pn-hdr-s">Post opportunities · Agree deals · Publish orders · Sync reviews</div></div>
+    <button class="btn bp sm" onclick="openM('m-create-post')">+ Create New Post</button>
+  </div>
+  <div class="ptabs">
+    <button class="ptab active" id="tab-posts" onclick="switchTab('posts')">📋 Opportunities Board<span class="tcnt" id="cnt-posts">12</span></button>
+    <button class="ptab" id="tab-deals" onclick="switchTab('deals')">🤝 Active Partnerships<span class="tcnt" id="cnt-deals">3</span></button>
+    <button class="ptab" id="tab-projects" onclick="switchTab('projects')">🗂 Partner Projects<span class="tcnt" id="cnt-projects">3</span></button>
+  </div>
+  <div class="pg">
+
+    <!-- POSTS TAB -->
+    <div class="page active" id="page-posts">
+      <div class="stats">
+        <div class="stat"><div class="stat-lbl">Total Posts</div><div class="stat-val" id="st-total">24</div></div>
+        <div class="stat"><div class="stat-lbl">Open Posts</div><div class="stat-val bc" id="st-open">12</div><div class="stat-sub">Awaiting responses</div></div>
+        <div class="stat"><div class="stat-lbl">My Posts</div><div class="stat-val ac">5</div></div>
+        <div class="stat"><div class="stat-lbl">Closed</div><div class="stat-val" style="color:var(--t2)">12</div></div>
+      </div>
+      <div class="tb">
+        <div class="tbl">
+          <div class="srch"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="m11 11 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><input placeholder="Search posts..."></div>
+          <select class="flt"><option>All Countries</option><option>Germany</option><option>France</option><option>India</option></select>
+          <select class="flt"><option>All Services</option><option>MS</option><option>CAWI</option><option>CATI</option><option>Retail Audit</option></select>
+          <select class="flt"><option>All Status</option><option>Open</option><option>Closed</option></select>
+        </div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Post ID</th><th>Posted By</th><th>Date</th><th>Title</th><th>Country</th><th>Services</th><th>Replies</th><th>Status</th><th>Closing Date</th><th>Actions</th></tr></thead><tbody id="posts-tbody"></tbody></table></div>
+    </div>
+
+    <!-- DEALS TAB -->
+    <div class="page" id="page-deals">
+      <div class="stats">
+        <div class="stat"><div class="stat-lbl">Total Deals</div><div class="stat-val">8</div></div>
+        <div class="stat"><div class="stat-lbl">Active</div><div class="stat-val ac">3</div></div>
+        <div class="stat"><div class="stat-lbl">Completed</div><div class="stat-val gc">4</div></div>
+        <div class="stat"><div class="stat-lbl">As Implementer</div><div class="stat-val pc">2</div></div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Deal ID</th><th>Role</th><th>Partner</th><th>Date</th><th>Title</th><th>Country</th><th>Services</th><th>Status</th><th>Project</th><th>Actions</th></tr></thead><tbody>
+        <tr><td class="tid">DL-2025-001</td><td><span class="bdg orig">Originator</span></td><td><div class="pchip"><div class="pav">M</div>MarketForce GmbH</div></td><td style="font-size:12px;color:var(--t2)">14 Mar</td><td style="font-weight:600">MS — Germany Q2</td><td><span class="bdg country">🇩🇪</span></td><td><span class="bdg srv">MS</span></td><td><span class="bdg inprog"><span class="bdg-dot"></span>Active</span></td><td><a class="olnk" onclick="switchTab('projects')">PRJ-001</a></td><td class="tacts"><button class="btn bo sm" onclick="openDealThread('DL-2025-001','MS — Germany Q2')">💬 Thread</button></td></tr>
+        <tr><td class="tid">DL-2025-002</td><td><span class="bdg impl">Implementer</span></td><td><div class="pchip"><div class="pav" style="background:linear-gradient(135deg,#d97706,#f59e0b)">S</div>SurveyNest India</div></td><td style="font-size:12px;color:var(--t2)">22 Mar</td><td style="font-weight:600">Retail Audit — India</td><td><span class="bdg country">🇮🇳</span></td><td><span class="bdg srv">Retail Audit</span></td><td><span class="bdg inprog"><span class="bdg-dot"></span>Active</span></td><td><a class="olnk" onclick="switchTab('projects')">PRJ-002</a></td><td class="tacts"><button class="btn bo sm" onclick="openDealThread('DL-2025-002','Retail Audit — India')">💬 Thread</button></td></tr>
+        <tr><td class="tid">DL-2025-003</td><td><span class="bdg orig">Originator</span></td><td><div class="pchip"><div class="pav" style="background:linear-gradient(135deg,#7c3aed,#4d9eff)">D</div>DataField Europe</div></td><td style="font-size:12px;color:var(--t2)">01 Apr</td><td style="font-weight:600">MS — France Luxury</td><td><span class="bdg country">🇫🇷</span></td><td><span class="bdg srv">MS</span> <span class="bdg srv">CAWI</span></td><td><span class="bdg inprog"><span class="bdg-dot"></span>Active</span></td><td><a class="olnk" onclick="switchTab('projects')">PRJ-003</a></td><td class="tacts"><button class="btn bo sm" onclick="openDealThread('DL-2025-003','MS — France Luxury')">💬 Thread</button></td></tr>
+      </tbody></table></div>
+    </div>
+
+    <!-- PROJECTS TAB -->
+    <div class="page" id="page-projects">
+      <div class="stats">
+        <div class="stat"><div class="stat-lbl">Projects</div><div class="stat-val">3</div></div>
+        <div class="stat"><div class="stat-lbl">Orders Published</div><div class="stat-val bc">247</div></div>
+        <div class="stat"><div class="stat-lbl">Reviews Received</div><div class="stat-val gc">126</div></div>
+        <div class="stat"><div class="stat-lbl">Pending Returns</div><div class="stat-val rc">3</div></div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Project ID</th><th>Deal</th><th>Partner</th><th>Role</th><th>Orders</th><th>Sync Status</th><th>Last Sync</th><th>Actions</th></tr></thead><tbody>
+
+        <!-- PRJ-001: Originator — field work done, reviews available to pull -->
+        <tr>
+          <td class="tid">PRJ-001</td><td class="tid">DL-2025-001</td>
+          <td><div class="pchip"><div class="pav">M</div>MarketForce GmbH</div></td>
+          <td><span class="bdg orig">Originator</span></td>
+          <td><a class="olnk" onclick="openOrders('PRJ-001',120)">120 orders</a></td>
+          <td>
+            <div>
+              <span class="sync-stage" style="color:var(--pur)">📥 Reviews Available</span>
+              <div class="sync-sub">Implementer pushed 72 reviews · ready to pull</div>
+            </div>
+          </td>
+          <td style="font-size:12px;color:var(--t2)">Today 14:20</td>
+          <td class="tacts">
+            <button class="btn bp sm" onclick="openM('m-pull-reviews')" style="background:var(--pur);box-shadow:0 2px 6px rgba(124,58,237,.22)">📥 Pull Reviews</button>
+            <button class="btn bo sm" onclick="openPublish('PRJ-001')">📤 Publish</button>
+            <button class="btn bt sm" onclick="openM('m-check-status')">🔄 Status</button>
+          </td>
+        </tr>
+
+        <!-- PRJ-002: Implementer — orders confirmed, field work ongoing, some returned -->
+        <tr>
+          <td class="tid">PRJ-002</td><td class="tid">DL-2025-002</td>
+          <td><div class="pchip"><div class="pav" style="background:linear-gradient(135deg,#d97706,#f59e0b)">S</div>SurveyNest India</div></td>
+          <td><span class="bdg impl">Implementer</span></td>
+          <td><a class="olnk" onclick="openOrders('PRJ-002',87)">87 orders</a></td>
+          <td>
+            <div>
+              <span class="sync-stage gc">✅ Orders Confirmed</span>
+              <div class="sync-sub">54 completed · 2 returned from Originator</div>
+            </div>
+          </td>
+          <td style="font-size:12px;color:var(--t2)">Yesterday 16:30</td>
+          <td class="tacts">
+            <button class="btn bp sm" onclick="openM('m-push-reviews')">📤 Push Reviews</button>
+            <button class="btn br sm" onclick="openM('m-push-corrected')" title="2 reviews returned by Originator awaiting correction push">↩ Push Corrected <span style="background:var(--red);color:#fff;border-radius:9px;padding:1px 6px;font-size:10px;margin-left:2px">2</span></button>
+          </td>
+        </tr>
+
+        <!-- PRJ-003: Originator — pending setup -->
+        <tr>
+          <td class="tid">PRJ-003</td><td class="tid">DL-2025-003</td>
+          <td><div class="pchip"><div class="pav" style="background:linear-gradient(135deg,#7c3aed,#4d9eff)">D</div>DataField Europe</div></td>
+          <td><span class="bdg orig">Originator</span></td>
+          <td style="color:var(--t3)">—</td>
+          <td><div><span class="sync-stage" style="color:var(--t3)">⏳ Pending Setup</span><div class="sync-sub">Publish first orders to start</div></div></td>
+          <td style="color:var(--t3)">—</td>
+          <td class="tacts">
+            <button class="btn bp sm" onclick="openPublish('PRJ-003')">📤 Publish</button>
+          </td>
+        </tr>
+
+      </tbody></table></div>
+    </div>
+
+  </div>
+</div><!-- /page-pn -->
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- CREATE POST -->
+<div class="ov" id="m-create-post" onclick="cbg(event,'m-create-post')">
+  <div class="modal mmd">
+    <div class="mh"><div><div class="mt">Create New Post</div><div class="ms">Visible to all Checker partner companies worldwide</div></div><button class="mc" onclick="closeM('m-create-post')">✕</button></div>
+    <div class="mb">
+      <div class="ibox"><span>📧</span><span>Email notification sent to all Checker master admins worldwide when you publish.</span></div>
+      <div class="fg"><label class="fl">Post Title <span>*</span></label><input class="fi" id="np-title" placeholder="e.g. Mystery Shopping — Germany Q3 2025"></div>
+      <div class="fg"><label class="fl">Description <span>*</span></label><textarea class="fta" rows="4" placeholder="Project scope, number of locations, timeline, what you need from a partner..."></textarea></div>
+      <div class="fr3">
+        <div class="fg" style="margin:0"><label class="fl">Country <span>*</span></label><select class="fsl"><option>Select...</option><option>Germany 🇩🇪</option><option>France 🇫🇷</option><option>India 🇮🇳</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Service <span>*</span></label><select class="fsl"><option>Select...</option><option>MS</option><option>CAWI</option><option>CATI</option><option>Retail Audit</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Closing Date <span>*</span></label><input type="date" class="fi"></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-create-post')">Cancel</button><button class="btn bp" onclick="submitPost()">📢 Publish Post</button></div>
+  </div>
+</div>
+
+<!-- VIEW REPLIES -->
+<div class="ov" id="m-view-replies" onclick="cbg(event,'m-view-replies')">
+  <div class="modal mlg">
+    <div class="mh"><div><div class="mt" id="vr-title">Replies</div><div class="ms" id="vr-sub">Partner responses</div></div><button class="mc" onclick="closeM('m-view-replies')">✕</button></div>
+    <div class="mb">
+      <div class="ibox"><span>💡</span><span>Agreeing a deal <strong>closes this post immediately</strong> and <strong>auto-creates a Partner Project</strong>.</span></div>
+      <div id="vr-list" class="rthread"></div>
+      <div class="hdiv"><div class="sec-hd">Follow-up Message</div></div>
+      <div class="fg"><textarea class="fta" rows="2" placeholder="Send a message to a specific partner..."></textarea></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-view-replies')">Close</button><button class="btn bo">📨 Send Message</button></div>
+  </div>
+</div>
+
+<!-- SEND REPLY -->
+<div class="ov" id="m-send-reply" onclick="cbg(event,'m-send-reply')">
+  <div class="modal mmd">
+    <div class="mh"><div><div class="mt">Reply to Post</div><div class="ms" id="sr-sub">Express your interest</div></div><button class="mc" onclick="closeM('m-send-reply')">✕</button></div>
+    <div class="mb">
+      <div class="fr2"><div class="fg"><label class="fl">Name</label><input class="fi" value="Arjun Sharma" readonly></div><div class="fg"><label class="fl">Email</label><input class="fi" value="arjun@globalsurvey.com" readonly></div></div>
+      <div class="fg"><label class="fl">Company</label><input class="fi" value="GlobalSurvey Co." readonly></div>
+      <div class="fg"><label class="fl">Message <span>*</span></label><textarea class="fta" rows="4" placeholder="Describe your capabilities, field coverage, experience, estimated timeline..."></textarea></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-send-reply')">Cancel</button><button class="btn bp" onclick="sendReply()">📨 Send Reply</button></div>
+  </div>
+</div>
+
+<!-- AGREE CONFIRM -->
+<div class="ov" id="m-agree-confirm" onclick="cbg(event,'m-agree-confirm')">
+  <div class="modal msm">
+    <div class="mh"><div><div class="mt">Agree Deal</div><div class="ms" id="ac-sub">Cannot be undone</div></div><button class="mc" onclick="closeM('m-agree-confirm')">✕</button></div>
+    <div class="mb">
+      <div class="agree-banner"><div class="agree-icon">🤝</div><div class="agree-text"><strong id="ac-partner">Agreeing deal</strong><p>✅ Post closes immediately<br>✅ Partner Project auto-created<br>✅ Both parties notified<br>⚠ All other replies declined</p></div></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-agree-confirm')">Cancel</button><button class="btn bp" onclick="confirmDeal()">🤝 Confirm Agreement</button></div>
+  </div>
+</div>
+
+<!-- AGREE SUCCESS -->
+<div class="ov" id="m-agree-success" onclick="cbg(event,'m-agree-success')">
+  <div class="modal msm">
+    <div class="mb" style="padding-top:26px;text-align:center">
+      <div class="succ-ic">🎉</div><div class="succ-t">Deal Agreed!</div>
+      <div class="succ-s" id="succ-s">Partnership confirmed. Partner Project auto-created.</div>
+      <div style="margin:14px 0;background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:12px;text-align:left">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--t2)">Deal ID</span><span class="tid" id="succ-did">DL-2025-004</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--t2)">Partner Project</span><span class="tid" id="succ-pid">PRJ-004</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t2)">Post Status</span><span class="bdg closed"><span class="bdg-dot"></span>Closed</span></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center"><button class="btn bg sm" onclick="closeM('m-agree-success')">Close</button><button class="btn bp sm" onclick="goPrj()">View Partner Projects →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- DEAL THREAD -->
+<div class="ov" id="m-deal-thread" onclick="cbg(event,'m-deal-thread')">
+  <div class="modal mmd">
+    <div class="mh"><div><div class="mt" id="dt-title">Deal Thread</div><div class="ms" id="dt-sub"></div></div><button class="mc" onclick="closeM('m-deal-thread')">✕</button></div>
+    <div class="mb">
+      <div class="cthread">
+        <div class="ci"><div class="ci-h"><div class="ci-av">AS</div><span class="ci-name">Arjun Sharma (Originator)</span><span class="ci-time">14 Mar, 10:22</span></div><div class="ci-txt">Hello! Glad to work together. Publishing the first batch shortly.</div></div>
+        <div class="ci"><div class="ci-h"><div class="ci-av imp">K</div><span class="ci-name">Klaus Müller (Implementer)</span><span class="ci-time">14 Mar, 11:45</span></div><div class="ci-txt">Ready on our side. Please publish when ready.</div></div>
+        <div class="ci"><div class="ci-h"><div class="ci-av">AS</div><span class="ci-name">Arjun Sharma (Originator)</span><span class="ci-time">15 Mar, 09:00</span></div><div class="ci-txt">Published 120 orders — VW QRE v2.1, 3 cities. Please confirm import.</div></div>
+        <div class="ci"><div class="ci-h"><div class="ci-av imp">K</div><span class="ci-name">Klaus Müller (Implementer)</span><span class="ci-time">15 Mar, 14:30</span></div><div class="ci-txt">Import confirmed. Field work begins April 1st.</div></div>
+      </div>
+      <div class="fg"><label class="fl">Send Message</label><textarea class="fta" rows="2" placeholder="Write your message..."></textarea></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-deal-thread')">Close</button><button class="btn bp">📨 Send</button></div>
+  </div>
+</div>
+
+<!-- ══ MERGED PUBLISH MODAL (Orders + Data) ══ -->
+<div class="ov" id="m-publish" onclick="cbg(event,'m-publish')">
+  <div class="modal mxl">
+    <div class="mh">
+      <div>
+        <div class="mt" id="pub-title">📤 Publish to Implementer — PRJ-001</div>
+        <div class="ms">Partner: <strong id="pub-partner">MarketForce GmbH</strong> · First publish: QRE and Branches are required</div>
+      </div>
+      <button class="mc" onclick="closeM('m-publish')">✕</button>
+    </div>
+    <div class="mb">
+      <!-- STEP 1: FILTER ORDERS -->
+      <div class="step-lbl"><div class="step-num">1</div><div class="step-title">Filter Orders</div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+        <div class="fg" style="margin:0"><label class="fl">Client</label><select class="fsl"><option selected>Volkswagen DE</option><option>RetailChain India</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Country</label><select class="fsl"><option selected>Germany 🇩🇪</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Region</label><select class="fsl"><option>All Regions</option><option selected>Bavaria + Berlin + Hesse</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">City</label><select class="fsl"><option selected>All Cities</option><option>Munich</option><option>Berlin</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Branch</label><select class="fsl"><option selected>All Branches</option><option>VW Frankfurt</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Branch Characteristics</label><select class="fsl"><option selected>All Characteristics</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Questionnaire</label><select class="fsl"><option selected>VW_MS_Q2_2025</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Project</label><select class="fsl"><option selected>VW Mystery Shopping 2025</option></select></div>
+        <div class="fg" style="margin:0"><label class="fl">Date Range</label><input type="text" class="fi" value="01 Jan 2025 — 30 Apr 2025"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+        <button class="btn bp sm">🔍 Fetch Orders</button>
+        <span style="font-size:12px;color:var(--t3)">Status fixed: <strong style="color:var(--t2)">Awaiting Assignation</strong> only</span>
+      </div>
+
+      <!-- STEP 2: SELECT ORDERS -->
+      <div class="step-lbl"><div class="step-num">2</div><div class="step-title">Select Orders to Publish</div></div>
+      <div class="tw" style="margin-bottom:14px">
+        <table><thead><tr>
+          <th><input type="checkbox" id="sel-all" onchange="toggleAll(this)" checked style="accent-color:var(--blu)"></th>
+          <th>Order ID</th><th>Branch</th><th>City</th><th>QRE</th><th>Project</th><th>Created</th>
+        </tr></thead><tbody>
+          <tr><td><input type="checkbox" class="ord-cb" checked style="accent-color:var(--blu)"></td><td class="tid">ORD-48205</td><td>VW Frankfurt</td><td>Frankfurt</td><td style="font-size:12px;color:var(--t2)">VW_MS_Q2</td><td style="font-size:12px;color:var(--t2)">VW MS 2025</td><td style="font-size:12px;color:var(--t2)">Jan 10</td></tr>
+          <tr><td><input type="checkbox" class="ord-cb" checked style="accent-color:var(--blu)"></td><td class="tid">ORD-48206</td><td>VW Hamburg</td><td>Hamburg</td><td style="font-size:12px;color:var(--t2)">VW_MS_Q2</td><td style="font-size:12px;color:var(--t2)">VW MS 2025</td><td style="font-size:12px;color:var(--t2)">Jan 11</td></tr>
+          <tr><td><input type="checkbox" class="ord-cb" style="accent-color:var(--blu)"></td><td class="tid">ORD-48207</td><td>VW Cologne</td><td>Cologne</td><td style="font-size:12px;color:var(--t2)">VW_MS_Q2</td><td style="font-size:12px;color:var(--t2)">VW MS 2025</td><td style="font-size:12px;color:var(--t2)">Jan 12</td></tr>
+        </tbody></table>
+      </div>
+
+      <!-- STEP 3: WHAT TO INCLUDE -->
+      <div class="step-lbl"><div class="step-num">3</div><div class="step-title">What to Include in This Publish</div></div>
+      <div class="ibox" style="margin-bottom:11px"><span>ℹ</span><span>This is the <strong>first publish</strong> for this project. QRE and Branches are pre-checked as they are required for the Implementer to run field work. You can uncheck them but will see a warning.</span></div>
+
+      <div class="pub-item checked mandatory" id="pi-orders">
+        <input type="checkbox" checked disabled style="accent-color:var(--blu);width:15px;height:15px;margin-top:2px;flex-shrink:0">
+        <div class="pub-item-content">
+          <div class="pub-item-title">📦 Orders <span class="pub-tag req">Always included</span></div>
+          <div class="pub-item-desc">Selected orders from Step 2 — <strong id="ord-count">2 orders selected</strong>. Implementer will receive these as new orders in their system.</div>
+        </div>
+      </div>
+
+      <div class="pub-item checked" id="pi-qre" onclick="togglePubItem(this,'qre')">
+        <input type="checkbox" id="cb-qre" checked style="accent-color:var(--blu);width:15px;height:15px;margin-top:2px;flex-shrink:0" onchange="onPubCbChange(event,'qre')">
+        <div class="pub-item-content">
+          <div class="pub-item-title">📋 Questionnaire (Full Structure) <span class="pub-tag req" id="tag-qre">Required — 1st publish</span></div>
+          <div class="pub-item-desc">Includes: sections, sub-sections, questions, answer options, scoring, weights, display conditions, alternative languages. <strong>VW_MS_Q2_2025 v2.1</strong></div>
+        </div>
+      </div>
+
+      <div class="pub-item checked" id="pi-branches" onclick="togglePubItem(this,'branches')">
+        <input type="checkbox" id="cb-branches" checked style="accent-color:var(--blu);width:15px;height:15px;margin-top:2px;flex-shrink:0" onchange="onPubCbChange(event,'branches')">
+        <div class="pub-item-content">
+          <div class="pub-item-title">🏢 Branches &amp; Characteristics <span class="pub-tag req" id="tag-branches">Required — 1st publish</span></div>
+          <div class="pub-item-desc">All client branches with country, region, city, address and custom branch characteristics. Existing branches in Implementer system will be updated.</div>
+        </div>
+      </div>
+
+      <div class="pub-item" id="pi-payments" onclick="togglePubItem(this,'payments')">
+        <input type="checkbox" id="cb-payments" style="accent-color:var(--blu);width:15px;height:15px;margin-top:2px;flex-shrink:0">
+        <div class="pub-item-content">
+          <div class="pub-item-title">💳 Payment Flows <span class="pub-tag opt">Optional</span></div>
+          <div class="pub-item-desc">Payment types and amounts per order type. Include if the Implementer needs to manage payments for shoppers.</div>
+        </div>
+      </div>
+
+      <div class="pub-item" id="pi-languages" onclick="togglePubItem(this,'languages')">
+        <input type="checkbox" id="cb-languages" style="accent-color:var(--blu);width:15px;height:15px;margin-top:2px;flex-shrink:0">
+        <div class="pub-item-content">
+          <div class="pub-item-title">🌐 Additional Languages <span class="pub-tag opt">Optional</span></div>
+          <div class="pub-item-desc">Add new language translations for QRE questions and answers. Only include if Implementer needs a language not yet in their system.</div>
+        </div>
+      </div>
+
+      <div class="fg" style="margin-top:12px"><label class="fl">Batch Note to Implementer (optional)</label><textarea class="fta" rows="2" placeholder="Any specific instructions for this batch..."></textarea></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-publish')">Cancel</button><button class="btn bp" onclick="doPublish()">📤 Publish Now</button></div>
+  </div>
+</div>
+
+<!-- ══ CONFIRM IMPORT (Implementer) ══ -->
+<div class="ov" id="m-confirm-import" onclick="cbg(event,'m-confirm-import')">
+  <div class="modal mxl">
+    <div class="mh">
+      <div>
+        <div class="mt">✅ Confirm Import — PRJ-002</div>
+        <div class="ms">Published by GlobalSurvey Co. · Today 09:00 · <strong>First import for this project</strong></div>
+      </div>
+      <button class="mc" onclick="closeM('m-confirm-import')">✕</button>
+    </div>
+    <div class="mb">
+
+      <!-- WHAT'S IN THIS PAYLOAD -->
+      <div class="sec-hd">What Was Published</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span class="bdg srv">📦 87 Orders</span>
+        <span class="bdg srv">📋 Questionnaire (RCI_AUDIT_2025 v1.0)</span>
+        <span class="bdg srv">🏢 Branches &amp; Characteristics</span>
+        <span class="bdg srv">💳 Payment Flows</span>
+      </div>
+
+      <!-- CLIENT CHOICE (first import only) -->
+      <div class="sec-hd">Step 1 — Map to Client</div>
+      <div class="ibox" style="margin-bottom:11px"><span>ℹ</span><span>This is the <strong>first import</strong> for PRJ-002. Choose how to map the incoming data to a client in your system. This choice is saved — future imports for this project will use the same mapping automatically.</span></div>
+
+      <div id="ci-options">
+        <div class="ri sel" id="ri-existing" onclick="selectClientChoice('existing')">
+          <input type="radio" name="ci-choice" value="existing" checked>
+          <div>
+            <strong>Use Existing Client</strong>
+            <p>Map incoming data to a client already in your Checker system. You can choose how to apply QRE and branches.</p>
+          </div>
+        </div>
+        <div class="ri" id="ri-new" onclick="selectClientChoice('new')">
+          <input type="radio" name="ci-choice" value="new">
+          <div>
+            <strong>Create New Client</strong>
+            <p>Auto-create a new client with all incoming data: branches, QRE, sections, languages, payments, and orders.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXISTING CLIENT OPTIONS -->
+      <div id="ci-existing-opts" style="margin-top:12px">
+        <div class="fg"><label class="fl">Select Existing Client <span>*</span></label>
+          <select class="fsl" id="ci-client-sel" onchange="onClientSelect()">
+            <option value="">— Select client —</option>
+            <option value="rc" selected>RetailChain India</option>
+            <option value="vw">Volkswagen DE</option>
+            <option value="lx">Luxe SA Paris</option>
+          </select>
+        </div>
+
+        <div id="ci-mapping-opts" style="">
+          <div class="sec-hd" style="margin-top:4px">Step 2 — Choose What to Apply</div>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
+
+            <!-- ORDERS always on -->
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid rgba(29,111,191,.2);border-radius:var(--rs);background:var(--blud)">
+              <input type="checkbox" checked disabled style="accent-color:var(--blu);margin-top:2px;flex-shrink:0">
+              <div><div style="font-size:13px;font-weight:600">📦 Apply Orders <span class="pub-tag req">Always</span></div><div style="font-size:11.5px;color:var(--t2);margin-top:2px">87 orders will be created in your system with source = partner, status = Awaiting Assignation.</div></div>
+            </div>
+
+            <!-- QRE -->
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:#fff" id="ci-qre-block">
+              <input type="checkbox" id="ci-cb-qre" checked style="accent-color:var(--blu);margin-top:2px;flex-shrink:0" onchange="toggleQreChoice()">
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:600">📋 Apply Questionnaire (RCI_AUDIT_2025)</div>
+                <div style="font-size:11.5px;color:var(--t2);margin-top:2px;margin-bottom:8px">Choose how to handle the incoming QRE in your system.</div>
+                <div id="ci-qre-opts" style="display:flex;flex-direction:column;gap:6px">
+                  <label style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1px solid var(--bd2);border-radius:var(--rs);cursor:pointer;font-size:12.5px;background:var(--bg)">
+                    <input type="radio" name="qre-choice" value="new" checked style="accent-color:var(--blu);margin-top:2px;flex-shrink:0">
+                    <div><strong>Create new QRE</strong> under selected client — Originator's full QRE structure will be added as a new questionnaire in your system.</div>
+                  </label>
+                  <label style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1px solid var(--bd2);border-radius:var(--rs);cursor:pointer;font-size:12.5px;background:var(--bg)">
+                    <input type="radio" name="qre-choice" value="existing" style="accent-color:var(--blu);margin-top:2px;flex-shrink:0">
+                    <div><strong>Map to existing QRE</strong> — Select one of your existing questionnaires to link. Incoming scoring and structure will update that QRE.</div>
+                  </label>
+                </div>
+                <div id="ci-qre-existing-sel" style="display:none;margin-top:7px">
+                  <select class="fsl"><option>— Select existing QRE —</option><option>RCI Standard Audit v3</option><option>India Retail 2024</option></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- BRANCHES -->
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:#fff">
+              <input type="checkbox" checked style="accent-color:var(--blu);margin-top:2px;flex-shrink:0">
+              <div>
+                <div style="font-size:13px;font-weight:600">🏢 Apply Branches &amp; Characteristics</div>
+                <div style="font-size:11.5px;color:var(--t2);margin-top:2px">New branches will be created. Existing branches (matched by name) will have properties updated.</div>
+              </div>
+            </div>
+
+            <!-- PAYMENTS -->
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:#fff">
+              <input type="checkbox" style="accent-color:var(--blu);margin-top:2px;flex-shrink:0">
+              <div>
+                <div style="font-size:13px;font-weight:600">💳 Apply Payment Flows <span class="pub-tag opt">Optional</span></div>
+                <div style="font-size:11.5px;color:var(--t2);margin-top:2px">Apply only if you want to use Originator's payment structure for this client.</div>
+              </div>
+            </div>
+
+          </div><!-- /apply options -->
+        </div><!-- /ci-mapping-opts -->
+      </div><!-- /ci-existing-opts -->
+
+      <!-- NEW CLIENT OPTIONS (hidden by default) -->
+      <div id="ci-new-opts" style="display:none;margin-top:12px">
+        <div class="sbox"><span>✅</span><span>A new client will be created automatically with all incoming data — branches, QRE, sections, languages, payment flows, and orders. No additional configuration needed.</span></div>
+        <div class="fg"><label class="fl">New Client Name (optional override)</label><input class="fi" placeholder="Leave blank to use Originator's client name: RetailChain India"></div>
+      </div>
+
+    </div>
+    <div class="mf">
+      <button class="btn br sm" onclick="closeM('m-confirm-import')">✗ Reject Payload</button>
+      <button class="btn bg" onclick="closeM('m-confirm-import')">Cancel</button>
+      <button class="btn bp" onclick="confirmImport()">✅ Confirm Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECK STATUS -->
+<div class="ov" id="m-check-status" onclick="cbg(event,'m-check-status')">
+  <div class="modal mlg">
+    <div class="mh"><div><div class="mt">🔄 Check Status — PRJ-001</div><div class="ms">Last checked: Today 09:14 · MarketForce GmbH</div></div><button class="mc" onclick="closeM('m-check-status')">✕</button></div>
+    <div class="mb">
+      <div class="sbox"><span>ℹ</span><span>Click <strong>Refresh Status</strong> to fetch the latest statuses from the Implementer. This is a manual pull — statuses are not updated automatically.</span></div>
+      <div class="tw"><table><thead><tr><th>Orig. Order ID</th><th>Branch</th><th>City</th><th>Status (Implementer)</th><th>APR Code</th><th>Last Updated</th></tr></thead><tbody>
+        <tr><td class="tid">ORD-48201</td><td>VW Munich Nord</td><td>Munich</td><td><span class="bdg done"><span class="bdg-dot"></span>Completed</span></td><td><span class="apr-badge">IMP-REF-A7X29F3C</span></td><td style="font-size:12px;color:var(--t2)">Apr 12</td></tr>
+        <tr><td class="tid">ORD-48202</td><td>VW Munich Süd</td><td>Munich</td><td><span class="bdg done"><span class="bdg-dot"></span>Completed</span></td><td><span class="apr-badge">IMP-REF-B2K91M7D</span></td><td style="font-size:12px;color:var(--t2)">Apr 13</td></tr>
+        <tr><td class="tid">ORD-48203</td><td>VW Berlin Mitte</td><td>Berlin</td><td><span class="bdg pending"><span class="bdg-dot"></span>Returned from Originator</span></td><td><span class="apr-badge">IMP-REF-A7X29F3C</span></td><td style="font-size:12px;color:var(--t2)">Today</td></tr>
+        <tr><td class="tid">ORD-48205</td><td>VW Frankfurt</td><td>Frankfurt</td><td><span class="bdg closed"><span class="bdg-dot"></span>Awaiting Assignation</span></td><td><span class="apr-nil">—</span></td><td style="font-size:12px;color:var(--t2)">—</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-check-status')">Close</button><button class="btn bt" onclick="refreshStatus()">🔄 Refresh Status</button></div>
+  </div>
+</div>
+
+<!-- RETURN REVIEW -->
+<div class="ov" id="m-return-review" onclick="cbg(event,'m-return-review')">
+  <div class="modal mlg">
+    <div class="mh"><div><div class="mt">↩ Return Review to Implementer</div><div class="ms">Order #48203 · VW Berlin Mitte · Return 1 of max 2</div></div><button class="mc" onclick="closeM('m-return-review')">✕</button></div>
+    <div class="mb">
+      <div class="wbox"><span>⚠</span><span>This is return <strong>1 of 2</strong> allowed. After 2 returns, use existing Checker review tools to handle this review.</span></div>
+      <div class="fg"><label class="fl">Return Reason <span>*</span></label><textarea class="fta" rows="3" placeholder="Describe why you are returning this review. Implementer will see this in their notification."></textarea></div>
+      <div class="hdiv"><div class="sec-hd">Flag Specific Questions (Optional)</div></div>
+      <div>
+        <div class="qflag flagged"><input type="checkbox" checked><div style="flex:1"><div class="qflag-q">Q13 — Was the entrance clearly visible and well-lit?</div><div class="qflag-note"><input type="text" value="Photo is too dark. Please retake in daylight."></div></div></div>
+        <div class="qflag flagged"><input type="checkbox" checked><div style="flex:1"><div class="qflag-q">Q17 — Staff greeting score (1–5)</div><div class="qflag-note"><input type="text" value="Score is 0 but narrative says staff greeted. Please verify."></div></div></div>
+        <div class="qflag"><input type="checkbox"><div style="flex:1"><div class="qflag-q">Q22 — Was the product display area clean?</div><div class="qflag-note" style="display:none"><input type="text" placeholder="Add note..."></div></div></div>
+      </div>
+      <div style="margin-top:8px;font-size:11.5px;color:var(--t3)">Question notes are sent in the Implementer's notification. No special UI is needed on their side.</div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-return-review')">Cancel</button><button class="btn br" onclick="doReturn()">↩ Return Review</button></div>
+  </div>
+</div>
+
+<!-- ORDERS OVERVIEW -->
+<div class="ov" id="m-orders" onclick="cbg(event,'m-orders')">
+  <div class="modal mlg">
+    <div class="mh"><div><div class="mt" id="ord-title">Orders — PRJ-001</div><div class="ms">Published order status</div></div><button class="mc" onclick="closeM('m-orders')">✕</button></div>
+    <div class="mb">
+      <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="stat" style="padding:12px 14px"><div class="stat-lbl">Total</div><div class="stat-val bc" id="ord-tot" style="font-size:20px">120</div></div>
+        <div class="stat" style="padding:12px 14px"><div class="stat-lbl">Completed</div><div class="stat-val gc" id="ord-done" style="font-size:20px">72</div></div>
+        <div class="stat" style="padding:12px 14px"><div class="stat-lbl">In Progress</div><div class="stat-val ac" id="ord-prog" style="font-size:20px">35</div></div>
+        <div class="stat" style="padding:12px 14px"><div class="stat-lbl">Awaiting</div><div class="stat-val" id="ord-wait" style="font-size:20px;color:var(--t2)">13</div></div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Order ID</th><th>Branch</th><th>City</th><th>Status</th><th>APR Code</th><th>Updated</th></tr></thead><tbody>
+        <tr><td class="tid">ORD-48201</td><td>VW Munich Nord</td><td>Munich</td><td><span class="bdg done"><span class="bdg-dot"></span>Completed</span></td><td><span class="apr-badge">IMP-REF-A7X29F3C</span></td><td style="font-size:12px;color:var(--t2)">Apr 12</td></tr>
+        <tr><td class="tid">ORD-48203</td><td>VW Berlin Mitte</td><td>Berlin</td><td><span class="bdg pending"><span class="bdg-dot"></span>Returned to Implementer</span></td><td><span class="apr-badge">IMP-REF-A7X29F3C</span></td><td style="font-size:12px;color:var(--t2)">Today</td></tr>
+        <tr><td class="tid">ORD-48205</td><td>VW Frankfurt</td><td>Frankfurt</td><td><span class="bdg closed"><span class="bdg-dot"></span>Awaiting Assignation</span></td><td><span class="apr-nil">—</span></td><td style="font-size:12px;color:var(--t2)">—</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="closeM('m-orders')">Close</button></div>
+  </div>
+</div>
+
+<!-- ══ PUSH REVIEWS MODAL (Implementer → Originator) ══ -->
+<div class="ov" id="m-push-reviews" onclick="cbg(event,'m-push-reviews')">
+  <div class="modal mxl">
+    <div class="mh">
+      <div>
+        <div class="mt">📤 Push Reviews to Originator — PRJ-002</div>
+        <div class="ms">Originator: GlobalSurvey Co. · Select completed reviews to push. You can push in batches.</div>
+      </div>
+      <button class="mc" onclick="closeM('m-push-reviews')">✕</button>
+    </div>
+    <div class="mb">
+      <div class="ibox"><span>💡</span><span>You can push reviews in batches at any time. Push completed reviews now and push more later as field work progresses. The Originator will be notified each time you push.</span></div>
+
+      <!-- FILTER + STATS -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <select class="flt"><option>All Statuses</option><option>Finished Awaiting Approval</option><option>Approved</option><option>In Progress</option></select>
+        <select class="flt"><option>All Cities</option><option>Bangalore</option><option>Mumbai</option><option>Delhi</option></select>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <div style="text-align:center;padding:6px 14px;background:var(--grnd);border:1px solid rgba(5,150,105,.2);border-radius:var(--rs)"><div style="font-size:16px;font-weight:800;color:var(--grn)">54</div><div style="font-size:10px;color:var(--grn);font-weight:600">Ready to Push</div></div>
+          <div style="text-align:center;padding:6px 14px;background:var(--ambd);border:1px solid rgba(217,119,6,.2);border-radius:var(--rs)"><div style="font-size:16px;font-weight:800;color:var(--amb)">28</div><div style="font-size:10px;color:var(--amb);font-weight:600">In Progress</div></div>
+          <div style="text-align:center;padding:6px 14px;background:var(--redd);border:1px solid rgba(220,38,38,.18);border-radius:var(--rs)"><div style="font-size:16px;font-weight:800;color:var(--red)">2</div><div style="font-size:10px;color:var(--red);font-weight:600">Returned</div></div>
+        </div>
+      </div>
+
+      <!-- REVIEW TABLE -->
+      <div class="tw" style="margin-bottom:13px">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="pr-sel-all" onchange="togglePrAll(this)" style="accent-color:var(--blu)"></th>
+              <th>Order ID (Orig.)</th>
+              <th>Branch</th>
+              <th>City</th>
+              <th>Review Status</th>
+              <th>APR Code</th>
+              <th>Images</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="pr-cb" checked style="accent-color:var(--blu)"></td>
+              <td class="tid">ORD-48204</td>
+              <td>RC Bangalore HQ</td><td>Bangalore</td>
+              <td><span class="bdg done"><span class="bdg-dot"></span>Finished Awaiting Approval</span></td>
+              <td><span class="apr-badge">IMP-REF-C3M44P1X</span></td>
+              <td style="font-size:12px;color:var(--teal)">📷 3 images</td>
+              <td style="font-size:12px;color:var(--t2)">Today 11:00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="pr-cb" checked style="accent-color:var(--blu)"></td>
+              <td class="tid">ORD-48208</td>
+              <td>RC Mumbai Central</td><td>Mumbai</td>
+              <td><span class="bdg done"><span class="bdg-dot"></span>Finished Awaiting Approval</span></td>
+              <td><span class="apr-badge">IMP-REF-D9Z11R2W</span></td>
+              <td style="font-size:12px;color:var(--teal)">📷 5 images</td>
+              <td style="font-size:12px;color:var(--t2)">Today 10:30</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="pr-cb" checked style="accent-color:var(--blu)"></td>
+              <td class="tid">ORD-48209</td>
+              <td>RC Delhi North</td><td>Delhi</td>
+              <td><span class="bdg done"><span class="bdg-dot"></span>Approved</span></td>
+              <td><span class="apr-badge">IMP-REF-C3M44P1X</span></td>
+              <td style="font-size:12px;color:var(--t3)">— no images</td>
+              <td style="font-size:12px;color:var(--t2)">Yesterday 17:00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="pr-cb" style="accent-color:var(--blu)"></td>
+              <td class="tid">ORD-48210</td>
+              <td>RC Hyderabad</td><td>Hyderabad</td>
+              <td><span class="bdg inprog"><span class="bdg-dot"></span>In Progress</span></td>
+              <td><span class="apr-nil">— not submitted</span></td>
+              <td style="font-size:12px;color:var(--t3)">—</td>
+              <td style="font-size:12px;color:var(--t3)">—</td>
+            </tr>
+            <tr>
+              <td colspan="8" style="text-align:center;padding:10px;color:var(--t3);font-size:12px">Showing 4 of 54 ready reviews · <span class="olnk">Load all</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="wbox" style="margin-bottom:12px"><span>ℹ</span><span>Images are included automatically in the payload as base64 data. Reviews with <strong>In Progress</strong> status can also be pushed — the Originator will see the current status.</span></div>
+      <div class="fg"><label class="fl">Batch Note to Originator (optional)</label><textarea class="fta" rows="2" placeholder="e.g. Pushing first 30 reviews from Bangalore and Mumbai. Delhi and remaining cities to follow next week."></textarea></div>
+    </div>
+    <div class="mf">
+      <button class="btn bg" onclick="closeM('m-push-reviews')">Cancel</button>
+      <button class="btn bp" onclick="doPushReviews()">📤 Push 3 Selected Reviews to Originator</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PUSH CORRECTED REVIEWS MODAL (Implementer → Originator) ══ -->
+<div class="ov" id="m-push-corrected" onclick="cbg(event,'m-push-corrected')">
+  <div class="modal mlg">
+    <div class="mh">
+      <div>
+        <div class="mt">↩ Push Corrected Reviews — PRJ-002</div>
+        <div class="ms">Originator: GlobalSurvey Co. · 2 reviews were returned for correction. Push individually or all at once.</div>
+      </div>
+      <button class="mc" onclick="closeM('m-push-corrected')">✕</button>
+    </div>
+    <div class="mb">
+      <div class="rbox"><span>⚠</span><span>These reviews were <strong>returned by the Originator</strong> with correction notes. Review the flagged questions and notes below before pushing. The Originator's correction notes are shown per review.</span></div>
+
+      <!-- RETURNED REVIEW 1 -->
+      <div style="background:var(--bg);border:1px solid var(--bd2);border-radius:var(--r);margin-bottom:11px;overflow:hidden">
+        <div style="padding:11px 14px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <input type="checkbox" id="pc-cb-1" checked style="accent-color:var(--red);width:15px;height:15px">
+            <div>
+              <div style="font-size:13px;font-weight:600">ORD-48203 — VW Berlin Mitte <span class="bdg pending" style="margin-left:6px;font-size:10px"><span class="bdg-dot"></span>Returned from Originator</span></div>
+              <div style="font-size:11.5px;color:var(--t2);margin-top:2px">APR: <span class="apr-badge">IMP-REF-A7X29F3C</span> · Returned: Today 08:30 · Return 1 of 2</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--t2)">Return count: <strong style="color:var(--red)">1</strong></div>
+        </div>
+        <div style="padding:11px 14px">
+          <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:7px">Return Reason from Originator:</div>
+          <div style="font-size:12.5px;color:var(--t2);margin-bottom:10px;padding:8px 10px;background:#fff;border-radius:var(--rs);border:1px solid var(--bd)">"Photo of entrance is missing. Score for Q13 appears incorrect."</div>
+          <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:7px">Flagged Questions:</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+            <div style="padding:7px 10px;background:#fff;border:1px solid rgba(220,38,38,.2);border-radius:var(--rs);font-size:12px"><strong>Q13</strong> — Was the entrance clearly visible? <span style="color:var(--red)">→</span> <em style="color:var(--t2)">"Photo is too dark. Please retake in daylight."</em></div>
+            <div style="padding:7px 10px;background:#fff;border:1px solid rgba(220,38,38,.2);border-radius:var(--rs);font-size:12px"><strong>Q17</strong> — Staff greeting score <span style="color:var(--red)">→</span> <em style="color:var(--t2)">"Score is 0 but narrative says staff greeted. Please verify."</em></div>
+          </div>
+          <div class="fr2">
+            <div class="fg" style="margin:0"><label class="fl">Current Review Status</label><select class="fsl"><option>Finished Awaiting Approval</option><option>Approved</option><option selected>In Progress</option><option>Disapproved</option></select></div>
+            <div class="fg" style="margin:0"><label class="fl">Correction Note to Originator</label><input class="fi" placeholder="Describe what was corrected..."></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RETURNED REVIEW 2 -->
+      <div style="background:var(--bg);border:1px solid var(--bd2);border-radius:var(--r);overflow:hidden">
+        <div style="padding:11px 14px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <input type="checkbox" id="pc-cb-2" checked style="accent-color:var(--red);width:15px;height:15px">
+            <div>
+              <div style="font-size:13px;font-weight:600">ORD-48211 — RC Pune Branch <span class="bdg pending" style="margin-left:6px;font-size:10px"><span class="bdg-dot"></span>Returned from Originator</span></div>
+              <div style="font-size:11.5px;color:var(--t2);margin-top:2px">APR: <span class="apr-badge">IMP-REF-D9Z11R2W</span> · Returned: Yesterday 15:00 · Return 1 of 2</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--t2)">Return count: <strong style="color:var(--red)">1</strong></div>
+        </div>
+        <div style="padding:11px 14px">
+          <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:7px">Return Reason from Originator:</div>
+          <div style="font-size:12.5px;color:var(--t2);margin-bottom:10px;padding:8px 10px;background:#fff;border-radius:var(--rs);border:1px solid var(--bd)">"Receipt photo missing. Product availability question answered incorrectly."</div>
+          <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:7px">Flagged Questions:</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+            <div style="padding:7px 10px;background:#fff;border:1px solid rgba(220,38,38,.2);border-radius:var(--rs);font-size:12px"><strong>Q8</strong> — Upload purchase receipt <span style="color:var(--red)">→</span> <em style="color:var(--t2)">"Receipt image not attached. Required for this audit."</em></div>
+          </div>
+          <div class="fr2">
+            <div class="fg" style="margin:0"><label class="fl">Current Review Status</label><select class="fsl"><option selected>Finished Awaiting Approval</option><option>Approved</option><option>In Progress</option></select></div>
+            <div class="fg" style="margin:0"><label class="fl">Correction Note to Originator</label><input class="fi" placeholder="Describe what was corrected..."></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="mf">
+      <button class="btn bg" onclick="closeM('m-push-corrected')">Cancel</button>
+      <button class="btn br" onclick="doPushCorrected()">↩ Push 2 Corrected Reviews to Originator</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PULL REVIEWS MODAL (Originator ← Implementer) ══ -->
+<div class="ov" id="m-pull-reviews" onclick="cbg(event,'m-pull-reviews')">
+  <div class="modal mlg">
+    <div class="mh">
+      <div>
+        <div class="mt">📥 Pull Reviews — PRJ-001</div>
+        <div class="ms">Implementer: MarketForce GmbH · Reviews pushed and waiting to be downloaded</div>
+      </div>
+      <button class="mc" onclick="closeM('m-pull-reviews')">✕</button>
+    </div>
+    <div class="mb">
+
+      <!-- AVAILABLE PAYLOADS -->
+      <div class="sec-hd">Available Review Batches from Implementer</div>
+
+      <!-- BATCH 1 -->
+      <div style="border:1px solid rgba(124,58,237,.25);border-radius:var(--r);margin-bottom:10px;overflow:hidden;background:#fff">
+        <div style="padding:11px 14px;background:var(--purd);border-bottom:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--pur)">Batch #2 — 44 Reviews</div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:2px">Pushed: Today 14:20 · Includes images</div>
+          </div>
+          <span class="bdg syncing"><span class="bdg-dot"></span>Pending Pull</span>
+        </div>
+        <div style="padding:11px 14px">
+          <div style="display:flex;gap:8px;margin-bottom:9px;flex-wrap:wrap">
+            <span class="bdg srv">📦 44 reviews</span>
+            <span class="bdg srv">📷 Images included (base64)</span>
+            <span class="bdg srv">✅ Finished Awaiting Approval: 38</span>
+            <span class="bdg srv">🔄 In Progress: 6</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--t2);margin-bottom:10px">Note from Implementer: <em>"Pushing Munich and Berlin batches. Frankfurt orders still in progress — will push next week."</em></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="checkbox" checked style="accent-color:var(--blu)"> <span style="font-size:13px;font-weight:600">Pull this batch</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BATCH 2 (already pulled) -->
+      <div style="border:1px solid var(--bd);border-radius:var(--r);margin-bottom:10px;overflow:hidden;background:#fff;opacity:.75">
+        <div style="padding:11px 14px;background:var(--grnd);border-bottom:1px solid rgba(5,150,105,.15);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--grn)">Batch #1 — 28 Reviews</div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:2px">Pushed: Apr 14 · Already pulled: Apr 14</div>
+          </div>
+          <span class="bdg done"><span class="bdg-dot"></span>Already Pulled</span>
+        </div>
+        <div style="padding:10px 14px">
+          <div style="font-size:12px;color:var(--t3)">28 reviews already imported into your system on Apr 14. These are not available to pull again.</div>
+        </div>
+      </div>
+
+      <div class="sbox"><span>✅</span><span>After pulling, reviews are imported into your system linked to the original orders via the order map. Images are stored in your own storage. APR codes are preserved.</span></div>
+
+    </div>
+    <div class="mf">
+      <button class="btn bg" onclick="closeM('m-pull-reviews')">Cancel</button>
+      <button class="btn bp" style="background:var(--pur);box-shadow:0 2px 6px rgba(124,58,237,.22)" onclick="doPullReviews()">📥 Pull Batch #2 (44 Reviews)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WARNING POPUP ══ -->
+<div class="warn-popup" id="warn-popup">
+  <div class="warn-box">
+    <div class="warn-box-t">⚠ Are you sure?</div>
+    <div class="warn-box-s" id="warn-msg">This item is recommended for first publish. Skipping it may cause issues for the Implementer when trying to run field work.</div>
+    <div class="warn-box-acts">
+      <button class="btn bg sm" onclick="cancelWarn()">Keep it checked</button>
+      <button class="btn ba sm" onclick="confirmWarn()">Uncheck anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="t-ic" style="font-size:18px">✅</span><div><div class="toast-t" id="t-t">Done</div><div class="toast-s" id="t-s"></div></div></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const POSTS = [
+  {id:'PST-2025-001',by:'GlobalSurvey Co.',own:true,date:'10 Mar',title:'Mystery Shopping — Germany Q2 2025',country:'🇩🇪 Germany',services:['MS'],replies:3,status:'closed',closing:'15 Apr 2025'},
+  {id:'PST-2025-002',by:'GlobalSurvey Co.',own:true,date:'18 Mar',title:'CATI Project — India Telecom Survey',country:'🇮🇳 India',services:['CATI'],replies:2,status:'closed',closing:'30 Mar 2025'},
+  {id:'PST-2025-003',by:'GlobalSurvey Co.',own:true,date:'01 Apr',title:'MS — France Luxury Retail',country:'🇫🇷 France',services:['MS','CAWI'],replies:4,status:'closed',closing:'20 Apr 2025'},
+  {id:'PST-2025-004',by:'GlobalSurvey Co.',own:true,date:'05 Apr',title:'Retail Audit — Poland Modern Trade',country:'🇵🇱 Poland',services:['Retail Audit'],replies:1,status:'open',closing:'30 Apr 2025'},
+  {id:'PST-2025-005',by:'GlobalSurvey Co.',own:true,date:'07 Apr',title:'CAWI Study — UAE Banking Sector',country:'🇦🇪 UAE',services:['CAWI'],replies:0,status:'open',closing:'25 Apr 2025'},
+  {id:'PST-2025-006',by:'SurveyNest Ltd.',own:false,date:'08 Mar',title:'MS + Audit — Brazil Q2 Retail',country:'🇧🇷 Brazil',services:['MS','Retail Audit'],replies:5,status:'open',closing:'01 May 2025'},
+  {id:'PST-2025-007',by:'DataPulse GmbH',own:false,date:'12 Mar',title:'CATI — Austria Insurance Market',country:'🇦🇹 Austria',services:['CATI'],replies:2,status:'open',closing:'28 Apr 2025'},
+  {id:'PST-2025-008',by:'FieldForce UK',own:false,date:'20 Mar',title:'MS — UK Hospitality Chain',country:'🇬🇧 UK',services:['MS'],replies:7,status:'open',closing:'15 Apr 2025'},
+  {id:'PST-2025-009',by:'ResearchMate PL',own:false,date:'25 Mar',title:'CAWI Panel — Poland FMCG',country:'🇵🇱 Poland',services:['CAWI'],replies:3,status:'open',closing:'10 May 2025'},
+  {id:'PST-2025-010',by:'AuditPro IT',own:false,date:'30 Mar',title:'Retail Audit — Italy Pharma',country:'🇮🇹 Italy',services:['Retail Audit'],replies:1,status:'open',closing:'05 May 2025'},
+  {id:'PST-2025-011',by:'InsightCo AE',own:false,date:'02 Apr',title:'MS — UAE Automotive Dealerships',country:'🇦🇪 UAE',services:['MS'],replies:4,status:'open',closing:'18 Apr 2025'},
+  {id:'PST-2025-012',by:'PollMaster IN',own:false,date:'06 Apr',title:'CATI — India Healthcare Survey',country:'🇮🇳 India',services:['CATI'],replies:0,status:'open',closing:'30 Apr 2025'},
+];
+let nDeal=4,nPrj=4,curPost=null,curPartner=null;
+let warnTarget=null,warnCb=null;
+
+const TITLES = {
+  dashboard:'Dashboard <span>/ Partner Projects Overview</span>',
+  operations:'Operations <span>/ Order Management</span>',
+  fieldwork:'Field Work <span>/ Partner Order Execution &amp; APR</span>',
+  pn:'Partner Network <span>/ Collaboration Hub</span>',
+};
+
+// ── RENDER POSTS
+function renderPosts(){
+  const tb=document.getElementById('posts-tbody'); tb.innerHTML='';
+  POSTS.forEach(p=>{
+    const srv=p.services.map(s=>`<span class="bdg srv">${s}</span>`).join(' ');
+    const stb=p.status==='open'?`<span class="bdg open"><span class="bdg-dot"></span>Open</span>`:`<span class="bdg closed"><span class="bdg-dot"></span>Closed</span>`;
+    const soon=p.closing.includes('15 Apr')||p.closing.includes('18 Apr');
+    const acts=p.own
+      ?(p.status==='open'?`<button class="btn bo sm" onclick="openViewReplies('${p.id}','${p.title.replace(/'/g,"\\'")}',${p.replies})">👁 View Replies (${p.replies})</button>`:`<span style="font-size:11px;color:var(--t3)">✅ Deal agreed</span>`)
+      :`<button class="btn bo sm" onclick="openSendReply('${p.id}','${p.title.replace(/'/g,"\\'")}')">✉️ Reply</button>`;
+    tb.innerHTML+=`<tr>
+      <td class="tid">${p.id}</td>
+      <td style="font-size:12px;${p.own?'font-weight:600;color:var(--blu)':'color:var(--t2)'}">${p.by}${p.own?' <span style="font-size:9.5px;background:var(--blud);color:var(--blu);padding:1px 5px;border-radius:4px">You</span>':''}</td>
+      <td style="font-size:12px;color:var(--t2)">${p.date}</td>
+      <td style="font-weight:600;max-width:190px;font-size:13px">${p.title}</td>
+      <td><span class="bdg country">${p.country}</span></td>
+      <td>${srv}</td>
+      <td><span class="rc-repl${p.replies>0?' has':''}">💬 ${p.replies}</span></td>
+      <td>${stb}</td>
+      <td style="font-size:12px;${soon?'color:var(--red);font-weight:600':''}">${p.closing}${soon?' ⚠':''}</td>
+      <td class="tacts">${acts}</td>
+    </tr>`;
+  });
+}
+
+// ── PAGE NAV
+function showPage(pg){
+  ['dashboard','operations','fieldwork','pn'].forEach(id=>{
+    const el=document.getElementById('page-'+id);
+    if(el)el.style.display='none';
+  });
+  const t=document.getElementById('page-'+pg);
+  if(t)t.style.display=pg==='pn'?'flex':'block';
+  document.getElementById('hdr-t').innerHTML=TITLES[pg]||pg;
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const nv=document.getElementById('nav-'+pg);
+  if(nv)nv.classList.add('active');
+  closeNotif();
+}
+
+// ── TABS
+function switchTab(tab){
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#page-pn .page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('page-'+tab).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const nv=document.getElementById('nav-pn-'+tab);
+  if(nv)nv.classList.add('active');
+  closeNotif();
+}
+
+// ── MODALS
+function openM(id){document.getElementById(id).classList.add('show');closeNotif();}
+function closeM(id){document.getElementById(id).classList.remove('show');}
+function cbg(e,id){if(e.target.id===id)closeM(id);}
+
+// ── NOTIF
+function toggleNotif(){document.getElementById('notifDrop').classList.toggle('show');}
+function closeNotif(){document.getElementById('notifDrop').classList.remove('show');}
+function markRead(){
+  document.querySelectorAll('.ndni.unread').forEach(n=>n.classList.remove('unread'));
+  document.querySelectorAll('.nd-dot').forEach(d=>d.remove());
+  document.getElementById('nbCnt').style.display='none';
+}
+document.addEventListener('click',e=>{
+  const nd=document.getElementById('notifDrop'),nb=document.getElementById('nbBtn');
+  if(!nd.contains(e.target)&&!nb.contains(e.target))closeNotif();
+});
+
+// ── TOAST
+function showToast(ic,t,s,col='grn'){
+  const el=document.getElementById('toast');
+  document.getElementById('t-ic').textContent=ic;
+  document.getElementById('t-t').textContent=t;
+  document.getElementById('t-s').textContent=s;
+  el.style.borderLeftColor=`var(--${col})`;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),4200);
+}
+
+// ── WARN POPUP (for unchecking mandatory items)
+function onPubCbChange(e,key){
+  const cb=e.target;
+  if(!cb.checked){
+    e.preventDefault();
+    cb.checked=true; // re-check until user confirms
+    warnTarget=key; warnCb=cb;
+    const msgs={
+      qre:'QRE is recommended for first publish. Without it, the Implementer may not be able to run field work correctly.',
+      branches:'Branches are recommended for first publish. Without them, the Implementer cannot assign orders to locations.',
+    };
+    document.getElementById('warn-msg').textContent=msgs[key]||'This item is recommended for first publish.';
+    document.getElementById('warn-popup').classList.add('show');
+  } else {
+    document.getElementById('pi-'+key).classList.add('checked');
+  }
+}
+function cancelWarn(){document.getElementById('warn-popup').classList.remove('show');warnTarget=null;warnCb=null;}
+function confirmWarn(){
+  if(warnCb){warnCb.checked=false;document.getElementById('pi-'+warnTarget).classList.remove('checked');}
+  document.getElementById('warn-popup').classList.remove('show');
+  warnTarget=null;warnCb=null;
+}
+function togglePubItem(el,key){
+  const cb=el.querySelector('input[type=checkbox]');
+  if(cb.disabled)return;
+  // clicking row doesn't toggle — only the checkbox handles it
+}
+
+// ── PUBLISH MODAL
+function openPublish(prjId){
+  const prjMap={'PRJ-001':{partner:'MarketForce GmbH',first:true},'PRJ-002':{partner:'SurveyNest India',first:false},'PRJ-003':{partner:'DataField Europe',first:true}};
+  const p=prjMap[prjId]||{partner:'Partner',first:true};
+  document.getElementById('pub-title').textContent=`📤 Publish to Implementer — ${prjId}`;
+  document.getElementById('pub-partner').textContent=p.partner;
+  // Update tags based on first/subsequent
+  const tagQre=document.getElementById('tag-qre');
+  const tagBranches=document.getElementById('tag-branches');
+  if(p.first){
+    tagQre.textContent='Required — 1st publish'; tagQre.className='pub-tag req';
+    tagBranches.textContent='Required — 1st publish'; tagBranches.className='pub-tag req';
+  } else {
+    tagQre.textContent='Optional'; tagQre.className='pub-tag opt';
+    tagBranches.textContent='Optional'; tagBranches.className='pub-tag opt';
+  }
+  openM('m-publish');
+}
+function toggleAll(cb){document.querySelectorAll('.ord-cb').forEach(c=>c.checked=cb.checked);}
+function doPublish(){closeM('m-publish');showToast('📤','Published Successfully','Implementer notified to review and confirm import.');}
+
+// ── CONFIRM IMPORT — client choice
+function selectClientChoice(val){
+  document.querySelectorAll('#ci-options .ri').forEach(r=>r.classList.remove('sel'));
+  document.getElementById('ri-'+val).classList.add('sel');
+  document.querySelector(`input[name="ci-choice"][value="${val}"]`).checked=true;
+  document.getElementById('ci-existing-opts').style.display=val==='existing'?'block':'none';
+  document.getElementById('ci-new-opts').style.display=val==='new'?'block':'none';
+}
+function onClientSelect(){
+  const v=document.getElementById('ci-client-sel').value;
+  document.getElementById('ci-mapping-opts').style.display=v?'block':'none';
+}
+function toggleQreChoice(){
+  const checked=document.getElementById('ci-cb-qre').checked;
+  document.getElementById('ci-qre-opts').style.display=checked?'flex':'none';
+}
+// QRE radio — show/hide existing selector
+document.addEventListener('change',e=>{
+  if(e.target.name==='qre-choice'){
+    document.getElementById('ci-qre-existing-sel').style.display=e.target.value==='existing'?'block':'none';
+  }
+});
+function confirmImport(){closeM('m-confirm-import');showToast('✅','Import Confirmed','Orders and data created in your system. Ready for assignment.');}
+
+// ── CHECK STATUS
+function refreshStatus(){showToast('🔄','Status Refreshed','Latest statuses fetched from Implementer.');}
+function checkStatusDash(prjId){showToast('🔄',`${prjId} — Status Refreshed`,'Dashboard stats updated from Implementer.');}
+
+// ── POSTS
+function submitPost(){
+  const t=document.getElementById('np-title').value.trim();
+  if(!t){document.getElementById('np-title').focus();return;}
+  closeM('m-create-post');
+  showToast('📢','Post Published','Email sent to all Checker partners worldwide.');
+}
+function openViewReplies(postId,title,cnt){
+  document.getElementById('vr-title').textContent=`Replies — "${title}"`;
+  document.getElementById('vr-sub').textContent=`${cnt} response${cnt!==1?'s':''} from partners`;
+  const list=document.getElementById('vr-list');
+  const samples=[
+    {c:'DataField Europe',n:'Sophie Laurent',d:'Apr 3',m:'Strong MS capabilities in France — luxury retail specialists. Paris, Lyon and Marseille coverage with 200+ trained shoppers.'},
+    {c:'AuditPro France',n:'Pierre Dubois',d:'Apr 4',m:'ISO 9001 certified. CAWI + MS specialist. 12 luxury brand clients in France. Can deploy in 2 weeks.'},
+    {c:'FieldMax FR',n:'Marc Bernard',d:'Apr 5',m:'Full French coverage. 8 years luxury mystery shopping. Flexible timelines and competitive rates.'},
+    {c:'InsightFrance',n:'Amelie Roy',d:'Apr 6',m:'Metropolitan France coverage. Happy to discuss scope and pricing in detail.'},
+  ];
+  list.innerHTML='';
+  const show=cnt>0?Math.min(cnt,samples.length):0;
+  for(let i=0;i<show;i++){
+    const r=samples[i];
+    list.innerHTML+=`<div class="rbubble">
+      <div class="r-meta"><div class="r-auth"><div style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--pur),#4d9eff);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">${r.c[0]}</div><strong>${r.n}</strong><span style="color:var(--t3);font-size:11px">${r.c}</span></div><span class="r-date">${r.d}</span></div>
+      <div class="r-body">${r.m}</div>
+      <div class="r-acts"><button class="btn bo xs">✉️ Reply</button><button class="btn bp xs" onclick="prepAgree('${postId}','${r.n} — ${r.c}')">🤝 Agree Deal</button></div>
+    </div>`;
+  }
+  if(!show)list.innerHTML=`<div style="text-align:center;padding:22px;color:var(--t3)"><div style="font-size:32px;opacity:.3;margin-bottom:7px">💬</div><div style="font-size:13px;font-weight:600">No replies yet</div></div>`;
+  openM('m-view-replies');
+}
+function openSendReply(id,title){document.getElementById('sr-sub').textContent=`Replying to: "${title}"`;openM('m-send-reply');}
+function sendReply(){closeM('m-send-reply');showToast('✉️','Reply Sent','Post owner notified by email and in-app.');}
+
+// ── AGREE DEAL
+function prepAgree(postId,partner){
+  curPost=postId;curPartner=partner;
+  document.getElementById('ac-partner').textContent=`Agreeing with ${partner}`;
+  document.getElementById('ac-sub').textContent=`Post: ${postId}`;
+  closeM('m-view-replies');openM('m-agree-confirm');
+}
+function confirmDeal(){
+  const p=POSTS.find(x=>x.id===curPost);if(p)p.status='closed';
+  const did=`DL-2025-00${nDeal++}`,pid=`PRJ-00${nPrj++}`;
+  document.getElementById('succ-did').textContent=did;
+  document.getElementById('succ-pid').textContent=pid;
+  document.getElementById('succ-s').textContent=`Partnership with ${curPartner} confirmed. Partner Project auto-created.`;
+  closeM('m-agree-confirm');renderPosts();
+  const open=POSTS.filter(p=>p.status==='open').length;
+  document.getElementById('st-open').textContent=open;
+  document.getElementById('cnt-posts').textContent=open;
+  setTimeout(()=>openM('m-agree-success'),200);
+}
+function goPrj(){closeM('m-agree-success');showPage('pn');switchTab('projects');}
+
+// ── DEAL THREAD
+function openDealThread(did,title){
+  document.getElementById('dt-title').textContent=`Thread — ${did}`;
+  document.getElementById('dt-sub').textContent=title;
+  openM('m-deal-thread');
+}
+
+// ── PUSH REVIEWS (Implementer)
+function togglePrAll(cb){document.querySelectorAll('.pr-cb').forEach(c=>c.checked=cb.checked);}
+function doPushReviews(){
+  closeM('m-push-reviews');
+  showToast('📤','Reviews Pushed','GlobalSurvey Co. notified. They can now pull the reviews.','pur');
+}
+
+// ── PUSH CORRECTED REVIEWS (Implementer)
+function doPushCorrected(){
+  closeM('m-push-corrected');
+  showToast('↩','Corrected Reviews Pushed','Originator notified. They can pull and review corrections.','amb');
+}
+
+// ── PULL REVIEWS (Originator)
+function doPullReviews(){
+  closeM('m-pull-reviews');
+  showToast('📥','44 Reviews Downloaded','Reviews imported and linked to original orders. Images stored.','pur');
+}
+
+// ── RETURN REVIEW
+function doReturn(){closeM('m-return-review');showToast('↩','Review Returned','Implementer notified with return reason and question corrections.','amb');}
+
+// ── ORDERS OVERVIEW
+function openOrders(prj,tot){
+  document.getElementById('ord-title').textContent=`Orders — ${prj}`;
+  document.getElementById('ord-tot').textContent=tot;
+  if(prj==='PRJ-002'){document.getElementById('ord-done').textContent=54;document.getElementById('ord-prog').textContent=28;document.getElementById('ord-wait').textContent=5;}
+  else{document.getElementById('ord-done').textContent=72;document.getElementById('ord-prog').textContent=35;document.getElementById('ord-wait').textContent=13;}
+  openM('m-orders');
+}
+
+// ── INIT
+showPage('dashboard');renderPosts();
+</script>
+</body>
+</html>
