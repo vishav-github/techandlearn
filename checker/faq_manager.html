@@ -1,0 +1,615 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#9cc826;--gd:#6e9a12;--gl:#eef7d4;--gb:#c6e87a;
+  --r:#e24b4a;--rl:#fcebeb;--rb:#f09595;
+  --b:#2f82d3;--bl:#e6f1fb;--bb:#85b7eb;
+  --a:#ba7517;--al:#faeeda;--ab:#ef9f27;
+  --pu:#534ab7;--pul:#eeedfe;--pub:#afa9ec;
+  --or:#d85a30;--orl:#faece7;--orb:#f0997b;
+  --text:var(--color-text-primary);
+  --muted:var(--color-text-secondary);
+  --hint:var(--color-text-tertiary);
+  --surf:var(--color-background-primary);
+  --surf2:var(--color-background-secondary);
+  --surf3:var(--color-background-tertiary);
+  --bdr:var(--color-border-tertiary);
+  --bdr2:var(--color-border-secondary);
+  --rad:8px;--radlg:12px
+}
+body{font-family:var(--font-sans),system-ui,sans-serif;font-size:14px;color:var(--text);background:var(--surf3);padding:20px}
+
+/* ── Top bar ── */
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.page-title{font-size:18px;font-weight:500;display:flex;align-items:center;gap:8px}
+.page-title svg{color:var(--g)}
+.page-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.stat-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.stat-pill{font-size:12px;padding:4px 11px;border-radius:20px;background:var(--surf2);border:0.5px solid var(--bdr);color:var(--muted)}
+.stat-pill b{color:var(--text);font-weight:500}
+.stat-pill.green{background:var(--gl);border-color:var(--gb)}
+.stat-pill.green b{color:#3b6d11}
+.stat-pill.blue{background:var(--bl);border-color:var(--bb)}
+.stat-pill.blue b{color:#185fa5}
+
+/* ── Steps ── */
+.steps{display:flex;align-items:center;gap:5px;margin-bottom:16px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--muted);padding:5px 12px;border-radius:20px;border:0.5px solid var(--bdr);background:var(--surf);cursor:pointer;transition:all .15s;user-select:none}
+.step:hover{background:var(--surf2)}
+.step.active{color:#3b6d11;border-color:var(--g);background:var(--gl)}
+.step.done{opacity:.5;text-decoration:line-through}
+.step-num{width:17px;height:17px;border-radius:50%;background:currentColor;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-num span{font-size:10px;font-weight:600;color:var(--surf)}
+.step.active .step-num{background:var(--g)}
+.step-arr{color:var(--bdr2);font-size:16px}
+
+/* ── Panel ── */
+.panel{background:var(--surf);border:0.5px solid var(--bdr);border-radius:var(--radlg);overflow:visible}
+
+/* ── Gen layout ── */
+.gen-layout{display:grid;grid-template-columns:1fr 220px;min-height:0}
+@media(max-width:620px){.gen-layout{grid-template-columns:1fr}}
+.gen-left{padding:22px 24px;border-right:0.5px solid var(--bdr)}
+.gen-right{padding:16px;background:var(--surf2);border-radius:0 var(--radlg) 0 0}
+
+.gen-h{font-size:14px;font-weight:500;margin-bottom:6px}
+.gen-p{font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:16px}
+
+/* ── Filter card ── */
+.filter-card{background:var(--surf2);border:0.5px solid var(--bdr);border-radius:var(--rad);padding:14px 16px;margin-bottom:16px;max-width:400px}
+.filter-card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--hint);margin-bottom:12px;display:flex;align-items:center;gap:5px}
+.filter-card-title svg{width:11px;height:11px;color:var(--hint)}
+.filter-row{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.filter-row:last-child{margin-bottom:0}
+.flbl{font-size:11px;font-weight:500;color:var(--muted)}
+
+/* ── Company selector ── */
+.co-wrap{position:relative;max-width:360px}
+.co-trigger{display:flex;align-items:center;justify-content:space-between;padding:6px 9px;border:0.5px solid var(--bdr2);border-radius:var(--rad);background:var(--surf);cursor:pointer;font-size:12px;color:var(--text);transition:border-color .15s;gap:6px;user-select:none}
+.co-trigger:hover,.co-trigger.open{border-color:var(--g);box-shadow:0 0 0 2px #9cc82618}
+.co-tl{display:flex;align-items:center;gap:5px;flex:1;min-width:0;overflow:hidden}
+.co-tags{display:flex;gap:3px;overflow:hidden;max-width:200px;flex-shrink:1}
+.co-tag{font-size:10px;padding:1px 7px;border-radius:10px;background:var(--gl);color:#3b6d11;border:0.5px solid var(--gb);white-space:nowrap;flex-shrink:0}
+.co-ph{color:var(--hint);font-size:12px}
+.co-more{font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.co-arr{color:var(--hint);flex-shrink:0;transition:transform .2s;width:10px;height:10px}
+.co-arr.open{transform:rotate(180deg)}
+
+.co-drop{position:absolute;top:calc(100% + 3px);left:0;width:280px;background:var(--surf);border:0.5px solid var(--bdr2);border-radius:var(--rad);box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:9999;overflow:hidden}
+.co-search-wrap{padding:7px 8px;border-bottom:0.5px solid var(--bdr);background:var(--surf2)}
+.co-search-wrap input{width:100%;border:0.5px solid var(--bdr2);border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;background:var(--surf);color:var(--text);outline:none}
+.co-search-wrap input:focus{border-color:var(--g)}
+.co-sel-bar{display:flex;justify-content:space-between;padding:5px 8px 4px;border-bottom:0.5px solid var(--bdr)}
+.co-sel-link{font-size:11px;color:var(--b);cursor:pointer;font-weight:500}
+.co-sel-link:hover{text-decoration:underline}
+.co-list{max-height:150px;overflow-y:auto}
+.co-opt{display:flex;align-items:center;gap:7px;padding:6px 9px;cursor:pointer;font-size:12px;transition:background .1s}
+.co-opt:hover{background:var(--surf2)}
+.co-opt.sel{background:var(--gl)}
+.co-chk{width:13px;height:13px;border-radius:3px;border:0.5px solid var(--bdr2);background:var(--surf);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .1s}
+.co-opt.sel .co-chk{background:var(--g);border-color:var(--g)}
+.co-chk svg{display:none;width:8px;height:8px;color:#fff}
+.co-opt.sel .co-chk svg{display:block}
+.co-opt-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+
+/* ── Date range ── */
+.date-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:360px}
+.date-f{display:flex;flex-direction:column;gap:3px}
+.date-lbl{font-size:10px;color:var(--hint)}
+.date-f input{padding:6px 8px;border:0.5px solid var(--bdr2);border-radius:var(--rad);font-size:12px;font-family:inherit;background:var(--surf);color:var(--text);outline:none;width:100%;transition:border-color .15s}
+.date-f input:focus{border-color:var(--g);box-shadow:0 0 0 2px #9cc82618}
+
+/* ── Checklist ── */
+.gen-list{list-style:none;display:flex;flex-direction:column;gap:4px;margin-bottom:16px}
+.gen-list li{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.chk{width:13px;height:13px;border-radius:50%;background:var(--gl);border:0.5px solid var(--gb);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chk svg{width:8px;height:8px;color:#3b6d11}
+
+/* ── Ticket count ── */
+.count-box{display:flex;align-items:baseline;gap:7px;padding:9px 12px;background:var(--gl);border:0.5px solid var(--gb);border-radius:var(--rad);max-width:200px;margin-bottom:10px}
+.count-num{font-size:22px;font-weight:500;color:#3b6d11}
+.count-lbl{font-size:12px;color:#6b9a1a}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:500;padding:7px 14px;border-radius:var(--rad);border:0.5px solid var(--bdr2);background:transparent;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--surf2)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--g);border-color:var(--g);color:#fff}
+.btn-primary:hover{background:var(--gd);border-color:var(--gd);color:#fff}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{color:var(--muted)}
+.btn-ghost:hover{color:var(--text)}
+.btn-sm{padding:5px 11px;font-size:11px}
+
+/* ── Progress ── */
+.prog-wrap{padding:0 24px 20px;border-top:0.5px solid var(--bdr);background:var(--surf2)}
+.prog-bar{height:4px;border-radius:2px;background:var(--bdr);margin:14px 0 6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;background:var(--g);transition:width .4s ease}
+.prog-txt{font-size:12px;color:var(--muted);text-align:center}
+
+/* ── Last session card ── */
+.ls-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--hint);margin-bottom:6px}
+.ls-card{background:var(--surf);border:0.5px solid var(--bdr);border-radius:var(--rad);overflow:hidden;margin-bottom:10px}
+.ls-head{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:0.5px solid var(--bdr);background:var(--surf)}
+.ls-icon{width:20px;height:20px;border-radius:5px;background:var(--pul);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ls-icon svg{width:11px;height:11px;color:var(--pu)}
+.ls-htitle{font-size:12px;font-weight:500;flex:1}
+.ls-ago{font-size:10px;color:var(--hint);white-space:nowrap}
+.ls-body{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.ls-row{display:flex;flex-direction:column;gap:2px}
+.ls-k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--hint)}
+.ls-v{font-size:11px;color:var(--text);line-height:1.4}
+.ls-vtags{display:flex;gap:3px;flex-wrap:wrap;margin-top:2px}
+.ls-vtag{font-size:10px;padding:1px 6px;border-radius:8px;background:var(--pul);color:var(--pu);border:0.5px solid var(--pub)}
+.ls-hr{height:0.5px;background:var(--bdr)}
+.ls-warn{display:flex;gap:5px;padding:6px 8px;background:var(--al);border-top:0.5px solid var(--ab)}
+.ls-warn svg{width:11px;height:11px;color:var(--a);flex-shrink:0;margin-top:1px}
+.ls-warn p{font-size:10px;color:#633806;line-height:1.5}
+.ls-none{padding:16px 10px;text-align:center}
+.ls-none svg{width:24px;height:24px;color:var(--bdr2);display:block;margin:0 auto 5px}
+.ls-none p{font-size:11px;color:var(--hint)}
+
+/* ── Review toolbar ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:0.5px solid var(--bdr);flex-wrap:wrap;background:var(--surf2)}
+.status-select-wrap{display:flex;align-items:center;gap:8px}
+.status-lbl{font-size:12px;color:var(--muted);white-space:nowrap}
+.status-select{font-size:12px;font-family:inherit;padding:5px 28px 5px 10px;border:0.5px solid var(--bdr2);border-radius:var(--rad);background:var(--surf);color:var(--text);cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 3.5l3 3 3-3' stroke='%23888' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .15s;min-width:140px}
+.status-select:focus{border-color:var(--g);box-shadow:0 0 0 2px #9cc82618}
+.toolbar .btn{padding:6px 12px}
+
+/* ── Cards ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;padding:14px}
+.card{background:var(--surf);border:0.5px solid var(--bdr);border-radius:var(--radlg);overflow:hidden;transition:border-color .15s}
+.card:hover{border-color:var(--bdr2)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 10px;background:var(--surf2);border-bottom:0.5px solid var(--bdr)}
+.card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.card-acts{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:12px;text-transform:uppercase;letter-spacing:.03em}
+.b-draft{background:#f1efe8;color:#444441}
+.b-approved{background:var(--gl);color:#27500a}
+.b-rejected{background:var(--rl);color:#791f1f}
+.b-pushed{background:var(--bl);color:#0c447c}
+.b-src{background:var(--surf);border:0.5px solid var(--bdr);color:var(--muted);font-weight:500;text-transform:none;font-size:10px}
+.b-ai{background:var(--pul);color:var(--pu);font-size:10px}
+.b-exists{background:var(--al);color:#633806;font-size:10px}
+.b-new{background:var(--gl);color:#27500a;font-size:10px}
+
+.ibtn{width:25px;height:25px;border-radius:var(--rad);border:0.5px solid var(--bdr);background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0}
+.ibtn:hover{background:var(--surf2);color:var(--text);border-color:var(--bdr2)}
+.ibtn:disabled{opacity:.3;cursor:not-allowed}
+.ibtn.g:hover{background:var(--gl);border-color:var(--g);color:#27500a}
+.ibtn.r:hover{background:var(--rl);border-color:var(--rb);color:#791f1f}
+.ibtn.b:hover{background:var(--bl);border-color:var(--bb);color:#0c447c}
+
+.card-view{padding:11px 11px 10px}
+.card-q{font-size:13px;font-weight:500;margin-bottom:6px;line-height:1.4}
+.card-a{font-size:12px;color:var(--muted);line-height:1.6;max-height:64px;overflow-y:auto}
+
+/* ── Index match banner ── */
+.index-match{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;border-top:0.5px solid var(--ab);background:var(--al)}
+.im-icon{flex-shrink:0;margin-top:1px}
+.im-icon svg{width:12px;height:12px;color:var(--a)}
+.im-body{flex:1;min-width:0}
+.im-title{font-size:11px;font-weight:500;color:#633806;margin-bottom:2px}
+.im-existing{font-size:11px;color:#633806;font-style:italic;margin-bottom:6px;line-height:1.4}
+.im-actions{display:flex;gap:5px;flex-wrap:wrap}
+.im-btn{font-size:11px;padding:3px 9px;border-radius:6px;border:0.5px solid;cursor:pointer;font-weight:500;transition:all .15s}
+.im-btn-update{background:var(--al);border-color:var(--ab);color:#633806}
+.im-btn-update:hover{background:#fad9a0}
+.im-btn-add{background:var(--gl);border-color:var(--gb);color:#27500a}
+.im-btn-add:hover{background:#d4ebb8}
+.im-btn-dismiss{background:transparent;border-color:var(--bdr2);color:var(--muted)}
+.im-btn-dismiss:hover{background:var(--surf2)}
+
+.card-edit,.card-imp{padding:9px 10px 10px;border-top:0.5px solid var(--bdr);background:var(--surf2)}
+.elbl{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--hint);margin-bottom:3px}
+.einput,.etarea,.iinput{width:100%;font-size:12px;font-family:inherit;padding:6px 8px;border:0.5px solid var(--bdr2);border-radius:var(--rad);background:var(--surf);color:var(--text);resize:vertical;transition:border-color .15s;display:block}
+.einput:focus,.etarea:focus,.iinput:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 2px #9cc82618}
+.efoot,.irow{display:flex;align-items:center;gap:6px;margin-top:7px}
+.efoot .btn,.irow .btn{padding:5px 11px;font-size:11px}
+.irow .iinput{flex:1}
+
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;gap:8px;color:var(--muted)}
+.empty p{font-size:13px}
+
+/* ── Toast ── */
+.toast-area{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.toast{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:var(--rad);border:0.5px solid var(--bdr);background:var(--surf);font-size:12px;animation:fi .2s ease}
+.toast.success{background:var(--gl);border-color:var(--gb);color:#27500a}
+.toast.warn{background:var(--al);border-color:var(--ab);color:#633806}
+.toast.error{background:var(--rl);border-color:var(--rb);color:#791f1f}
+.toast-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+@keyframes fi{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
+<div class="topbar">
+  <div>
+    <div class="page-title">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="1" y="1" width="15" height="15" rx="3.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6h8M4.5 8.5h5M4.5 11h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      FAQ manager
+    </div>
+    <div class="page-sub">Build the support knowledge base from closed tickets</div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-pill"><b id="si">47</b> in index</div>
+    <div class="stat-pill green"><b id="sa">2</b> approved</div>
+    <div class="stat-pill blue"><b id="sp">1</b> pushed</div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step active" id="s1" onclick="showPanel(1)"><div class="step-num"><span>1</span></div>Load &amp; analyse</div>
+  <div class="step-arr">›</div>
+  <div class="step" id="s2" onclick="showPanel(2)"><div class="step-num"><span>2</span></div>Review &amp; edit</div>
+  <div class="step-arr">›</div>
+  <div class="step" id="s3" onclick="showPanel(3)"><div class="step-num"><span>3</span></div>Push to index</div>
+</div>
+
+<div id="toastArea" class="toast-area"></div>
+
+<!-- ── Panel 1 ── -->
+<div class="panel" id="p1">
+  <div class="gen-layout">
+    <div class="gen-left">
+      <div class="gen-h">Load &amp; analyse closed tickets</div>
+      <div class="gen-p">Select companies and a date range, then let the AI extract, deduplicate, and clean FAQ content from closed tickets.</div>
+
+      <div class="filter-card">
+        <div class="filter-card-title">
+          <svg viewBox="0 0 11 11" fill="none"><path d="M1 2.5h9M3 5.5h5M4.5 8.5h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Filters
+        </div>
+
+        <div class="filter-row">
+          <div class="flbl">Companies</div>
+          <div class="co-wrap" id="coWrap">
+            <div class="co-trigger" id="coTrig" onclick="toggleDrop()">
+              <div class="co-tl">
+                <div class="co-tags" id="coTags"><span class="co-ph">Select companies…</span></div>
+              </div>
+              <span class="co-more" id="coMore" style="display:none"></span>
+              <svg class="co-arr" id="coArr" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="co-drop" id="coDrop" style="display:none">
+              <div class="co-search-wrap"><input type="text" id="coSrch" placeholder="Search…" oninput="filterCo()" onclick="event.stopPropagation()"></div>
+              <div class="co-sel-bar">
+                <span class="co-sel-link" onclick="selAll()">Select all</span>
+                <span class="co-sel-link" onclick="deselAll()">Deselect all</span>
+              </div>
+              <div class="co-list" id="coList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="flbl">Date range</div>
+          <div class="date-grid">
+            <div class="date-f"><span class="date-lbl">From</span><input type="date" id="dFrom" value="2025-01-01"></div>
+            <div class="date-f"><span class="date-lbl">To</span><input type="date" id="dTo" value="2025-04-08"></div>
+          </div>
+        </div>
+      </div>
+
+      <ul class="gen-list">
+        <li><div class="chk"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Filters non-reusable tickets automatically</li>
+        <li><div class="chk"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Strips all private &amp; sensitive information</li>
+        <li><div class="chk"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Merges duplicate topics into one FAQ</li>
+        <li><div class="chk"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Compares against live index for duplicates</li>
+      </ul>
+
+      <div id="cntBox" style="display:none;margin-bottom:10px">
+        <div class="count-box"><span class="count-num" id="cntNum">0</span><span class="count-lbl">closed tickets found</span></div>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btnLoad" onclick="loadTix()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M3 6l3 3 3-3M1.5 11h9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Load tickets
+        </button>
+        <button class="btn btn-primary" id="btnGen" style="display:none" onclick="doGenerate()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l.9 2.1 2.3.3-1.6 1.6.38 2.3L6 6.5 3.98 7.3l.38-2.3L2.8 3.4l2.3-.3z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
+          Generate FAQs
+        </button>
+      </div>
+    </div>
+
+    <div class="gen-right">
+      <div class="ls-label">Last session</div>
+      <div class="ls-card" id="lsCard">
+        <div class="ls-head">
+          <div class="ls-icon"><svg viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1"/><path d="M5.5 3v2.5l1.5 1.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="ls-htitle">Previous run</span>
+          <span class="ls-ago">2 days ago · Apr 6, 2025</span>
+        </div>
+        <div class="ls-body">
+          <div class="ls-row">
+            <div class="ls-k">Companies</div>
+            <div class="ls-vtags">
+              <span class="ls-vtag">Acme Corp</span>
+              <span class="ls-vtag">Beta Ltd</span>
+              <span class="ls-vtag">Gamma Inc</span>
+            </div>
+          </div>
+          <div class="ls-hr"></div>
+          <div class="ls-row">
+            <div class="ls-k">Date range</div>
+            <div class="ls-v">1 Jan 2025 — 1 Apr 2025</div>
+          </div>
+          <div class="ls-hr"></div>
+          <div class="ls-row">
+            <div class="ls-k">Tickets processed</div>
+            <div class="ls-v">84 closed tickets</div>
+          </div>
+          <div class="ls-hr"></div>
+          <div class="ls-row">
+            <div class="ls-k">FAQs generated</div>
+            <div class="ls-v">6 drafts created</div>
+          </div>
+          <div class="ls-hr"></div>
+          <div class="ls-row">
+            <div class="ls-k">FAQs pushed to index</div>
+            <div class="ls-v">2 pushed · 4 still pending</div>
+          </div>
+        </div>
+        <div class="ls-warn" id="lsWarn">
+          <svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1.5L10 9.5H1L5.5 1.5z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M5.5 5v2M5.5 8.3v.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          <p>Current selection overlaps with this run. You may generate duplicate FAQs.</p>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="showPanel(2)">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5h8M6 2l3.5 3.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        View last session
+      </button>
+    </div>
+  </div>
+
+  <div id="progWrap" style="display:none">
+    <div class="prog-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div class="prog-txt" id="progTxt">Initialising…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Panel 2 ── -->
+<div class="panel" id="p2" style="display:none">
+  <div class="toolbar">
+    <div class="status-select-wrap">
+      <span class="status-lbl">Showing:</span>
+      <select class="status-select" id="statusSel" onchange="filt(this.value)">
+        <option value="all">All FAQs (6)</option>
+        <option value="draft">Draft (2)</option>
+        <option value="approved">Approved (2)</option>
+        <option value="rejected">Rejected (1)</option>
+        <option value="pushed">Pushed (1)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-sm" id="pushAllBtn" onclick="pushAll()">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 8.5V2M3 4.5l2.5-2.5 2.5 2.5M1.5 10h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Push all approved
+    </button>
+  </div>
+  <div class="cards" id="cardsGrid"></div>
+  <div class="empty" id="emptyState" style="display:none">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><rect x="3" y="2" width="24" height="26" rx="3" stroke="currentColor" stroke-width="1" opacity=".3"/><path d="M9 11h12M9 16h8M9 21h10" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".4"/></svg>
+    <p>No FAQs match this filter.</p>
+  </div>
+</div>
+
+<!-- ── Panel 3 ── -->
+<div class="panel" id="p3" style="display:none;padding:32px;text-align:center">
+  <svg width="38" height="38" viewBox="0 0 38 38" fill="none" style="display:block;margin:0 auto 10px"><circle cx="19" cy="19" r="17" stroke="#9cc826" stroke-width="1.5"/><path d="M12 19l5 5 9-9" stroke="#9cc826" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div style="font-size:15px;font-weight:500;margin-bottom:6px">All done</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:18px">2 FAQs pushed to the live knowledge index.</div>
+  <button class="btn" onclick="showPanel(1)">Start a new session</button>
+</div>
+
+<script>
+const COS=[{id:1,n:'Acme Corp'},{id:2,n:'Beta Ltd'},{id:3,n:'Gamma Inc'},{id:4,n:'Delta Solutions'},{id:5,n:'Echo Systems'},{id:6,n:'Foxtrot Agency'},{id:7,n:'Global Metrics'},{id:8,n:'Harbor Tech'}];
+let sel=new Set([1,2,3]);
+let dropOpen=false;
+
+function renderTrig(){
+  const tags=document.getElementById('coTags');
+  const more=document.getElementById('coMore');
+  tags.innerHTML='';
+  if(!sel.size){tags.innerHTML='<span class="co-ph">Select companies…</span>';more.style.display='none';}
+  else if(sel.size<=2){
+    sel.forEach(id=>{const c=COS.find(x=>x.id===id);if(c){const t=document.createElement('span');t.className='co-tag';t.textContent=c.n;tags.appendChild(t);}});
+    more.style.display='none';
+  } else {
+    const first=COS.find(x=>x.id===Array.from(sel)[0]);
+    if(first){const t=document.createElement('span');t.className='co-tag';t.textContent=first.n;tags.appendChild(t);}
+    more.style.display='inline';
+    more.textContent='+'+(sel.size-1)+' more';
+  }
+  document.getElementById('coArr').classList.toggle('open',dropOpen);
+  document.getElementById('coTrig').classList.toggle('open',dropOpen);
+}
+
+function renderList(q=''){
+  const list=document.getElementById('coList');list.innerHTML='';
+  COS.filter(c=>c.n.toLowerCase().includes(q.toLowerCase())).forEach(c=>{
+    const o=document.createElement('div');
+    o.className='co-opt'+(sel.has(c.id)?' sel':'');
+    o.innerHTML=`<div class="co-chk"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="co-opt-name">${c.n}</span>`;
+    o.onclick=e=>{e.stopPropagation();sel.has(c.id)?sel.delete(c.id):sel.add(c.id);renderTrig();renderList(document.getElementById('coSrch').value);updateWarn();};
+    list.appendChild(o);
+  });
+}
+
+function toggleDrop(){
+  dropOpen=!dropOpen;
+  const d=document.getElementById('coDrop');
+  d.style.display=dropOpen?'block':'none';
+  if(dropOpen){renderList();document.getElementById('coSrch').focus();}
+  renderTrig();
+}
+function filterCo(){renderList(document.getElementById('coSrch').value);}
+function selAll(){COS.forEach(c=>sel.add(c.id));renderTrig();renderList(document.getElementById('coSrch').value);updateWarn();}
+function deselAll(){sel.clear();renderTrig();renderList(document.getElementById('coSrch').value);updateWarn();}
+
+document.addEventListener('click',e=>{
+  if(!document.getElementById('coWrap').contains(e.target)&&dropOpen){
+    dropOpen=false;document.getElementById('coDrop').style.display='none';renderTrig();
+  }
+});
+
+function updateWarn(){
+  const w=document.getElementById('lsWarn');
+  const overlap=[1,2,3].some(id=>sel.has(id));
+  w.style.display=overlap?'flex':'none';
+}
+
+function loadTix(){
+  if(!sel.size){toast('Select at least one company.','warn');return;}
+  document.getElementById('cntBox').style.display='block';
+  document.getElementById('cntNum').textContent=Math.floor(60+Math.random()*50);
+  document.getElementById('btnLoad').style.display='none';
+  document.getElementById('btnGen').style.display='inline-flex';
+  toast('Tickets loaded.','success');
+}
+
+function doGenerate(){
+  document.getElementById('progWrap').style.display='block';
+  const pf=document.getElementById('progFill'),pt=document.getElementById('progTxt');
+  const steps=[[12,'Loading tickets…'],[30,'Batch 1/5 → AI…'],[50,'Batch 3/5 → AI…'],[68,'Deduplicating…'],[82,'Comparing against index…'],[95,'Saving drafts…'],[100,'Done — 6 FAQs generated!']];
+  let i=0;const tick=()=>{if(i>=steps.length){setTimeout(()=>{document.getElementById('progWrap').style.display='none';showPanel(2);},400);return;}pf.style.width=steps[i][0]+'%';pt.textContent=steps[i][1];i++;setTimeout(tick,550);};tick();
+}
+
+function toast(msg,type){
+  const a=document.getElementById('toastArea');
+  const t=document.createElement('div');t.className='toast '+(type||'');
+  t.innerHTML=`<div class="toast-dot"></div><span>${msg}</span>`;
+  a.prepend(t);setTimeout(()=>t.style.opacity='0',2500);setTimeout(()=>t.remove(),2800);
+}
+
+const FAQS=[
+  {id:1,status:'draft',q:'How do I reset my password?',a:'Navigate to the login page and click "Forgot password". Enter your registered email and you will receive a reset link valid for 24 hours.',src:3,ai:false,indexMatch:{q:'How to reset password?',a:'Click forgot password on the login screen and follow the email link.'},matchAction:null,editOpen:false,impOpen:false},
+  {id:2,status:'draft',q:'What is the SLA for urgent support tickets?',a:'Urgent tickets (Priority 1–2) receive an initial response within 2 business hours.',src:5,ai:false,indexMatch:null,matchAction:null,editOpen:true,impOpen:false},
+  {id:3,status:'approved',q:'How do I add a new user to my account?',a:'Navigate to Settings → Users → Add User, fill in the name and email, select a role, and send the invitation.',src:2,ai:true,indexMatch:null,matchAction:null,editOpen:false,impOpen:false},
+  {id:4,status:'draft',q:'What file formats are supported for attachments?',a:'PDF, DOCX, XLSX, PNG, JPG, and CSV — up to 20 MB per file.',src:4,ai:false,indexMatch:{q:'Which file types can be uploaded?',a:'The platform supports PDF, DOCX, PNG, JPG and CSV attachments.'},matchAction:null,editOpen:false,impOpen:true},
+  {id:5,status:'rejected',q:'How is the overall evaluation score calculated?',a:'It is a weighted average of all chapter scores, as defined in the evaluation template.',src:7,ai:true,indexMatch:null,matchAction:null,editOpen:false,impOpen:false},
+  {id:6,status:'pushed',q:'Can I customise the scoring scale?',a:'Yes — under Client Settings → Scoring Scale, managers can define a min/max range per client.',src:4,ai:false,indexMatch:null,matchAction:null,editOpen:false,impOpen:false}
+];
+let state=FAQS.map(d=>({...d}));
+let curFilter='all';
+
+function counts(){
+  const c={all:0,draft:0,approved:0,rejected:0,pushed:0};
+  state.forEach(d=>{c.all++;c[d.status]++;});
+  const sel=document.getElementById('statusSel');
+  if(sel){
+    sel.options[0].text=`All FAQs (${c.all})`;
+    sel.options[1].text=`Draft (${c.draft})`;
+    sel.options[2].text=`Approved (${c.approved})`;
+    sel.options[3].text=`Rejected (${c.rejected})`;
+    sel.options[4].text=`Pushed (${c.pushed})`;
+  }
+  document.getElementById('pushAllBtn').style.display=c.approved>0?'inline-flex':'none';
+  document.getElementById('sa').textContent=c.approved;
+}
+
+function filt(f){curFilter=f;render();}
+
+function render(){
+  const grid=document.getElementById('cardsGrid');
+  const empty=document.getElementById('emptyState');
+  const filtered=curFilter==='all'?state:state.filter(d=>d.status===curFilter);
+  empty.style.display=filtered.length?'none':'flex';
+  grid.innerHTML='';
+  filtered.forEach(d=>grid.appendChild(buildCard(d)));
+  counts();
+}
+
+function buildCard(d){
+  const el=document.createElement('div');el.className='card';
+  const sL={draft:'Draft',approved:'Approved',rejected:'Rejected',pushed:'Pushed'}[d.status];
+  const sC={draft:'b-draft',approved:'b-approved',rejected:'b-rejected',pushed:'b-pushed'}[d.status];
+  const pushed=d.status==='pushed';
+  const hasMatch=d.indexMatch&&!d.matchAction;
+
+  el.innerHTML=`
+    <div class="card-head">
+      <div class="card-meta">
+        <span class="badge ${sC}">${sL}</span>
+        <span class="badge b-src">${d.src} ticket${d.src!==1?'s':''}</span>
+        ${d.ai?'<span class="badge b-ai">✦ AI</span>':''}
+        ${hasMatch?'<span class="badge b-exists">Similar in index</span>':''}
+        ${d.matchAction==='add'?'<span class="badge b-new">Adding as new</span>':''}
+        ${d.matchAction==='update'?'<span class="badge b-exists">Will update existing</span>':''}
+      </div>
+      <div class="card-acts">
+        ${!pushed?`
+        <button class="ibtn" title="Edit" onclick="togEdit(${d.id})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M7.5 1.5l2 2-5.5 5.5H2v-2l5.5-5.5z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg></button>
+        <button class="ibtn" title="Improve with AI" onclick="togImp(${d.id})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1l.85 1.95 2.1.3-1.5 1.45.35 2.1L5.5 5.9 3.7 6.8l.35-2.1L2.55 3.25l2.1-.3z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg></button>
+        <button class="ibtn g" title="Approve" onclick="approve(${d.id})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="ibtn r" title="Reject" onclick="reject(${d.id})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 2.5l6 6M8.5 2.5l-6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+        <button class="ibtn b" title="Push to index" onclick="push(${d.id})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 8.5V2M3 4.5l2.5-2.5 2.5 2.5M1.5 10h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`
+        :`<button class="ibtn r" title="Delete from index" onclick="del(${d.id})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 2.75h8M6.75 2.75V2h-2.5v.75M4.5 4.5v3M6.5 4.5v3M2.5 2.75l.5 5.75h5l.5-5.75" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`}
+      </div>
+    </div>
+    <div class="card-view">
+      <div class="card-q">${d.q}</div>
+      <div class="card-a">${d.a}</div>
+    </div>
+    ${hasMatch?`
+    <div class="index-match">
+      <div class="im-icon"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1"/><path d="M6 4v2.5M6 8v.3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg></div>
+      <div class="im-body">
+        <div class="im-title">Similar FAQ already exists in index</div>
+        <div class="im-existing">"${d.indexMatch.q}"</div>
+        <div class="im-actions">
+          <button class="im-btn im-btn-update" onclick="resolveMatch(${d.id},'update')">Update existing</button>
+          <button class="im-btn im-btn-add" onclick="resolveMatch(${d.id},'add')">Add as new</button>
+          <button class="im-btn im-btn-dismiss" onclick="resolveMatch(${d.id},'dismiss')">Dismiss</button>
+        </div>
+      </div>
+    </div>`:''}
+    ${d.editOpen&&!pushed?`
+    <div class="card-edit">
+      <label class="elbl">Question</label><input class="einput" type="text" id="eq-${d.id}" value="${d.q.replace(/"/g,'&quot;')}">
+      <label class="elbl" style="margin-top:7px">Answer</label><textarea class="etarea" rows="3" id="ea-${d.id}">${d.a}</textarea>
+      <div class="efoot"><button class="btn btn-primary" onclick="saveEdit(${d.id})">Save</button><button class="btn btn-ghost" onclick="togEdit(${d.id})">Cancel</button></div>
+    </div>`:''}
+    ${d.impOpen&&!pushed?`
+    <div class="card-imp">
+      <label class="elbl">Improvement instruction</label>
+      <div class="irow"><input class="iinput" type="text" id="ii-${d.id}" placeholder="e.g. Make the answer shorter, add mobile steps…"><button class="btn btn-primary" onclick="sendImp(${d.id})">Improve</button><button class="btn btn-ghost" onclick="togImp(${d.id})">Cancel</button></div>
+    </div>`:''}
+  `;
+  return el;
+}
+
+function resolveMatch(id,action){
+  const d=state.find(x=>x.id===id);if(!d)return;
+  d.matchAction=action;
+  render();
+  if(action==='update')toast('Marked to update the existing index entry.','warn');
+  else if(action==='add')toast('Will be added as a new FAQ to the index.','success');
+  else toast('Match dismissed.','success');
+}
+
+function gD(id){return state.find(d=>d.id===id)}
+function togEdit(id){const d=gD(id);if(!d)return;d.editOpen=!d.editOpen;d.impOpen=false;render();if(d.editOpen){const i=document.getElementById('eq-'+id);if(i){i.focus();i.select();}}}
+function saveEdit(id){const d=gD(id);if(!d)return;const q=(document.getElementById('eq-'+id)||{}).value;const a=(document.getElementById('ea-'+id)||{}).value;if(q)d.q=q;if(a)d.a=a;d.editOpen=false;render();toast('FAQ updated.','success');}
+function togImp(id){const d=gD(id);if(!d)return;d.impOpen=!d.impOpen;d.editOpen=false;render();if(d.impOpen){const i=document.getElementById('ii-'+id);if(i)i.focus();}}
+function sendImp(id){const d=gD(id);if(!d)return;const v=(document.getElementById('ii-'+id)||{}).value||'';if(v.trim().length<4){toast('Enter a more specific instruction.','warn');return;}d.ai=true;d.impOpen=false;d.a='[AI rewrite: "'+v.trim()+'"]';render();toast('FAQ improved by AI.','success');}
+function approve(id){const d=gD(id);if(!d||d.status==='pushed')return;d.status='approved';d.editOpen=false;d.impOpen=false;render();toast('Approved.','success');}
+function reject(id){const d=gD(id);if(!d||d.status==='pushed')return;d.status='rejected';d.editOpen=false;d.impOpen=false;render();toast('Rejected.','warn');}
+function push(id){const d=gD(id);if(!d)return;if(d.status!=='approved'){toast('Approve before pushing.','warn');return;}d.status='pushed';d.editOpen=false;d.impOpen=false;const si=document.getElementById('si');si.textContent=parseInt(si.textContent)+1;const sp=document.getElementById('sp');sp.textContent=parseInt(sp.textContent)+1;render();toast('Pushed to index.','success');}
+function del(id){const d=gD(id);if(!d)return;d.status='rejected';const si=document.getElementById('si');si.textContent=Math.max(0,parseInt(si.textContent)-1);const sp=document.getElementById('sp');sp.textContent=Math.max(0,parseInt(sp.textContent)-1);render();toast('Removed from index.','warn');}
+function pushAll(){let n=0;state.forEach(d=>{if(d.status==='approved'){d.status='pushed';n++;}});const si=document.getElementById('si');si.textContent=parseInt(si.textContent)+n;const sp=document.getElementById('sp');sp.textContent=parseInt(sp.textContent)+n;render();if(n)toast(n+' FAQ'+(n>1?'s':'')+' pushed.','success');}
+
+function showPanel(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('p'+i).style.display=i===n?'block':'none';
+    const s=document.getElementById('s'+i);
+    s.classList.toggle('active',i===n);
+    s.classList.toggle('done',i<n);
+  });
+}
+
+renderTrig();renderList();render();counts();updateWarn();
+</script>
