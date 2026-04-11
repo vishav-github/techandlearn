@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspection Timeline · Bar Chart with Area Legend</title>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Font & Styling -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      padding: 30px 24px;
+      color: #0f172a;
+    }
+    .chart-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 24px 24px 20px;
+      box-shadow: 0 20px 35px -8px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.03);
+      border: 1px solid #eef2f6;
+    }
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .chart-header h2 {
+      font-weight: 650;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-height: 500px;
+    }
+    .footer-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #64748b;
+      text-align: right;
+      border-top: 1px dashed #dce3ec;
+      padding-top: 16px;
+    }
+    .footer-note i {
+      color: #3b82f6;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chart-container">
+  <div class="chart-header">
+    <h2>
+      <span style="background: #2563eb; color: white; padding: 6px 12px; border-radius: 40px; font-size: 16px;">📊</span>
+      Inspection Scores · Timeline by Area
+    </h2>
+  </div>
+
+  <!-- Chart canvas -->
+  <canvas id="timeBarChart"></canvas>
+
+  <div class="footer-note">
+    <i class="fa-regular fa-circle-info"></i> Hover any bar to see full details — Date, Time, Score, and Inspector Notes. Dashed line = Target (70)
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- Raw data (from the table) -----
+    const rawData = [
+      { title: "Coffee Shop", reportDate: "2025-12-02", time: "06:00:00", score: 70, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { title: "Restrooms", reportDate: "2025-12-02", time: "07:00:00", score: 75, description: "" },
+      { title: "Security", reportDate: "2025-12-02", time: "07:11:00", score: 60, description: "" },
+      { title: "Foyer", reportDate: "2025-12-01", time: "16:08:48", score: 100, description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
+      { title: "Bar", reportDate: "2025-12-01", time: "16:20:16", score: 30, description: "" },
+      { title: "Bistro", reportDate: "2025-12-02", time: "17:29:57", score: 80, description: "g9" },
+      { title: "Membership", reportDate: "2025-12-02", time: "18:43:39", score: 90, description: "" },
+      { title: "Gaming", reportDate: "2025-12-02", time: "19:00:00", score: 40, description: "" },
+      { title: "Restaurant", reportDate: "2025-12-02", time: "20:03:33", score: 80, description: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat laborum." }
+    ];
+
+    // Sort chronologically (by date + time)
+    const sorted = [...rawData].sort((a, b) => {
+      const dateA = new Date(`${a.reportDate}T${a.time}`);
+      const dateB = new Date(`${b.reportDate}T${b.time}`);
+      return dateA - dateB;
+    });
+
+    // Prepare labels: combined date + time
+    const labels = sorted.map(item => {
+      const d = new Date(`${item.reportDate}T${item.time}`);
+      return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    });
+
+    // Scores array
+    const scores = sorted.map(item => item.score);
+
+    // For tooltip: store full details
+    const tooltipDetails = sorted.map(item => ({
+      title: item.title,
+      date: item.reportDate,
+      time: item.time,
+      score: item.score,
+      description: item.description || 'No additional notes.'
+    }));
+
+    // ----- Assign distinct colors to each unique area -----
+    // Get unique titles in order of appearance (after sorting)
+    const uniqueTitles = [...new Set(sorted.map(item => item.title))];
+    
+    // Predefined color palette (Tableau10 + extras)
+    const colorPalette = [
+      '#4e79a7', '#f28e2c', '#e15759', '#76b7b2', '#59a14f',
+      '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab'
+    ];
+    
+    // Map title to color
+    const titleColorMap = {};
+    uniqueTitles.forEach((title, index) => {
+      titleColorMap[title] = colorPalette[index % colorPalette.length];
+    });
+
+    // Generate background colors for each bar based on its title
+    const barColors = sorted.map(item => titleColorMap[item.title]);
+
+    // Chart.js configuration
+    const ctx = document.getElementById('timeBarChart').getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Inspection Score',
+            data: scores,
+            backgroundColor: barColors,
+            borderRadius: 8,
+            barPercentage: 0.65,
+            categoryPercentage: 0.8,
+            borderColor: 'rgba(255,255,255,0.3)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Target (70)',
+            data: Array(labels.length).fill(70),
+            type: 'line',
+            borderColor: '#94a3b8',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            tension: 0,
+            order: 1,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleColor: '#f1f5f9',
+            bodyColor: '#cbd5e1',
+            padding: 14,
+            cornerRadius: 16,
+            displayColors: false,
+            callbacks: {
+              title: function(context) {
+                const idx = context[0].dataIndex;
+                const d = tooltipDetails[idx];
+                return `${d.title} · ${d.date}`;
+              },
+              label: function(context) {
+                const idx = context.dataIndex;
+                const d = tooltipDetails[idx];
+                return [
+                  `⏱ Time: ${d.time}`,
+                  `📊 Score: ${d.score}/100`,
+                  `📝 ${d.description.substring(0, 60)}${d.description.length > 60 ? '…' : ''}`
+                ];
+              }
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom',
+            align: 'center',
+            labels: {
+              usePointStyle: true,
+              boxWidth: 12,
+              padding: 20,
+              font: { family: 'Inter', size: 12 },
+              // Custom filter to show only area labels, not target line
+              filter: function(legendItem, chartData) {
+                // Only show dataset index 0 (bars), hide dataset 1 (target line)
+                return legendItem.datasetIndex === 0;
+              },
+              // Generate custom labels for each bar based on title
+              generateLabels: function(chart) {
+                const data = chart.data;
+                const barDataset = data.datasets[0];
+                const items = [];
+                // Create a legend item for each unique title
+                uniqueTitles.forEach(title => {
+                  items.push({
+                    text: title,
+                    fillStyle: titleColorMap[title],
+                    strokeStyle: titleColorMap[title],
+                    lineWidth: 0,
+                    hidden: false,
+                    datasetIndex: 0,
+                    index: -1 // Not tied to a specific data point
+                  });
+                });
+                return items;
+              }
+            }
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            grid: { color: '#e9eef4' },
+            title: {
+              display: true,
+              text: 'Score (0–100)',
+              font: { weight: 500, size: 12 }
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: {
+              maxRotation: 35,
+              font: { size: 11 }
+            }
+          }
+        },
+        animation: {
+          duration: 800,
+          easing: 'easeOutQuart'
+        },
+        onHover: (event, chartElement) => {
+          event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+        }
+      }
+    });
+
+    // Add Font Awesome if not present
+    if (!document.querySelector('link[href*="font-awesome"]')) {
+      const fa = document.createElement('link');
+      fa.rel = 'stylesheet';
+      fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+      document.head.appendChild(fa);
+    }
+  })();
+</script>
+</body>
+</html>
