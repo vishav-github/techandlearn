@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inspection Timeline · Bar Chart with Area Legend</title>
+  <title>Inspection Timeline · Line Chart with Area Legend</title>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <!-- Font & Styling -->
@@ -68,16 +68,16 @@
 <div class="chart-container">
   <div class="chart-header">
     <h2>
-      <span style="background: #2563eb; color: white; padding: 6px 12px; border-radius: 40px; font-size: 16px;">📊</span>
-      Inspection Scores · Timeline by Area
+      <span style="background: #2563eb; color: white; padding: 6px 12px; border-radius: 40px; font-size: 16px;">📈</span>
+      Inspection Scores · Timeline by Area (Line Chart)
     </h2>
   </div>
 
   <!-- Chart canvas -->
-  <canvas id="timeBarChart"></canvas>
+  <canvas id="timeLineChart"></canvas>
 
   <div class="footer-note">
-    <i class="fa-regular fa-circle-info"></i> Hover any bar to see full details — Date, Time, Score, and Inspector Notes. Dashed line = Target (70)
+    <i class="fa-regular fa-circle-info"></i> Hover any point to see full details — Date, Time, Score, and Inspector Notes. Dashed line = Target (70)
   </div>
 </div>
 
@@ -122,41 +122,47 @@
     }));
 
     // ----- Assign distinct colors to each unique area -----
-    // Get unique titles in order of appearance (after sorting)
     const uniqueTitles = [...new Set(sorted.map(item => item.title))];
     
-    // Predefined color palette (Tableau10 + extras)
     const colorPalette = [
       '#4e79a7', '#f28e2c', '#e15759', '#76b7b2', '#59a14f',
       '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab'
     ];
     
-    // Map title to color
     const titleColorMap = {};
     uniqueTitles.forEach((title, index) => {
       titleColorMap[title] = colorPalette[index % colorPalette.length];
     });
 
-    // Generate background colors for each bar based on its title
-    const barColors = sorted.map(item => titleColorMap[item.title]);
+    // For line chart, we'll use pointBackgroundColor to match the area
+    const pointColors = sorted.map(item => titleColorMap[item.title]);
 
-    // Chart.js configuration
-    const ctx = document.getElementById('timeBarChart').getContext('2d');
+    // Chart.js configuration - changed to line chart
+    const ctx = document.getElementById('timeLineChart').getContext('2d');
     
     new Chart(ctx, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: labels,
         datasets: [
           {
             label: 'Inspection Score',
             data: scores,
-            backgroundColor: barColors,
-            borderRadius: 8,
-            barPercentage: 0.65,
-            categoryPercentage: 0.8,
-            borderColor: 'rgba(255,255,255,0.3)',
-            borderWidth: 1,
+            backgroundColor: 'transparent',
+            borderColor: '#3b82f6',        // single color for the line
+            borderWidth: 3,
+            pointBackgroundColor: pointColors,
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            tension: 0.2,                   // slight curve for smoothness
+            segment: {
+              borderColor: ctx => {
+                // Optional: could color segments by area, but we'll keep it simple with a single line color
+                return '#3b82f6';
+              }
+            }
           },
           {
             label: 'Target (70)',
@@ -210,17 +216,13 @@
               boxWidth: 12,
               padding: 20,
               font: { family: 'Inter', size: 12 },
-              // Custom filter to show only area labels, not target line
               filter: function(legendItem, chartData) {
-                // Only show dataset index 0 (bars), hide dataset 1 (target line)
+                // Only show dataset index 0 (the line), hide target line
                 return legendItem.datasetIndex === 0;
               },
-              // Generate custom labels for each bar based on title
               generateLabels: function(chart) {
-                const data = chart.data;
-                const barDataset = data.datasets[0];
                 const items = [];
-                // Create a legend item for each unique title
+                // Create a legend item for each unique area (color swatch)
                 uniqueTitles.forEach(title => {
                   items.push({
                     text: title,
@@ -229,7 +231,7 @@
                     lineWidth: 0,
                     hidden: false,
                     datasetIndex: 0,
-                    index: -1 // Not tied to a specific data point
+                    index: -1
                   });
                 });
                 return items;
