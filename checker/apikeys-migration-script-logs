@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Key Migration · Checker Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f9fafb;
+      font-family: 'Inter', sans-serif;
+      padding: 32px 24px;
+      color: #1e293b;
+    }
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-weight: 600;
+      font-size: 26px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .subtitle {
+      color: #64748b;
+      margin-bottom: 24px;
+      font-size: 14px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 16px;
+    }
+    .stats-row {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 24px;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid #eef2f6;
+      font-size: 14px;
+    }
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .stat-value {
+      font-weight: 700;
+      font-size: 22px;
+    }
+    .stat-label {
+      color: #64748b;
+    }
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background: #2563eb;
+      border: none;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #2563eb;
+    }
+    .btn-outline {
+      background: white;
+      color: #1e293b;
+      border-color: #d0ddee;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .last-run {
+      font-size: 13px;
+      color: #64748b;
+    }
+    .table-wrapper {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #eef2f6;
+      overflow-x: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1300px;
+    }
+    th {
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #64748b;
+      background: #fafcff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    td {
+      padding: 14px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid #ecf1f7;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .badge-success { background: #e3f9e5; color: #0b6b23; }
+    .badge-skipped { background: #f1f5f9; color: #475569; }
+    .badge-error { background: #fee9e9; color: #b91c1c; }
+    .badge-warning { background: #fef9e6; color: #b45309; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
+    .subscription {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sub-period {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .error-detail {
+      font-size: 11px;
+      color: #b91c1c;
+      margin-top: 4px;
+      max-width: 240px;
+    }
+    .footnote {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>
+    <span>🔑 API Key Migration</span>
+  </h1>
+  <div class="subtitle">Migrate static keys from api_keys.php to ApiKeys table · Starter plan (monthly, until end of month)</div>
+
+  <!-- Simple stats row -->
+  <div class="stats-row">
+    <div class="stat-item"><span class="stat-value" id="totalFound">10</span> <span class="stat-label">legacy keys found</span></div>
+    <div class="stat-item"><span class="stat-value" id="migratedCount">6</span> <span class="stat-label">migrated</span></div>
+    <div class="stat-item"><span class="stat-value" id="skippedCount">3</span> <span class="stat-label">skipped</span></div>
+    <div class="stat-item"><span class="stat-value" id="failedCount">1</span> <span class="stat-label">failed</span></div>
+    <div class="stat-item"><span class="stat-value" id="emailSentCount">4</span> <span class="stat-label">emails sent</span></div>
+  </div>
+
+  <!-- Action bar -->
+  <div class="action-bar">
+    <button class="btn" id="runMigrationBtn">
+      <span>▶</span> Run Migration
+    </button>
+    <span class="last-run" id="lastRunDisplay">Last run: <span id="lastRunTime">Never</span></span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Company ID</th>
+          <th>Company</th>
+          <th>Key Name</th>
+          <th>ClientLink</th>
+          <th>Migration Status</th>
+          <th>Starter Subscription</th>
+          <th>Period (Month)</th>
+          <th>Email Notification</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <div class="footnote">✓ Migrated keys are active with Starter plan limits. Emails sent to company admins (if email on file).</div>
+</div>
+
+<script>
+  (function(){
+    // ----- Mock data with Company ID added -----
+    const mockLegacyKeys = [
+      { companyId: 68, company: "testing", token: "18e336ac6c4423d946ba02a19c6a2632", clientLink: null, keyName: "Legacy key for testing", emailSent: true },
+      { companyId: 189, company: "Expose", token: "4f8fcb347303a5b069d6ba8738522e9f", clientLink: 3276, keyName: "Legacy key for expose-lm (Client: 3276)", emailSent: true },
+      { companyId: 177, company: "WeBeThere", token: "f234c0d6da11d120d8068e735e003c5a", clientLink: 2229, keyName: "Legacy key for aguirrelittvik (Client: 2229)", emailSent: false }, // email failed
+      { companyId: 177, company: "WeBeThere", token: "7db7bf7c854060681acc2f5f4801ed90", clientLink: 1061, keyName: "Legacy key for aguirrelittvik (Client: 1061)", emailSent: true },
+      { companyId: 20, company: "MIS", token: "3ca2a7bac5504a5dab66741668ba0718", clientLink: 1648, keyName: "Legacy key for mis (Client: 1648)", emailSent: true },
+      { companyId: 207, company: "Romir", token: "2e3c861fae144887839e9662b4c406d8", clientLink: 473, keyName: "Legacy key for romir (Client: 473)", emailSent: false }, // email pending/failed
+      { companyId: 229, company: "Research", token: "4B6R9LFaFEKRmxE70XmnwZR9kNWPSn14", clientLink: 185, keyName: "Legacy key for research (Client: 185)", emailSent: true },
+      { companyId: 221, company: "Mysterychecks", token: "r7wPw4wapipR2fn9uRYWrVKKfCby7xlX", clientLink: 3200, keyName: "Legacy key for mysterychecks (Client: 3200)", emailSent: null }, // no email on file
+      // duplicate / will be skipped
+      { companyId: 68, company: "DuplicateCo", token: "18e336ac6c4423d946ba02a19c6a2632", clientLink: null, keyName: "Legacy key for testing (duplicate)", emailSent: null },
+      // failing key
+      { companyId: 999, company: "FailCorp", token: "aaaaaaaabbbbbbbbccccccccdddddddd", clientLink: null, keyName: "Legacy key for failcorp", emailSent: null }
+    ];
+
+    // Existing tokens (already in ApiKeys)
+    const existingTokens = new Set([
+      "18e336ac6c4423d946ba02a19c6a2632",
+      "f234c0d6da11d120d8068e735e003c5a"
+    ]);
+
+    // Helper: get current month period (1st to last day)
+    function getCurrentMonthPeriod() {
+      const now = new Date();
+      const first = new Date(now.getFullYear(), now.getMonth(), 1);
+      const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${monthNames[first.getMonth()]} ${first.getDate()} – ${monthNames[last.getMonth()]} ${last.getDate()}, ${last.getFullYear()}`;
+    }
+
+    function renderTable(data, existingSet) {
+      const tbody = document.getElementById('tableBody');
+      let migrated = 0, skipped = 0, failed = 0, emailSent = 0;
+      let rowsHtml = '';
+
+      data.forEach(item => {
+        const isExisting = existingSet.has(item.token);
+        let statusHtml, statusBadge, subHtml, periodHtml, emailBadge;
+        const clientDisplay = item.clientLink ?? '—';
+        
+        if (isExisting) {
+          statusBadge = '<span class="badge badge-skipped">Skipped (already exists)</span>';
+          skipped++;
+          subHtml = '<span class="badge badge-skipped">Inactive</span>';
+          periodHtml = '—';
+          emailBadge = '<span class="badge badge-neutral">—</span>';
+        } else {
+          const willFail = (item.token === 'aaaaaaaabbbbbbbbccccccccdddddddd');
+          if (willFail) {
+            statusBadge = '<span class="badge badge-error">Failed</span>';
+            statusHtml = '<div class="error-detail">Error: DB constraint violation (duplicate entry)</div>';
+            failed++;
+            subHtml = '<span class="badge badge-skipped">—</span>';
+            periodHtml = '—';
+            emailBadge = '<span class="badge badge-neutral">—</span>';
+          } else {
+            statusBadge = '<span class="badge badge-success">Migrated</span>';
+            migrated++;
+            subHtml = '<span class="badge badge-success">Active</span>';
+            periodHtml = getCurrentMonthPeriod();
+            
+            // Email status handling
+            if (item.emailSent === true) {
+              emailBadge = '<span class="badge badge-success">✓ Sent</span>';
+              emailSent++;
+            } else if (item.emailSent === false) {
+              emailBadge = '<span class="badge badge-error">✗ Failed</span>';
+            } else {
+              emailBadge = '<span class="badge badge-warning">No email</span>';
+            }
+          }
+        }
+
+        rowsHtml += `<tr>
+          <td>${item.companyId}</td>
+          <td>${item.company}</td>
+          <td>${item.keyName}</td>
+          <td>${clientDisplay}</td>
+          <td>${statusBadge}${statusHtml || ''}</td>
+          <td>${subHtml}</td>
+          <td><div class="subscription"><span>${periodHtml}</span></div></td>
+          <td>${emailBadge}</td>
+        </tr>`;
+      });
+
+      tbody.innerHTML = rowsHtml;
+      return { migrated, skipped, failed, emailSent };
+    }
+
+    function updateUI() {
+      const existingSet = new Set(existingTokens);
+      const stats = renderTable(mockLegacyKeys, existingSet);
+      
+      document.getElementById('totalFound').textContent = mockLegacyKeys.length;
+      document.getElementById('migratedCount').textContent = stats.migrated;
+      document.getElementById('skippedCount').textContent = stats.skipped;
+      document.getElementById('failedCount').textContent = stats.failed;
+      document.getElementById('emailSentCount').textContent = stats.emailSent;
+      
+      const now = new Date();
+      document.getElementById('lastRunTime').textContent = now.toLocaleString('en-US', { hour:'2-digit', minute:'2-digit', month:'short', day:'numeric' });
+    }
+
+    updateUI();
+
+    document.getElementById('runMigrationBtn').addEventListener('click', function() {
+      const btn = this;
+      btn.innerHTML = '<span>⏳</span> Running...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        // Simulate progress: mark another token as existing
+        existingTokens.add('4f8fcb347303a5b069d6ba8738522e9f');
+        updateUI();
+        btn.innerHTML = '<span>▶</span> Run Migration';
+        btn.disabled = false;
+      }, 1000);
+    });
+  })();
+</script>
+</body>
+</html>
