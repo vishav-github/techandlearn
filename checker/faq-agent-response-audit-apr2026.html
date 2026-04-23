@@ -1,125 +1,411 @@
-<title>Automated Collateral Export</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Support Agent Q&A Coverage Audit | CheckerSoft</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<div style="font-family: Arial, sans-serif; margin-bottom: 16px;">
-  <h3 style="margin: 0 0 8px 0;">Support Agent Q&A Coverage Audit</h3>
-  <p style="margin: 0; font-size: 14px; color: #555;">
-    This table lists user questions and agent replies from 1-Jan-2026 to 22-Apr-2026. 
-    Status column shows ✅ for answered vs ❌ for no KB match. 
-    Source: <a href="https://eu.checker-soft.com/high-remark/m_report-support-agent-history.php?CompanyID=0&rangeStartd=1&rangeStartm=1&rangeStarty=2026&rangeEndd=22&rangeEndm=4&rangeEndy=2026&go=Please+Wait#" target="_blank">Support Agent History Report</a>
-  </p>
+    body {
+      background: #f4f7fc;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      padding: 32px 24px;
+      color: #1e2a3a;
+    }
+
+    .audit-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    /* header section */
+    .page-header {
+      background: linear-gradient(135deg, #0b2b3d 0%, #1a4c6e 100%);
+      color: white;
+      padding: 28px 32px;
+    }
+
+    .page-header h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .page-header .subhead {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+
+    .meta-badge {
+      display: inline-flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.15);
+      padding: 10px 18px;
+      border-radius: 40px;
+      backdrop-filter: blur(2px);
+    }
+
+    .meta-badge span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .source-link {
+      color: #ffdfa5;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dashed #ffdfa5;
+    }
+
+    .source-link:hover {
+      color: white;
+      border-bottom-color: white;
+    }
+
+    /* summary cards */
+    .stats-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 24px 32px 0 32px;
+      background: white;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 140px;
+      background: #f8fafd;
+      border-radius: 20px;
+      padding: 16px 20px;
+      border: 1px solid #e2edf2;
+      transition: all 0.2s;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: #2c6e9e;
+    }
+
+    .stat-card .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0f2c3b;
+      line-height: 1.2;
+      margin: 8px 0 4px;
+    }
+
+    .stat-card .stat-sub {
+      font-size: 0.75rem;
+      color: #5a6e7c;
+    }
+
+    /* table wrapper */
+    .table-wrapper {
+      padding: 0 32px 32px 32px;
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .data-table th {
+      background-color: #eef3f8;
+      color: #1a4c6e;
+      font-weight: 600;
+      padding: 14px 12px;
+      border-bottom: 2px solid #cbdde6;
+      text-align: left;
+    }
+
+    .data-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e6edf2;
+      vertical-align: top;
+      background-color: white;
+    }
+
+    .data-table tr:hover td {
+      background-color: #fefaf0;
+    }
+
+    /* status badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e9f3eb;
+      color: #1e6f3f;
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      width: fit-content;
+    }
+
+    .status-badge.fail {
+      background: #ffe6e5;
+      color: #b13b2d;
+    }
+
+    .faq-id {
+      font-weight: 600;
+      background: #f2f5f7;
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-family: monospace;
+    }
+
+    .question-text {
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .reply-text {
+      color: #2c3e44;
+      line-height: 1.45;
+      font-size: 0.8rem;
+    }
+
+    /* footer */
+    .footer-note {
+      background: #f9fbfd;
+      border-top: 1px solid #e2edf2;
+      padding: 16px 32px;
+      font-size: 0.7rem;
+      color: #5f7f9c;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 16px; }
+      .page-header { padding: 20px; }
+      .page-header h1 { font-size: 1.5rem; }
+      .stats-row { padding: 16px 20px 0 20px; }
+      .table-wrapper { padding: 0 16px 20px 16px; }
+      .data-table th, .data-table td { padding: 10px 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="audit-container">
+  <div class="page-header">
+    <h1>📋 Support Agent Q&A Coverage Audit</h1>
+    <div class="subhead">Knowledge base effectiveness & unanswered queries</div>
+    <div class="meta-badge">
+      <span>📅 1 Jan 2026 – 22 Apr 2026</span>
+      <span>🔍 Source: <a href="https://eu.checker-soft.com/high-remark/m_report-support-agent-history.php?CompanyID=0&rangeStartd=1&rangeStartm=1&rangeStarty=2026&rangeEndd=22&rangeEndm=4&rangeEndy=2026&go=Please+Wait#" target="_blank" class="source-link">Support Agent History Report ↗</a></span>
+    </div>
+  </div>
+
+  <!-- dynamic summary stats (built from table data) -->
+  <div class="stats-row" id="statsContainer"></div>
+
+  <div class="table-wrapper">
+    <table class="data-table" id="auditTable">
+      <thead>
+        <tr>
+          <th style="width: 8%">FAQ #</th>
+          <th style="width: 32%">User Question</th>
+          <th style="width: 50%">Agent Reply (KB based)</th>
+          <th style="width: 10%">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- FAQ1 -->
+        <tr>
+          <td><span class="faq-id">FAQ1</span></td>
+          <td class="question-text">How to import branches?</td>
+          <td class="reply-text">To import branches into the Checker system, you should refer to the User Guides section under 'Checker System' > 'Import'. This section provides general instructions for importing branches. If you encounter specific issues or have further questions about the import process, you can contact the support team for assistance.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ2 -->
+        <tr>
+          <td><span class="faq-id">FAQ2</span></td>
+          <td class="question-text">יבוא סניפים</td>
+          <td class="reply-text">😕 I’m sorry, I couldn’t find a direct answer to your question in our knowledge base. 🔍 Please try another query or question.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ3 -->
+        <tr>
+          <td><span class="faq-id">FAQ3</span></td>
+          <td class="question-text">כיצד מעתיקים שאלון קיים אצל לקוח אחד ללקוח אחר באופן שלא ישפיע על השאלונים הקיימים</td>
+          <td class="reply-text">כדי להעתיק שאלון קיים אצל לקוח אחד ללקוח אחר באופן שלא ישפיע על השאלונים הקיימים, מומלץ לשכפל את השאלון הקיים ולבצע את השינויים על הגרסה החדשה. גישה זו מונעת שינוי בנתונים המקוריים ושומרת על שלמות הדוחות המשתרעים על פני מספר גרסאות של שאלונים. אם יש צורך לבצע שינויים בשאלון הקיים, אין למחוק שאלות; במקום זאת, יש להשתמש בתנאי תצוגה כדי להסתיר אותן (לדוגמה, להחיל '1=2' בתנאי התצוגה) ולוודא שהן אינן מוצגות בדוחות. זה ימנע כל השפעה על הניקוד והאגרגציה של הנתונים. בעת יצירת דוחות, יש לוודא שבוחרים את גרסת השאלון המתאימה או להשאיר את הבחירה ריקה כדי לכלול את כל הגרסאות. עבור כל שאלות שאינן נדרשות יותר, יש לסמן אותן כנסתרות מהדוחות ולהוציא אותן מהניקוד. זה מבטיח שהן לא ישפיעו על חישובי הניקוד הכוללים.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ3.1 -->
+        <tr>
+          <td><span class="faq-id">FAQ3.1</span></td>
+          <td class="question-text">אבל כאשר אני משכפל שאלון הוא יוצר שאלון חדש עם אותן השאלות וכל שינוי מסביר כי השאלה משוייכת גם לשאלונים אחרים</td>
+          <td class="reply-text">כאשר אתה משכפל שאלון, השאלות המקוריות נשארות משויכות לשאלונים אחרים, ולכן כל שינוי בשאלה ישפיע על כל השאלונים שבהם היא מופיעה. כדי למנוע זאת, יש לך שתי אפשרויות: 1. ליצור שאלה חדשה בבנק השאלות ולהוסיף אותה לשאלון שלך. 2. לשכפל את השאלה. לאחר השכפול, תוכל לערוך את השאלה החדשה מבלי להשפיע על המקורית. לפרטים נוספים, ניתן לפנות לצוות התמיכה.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ4 -->
+        <tr>
+          <td><span class="faq-id">FAQ4</span></td>
+          <td class="question-text">שליחה לאנשי קשר של הסניף</td>
+          <td class="reply-text">המידע המבוקש אינו זמין בנתונים שהתקבלו. אנא נסה שאילתה או נושא אחר.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ5 -->
+        <tr>
+          <td><span class="faq-id">FAQ5</span></td>
+          <td class="question-text">האם יש אפשרות לעדכן שאלה שבה יש אפשרות לעדכן גם שעה וגם תאריך יחדיו</td>
+          <td class="reply-text">המידע המבוקש אינו זמין בנתונים שהתקבלו. אנא נסה שאילתה או נושא אחר.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ6 -->
+        <tr>
+          <td><span class="faq-id">FAQ6</span></td>
+          <td class="question-text">can i change the setting of the default date range in the panel to more then 2 days? eg: from the start of the month?</td>
+          <td class="reply-text">???? I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???? Please try another query or question.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ7 -->
+        <tr>
+          <td><span class="faq-id">FAQ7</span></td>
+          <td class="question-text">En el módulo de OPERACIÓN ----ENVIAR MENSAJES</td>
+          <td class="reply-text">Para enviar nombres de usuario a múltiples usuarios simultáneamente, asegúrese de que la dirección de correo electrónico de cada usuario esté incluida en su configuración. Puede utilizar la función <strong>Operación > Enviar Mensajes</strong> para editar el contenido del correo electrónico con la información de credenciales. Sin embargo, debido a preocupaciones de seguridad y regulaciones, las contraseñas no pueden incluirse en este proceso automatizado. Como alternativa, considere usar un enfoque basado en lógica donde se informe a los usuarios de su nombre de usuario y contraseña a través de un método seguro. Para obtener más asistencia, por favor contacte al equipo de soporte.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ7.1 -->
+        <tr>
+          <td><span class="faq-id">FAQ7.1</span></td>
+          <td class="question-text">Sólo me muestra los primeros 1000 colaboradores de cada ciudad seleccionada</td>
+          <td class="reply-text">Para visualizar más de 1000 registros en una sola página, ten en cuenta que existe un límite de 1000 registros por página para evitar la sobrecarga del servidor. Para ver registros adicionales, puedes navegar a las páginas siguientes. Alternativamente, considera usar las funciones de informe disponibles que incluyen opciones de filtro para clientes, compradores y fechas. Esto te permite personalizar tu vista sin exceder el límite de la página. Para un acceso más fácil, puedes crear un acceso directo al informe para una navegación más rápida.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ8 -->
+        <tr>
+          <td><span class="faq-id">FAQ8</span></td>
+          <td class="question-text">API conexion</td>
+          <td class="reply-text">???? I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???? Please try another query or question.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ9 -->
+        <tr>
+          <td><span class="faq-id">FAQ9</span></td>
+          <td class="question-text">SYSTEM CONECTION WITH CLIENT</td>
+          <td class="reply-text">Yes, it is possible to connect a system and a client's database via API for data and image transfer. This setup allows for the data to be evaluated and the results to be transferred back to the client's system. You can import data such as cabinet audit photo sets from the client's platform to the checker system, audit the photos, and then transfer the results back to the client's server. For specific API integration details, refer to the provided API guide or contact the support team for further assistance.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ9.1 -->
+        <tr>
+          <td><span class="faq-id">FAQ9.1</span></td>
+          <td class="question-text">provided API guide</td>
+          <td class="reply-text">To set up data integration using the API, you need to obtain the API documentation and an API key. The API documentation will provide details such as the host, port, and other connection parameters necessary for integration. You can contact the support team to receive your API key and access the updated API documentation. Ensure that your system can process JSON data for successful integration. If further assistance is needed, you can arrange a meeting with the support team to discuss any questions you may have.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ10 -->
+        <tr>
+          <td><span class="faq-id">FAQ10</span></td>
+          <td class="question-text">In questionnaire settings, what is the meaning of: Convert the weights of questions into the weight of sections and sub-sections</td>
+          <td class="reply-text">The setting "Convert the weights of questions into the weight of sections and sub-sections" in questionnaire settings determines how weights are distributed across sections and subsections. If set to "Always," the system will convert the weights of individual questions into the cumulative weight of sections and subsections, affecting the overall scoring logic. This can be useful for ensuring that the total weight reflects the intended scoring structure across different parts of the questionnaire. Conversely, if set to "Never," sections and subsections will retain their own specific weights, allowing for more granular control over how each part contributes to the final score. This setting is crucial for aligning the scoring results with your expectations and ensuring accurate weight distribution.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ11 -->
+        <tr>
+          <td><span class="faq-id">FAQ11</span></td>
+          <td class="question-text">One client would like to add a few conditional questions to the questionnaire. Specifically, one question should only appear for stores that offer a certain service...</td>
+          <td class="reply-text">To configure a questionnaire so that a question appears only for specific stores based on predefined criteria, you can use conditional logic linked to store characteristics. This approach automates the display of questions without relying on shoppers to determine service availability. Here are the steps to achieve this: 1. Navigate to the questionnaire settings where you can define conditional logic. 2. Use the store characteristics to set conditions for displaying the question. This can be done by linking the question to specific store attributes or custom characteristics that you define. 3. Ensure that your questionnaire platform supports conditional logic and verify the setup process in your questionnaire's settings or documentation. 4. If you encounter difficulties, consider reaching out to your support team for assistance with the specific configuration in your survey tool. This method allows the question to automatically appear or be hidden based on the predefined setup, eliminating the need for shoppers to make decisions about service availability, thus reducing errors.</td>
+          <td><span class="status-badge">✅ Answered</span></td>
+        </tr>
+        <!-- FAQ11.1 -->
+        <tr>
+          <td><span class="faq-id">FAQ11.1</span></td>
+          <td class="question-text">Where I can find questionnaire settings where I can define conditional logic?</td>
+          <td class="reply-text">I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???? Please try another query or question.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ12 -->
+        <tr>
+          <td><span class="faq-id">FAQ12</span></td>
+          <td class="question-text">Automatic values in question settings?</td>
+          <td class="reply-text">I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+        <!-- FAQ13 -->
+        <tr>
+          <td><span class="faq-id">FAQ13</span></td>
+          <td class="question-text">"how can I use \"Automatic values\" in question settings?</td>
+          <td class="reply-text">I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???</td>
+          <td><span class="status-badge fail">❌ No KB match</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer-note">
+    ✅ = Knowledge base match · ❌ = No relevant KB article · Coverage based on agent replies between Jan 1 – Apr 22, 2026.
+  </div>
 </div>
 
-<table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
-  <thead>
-    <tr style="background-color: #f2f2f2;">
-      <th style="width: 5%;">FAQ #</th>
-      <th style="width: 35%;">Question</th>
-      <th style="width: 50%;">Agent Reply</th>
-      <th style="width: 10%;">Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>FAQ1</td>
-      <td>How to import branches?</td>
-      <td>To import branches into the Checker system, you should refer to the User Guides section under 'Checker System' > 'Import'. This section provides general instructions for importing branches. If you encounter specific issues or have further questions about the import process, you can contact the support team for assistance.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ2</td>
-      <td>יבוא סניפים</td>
-      <td>😕 I’m sorry, I couldn’t find a direct answer to your question in our knowledge base. 🔍 Please try another query or question.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ3</td>
-      <td>כיצד מעתיקים שאלון קיים אצל לקוח אחד ללקוח אחר באופן שלא ישפיע על השאלונים הקיימים</td>
-      <td>כדי להעתיק שאלון קיים אצל לקוח אחד ללקוח אחר באופן שלא ישפיע על השאלונים הקיימים, מומלץ לשכפל את השאלון הקיים ולבצע את השינויים על הגרסה החדשה. גישה זו מונעת שינוי בנתונים המקוריים ושומרת על שלמות הדוחות המשתרעים על פני מספר גרסאות של שאלונים. אם יש צורך לבצע שינויים בשאלון הקיים, אין למחוק שאלות; במקום זאת, יש להשתמש בתנאי תצוגה כדי להסתיר אותן (לדוגמה, להחיל '1=2' בתנאי התצוגה) ולוודא שהן אינן מוצגות בדוחות. זה ימנע כל השפעה על הניקוד והאגרגציה של הנתונים. בעת יצירת דוחות, יש לוודא שבוחרים את גרסת השאלון המתאימה או להשאיר את הבחירה ריקה כדי לכלול את כל הגרסאות. עבור כל שאלות שאינן נדרשות יותר, יש לסמן אותן כנסתרות מהדוחות ולהוציא אותן מהניקוד. זה מבטיח שהן לא ישפיעו על חישובי הניקוד הכוללים.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ3.1</td>
-      <td>אבל כאשר אני משכפל שאלון הוא יוצר שאלון חדש עם אותן השאלות וכל שינוי מסביר כי השאלה משוייכת גם לשאלונים אחרים</td>
-      <td>כאשר אתה משכפל שאלון, השאלות המקוריות נשארות משויכות לשאלונים אחרים, ולכן כל שינוי בשאלה ישפיע על כל השאלונים שבהם היא מופיעה. כדי למנוע זאת, יש לך שתי אפשרויות: 1. ליצור שאלה חדשה בבנק השאלות ולהוסיף אותה לשאלון שלך. 2. לשכפל את השאלה. לאחר השכפול, תוכל לערוך את השאלה החדשה מבלי להשפיע על המקורית. לפרטים נוספים, ניתן לפנות לצוות התמיכה.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ4</td>
-      <td>שליחה לאנשי קשר של הסניף</td>
-      <td>המידע המבוקש אינו זמין בנתונים שהתקבלו. אנא נסה שאילתה או נושא אחר.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ5</td>
-      <td>האם יש אפשרות לעדכן שאלה שבה יש אפשרות לעדכן גם שעה וגם תאריך יחדיו</td>
-      <td>המידע המבוקש אינו זמין בנתונים שהתקבלו. אנא נסה שאילתה או נושא אחר.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ6</td>
-      <td>can i change the setting of the default date range in the panel to more then 2 days? eg: from the start of the month?</td>
-      <td>???? I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???? Please try another query or question.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ7</td>
-      <td>En el módulo de OPERACIÓN ----ENVIAR MENSAJES</td>
-      <td>Para enviar nombres de usuario a múltiples usuarios simultáneamente, asegúrese de que la dirección de correo electrónico de cada usuario esté incluida en su configuración. Puede utilizar la función <strong>Operación > Enviar Mensajes</strong> para editar el contenido del correo electrónico con la información de credenciales. Sin embargo, debido a preocupaciones de seguridad y regulaciones, las contraseñas no pueden incluirse en este proceso automatizado. Como alternativa, considere usar un enfoque basado en lógica donde se informe a los usuarios de su nombre de usuario y contraseña a través de un método seguro. Para obtener más asistencia, por favor contacte al equipo de soporte.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ7.1</td>
-      <td>Sólo me muestra los primeros 1000 colaboradores de cada ciudad seleccionada</td>
-      <td>Para visualizar más de 1000 registros en una sola página, ten en cuenta que existe un límite de 1000 registros por página para evitar la sobrecarga del servidor. Para ver registros adicionales, puedes navegar a las páginas siguientes. Alternativamente, considera usar las funciones de informe disponibles que incluyen opciones de filtro para clientes, compradores y fechas. Esto te permite personalizar tu vista sin exceder el límite de la página. Para un acceso más fácil, puedes crear un acceso directo al informe para una navegación más rápida.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ8</td>
-      <td>API conexion</td>
-      <td>???? I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???? Please try another query or question.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ9</td>
-      <td>SYSTEM CONECTION WITH CLIENT</td>
-      <td>Yes, it is possible to connect a system and a client's database via API for data and image transfer. This setup allows for the data to be evaluated and the results to be transferred back to the client's system. You can import data such as cabinet audit photo sets from the client's platform to the checker system, audit the photos, and then transfer the results back to the client's server. For specific API integration details, refer to the provided API guide or contact the support team for further assistance.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ9.1</td>
-      <td>provided API guide</td>
-      <td>To set up data integration using the API, you need to obtain the API documentation and an API key. The API documentation will provide details such as the host, port, and other connection parameters necessary for integration. You can contact the support team to receive your API key and access the updated API documentation. Ensure that your system can process JSON data for successful integration. If further assistance is needed, you can arrange a meeting with the support team to discuss any questions you may have.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ10</td>
-      <td>In questionnaire settings, what is the meanig of: Convert the weights of questions into the weight of sections and sub-sections</td>
-      <td>The setting "Convert the weights of questions into the weight of sections and sub-sections" in questionnaire settings determines how weights are distributed across sections and subsections. If set to "Always," the system will convert the weights of individual questions into the cumulative weight of sections and subsections, affecting the overall scoring logic. This can be useful for ensuring that the total weight reflects the intended scoring structure across different parts of the questionnaire. Conversely, if set to "Never," sections and subsections will retain their own specific weights, allowing for more granular control over how each part contributes to the final score. This setting is crucial for aligning the scoring results with your expectations and ensuring accurate weight distribution.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ11</td>
-      <td>One client would like to add a few conditional questions to the questionnaire. Specifically, one question should only appear for stores that offer a certain service...</td>
-      <td>To configure a questionnaire so that a question appears only for specific stores based on predefined criteria, you can use conditional logic linked to store characteristics. This approach automates the display of questions without relying on shoppers to determine service availability. Here are the steps to achieve this: 1. Navigate to the questionnaire settings where you can define conditional logic. 2. Use the store characteristics to set conditions for displaying the question. This can be done by linking the question to specific store attributes or custom characteristics that you define. 3. Ensure that your questionnaire platform supports conditional logic and verify the setup process in your questionnaire's settings or documentation. 4. If you encounter difficulties, consider reaching out to your support team for assistance with the specific configuration in your survey tool. This method allows the question to automatically appear or be hidden based on the predefined setup, eliminating the need for shoppers to make decisions about service availability, thus reducing errors.</td>
-      <td style="text-align: center;">✅</td>
-    </tr>
-    <tr>
-      <td>FAQ11.1</td>
-      <td>Where I can find questionnaire settings where I can define conditional logic?</td>
-      <td>I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???? Please try another query or question.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ12</td>
-      <td>Automatic values in question settings?</td>
-      <td>I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-    <tr>
-      <td>FAQ13</td>
-      <td>"how can I use \"Automatic values\" in question settings?</td>
-      <td>I’m sorry, I couldn’t find a direct answer to your question in our knowledge base.???</td>
-      <td style="text-align: center;">❌</td>
-    </tr>
-  </tbody>
-</table>
+<script>
+  (function() {
+    // Calculate summary statistics from table
+    const rows = document.querySelectorAll('#auditTable tbody tr');
+    let total = rows.length;
+    let answered = 0;
+    rows.forEach(row => {
+      const statusCell = row.querySelector('td:last-child');
+      if (statusCell && statusCell.innerText.includes('✅')) {
+        answered++;
+      }
+    });
+    const uncovered = total - answered;
+    const coveragePercent = total ? Math.round((answered / total) * 100) : 0;
+    
+    // Create stats HTML
+    const statsHtml = `
+      <div class="stat-card">
+        <div class="stat-label">Total Queries</div>
+        <div class="stat-number">${total}</div>
+        <div class="stat-sub">Jan–Apr 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">✅ Answered (KB match)</div>
+        <div class="stat-number">${answered}</div>
+        <div class="stat-sub">successful coverage</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">❌ Unanswered / No KB</div>
+        <div class="stat-number">${uncovered}</div>
+        <div class="stat-sub">needs knowledge update</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Coverage Rate</div>
+        <div class="stat-number">${coveragePercent}%</div>
+        <div class="stat-sub">KB effectiveness</div>
+      </div>
+    `;
+    const statsContainer = document.getElementById('statsContainer');
+    if (statsContainer) statsContainer.innerHTML = statsHtml;
+  })();
+</script>
+</body>
+</html>
