@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Queue Monitor — Checker Admin (Mockup)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #222;
+    background: #f4f5f7;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Page chrome — mimics existing admin pages */
+  .topbar {
+    background: #2b3a4a;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #1f2a36;
+  }
+  .topbar .left { font-weight: bold; }
+  .topbar .right { font-size: 12px; opacity: 0.85; }
+  .topbar .right a { color: #9cd0ff; text-decoration: none; margin-left: 12px; }
+
+  .page { padding: 14px 18px; max-width: 1400px; }
+
+  h1 {
+    font-size: 18px;
+    margin: 4px 0 2px 0;
+    color: #1f2a36;
+  }
+  .subtitle {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  /* Banner / kill-switch status */
+  .banner {
+    padding: 8px 12px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .banner.ok   { background: #e4f5e4; border: 1px solid #a3c9a3; color: #2a5a2a; }
+  .banner.warn { background: #fff6d9; border: 1px solid #e0c87a; color: #7b5a00; }
+  .banner.err  { background: #f8dada; border: 1px solid #c98585; color: #762525; }
+  .banner .badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #999;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  /* Section block */
+  .section {
+    background: #fff;
+    border: 1px solid #d0d4d9;
+    border-radius: 3px;
+    margin-bottom: 16px;
+  }
+  .section h2 {
+    font-size: 13px;
+    background: #eef1f4;
+    border-bottom: 1px solid #d0d4d9;
+    margin: 0;
+    padding: 7px 12px;
+    color: #1f2a36;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .section .body { padding: 10px 12px; }
+
+  /* KPI grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .kpi {
+    background: #fafbfc;
+    border: 1px solid #e0e3e7;
+    border-radius: 3px;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .kpi .label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 3px;
+  }
+  .kpi .value {
+    font-size: 20px;
+    color: #1f2a36;
+    font-weight: bold;
+    line-height: 1.1;
+  }
+  .kpi .sub {
+    font-size: 11px;
+    color: #777;
+    margin-top: 2px;
+  }
+  .kpi .value.err { color: #a13030; }
+  .kpi .value.warn { color: #a07700; }
+
+  /* Tables */
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.data th,
+  table.data td {
+    border-bottom: 1px solid #e2e5e9;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  table.data th {
+    background: #f5f7f9;
+    font-weight: bold;
+    color: #1f2a36;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-size: 11px;
+  }
+  table.data tr:hover td { background: #fafbfc; }
+  table.data td.num  { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data td.mono { font-family: Consolas, Menlo, monospace; font-size: 12px; }
+
+  /* Outcome pills */
+  .pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    min-width: 58px;
+    text-align: center;
+  }
+  .pill.success { background: #e4f5e4; color: #2a5a2a; border: 1px solid #a3c9a3; }
+  .pill.partial { background: #fff6d9; color: #7b5a00; border: 1px solid #e0c87a; }
+  .pill.timeout { background: #f8dada; color: #762525; border: 1px solid #c98585; }
+  .pill.error   { background: #f8dada; color: #762525; border: 1px solid #c98585; }
+  .pill.paused  { background: #e6e8ec; color: #555;   border: 1px solid #bbb; }
+
+  /* Buttons */
+  .btn {
+    background: #f0f2f5;
+    border: 1px solid #bcc2ca;
+    color: #1f2a36;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn:hover  { background: #e2e5ea; }
+  .btn.primary { background: #2b6cb0; border-color: #204e81; color: #fff; }
+  .btn.primary:hover { background: #204e81; }
+  .btn.danger  { background: #a13030; border-color: #7d2424; color: #fff; }
+  .btn.danger:hover  { background: #7d2424; }
+  .btn.warn    { background: #c88c14; border-color: #9a6a0a; color: #fff; }
+  .btn.warn:hover    { background: #9a6a0a; }
+  .btn.small   { padding: 2px 7px; font-size: 11px; }
+
+  /* Filters row */
+  .filters {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fafbfc;
+    border-bottom: 1px solid #e2e5e9;
+    font-size: 12px;
+  }
+  .filters select, .filters input {
+    font-size: 12px;
+    padding: 3px 5px;
+    border: 1px solid #bcc2ca;
+    border-radius: 2px;
+    font-family: inherit;
+  }
+  .filters label { color: #555; }
+
+  /* Settings form */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 24px;
+    padding: 10px 12px;
+  }
+  .field {
+    display: grid;
+    grid-template-columns: 220px 120px 1fr;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px dashed #e8eaee;
+  }
+  .field label { color: #333; font-size: 12px; }
+  .field .hint { color: #888; font-size: 11px; }
+  .field input[type="number"],
+  .field input[type="text"] {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #bcc2ca;
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 12px;
+    text-align: right;
+  }
+  .field input[readonly] { background: #f4f5f7; color: #555; }
+
+  .settings-actions {
+    padding: 10px 12px;
+    border-top: 1px solid #e2e5e9;
+    background: #fafbfc;
+    display: flex;
+    gap: 8px;
+  }
+
+  /* Kill-switch box */
+  .killswitch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+  }
+  .killswitch .desc { color: #444; font-size: 12px; max-width: 70%; }
+  .killswitch .state-on  { color: #2a5a2a; font-weight: bold; }
+  .killswitch .state-off { color: #a13030; font-weight: bold; }
+
+  /* Footer notes */
+  .footnote {
+    color: #888;
+    font-size: 11px;
+    text-align: center;
+    padding: 12px 0 24px 0;
+  }
+
+  /* Legend */
+  .legend {
+    font-size: 11px;
+    color: #666;
+    padding: 6px 12px;
+    background: #fafbfc;
+    border-top: 1px solid #e2e5e9;
+  }
+
+  .flex-gap { display: flex; gap: 6px; }
+
+  /* Tiny histogram bar */
+  .bar {
+    display: inline-block;
+    height: 6px;
+    background: #6c9bd1;
+    vertical-align: middle;
+    border-radius: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="left">Checker Admin &nbsp;›&nbsp; AI Queue Monitor</div>
+  <div class="right">
+    vishavchecker@gmail.com
+    <a href="#">Company Manager</a>
+    <a href="#">DB Status</a>
+    <a href="#">Logout</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <h1>AI Queue Monitor</h1>
+  <div class="subtitle">
+    Dedicated pipeline for <code>AIQueue</code> processing. Settings below affect the <code>cron-ai-queue.php</code> dispatcher and workers only.
+    Last refreshed: 2026-04-24 14:07:22 UTC &nbsp;|&nbsp; <a href="#">↻ Refresh</a>
+  </div>
+
+  <!-- ================= KILL-SWITCH BANNER ================= -->
+  <div class="banner ok">
+    <div>
+      <strong>Dispatch: RUNNING</strong> &nbsp;|&nbsp;
+      Master last ran 00:00:48 ago &nbsp;|&nbsp;
+      Settings last changed by <code>vdeep@checker</code> on 2026-04-23 09:12
+    </div>
+    <div>
+      <form style="display:inline;">
+        <button class="btn danger" type="button">Pause Dispatch</button>
+      </form>
+      <form style="display:inline;">
+        <button class="btn primary" type="button">Trigger master now</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= HEADER KPIs ================= -->
+  <div class="section">
+    <h2>Pipeline Health — Last Hour</h2>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="label">Active Workers</div>
+        <div class="value">7 <span style="font-size:13px;color:#888;font-weight:normal;">/ 10</span></div>
+        <div class="sub">MaxConcurrent = 10</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Pending AIQueue</div>
+        <div class="value">342</div>
+        <div class="sub">oldest: 00:04:11</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Items/hr</div>
+        <div class="value">1,284</div>
+        <div class="sub">processed last 60 min</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Error Rate</div>
+        <div class="value warn">3.2%</div>
+        <div class="sub">27 err / 837 runs</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Duration p50 / p95</div>
+        <div class="value">42s <span style="color:#888;font-size:14px;">/ 184s</span></div>
+        <div class="sub">worker wall-clock</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Load Avg (1m)</div>
+        <div class="value">8.42</div>
+        <div class="sub">cutoff: 16.00</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Timeouts</div>
+        <div class="value err">6</div>
+        <div class="sub">Azure &gt; 60s</div>
+      </div>
+    </div>
+    <div class="legend">
+      KPIs are queried inline on page load. Thresholds are configurable below. No browser auto-refresh — click <em>Refresh</em> to re-query.
+    </div>
+  </div>
+
+  <!-- ================= ACTIVE WORKERS ================= -->
+  <div class="section">
+    <h2>Active Workers (7)</h2>
+    <table class="data">
+      <thead>
+        <tr>
+          <th style="width:90px;">Company</th>
+          <th>Company Name</th>
+          <th style="width:160px;">Started</th>
+          <th style="width:90px;" class="num">Elapsed</th>
+          <th style="width:90px;" class="num">Sem ID</th>
+          <th style="width:170px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">1042</td>
+          <td>Acme Retail Group</td>
+          <td>14:06:34</td>
+          <td class="num">00:00:48</td>
+          <td class="num">88712</td>
+          <td><button class="btn small danger">Clear semaphore</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1065</td>
+          <td>Northwind Inspections</td>
+          <td>14:06:22</td>
+          <td class="num">00:01:00</td>
+          <td class="num">88713</td>
+          <td><button class="btn small danger">Clear semaphore</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1118</td>
+          <td>Prime Shopper Co.</td>
+          <td>14:05:59</td>
+          <td class="num">00:01:23</td>
+          <td class="num">88714</td>
+          <td><button class="btn small danger">Clear semaphore</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1203</td>
+          <td>Field Audit Solutions</td>
+          <td>14:05:11</td>
+          <td class="num">00:02:11</td>
+          <td class="num">88715</td>
+          <td><button class="btn small danger">Clear semaphore</button></td>
+        </tr>
+        <tr style="background:#fff8e0;">
+          <td class="mono">1244</td>
+          <td>Gallup Mystery Shopping</td>
+          <td>13:51:07</td>
+          <td class="num" style="color:#a13030;font-weight:bold;">00:16:15 ⚠</td>
+          <td class="num">88708</td>
+          <td>
+            <button class="btn small danger">Clear semaphore</button>
+            <span class="hint" style="color:#a13030;font-size:11px;">stale (&gt;15m)</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="mono">1289</td>
+          <td>QSI International</td>
+          <td>14:06:58</td>
+          <td class="num">00:00:24</td>
+          <td class="num">88716</td>
+          <td><button class="btn small danger">Clear semaphore</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1301</td>
+          <td>Secret Shopper LLC</td>
+          <td>14:07:03</td>
+          <td class="num">00:00:19</td>
+          <td class="num">88717</td>
+          <td><button class="btn small danger">Clear semaphore</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="legend">
+      Rows highlighted amber have exceeded <code>MaxWorkerDurationSec</code> — either the shutdown handler hasn't fired yet, or the worker is stuck. Use <em>Clear semaphore</em> then <em>Trigger worker</em> on the row below.
+    </div>
+  </div>
+
+  <!-- ================= RECENT RUNS ================= -->
+  <div class="section">
+    <h2>Recent Runs (last 100)</h2>
+    <div class="filters">
+      <label>Company:</label>
+      <select>
+        <option>All</option>
+        <option>1042 — Acme Retail Group</option>
+        <option>1065 — Northwind Inspections</option>
+        <option>1244 — Gallup Mystery Shopping</option>
+      </select>
+      <label>Outcome:</label>
+      <select>
+        <option>All</option>
+        <option>success</option>
+        <option>partial</option>
+        <option>timeout</option>
+        <option>error</option>
+        <option>paused</option>
+      </select>
+      <label>Since:</label>
+      <input type="text" value="2026-04-24 13:07" style="width:140px;">
+      <button class="btn">Apply</button>
+    </div>
+    <table class="data">
+      <thead>
+        <tr>
+          <th style="width:60px;">Log</th>
+          <th style="width:70px;">Cmp</th>
+          <th>Company</th>
+          <th style="width:150px;">Started</th>
+          <th style="width:90px;" class="num">Dur (s)</th>
+          <th style="width:60px;" class="num">Req</th>
+          <th style="width:60px;" class="num">OK</th>
+          <th style="width:70px;" class="num">Skip</th>
+          <th style="width:80px;" class="num">Mem MB</th>
+          <th style="width:90px;">Outcome</th>
+          <th>Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">210418</td>
+          <td class="mono">1042</td>
+          <td>Acme Retail Group</td>
+          <td>14:06:34</td>
+          <td class="num">48.12</td>
+          <td class="num">5</td>
+          <td class="num">5</td>
+          <td class="num">0</td>
+          <td class="num">184</td>
+          <td><span class="pill success">success</span></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="mono">210417</td>
+          <td class="mono">1065</td>
+          <td>Northwind Inspections</td>
+          <td>14:04:12</td>
+          <td class="num">127.04</td>
+          <td class="num">5</td>
+          <td class="num">3</td>
+          <td class="num">2</td>
+          <td class="num">212</td>
+          <td><span class="pill partial">partial</span></td>
+          <td>deadline reached at item 4</td>
+        </tr>
+        <tr>
+          <td class="mono">210416</td>
+          <td class="mono">1203</td>
+          <td>Field Audit Solutions</td>
+          <td>14:02:55</td>
+          <td class="num">60.08</td>
+          <td class="num">5</td>
+          <td class="num">4</td>
+          <td class="num">0</td>
+          <td class="num">176</td>
+          <td><span class="pill timeout">timeout</span></td>
+          <td>Azure call timed out (item 3): CURLE_OPERATION_TIMEDOUT</td>
+        </tr>
+        <tr>
+          <td class="mono">210415</td>
+          <td class="mono">1118</td>
+          <td>Prime Shopper Co.</td>
+          <td>14:01:41</td>
+          <td class="num">39.81</td>
+          <td class="num">5</td>
+          <td class="num">5</td>
+          <td class="num">0</td>
+          <td class="num">168</td>
+          <td><span class="pill success">success</span></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="mono">210414</td>
+          <td class="mono">1301</td>
+          <td>Secret Shopper LLC</td>
+          <td>13:59:22</td>
+          <td class="num">0.12</td>
+          <td class="num">0</td>
+          <td class="num">0</td>
+          <td class="num">0</td>
+          <td class="num">42</td>
+          <td><span class="pill paused">paused</span></td>
+          <td>DispatchEnabled=0 at start</td>
+        </tr>
+        <tr>
+          <td class="mono">210413</td>
+          <td class="mono">1244</td>
+          <td>Gallup Mystery Shopping</td>
+          <td>13:51:07</td>
+          <td class="num" style="color:#a13030;">—</td>
+          <td class="num">5</td>
+          <td class="num">2</td>
+          <td class="num">0</td>
+          <td class="num">—</td>
+          <td><span class="pill error">error</span></td>
+          <td>worker-vanished (set by nightly sweep)</td>
+        </tr>
+        <tr>
+          <td class="mono">210412</td>
+          <td class="mono">1289</td>
+          <td>QSI International</td>
+          <td>13:48:19</td>
+          <td class="num">52.44</td>
+          <td class="num">5</td>
+          <td class="num">5</td>
+          <td class="num">0</td>
+          <td class="num">192</td>
+          <td><span class="pill success">success</span></td>
+          <td></td>
+        </tr>
+        <tr style="color:#888;">
+          <td colspan="11" style="text-align:center;padding:6px;">… 93 more rows (scroll / filter to see) …</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================= PENDING BY COMPANY ================= -->
+  <div class="section">
+    <h2>Pending Queue by Company</h2>
+    <table class="data">
+      <thead>
+        <tr>
+          <th style="width:70px;">Cmp</th>
+          <th>Company</th>
+          <th style="width:90px;" class="num">Pending</th>
+          <th style="width:130px;" class="num">Oldest Age</th>
+          <th style="width:110px;">Worker Active?</th>
+          <th style="width:200px;">Depth</th>
+          <th style="width:170px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">1042</td>
+          <td>Acme Retail Group</td>
+          <td class="num">87</td>
+          <td class="num">00:04:11</td>
+          <td>Yes (Sem 88712)</td>
+          <td><span class="bar" style="width:180px;"></span></td>
+          <td>
+            <button class="btn small" disabled style="opacity:0.5;">Trigger worker</button>
+          </td>
+        </tr>
+        <tr>
+          <td class="mono">1065</td>
+          <td>Northwind Inspections</td>
+          <td class="num">64</td>
+          <td class="num">00:03:22</td>
+          <td>Yes (Sem 88713)</td>
+          <td><span class="bar" style="width:130px;"></span></td>
+          <td><button class="btn small" disabled style="opacity:0.5;">Trigger worker</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1118</td>
+          <td>Prime Shopper Co.</td>
+          <td class="num">42</td>
+          <td class="num">00:02:58</td>
+          <td>Yes (Sem 88714)</td>
+          <td><span class="bar" style="width:85px;"></span></td>
+          <td><button class="btn small" disabled style="opacity:0.5;">Trigger worker</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1155</td>
+          <td>Focus Feedback Corp</td>
+          <td class="num">38</td>
+          <td class="num">00:02:11</td>
+          <td>No</td>
+          <td><span class="bar" style="width:76px;"></span></td>
+          <td><button class="btn small primary">Trigger worker</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1176</td>
+          <td>MetroAudit Ltd.</td>
+          <td class="num">31</td>
+          <td class="num">00:01:47</td>
+          <td>No</td>
+          <td><span class="bar" style="width:62px;"></span></td>
+          <td><button class="btn small primary">Trigger worker</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1203</td>
+          <td>Field Audit Solutions</td>
+          <td class="num">28</td>
+          <td class="num">00:01:32</td>
+          <td>Yes (Sem 88715)</td>
+          <td><span class="bar" style="width:56px;"></span></td>
+          <td><button class="btn small" disabled style="opacity:0.5;">Trigger worker</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1244</td>
+          <td>Gallup Mystery Shopping</td>
+          <td class="num">18</td>
+          <td class="num">00:01:09</td>
+          <td>Stale (Sem 88708, 16m15s)</td>
+          <td><span class="bar" style="width:36px;"></span></td>
+          <td><button class="btn small warn">Clear &amp; trigger</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1289</td>
+          <td>QSI International</td>
+          <td class="num">14</td>
+          <td class="num">00:00:52</td>
+          <td>Yes (Sem 88716)</td>
+          <td><span class="bar" style="width:28px;"></span></td>
+          <td><button class="btn small" disabled style="opacity:0.5;">Trigger worker</button></td>
+        </tr>
+        <tr>
+          <td class="mono">1301</td>
+          <td>Secret Shopper LLC</td>
+          <td class="num">12</td>
+          <td class="num">00:00:38</td>
+          <td>Yes (Sem 88717)</td>
+          <td><span class="bar" style="width:24px;"></span></td>
+          <td><button class="btn small" disabled style="opacity:0.5;">Trigger worker</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="legend">
+      <em>Trigger worker</em> is only enabled for companies with no active <code>ai_qa_worker_{cmp}</code> semaphore. For stuck/stale rows, use <em>Clear &amp; trigger</em> (runs the clear + dispatch as a single POST).
+    </div>
+  </div>
+
+  <!-- ================= SETTINGS FORM ================= -->
+  <div class="section">
+    <h2>Settings (AIQueueSettings)</h2>
+    <form>
+      <div class="settings-grid">
+
+        <div class="field">
+          <label for="f1">MaxConcurrentWorkers</label>
+          <input id="f1" type="number" min="1" max="200" value="10">
+          <span class="hint">global cap on simultaneous workers (1–200)</span>
+        </div>
+        <div class="field">
+          <label for="f2">MaxWorkerDurationSec</label>
+          <input id="f2" type="number" min="60" max="3600" value="900">
+          <span class="hint">worker max_execution_time (60–3600)</span>
+        </div>
+
+        <div class="field">
+          <label for="f3">WorkerMemoryLimitMb</label>
+          <input id="f3" type="number" min="128" max="4096" value="512">
+          <span class="hint">per-worker memory_limit in MB (128–4096)</span>
+        </div>
+        <div class="field">
+          <label for="f4">AICallTimeoutSec</label>
+          <input id="f4" type="number" min="5" max="300" value="60">
+          <span class="hint">CURLOPT_TIMEOUT per AI call (5–300)</span>
+        </div>
+
+        <div class="field">
+          <label for="f5">AICallConnectTimeoutSec</label>
+          <input id="f5" type="number" min="1" max="30" value="10">
+          <span class="hint">CURLOPT_CONNECTTIMEOUT per AI call (1–30)</span>
+        </div>
+        <div class="field">
+          <label for="f6">MaxItemsPerBatch</label>
+          <input id="f6" type="number" min="1" max="50" value="5">
+          <span class="hint">AIQueue rows per worker run (1–50)</span>
+        </div>
+
+        <div class="field">
+          <label for="f7">MaxLoadAverage</label>
+          <input id="f7" type="number" min="1" max="200" step="0.01" value="16.00">
+          <span class="hint">master skips dispatch above this 1-min load (1.00–200.00)</span>
+        </div>
+        <div class="field">
+          <label for="f8">DispatchCurlTimeoutSec</label>
+          <input id="f8" type="number" min="1" max="10" value="4">
+          <span class="hint">master→worker fire-and-forget timeout (1–10)</span>
+        </div>
+
+        <div class="field">
+          <label for="f9">OrphanSemaphoreSweepSec</label>
+          <input id="f9" type="number" min="300" max="7200" value="1080">
+          <span class="hint">age at which master deletes stale ai_qa_* semaphores (300–7200)</span>
+        </div>
+        <div class="field">
+          <label for="f10">DispatchEnabled</label>
+          <input id="f10" type="text" value="1 (controlled via kill-switch button above)" readonly>
+          <span class="hint">use Pause / Resume buttons, not this field</span>
+        </div>
+
+        <div class="field">
+          <label>Last updated</label>
+          <input type="text" value="2026-04-23 09:12" readonly>
+          <span class="hint">UpdatedAt</span>
+        </div>
+        <div class="field">
+          <label>Last updated by</label>
+          <input type="text" value="vdeep@checker (UserID 42)" readonly>
+          <span class="hint">UpdatedBy</span>
+        </div>
+
+      </div>
+      <div class="settings-actions">
+        <button class="btn primary" type="submit" name="action" value="save_settings">Save settings</button>
+        <button class="btn" type="reset">Reset form</button>
+        <span class="hint" style="margin-left:auto;color:#888;font-size:11px;align-self:center;">
+          Changes take effect on the next master run (≤ 2 min). In-flight workers keep their prior settings.
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <!-- ================= KILL-SWITCH + MANUAL TRIGGERS ================= -->
+  <div class="section">
+    <h2>Operator Controls</h2>
+    <div class="killswitch">
+      <div class="desc">
+        <strong>Dispatch status:</strong> <span class="state-on">RUNNING</span><br>
+        Pausing stops new workers from being dispatched. In-flight workers run to completion.
+        Use this during Azure outages or runaway cost events.
+      </div>
+      <div class="flex-gap">
+        <button class="btn danger" type="button" name="action" value="pause">Pause Dispatch</button>
+        <button class="btn" type="button" name="action" value="resume" disabled style="opacity:0.5;">Resume Dispatch</button>
+      </div>
+    </div>
+    <div class="killswitch" style="border-top:1px solid #e2e5e9;">
+      <div class="desc">
+        <strong>Manual master trigger:</strong> runs the dispatcher synchronously within this request. Useful right after resuming or clearing backlogs — avoids waiting for the next 2-minute cron tick.
+      </div>
+      <div>
+        <button class="btn primary" type="button" name="action" value="trigger_master">Trigger master now</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Mockup — <code>admin/ai-queue-monitor.php</code> &nbsp;|&nbsp;
+    Spec: Roadmap v1.1 §4.6 &nbsp;|&nbsp;
+    All POSTs go to <code>admin/ai-queue-monitor.php</code>, dispatched by hidden <code>action</code> field, protected by the existing <code>authmodeManagement</code> + CSRF helper.
+  </div>
+
+</div>
+
+</body>
+</html>
