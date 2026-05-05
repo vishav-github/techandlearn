@@ -1,0 +1,228 @@
+
+<h2 class="sr-only">Three-level drill-down chip navigation mockup for AI Support Agent chat widget</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.demo{display:flex;justify-content:center;align-items:flex-start;gap:32px;padding:2rem;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);flex-wrap:wrap}
+.demo-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.demo-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary)}
+.widget{width:270px;border-radius:12px;overflow:hidden;border:0.5px solid var(--color-border-secondary)}
+.wh{background:#9cc826;padding:9px 13px;display:flex;align-items:center;justify-content:space-between}
+.wh-l{display:flex;align-items:center;gap:7px}
+.wh-logo{width:20px;height:20px;background:#fff;border-radius:3px;display:flex;align-items:center;justify-content:center}
+.wh-logo svg{width:12px;height:12px}
+.wh-title{font-size:12px;font-weight:500;color:#fff}
+.wh-btns{display:flex;gap:4px}
+.wh-btn{width:19px;height:19px;border-radius:3px;background:rgba(255,255,255,.22);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.wh-btn svg{width:9px;height:9px;color:#fff}
+.wb{background:var(--color-background-primary);padding:10px;min-height:300px;display:flex;flex-direction:column;gap:8px}
+.ai-bub{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:10px 10px 10px 2px;padding:8px 10px;font-size:11px;color:var(--color-text-primary);line-height:1.5;max-width:92%}
+.chip-nav{flex:1;display:flex;flex-direction:column}
+.wi{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);padding:8px 10px;display:flex;align-items:center;gap:6px}
+.wi-f{flex:1;border:0.5px solid var(--color-border-secondary);border-radius:16px;padding:5px 10px;font-size:11px;background:var(--color-background-secondary);color:var(--color-text-primary);outline:none;min-width:0}
+.wi-f:focus{border-color:#9cc826}
+.wi-s{width:26px;height:26px;border-radius:50%;background:#9cc826;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wi-s svg{width:11px;height:11px;color:#fff}
+.nav-lv{animation:lv-in .15s ease}
+.nav-lv.bk{animation:lv-bk .15s ease}
+@keyframes lv-in{from{opacity:0;transform:translateX(7px)}to{opacity:1;transform:translateX(0)}}
+@keyframes lv-bk{from{opacity:0;transform:translateX(-7px)}to{opacity:1;transform:translateX(0)}}
+.sec-lbl{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary);margin-bottom:5px}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cat-tile{display:flex;flex-direction:column;gap:3px;padding:8px 8px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);cursor:pointer;transition:border-color .12s,background .12s;text-align:left}
+.cat-tile:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.ct-top{display:flex;align-items:center;justify-content:space-between}
+.ct-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ct-icon svg{width:10px;height:10px}
+.ic-sv{background:#eef7d4} .ic-sv svg{color:#3b6d11}
+.ic-ai{background:#e6f1fb} .ic-ai svg{color:#185fa5}
+.ic-rv{background:#faece7} .ic-rv svg{color:#993c1d}
+.ic-gd{background:#faeeda} .ic-gd svg{color:#633806}
+.ct-chev svg{width:9px;height:9px;color:var(--color-text-secondary)}
+.ct-name{font-size:10px;font-weight:500;color:var(--color-text-primary);line-height:1.3}
+.ct-cnt{font-size:9px;color:var(--color-text-secondary)}
+.nav-back{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--color-text-secondary);cursor:pointer;padding:0 0 6px;border:none;background:none;transition:color .12s}
+.nav-back:hover{color:var(--color-text-primary)}
+.nav-back svg{width:9px;height:9px;flex-shrink:0}
+.lv-title{font-size:11px;font-weight:500;color:var(--color-text-primary);padding:0 0 5px}
+.sub-list{display:flex;flex-direction:column;gap:4px}
+.sub-row{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);cursor:pointer;font-size:11px;color:var(--color-text-primary);transition:border-color .12s,background .12s;text-align:left}
+.sub-row:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.sub-row svg{width:9px;height:9px;color:var(--color-text-secondary);flex-shrink:0}
+.q-list{display:flex;flex-direction:column;gap:4px}
+.q-chip{display:flex;align-items:flex-start;gap:6px;padding:7px 9px;border:0.5px solid #c6e87a;border-radius:var(--border-radius-md);background:#eef7d4;cursor:pointer;font-size:11px;color:#3b6d11;line-height:1.4;text-align:left;transition:background .12s,border-color .12s;width:100%}
+.q-chip:hover{background:#d4ebb8;border-color:#9cc826}
+.q-chip.sel{background:#d4ebb8;border-color:#9cc826}
+.q-chip svg{width:10px;height:10px;flex-shrink:0;margin-top:1px;color:#6b9a1a}
+</style>
+
+<div class="demo">
+  <div class="demo-col">
+    <div class="demo-lbl">Level 1 — topics</div>
+    <div class="widget" id="w1">
+      <div class="wh"><div class="wh-l"><div class="wh-logo"><svg viewBox="0 0 12 12" fill="none"><rect x=".5" y=".5" width="11" height="11" rx="2" stroke="#9cc826" stroke-width="1.2"/><path d="M3 6h6M3 4h3.5M3 8h4" stroke="#9cc826" stroke-width="1" stroke-linecap="round"/></svg></div><span class="wh-title">AI Support Agent</span></div><div class="wh-btns"><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5h7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 1.5l6 6M7.5 1.5l-6 6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div></div></div>
+      <div class="wb"><div class="ai-bub">Hi! I can help with surveys, reviews, API access and more. Choose a topic:</div><div id="cn1" class="chip-nav"></div></div>
+      <div class="wi"><input class="wi-f" id="inp1" placeholder="Or type your question..."><button class="wi-s"><svg viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M6 2l4 3.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+  </div>
+
+  <div class="demo-col">
+    <div class="demo-lbl">Level 2 — sub-categories</div>
+    <div class="widget">
+      <div class="wh"><div class="wh-l"><div class="wh-logo"><svg viewBox="0 0 12 12" fill="none"><rect x=".5" y=".5" width="11" height="11" rx="2" stroke="#9cc826" stroke-width="1.2"/><path d="M3 6h6M3 4h3.5M3 8h4" stroke="#9cc826" stroke-width="1" stroke-linecap="round"/></svg></div><span class="wh-title">AI Support Agent</span></div><div class="wh-btns"><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5h7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 1.5l6 6M7.5 1.5l-6 6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div></div></div>
+      <div class="wb">
+        <div class="ai-bub">Hi! I can help with surveys, reviews, API access and more. Choose a topic:</div>
+        <div class="chip-nav">
+          <div class="nav-lv">
+            <button class="nav-back"><svg viewBox="0 0 9 9" fill="none"><path d="M7 1.5L3 4.5l4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>All topics</button>
+            <div class="lv-title">Surveys</div>
+            <div class="sub-list">
+              <div class="sub-row"><span>WhatsApp surveys</span><svg viewBox="0 0 9 9" fill="none"><path d="M2 1.5l4 3-4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="sub-row"><span>Email surveys</span><svg viewBox="0 0 9 9" fill="none"><path d="M2 1.5l4 3-4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="sub-row"><span>Notifications</span><svg viewBox="0 0 9 9" fill="none"><path d="M2 1.5l4 3-4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wi"><input class="wi-f" placeholder="Or type your question..."><button class="wi-s"><svg viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M6 2l4 3.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+  </div>
+
+  <div class="demo-col">
+    <div class="demo-lbl">Level 3 — questions</div>
+    <div class="widget">
+      <div class="wh"><div class="wh-l"><div class="wh-logo"><svg viewBox="0 0 12 12" fill="none"><rect x=".5" y=".5" width="11" height="11" rx="2" stroke="#9cc826" stroke-width="1.2"/><path d="M3 6h6M3 4h3.5M3 8h4" stroke="#9cc826" stroke-width="1" stroke-linecap="round"/></svg></div><span class="wh-title">AI Support Agent</span></div><div class="wh-btns"><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5h7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 1.5l6 6M7.5 1.5l-6 6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div></div></div>
+      <div class="wb">
+        <div class="ai-bub">Hi! I can help with surveys, reviews, API access and more. Choose a topic:</div>
+        <div class="chip-nav">
+          <div class="nav-lv">
+            <button class="nav-back"><svg viewBox="0 0 9 9" fill="none"><path d="M7 1.5L3 4.5l4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Surveys</button>
+            <div class="lv-title">WhatsApp surveys</div>
+            <div class="q-list">
+              <button class="q-chip"><svg viewBox="0 0 10 10" fill="none"><path d="M1 2.5h8M1 5h6M1 7.5h4.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>How can I set up and manage WhatsApp surveys?</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wi"><input class="wi-f" placeholder="Or type your question..."><button class="wi-s"><svg viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M6 2l4 3.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:1rem;padding:1rem;background:var(--color-background-secondary);border-radius:var(--border-radius-lg)">
+  <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary);margin-bottom:10px">Interactive demo — full navigation</div>
+  <div style="display:flex;justify-content:center">
+    <div class="widget" id="wMain">
+      <div class="wh"><div class="wh-l"><div class="wh-logo"><svg viewBox="0 0 12 12" fill="none"><rect x=".5" y=".5" width="11" height="11" rx="2" stroke="#9cc826" stroke-width="1.2"/><path d="M3 6h6M3 4h3.5M3 8h4" stroke="#9cc826" stroke-width="1" stroke-linecap="round"/></svg></div><span class="wh-title">AI Support Agent</span></div><div class="wh-btns"><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5h7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="wh-btn"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 1.5l6 6M7.5 1.5l-6 6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div></div></div>
+      <div class="wb"><div class="ai-bub">Hi! I can help with surveys, reviews, API access and more. Choose a topic to get started:</div><div id="cnMain" class="chip-nav"></div></div>
+      <div class="wi"><input class="wi-f" id="inpMain" placeholder="Or type your question..."><button class="wi-s" onclick="sendMain()"><svg viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M6 2l4 3.5L6 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const T=[
+  {id:'surveys',label:'Surveys',ic:'ic-sv',isvg:'<path d="M1 2.5h8M1 5h6.5M1 7.5h4.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>',subs:[
+    {id:'whatsapp',label:'WhatsApp surveys',qs:['How can I set up and manage WhatsApp surveys?']},
+    {id:'email',label:'Email surveys',qs:['How to setup an email survey?']},
+    {id:'notif',label:'Notifications',qs:['How to set up automatic notifications for shoppers?']}
+  ]},
+  {id:'ai',label:'AI Features',ic:'ic-ai',isvg:'<path d="M5.5 1l.8 2 2.2.3-1.5 1.5.35 2.2L5.5 6l-1.85 1 .35-2.2L2.5 3.3l2.2-.3z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/>',qs:['Want AI to read your surveys & email you insights automatically?','Set up AI Push Reports in 2 minutes']},
+  {id:'reviews',label:'Reviews & Access',ic:'ic-rv',isvg:'<path d="M1 5.5a4.5 4.5 0 009 0M1 5.5l2-2M1 5.5l2 2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>',qs:["Why can't I return a review to the shopper?",'Does Checker support API access? How does it work?']},
+  {id:'guides',label:'Quick Guides',ic:'ic-gd',isvg:'<path d="M1 5.5h8.5M6 2l3.5 3.5L6 9" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>',subs:[
+    {id:'integrations',label:'Integrations',qs:['Set up Infobip SMS in Checker']},
+    {id:'reports',label:'Reports & users',qs:['Rename Visit Report PDFs automatically — set it once','New analyst user? Build their dashboard in 2 minutes']}
+  ]}
+];
+
+function countQ(t){return t.qs?t.qs.length:t.subs.reduce((s,x)=>s+x.qs.length,0)}
+
+let stack=[];
+let goingBack=false;
+
+function render(){
+  const el=document.getElementById('cnMain');
+  let html='';
+  const bk=goingBack;
+
+  if(stack.length===0){
+    html=`<div class="nav-lv ${bk?'bk':''}">
+      <div class="sec-lbl">Choose a topic</div>
+      <div class="cat-grid">
+        ${T.map((t,i)=>`
+          <button class="cat-tile" data-i="${i}" onclick="fwd(this,'cat')">
+            <div class="ct-top">
+              <div class="ct-icon ${t.ic}"><svg viewBox="0 0 11 11" fill="none">${t.isvg}</svg></div>
+              <div class="ct-chev"><svg viewBox="0 0 9 9" fill="none"><path d="M2 1.5l4 3-4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="ct-name">${t.label}</div>
+            <div class="ct-cnt">${countQ(t)} question${countQ(t)!==1?'s':''}</div>
+          </button>
+        `).join('')}
+      </div>
+    </div>`;
+  } else if(stack.length===1){
+    const cat=T[stack[0]];
+    if(cat.qs){
+      html=renderQs(cat.qs, cat.label, 'All topics', bk);
+    } else {
+      html=`<div class="nav-lv ${bk?'bk':''}">
+        <button class="nav-back" onclick="bkNav()"><svg viewBox="0 0 9 9" fill="none"><path d="M7 1.5L3 4.5l4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>All topics</button>
+        <div class="lv-title">${cat.label}</div>
+        <div class="sub-list">
+          ${cat.subs.map((s,i)=>`
+            <button class="sub-row" data-i="${i}" onclick="fwd(this,'sub')">
+              <span>${s.label}</span>
+              <svg viewBox="0 0 9 9" fill="none"><path d="M2 1.5l4 3-4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+  } else {
+    const cat=T[stack[0]];
+    const sub=cat.subs[stack[1]];
+    html=renderQs(sub.qs, sub.label, cat.label, bk);
+  }
+  el.innerHTML=html;
+  goingBack=false;
+}
+
+function renderQs(qs,title,backLbl,bk){
+  return `<div class="nav-lv ${bk?'bk':''}">
+    <button class="nav-back" onclick="bkNav()"><svg viewBox="0 0 9 9" fill="none"><path d="M7 1.5L3 4.5l4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>${backLbl}</button>
+    <div class="lv-title">${title}</div>
+    <div class="q-list">
+      ${qs.map(q=>`<button class="q-chip" data-q="${q.replace(/"/g,'&quot;')}" onclick="selQ(this)"><svg viewBox="0 0 10 10" fill="none"><path d="M1 2.5h8M1 5h6M1 7.5h4.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>${q}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function fwd(el,type){
+  const i=parseInt(el.dataset.i);
+  goingBack=false;
+  if(type==='cat') stack=[i];
+  else stack=[stack[0],i];
+  render();
+}
+
+function bkNav(){
+  goingBack=true;
+  stack.pop();
+  render();
+}
+
+function selQ(el){
+  document.querySelectorAll('.q-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('inpMain').value=el.dataset.q;
+  document.getElementById('inpMain').focus();
+}
+
+function sendMain(){
+  const v=document.getElementById('inpMain').value.trim();
+  if(!v) return;
+  document.getElementById('cnMain').innerHTML='<div style="font-size:11px;color:var(--color-text-secondary);padding:4px 0">Chips removed on first send — normal conversation continues.</div>';
+}
+
+render();
+</script>
