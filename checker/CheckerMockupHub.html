@@ -278,6 +278,35 @@
     .count-badge { display:none; }
     .hero-stats { display:none; }
   }
+
+.card-actions{display:flex;gap:8px;align-items:center}
+.card-copy{background:none;border:none;cursor:pointer;font-size:16px;line-height:1;padding:4px;border-radius:4px;color:inherit}
+.card-copy:hover{background:rgba(0,0,0,.06)}
+.card-copy:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:stretch}
+.card{display:flex;flex-direction:column}
+
+.cards{align-items:start}
+.card{transition:transform .15s ease, box-shadow .15s ease; position:relative}
+.card-desc{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  transition:max-height .2s ease;
+}
+.card:hover,.card:focus-within{
+  z-index:10;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.card:hover .card-desc,.card:focus-within .card-desc{
+  -webkit-line-clamp:unset;
+  overflow:visible;
+}
+.card:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+
+
 </style>
 </head>
 <body>
@@ -336,74 +365,110 @@
   <!-- ───── AI ───── -->
   <div class="section-divider"><span class="section-divider-label">🤖 AI Features</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/ai-dynamic-prompt.html" target="_blank" data-tags="ai ops" data-name="dynamic QA prompt generator AI JSON grammar spelling coherence">
-    <div class="card-top"><div class="card-icon icon-ai">⚙️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-dynamic-prompt.html" target="_blank" data-tags="ai ops" data-name="dynamic QA prompt generator AI JSON grammar spelling coherence">
+    <div class="card-top"><div class="card-icon icon-ai">⚙️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Dynamic QA Prompt Generator</div><div class="card-desc">Select which QA checks to run (grammar, spelling, coherence, location anomaly) and preview the exact AI prompt and JSON payload that would be sent to the AI model in real time.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ai-poweredqa-adminpanel.html" target="_blank" data-tags="ai ops" data-name="AI QA admin panel confidence threshold auto-apply grammar spelling coherence">
-    <div class="card-top"><div class="card-icon icon-ai">🎛️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-poweredqa-adminpanel.html" target="_blank" data-tags="ai ops" data-name="AI QA admin panel confidence threshold auto-apply grammar spelling coherence">
+    <div class="card-top"><div class="card-icon icon-ai">🎛️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI QA Admin Panel</div><div class="card-desc">Admin settings for the AI-powered QA automation engine. Configure global confidence thresholds, choose which issue types (grammar, spelling, coherence, location) are auto-resolved, and set review-level auto-actions.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ai-powerqa-editreview.html" target="_blank" data-tags="ai fraud ops" data-name="AI QA edit review coherence grammar spelling location anomaly checker">
-    <div class="card-top"><div class="card-icon icon-ai">✏️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-editreview.html" target="_blank" data-tags="ai fraud ops" data-name="AI QA edit review coherence grammar spelling location anomaly checker">
+    <div class="card-top"><div class="card-icon icon-ai">✏️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI QA — Edit Review</div><div class="card-desc">In-line review editing screen powered by AI QA. Shows each question with AI-detected issues (coherence, grammar, spelling, location), allows one-click fix application, draft saving, and per-question mark-reviewed actions.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-fraud">Fraud &amp; QA</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ai-powerqa-insight.html" target="_blank" data-tags="ai ops" data-name="AI QA insights reviews acceptance rate auto-resolved filter">
-    <div class="card-top"><div class="card-icon icon-ai">📈</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-insight.html" target="_blank" data-tags="ai ops" data-name="AI QA insights reviews acceptance rate auto-resolved filter">
+    <div class="card-top"><div class="card-icon icon-ai">📈</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI QA Insights Dashboard</div><div class="card-desc">Filterable dashboard for reviewing AI QA results across all reviews. Filter by client, branch, project, issue type, AI acceptance rate range, auto-resolution status, and final QA outcome.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ai-supportagent.html" target="_blank" data-tags="ai ops notify" data-name="AI support agent tickets instant chat deflection">
-    <div class="card-top"><div class="card-icon icon-ai">💬</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-supportagent.html" target="_blank" data-tags="ai ops notify" data-name="AI support agent tickets instant chat deflection">
+    <div class="card-top"><div class="card-icon icon-ai">💬</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI-Assisted Support Tickets</div><div class="card-desc">Support ticket list enhanced with an AI instant support button. Clients can get immediate AI-powered answers before opening a human ticket, reducing support load through intelligent deflection.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence mapping">
-    <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence mapping">
+    <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI Answer Recoding V2</div><div class="card-desc">Wizard-style tool for AI-assisted recoding of open-ended survey answers. Supports data source mapping, confidence thresholds, processing dashboard, and human review queue.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ansrecodingv1.html" target="_blank" data-tags="ai ops" data-name="AI answer recoding v1 survey">
-    <div class="card-top"><div class="card-icon icon-ai">🔄</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv1.html" target="_blank" data-tags="ai ops" data-name="AI answer recoding v1 survey">
+    <div class="card-top"><div class="card-icon icon-ai">🔄</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI Answer Recoding V1</div><div class="card-desc">First iteration of the AI-powered answer recoding tool. Earlier concept for mapping and reclassifying open-text survey responses using AI categorisation.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/supportanalytics" target="_blank" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
-    <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/supportanalytics" target="_blank" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
+    <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Support Channel ROI Report</div><div class="card-desc">Analytics comparing human ticket support vs AI agent. Tracks AI deflection rate, query volume, estimated cost savings, and audit correctness scores per channel.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/faq-agent-response-audit-apr2026.html" target="_blank" data-tags="ai qa audit kb" data-name="faq agent response audit kb coverage">
-    <div class="card-top"><div class="card-icon icon-ai">🧪</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq-agent-response-audit-apr2026.html" target="_blank" data-tags="ai qa audit kb" data-name="faq agent response audit kb coverage">
+    <div class="card-top"><div class="card-icon icon-ai">🧪</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">FAQ AI Agent Response Audit – Apr 2026</div><div class="card-desc">QA audit of Support Agent replies from Jan–Apr 2026. Flags answered vs unanswered FAQs, highlights KB gaps, and tracks coverage across English, Hebrew, and Spanish.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">QA</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/faq_manager.html" target="_blank" data-tags="faq manager" data-name="FAQ Manager Documentation Guide">
-    <div class="card-top"><div class="card-icon icon-ai">📖</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq_manager.html" target="_blank" data-tags="faq manager" data-name="FAQ Manager Documentation Guide">
+    <div class="card-top"><div class="card-icon icon-ai">📖</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">FAQ Manager</div><div class="card-desc">Centralized tool for managing frequently asked questions. Provides structured documentation, easy updates, and clear guidance for support teams.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Documentation</span></div>
   </a>
 
-   <a class="card" href="https://techandlearn.in/checker/ai-queue-monitor-mockup.html" target="_blank" data-tags="ui" data-name="AI Queue Monitor">
-    <div class="card-top"><div class="card-icon icon-ui">🤖</div><div class="card-arrow">↗</div></div>
+   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-queue-monitor-mockup.html" target="_blank" data-tags="ui" data-name="AI Queue Monitor">
+    <div class="card-top"><div class="card-icon icon-ui">🤖</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI Queue Monitor</div><div class="card-desc">Admin mockup for monitoring and controlling the AIQueue processing pipeline. Shows real-time pipeline health KPIs (active workers, pending queue, error rate, throughput), active worker table with stale detection, recent run logs with filtering, per-company queue depth, dispatcher pause/resume controls, and configurable settings for concurrency, timeouts, memory limits, and batch size.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/ai_agent_chip_drilldown_mockup.html" target="_blank" data-tags="ui" data-name="AI Agent Chip Drilldown">
-    <div class="card-top"><div class="card-icon icon-ui">🧩</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai_agent_chip_drilldown_mockup.html" target="_blank" data-tags="ui" data-name="AI Agent Chip Drilldown">
+    <div class="card-top"><div class="card-icon icon-ui">🧩</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">AI Agent Chip Drilldown</div><div class="card-desc">Interactive three-level drill-down chip navigation mockup for the AI Support Agent chat widget. Enables users to explore topics, sub‑categories, and specific questions through an intuitive chip‑based interface. Includes a full navigation demo with pre‑defined topics like Surveys (3 questions), AI Features (2 questions), Reviews & Access (2 questions), and Quick Guides (3 questions).</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI/UX</span><span class="tag tag-ai">AI</span></div>
   </a>
@@ -411,32 +476,47 @@
   <!-- ───── Billing ───── -->
   <div class="section-divider"><span class="section-divider-label">💳 Billing</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" data-tags="billing notify" data-name="billing reminder schedule invoice business days">
-    <div class="card-top"><div class="card-icon icon-billing">🗓️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" data-tags="billing notify" data-name="billing reminder schedule invoice business days">
+    <div class="card-top"><div class="card-icon icon-billing">🗓️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Billing Reminder Schedule</div><div class="card-desc">Visual timeline of the full invoice reminder cycle — Gentle → Follow-up → Final → Suspension — calculated in business days, skipping weekends and public holidays.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" data-tags="billing notify" data-name="billing reminders v2 invoice">
-    <div class="card-top"><div class="card-icon icon-billing">📆</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" data-tags="billing notify" data-name="billing reminders v2 invoice">
+    <div class="card-top"><div class="card-icon icon-billing">📆</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Billing Reminder Schedule V2</div><div class="card-desc">Alternate version of the billing reminder timeline. Explores a different visual layout or extended scenario for the invoice notification flow.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/specialservice" target="_blank" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
-    <div class="card-top"><div class="card-icon icon-billing">📜</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/specialservice" target="_blank" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
+    <div class="card-top"><div class="card-icon icon-billing">📜</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Special Service Notifications</div><div class="card-desc">Four-stage flow for custom service requests (CSS, training, dev): Agreement offer → Client acceptance → AM approval &amp; billing notice → Cancellation confirmation.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/apiplatformemail" target="_blank" data-tags="api billing notify gatekeeper" data-name="api key management tiered pricing usage control gatekeeper middleware billing postpaid quota rate limit notifications self service top-up upgrade downgrade">
-  <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apiplatformemail" target="_blank" data-tags="api billing notify gatekeeper" data-name="api key management tiered pricing usage control gatekeeper middleware billing postpaid quota rate limit notifications self service top-up upgrade downgrade">
+  <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
   <div><div class="card-title">API Key Management — Tiered Pricing System</div><div class="card-desc">Full tier-based API platform: Gatekeeper middleware enforcing feature gates, hard-stops, soft limits &amp; RPM · Starter / Growth / Professional / Enterprise tiers · Postpaid billing with proration, top-up &amp; plan lifecycle · 9 automated email notifications · Self-service upgrade &amp; cancellation flows.</div></div>
   <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span><span class="tag tag-gatekeeper">Gatekeeper</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/services-removal.html" target="_blank" data-tags="billing notify" data-name="service removal confirmation billing invoice monthly postpaid">
-    <div class="card-top"><div class="card-icon icon-billing">🗑️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/services-removal.html" target="_blank" data-tags="billing notify" data-name="service removal confirmation billing invoice monthly postpaid">
+    <div class="card-top"><div class="card-icon icon-billing">🗑️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Service Removal Confirmation</div><div class="card-desc">Email notification confirming a service has been removed from the client's account. Includes removal date, who actioned it, and billing note explaining pro-rated charge on the next monthly invoice.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
@@ -444,26 +524,38 @@
   <!-- ───── Fraud & QA ───── -->
   <div class="section-divider"><span class="section-divider-label">🛡 Fraud &amp; QA</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" data-tags="fraud ops" data-name="image comparison viewer similarity shopper receipt">
-    <div class="card-top"><div class="card-icon icon-fraud">🔍</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" data-tags="fraud ops" data-name="image comparison viewer similarity shopper receipt">
+    <div class="card-top"><div class="card-icon icon-fraud">🔍</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Image Comparison Viewer</div><div class="card-desc">Side-by-side viewer comparing a shopper's submitted image against historical matches. Shows similarity scores, risk flags, and lets reviewers accept or reject flagged matches.</div></div>
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" data-tags="fraud ops" data-name="image integrity dashboard duplicate reuse suspicious">
-    <div class="card-top"><div class="card-icon icon-fraud">🖼️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" data-tags="fraud ops" data-name="image integrity dashboard duplicate reuse suspicious">
+    <div class="card-top"><div class="card-icon icon-fraud">🖼️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Image Integrity Dashboard</div><div class="card-desc">QA intelligence dashboard for monitoring image-level fraud across the platform. Flags duplicate, reused, or suspicious images submitted by shoppers across projects and branches.</div></div>
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
-    <div class="card-top"><div class="card-icon icon-fraud">🛡️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
+    <div class="card-top"><div class="card-icon icon-fraud">🛡️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Shopper Fraud Intelligence</div><div class="card-desc">Long-term shopper behaviour analytics. Filters by client, project, branch, date range, and risk level to surface fraudulent or suspicious shopper patterns over time.</div></div>
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/returnreview" target="_blank" data-tags="notify ops" data-name="return review QA shopper notification email correction">
-    <div class="card-top"><div class="card-icon icon-notify">↩️</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/returnreview" target="_blank" data-tags="notify ops" data-name="return review QA shopper notification email correction">
+    <div class="card-top"><div class="card-icon icon-notify">↩️</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Return Review Notification</div><div class="card-desc">Email sent to a shopper when their review is auto-returned by QA. Highlights coherence issues and grammar errors, and explains required corrections before resubmission.</div></div>
     <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ops">Operations</span></div>
   </a>
@@ -471,44 +563,65 @@
   <!-- ───── Operations ───── -->
   <div class="section-divider"><span class="section-divider-label">⚙️ Operations</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" data-tags="ops" data-name="mobile audit logs submission CAPI media partial">
-    <div class="card-top"><div class="card-icon icon-ops">📱</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" data-tags="ops" data-name="mobile audit logs submission CAPI media partial">
+    <div class="card-top"><div class="card-icon icon-ops">📱</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Mobile Submission Audit Logs</div><div class="card-desc">Detailed log table of mobile survey submissions. Tracks partial media uploads, CAPI intercepts, quota blocks, and provides step-by-step resolution instructions per log entry.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/oops" target="_blank" data-tags="ops" data-name="branch visit report scores mystery shopping">
-    <div class="card-top"><div class="card-icon icon-ops">📋</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/oops" target="_blank" data-tags="ops" data-name="branch visit report scores mystery shopping">
+    <div class="card-top"><div class="card-icon icon-ops">📋</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Branch Visit Report</div><div class="card-desc">Tabular report for a mystery shopping visit to a branch. Sortable by time and exportable, showing scores and comments per question across multiple venue visits.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/export-collateral.html" target="_blank" data-tags="ops api" data-name="export collateral automated PDF SFTP profile schedule">
-    <div class="card-top"><div class="card-icon icon-ops">📤</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/export-collateral.html" target="_blank" data-tags="ops api" data-name="export collateral automated PDF SFTP profile schedule">
+    <div class="card-top"><div class="card-icon icon-ops">📤</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Automated Collateral Export</div><div class="card-desc">Configure scheduled export profiles for QA transcripts and PDFs to a remote server via SFTP. Set active schedules, export types, review statuses, file naming, and test remote connections.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-api">API</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/checkerpartner" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
-    <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/checkerpartner" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
+    <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Checker Partner Network - Old Version</div><div class="card-desc">B2B partner collaboration workflow. Allows Checker companies to post research projects, browse partner replies, negotiate deals, and manage agreed partner projects across countries and regions.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/checker-partner.html" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
-    <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/checker-partner.html" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
+    <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Checker Partner Network - New Version 2026</div><div class="card-desc">B2B partner collaboration workflow. Allows Checker companies to post research projects, browse partner replies, negotiate deals, and manage agreed partner projects across countries and regions.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" data-tags="ui ops" data-name="main menu dashboard checker home overview assignments">
-    <div class="card-top"><div class="card-icon icon-ui">🏠</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" data-tags="ui ops" data-name="main menu dashboard checker home overview assignments">
+    <div class="card-top"><div class="card-icon icon-ui">🏠</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Main Menu / Dashboard</div><div class="card-desc">Primary Checker platform dashboard. Shows active shoppers, clients, assignment counts, urgent items, and quick-action buttons for orders, reports, and settings.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/translation-admin-mockup.html" target="_blank" data-tags="localization" data-name="Translation Admin Dashboard">
-    <div class="card-top"><div class="card-icon icon-ui">🌐</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/translation-admin-mockup.html" target="_blank" data-tags="localization" data-name="Translation Admin Dashboard">
+    <div class="card-top"><div class="card-icon icon-ui">🌐</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Translation Admin Dashboard</div><div class="card-desc">Centralized translation management for the AI support agent and interface. Overview of 55 active languages and 8,142 translation keys, with support for inline editing, code scanner integration, key triage, import/export (XLS), audit logging, and machine translation provider configuration. Helps maintain localization coverage and streamline translation workflows.</div></div>
     <div class="card-footer"><span class="tag tag-localization">Localization</span><span class="tag tag-admin">Admin</span></div>
 </a>
@@ -516,20 +629,29 @@
   <!-- ───── Shoppers ───── -->
   <div class="section-divider"><span class="section-divider-label">👤 Shoppers</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/interested-shopper-adminpanel.html" target="_blank" data-tags="ops ui" data-name="interested shoppers admin panel management leads invite registration">
-    <div class="card-top"><div class="card-icon icon-ops">👥</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-adminpanel.html" target="_blank" data-tags="ops ui" data-name="interested shoppers admin panel management leads invite registration">
+    <div class="card-top"><div class="card-icon icon-ops">👥</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Interested Shoppers — Admin Panel</div><div class="card-desc">Admin panel for managing pre-registered shopper leads. Filter by status (Interested, Invited, Registered, Expired, Declined), track invitation counts, record admin notes, and manage the conversion pipeline.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/interested-shopper-form.html" target="_blank" data-tags="ui" data-name="interested shopper form express interest become shopper public">
-    <div class="card-top"><div class="card-icon icon-ui">🙋</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-form.html" target="_blank" data-tags="ui" data-name="interested shopper form express interest become shopper public">
+    <div class="card-top"><div class="card-icon icon-ui">🙋</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Interested Shopper — Public Form</div><div class="card-desc">Public-facing landing form for prospective mystery shoppers. Captures name, email, and phone number with a simple "Express My Interest" CTA and links to social profiles.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/registration%20form" target="_blank" data-tags="ui ops" data-name="registration form shopper onboarding multi-step">
-    <div class="card-top"><div class="card-icon icon-ui">📝</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/registration%20form" target="_blank" data-tags="ui ops" data-name="registration form shopper onboarding multi-step">
+    <div class="card-top"><div class="card-icon icon-ui">📝</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Shopper Registration Form</div><div class="card-desc">Full multi-step registration form for onboarding new mystery shoppers. Covers basic info, address, contact details, experience level, and account settings with field validation.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
   </a>
@@ -537,26 +659,38 @@
   <!-- ───── API & Settings ───── -->
   <div class="section-divider"><span class="section-divider-label">🔑 API &amp; Settings</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" data-tags="api" data-name="API key management generate revoke expiry secrets">
-    <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" data-tags="api" data-name="API key management generate revoke expiry secrets">
+    <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">API Key Management</div><div class="card-desc">Dashboard for managing all API access keys across clients. Generate new keys, set expiry dates, view masked secrets, and revoke or regenerate existing keys.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/apikeyemails" target="_blank" data-tags="api" data-name="API key email configuration sender reply-to">
-    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeyemails" target="_blank" data-tags="api" data-name="API key email configuration sender reply-to">
+    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">API Key Email Config</div><div class="card-desc">Interface for configuring email-related settings tied to API keys. Manages sender addresses, reply-to settings, and notification email behaviour per API access token.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility authentication">
-    <div class="card-top"><div class="card-icon icon-api">💬</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility authentication">
+    <div class="card-top"><div class="card-icon icon-api">💬</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">WhatsApp Template Manager</div><div class="card-desc">Business API manager for WhatsApp message templates. Syncs with Meta, tracks approval status (approved/pending/rejected), and supports marketing, utility, and authentication categories.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/apikeys-migration-script-logs" target="_blank" data-tags="api" data-name="API keys migration script logs">
-    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeys-migration-script-logs" target="_blank" data-tags="api" data-name="API keys migration script logs">
+    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">API Key Migration log</div><div class="card-desc">To run API keys migration script and show migration logs.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
@@ -564,32 +698,47 @@
   <!-- ───── UI / UX ───── -->
   <div class="section-divider"><span class="section-divider-label">🎨 UI / UX Components</span><div class="section-divider-line"></div></div>
 
-  <a class="card" href="https://techandlearn.in/checker/alert.html" target="_blank" data-tags="notify ui" data-name="alert notification component banner dismiss">
-    <div class="card-top"><div class="card-icon icon-notify">🔔</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/alert.html" target="_blank" data-tags="notify ui" data-name="alert notification component banner dismiss">
+    <div class="card-top"><div class="card-icon icon-notify">🔔</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Alert Notification</div><div class="card-desc">UI mockup for system alert and notification components. Demonstrates styling, dismissal behaviour, and message hierarchy for platform-wide alert banners.</div></div>
     <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/toggledemo.html" target="_blank" data-tags="ui" data-name="toggle demo accordion slide show hide component">
-    <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/toggledemo.html" target="_blank" data-tags="ui" data-name="toggle demo accordion slide show hide component">
+    <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Toggle &amp; Accordion Demo</div><div class="card-desc">Component library demo showing various toggle and accordion patterns: basic accordion, slide toggle, show/hide content blocks, and multi-panel toggle layouts for reuse across the platform.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/sftp.html" target="_blank" data-tags="ui" data-name="SFTP Key-Based Authentication">
-    <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/sftp.html" target="_blank" data-tags="ui" data-name="SFTP Key-Based Authentication">
+    <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">SFTP Key-Based Authentication</div><div class="card-desc">Single reference mockup for development team: same page structure, same field naming style, and same legacy visual pattern. Show these three states using the same shared component logic. This helps developers understand exactly which fields stay fixed, which fields are conditional, and what disabled state should look like.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/question-settings-for-reports.html" target="_blank" data-tags="ui" data-name="Question Settings for Reports">
-    <div class="card-top"><div class="card-icon icon-ui">📊</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/question-settings-for-reports.html" target="_blank" data-tags="ui" data-name="Question Settings for Reports">
+    <div class="card-top"><div class="card-icon icon-ui">📊</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Question Settings for Reports</div><div class="card-desc">Redesign v2 mockup for configuring how questions appear and calculate in client reports. Shows question bank mode toggle, stats overview (47 total, 12 configured, 8 with calculations), filters, and unified question table with special calculations column.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" href="https://techandlearn.in/checker/special_service_notifications.html" target="_blank" data-tags="ui" data-name="Special Service Order Notifications">
-    <div class="card-top"><div class="card-icon icon-ui">📧</div><div class="card-arrow">↗</div></div>
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/special_service_notifications.html" target="_blank" data-tags="ui" data-name="Special Service Order Notifications">
+    <div class="card-top"><div class="card-icon icon-ui">📧</div><div class="card-actions">
+        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
+        <div class="card-arrow" aria-hidden="true">↗</div>
+    </div></div>
     <div><div class="card-title">Special Service Order Notifications</div><div class="card-desc">Universal HTML email templates for the full special service workflow. Works across all email providers (Gmail, Outlook, Yahoo, Apple Mail) and support ticket threads. Covers four scenarios: agreement request to client, client confirmation to Checker team, billing confirmation after approval, and cancellation notice.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-billing">Billing</span></div>
   </a>  
@@ -659,6 +808,99 @@
     document.getElementById('statVisible').textContent  = visible;
     document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
   }
+</script>
+
+<script>
+// --- Utility: toast ---
+function showToast(msg){
+  let t=document.getElementById('toast'); 
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:6px;font-size:14px;z-index:9999;opacity:0;transition:opacity .2s';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,2000);
+}
+
+// --- Core: re-query cards and update count ---
+
+
+// --- Copy URL handler ---
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('.card-copy');
+  if(!btn) return;
+  e.preventDefault();e.stopPropagation();
+  const card=btn.closest('.card');
+  const url=card.href;
+  navigator.clipboard.writeText(url).then(()=>showToast('Link copied'));
+});
+
+// --- Keyboard: Shift+C to copy focused card ---
+document.addEventListener('keydown',function(e){
+  if(e.shiftKey && e.key.toLowerCase()==='c'){
+    const card=document.activeElement.closest('.card');
+    if(card){card.querySelector('.card-copy')?.click();}
+  }
+});
+
+// --- Hook: call reindex on DOM mutations for future dynamic adds ---
+const grid=document.querySelector('.cards');
+if(grid){
+  grid.setAttribute('role','list');
+  new MutationObserver(reindexAll).observe(grid,{childList:true});
+  getCards().forEach(c=>c.setAttribute('role','listitem'));
+}
+
+// --- Initial run ---
+document.addEventListener('DOMContentLoaded',reindexAll);
+</script>
+
+<script>
+// --- Core: get only actual cards ---
+function getCards(){ return Array.from(document.querySelectorAll('.cards > .card')); }
+
+// --- Core: update counts ---
+function updateTotalCount(){ 
+  const el=document.getElementById('totalCount'); 
+  if(el) el.textContent=getCards().length; 
+}
+
+function updateShowingCount(){
+  const visible = getCards().filter(c => {
+    const style = window.getComputedStyle(c);
+    return style.display !== 'none' && c.offsetParent !== null;
+  });
+  const el=document.getElementById('showingCount');
+  if(el) el.textContent = visible.length;
+}
+
+function updateCategoryCount(){
+  const tags = new Set();
+  getCards().forEach(c => {
+    const t = c.dataset.tags;
+    if(t) t.split(/\s+/).forEach(tag => tag && tags.add(tag));
+  });
+  const el=document.getElementById('categoryCount');
+  if(el) el.textContent = tags.size;
+}
+
+// --- Unified reindex ---
+function reindexAll(){
+  updateTotalCount();
+  updateShowingCount();
+  updateCategoryCount();
+  if(window.buildSearchIndex) window.buildSearchIndex();
+  if(window.rebuildTagFilters) window.rebuildTagFilters();
+}
+
+// --- Hook search/filter inputs to update Showing ---
+document.addEventListener('input', function(e){
+  if(e.target.matches('#searchInput, .tag-filter')){
+    setTimeout(updateShowingCount, 0);
+  }
+});
+document.addEventListener('click', function(e){
+  if(e.target.matches('.tag-filter, #clearFilters')){
+    setTimeout(updateShowingCount, 0);
+  }
+});
+
 </script>
 </body>
 </html>
