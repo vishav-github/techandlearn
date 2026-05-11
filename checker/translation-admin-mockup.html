@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checker Admin &middot; Translations</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f3f4f6;
+  --surface-3: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --text-soft: #9ca3af;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-soft: #dbeafe;
+  --success: #059669;
+  --success-soft: #d1fae5;
+  --warning: #d97706;
+  --warning-soft: #fef3c7;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --info: #4f46e5;
+  --info-soft: #e0e7ff;
+}
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+}
+button { font-family: inherit; font-size: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+a { text-decoration: none; color: inherit; cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+
+/* ============ LAYOUT ============ */
+.topbar {
+  height: 52px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.topbar-left .crumb-sep { color: var(--text-soft); }
+.topbar-left .crumb-section { color: var(--text-muted); }
+.topbar-right { display: flex; align-items: center; gap: 14px; }
+.user-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 10px 4px 4px; border-radius: 999px;
+  background: var(--surface-2);
+}
+.user-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primary); color: white; font-weight: 600; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+}
+.layout { display: flex; height: calc(100vh - 52px); }
+.sidebar {
+  width: 220px; background: var(--surface); border-right: 1px solid var(--border);
+  padding: 12px 8px; overflow-y: auto; flex-shrink: 0;
+}
+.nav-section {
+  padding: 14px 12px 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text-soft);
+}
+.nav-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 12px; border-radius: 6px; color: var(--text);
+  font-size: 13.5px; margin-bottom: 1px;
+}
+.nav-item:hover { background: var(--surface-2); }
+.nav-item.active { background: var(--primary-soft); color: var(--primary); font-weight: 500; }
+.nav-item .badge {
+  font-size: 11px; background: var(--danger); color: white;
+  padding: 1px 7px; border-radius: 999px; font-weight: 600;
+}
+.nav-item .badge.subtle { background: var(--border-strong); color: var(--text); }
+.content { flex: 1; overflow-y: auto; padding: 24px 28px; }
+
+/* ============ COMMON ============ */
+.page-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 22px; gap: 16px; flex-wrap: wrap;
+}
+.page-title { font-size: 20px; font-weight: 600; }
+.page-sub { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+.btn {
+  padding: 7px 14px; border-radius: 6px; font-weight: 500; font-size: 13px;
+  display: inline-flex; align-items: center; gap: 6px; transition: background 0.12s;
+  border: 1px solid transparent;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--surface); border-color: var(--border-strong); color: var(--text); }
+.btn-secondary:hover { background: var(--surface-2); }
+.btn-ghost { background: transparent; color: var(--text-muted); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #b91c1c; }
+.btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+.btn .spinner {
+  width: 12px; height: 12px; border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 18px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.card-title { font-size: 14px; font-weight: 600; }
+
+.tag {
+  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px;
+  font-size: 11.5px; font-weight: 500;
+}
+.tag-success { background: var(--success-soft); color: var(--success); }
+.tag-warning { background: var(--warning-soft); color: var(--warning); }
+.tag-danger { background: var(--danger-soft); color: var(--danger); }
+.tag-info { background: var(--info-soft); color: var(--info); }
+.tag-muted { background: var(--surface-2); color: var(--text-muted); }
+
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+  width: 100%; padding: 7px 10px; border: 1px solid var(--border-strong);
+  border-radius: 6px; background: var(--surface);
+}
+input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-soft);
+}
+.field { margin-bottom: 14px; }
+.field-label { display: block; font-weight: 500; font-size: 12.5px; margin-bottom: 5px; }
+.field-help { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.field-error { font-size: 12px; color: var(--danger); margin-top: 4px; display: none; }
+.field.has-error input, .field.has-error select { border-color: var(--danger); }
+.field.has-error .field-error { display: block; }
+
+/* ============ TABLE ============ */
+.data-table { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.data-table table { font-size: 13px; }
+.data-table th {
+  text-align: left; padding: 10px 14px; font-weight: 600; font-size: 12px;
+  color: var(--text-muted); background: var(--surface-3); border-bottom: 1px solid var(--border);
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.data-table td {
+  padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle;
+}
+.data-table tbody tr:hover { background: var(--surface-3); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table .row-actions { display: flex; gap: 4px; opacity: 0.4; }
+.data-table tr:hover .row-actions { opacity: 1; }
+.btn-row {
+  padding: 4px 9px; border-radius: 4px; font-size: 12px;
+  background: var(--surface); border: 1px solid var(--border-strong);
+}
+.btn-row:hover { background: var(--surface-2); }
+.editable-cell {
+  cursor: text; padding: 4px 6px; border-radius: 4px; min-height: 22px;
+}
+.editable-cell:hover { background: var(--primary-soft); }
+.editable-cell.editing { background: white; border: 1px solid var(--primary); padding: 3px 5px; }
+
+/* skeleton */
+.skeleton-row td { padding: 14px; }
+.skeleton-bar {
+  height: 12px; background: linear-gradient(90deg, var(--surface-2) 0%, #e5e7eb 50%, var(--surface-2) 100%);
+  background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* empty state */
+.empty-state {
+  padding: 48px 20px; text-align: center; color: var(--text-muted);
+}
+.empty-state-icon {
+  width: 44px; height: 44px; margin: 0 auto 12px; border-radius: 50%;
+  background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.empty-state-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+
+/* filter bar */
+.filter-bar {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 14px; background: var(--surface); padding: 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+}
+.filter-bar input[type="text"], .filter-bar select { width: auto; }
+.filter-bar .grow { flex: 1; min-width: 160px; }
+.filter-bar .filter-group { display: flex; align-items: center; gap: 6px; }
+.filter-bar .filter-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+/* status pill */
+.status-pill { display: inline-flex; align-items: center; gap: 5px; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.translated { background: var(--success); }
+.status-dot.needs-review { background: var(--warning); }
+.status-dot.missing { background: var(--danger); }
+.status-dot.same-as-source { background: var(--info); }
+.status-dot.pending { background: var(--text-soft); }
+
+/* dashboard stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px;
+}
+.stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+.stat-value { font-size: 24px; font-weight: 600; }
+.stat-delta { font-size: 12px; margin-top: 4px; }
+.stat-delta.up { color: var(--success); }
+.stat-delta.down { color: var(--danger); }
+
+.dashboard-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+@media (max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+/* progress bar */
+.progress {
+  height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--success); transition: width 0.4s;
+}
+.coverage-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0;
+}
+.coverage-row .lang { width: 130px; font-size: 13px; }
+.coverage-row .progress { flex: 1; }
+.coverage-row .pct { width: 44px; text-align: right; font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--text-muted); }
+
+/* activity feed */
+.activity-item {
+  display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--primary-soft); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; flex-shrink: 0;
+}
+.activity-text { font-size: 13px; }
+.activity-meta { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+/* ============ MODAL ============ */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+  animation: fadeIn 0.15s ease-out;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--surface); border-radius: 10px;
+  width: 100%; max-width: 560px; max-height: 92vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+  animation: slideUp 0.2s ease-out;
+}
+@keyframes slideUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal.large { max-width: 920px; }
+.modal.medium { max-width: 720px; }
+.modal-header {
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-title { font-size: 16px; font-weight: 600; }
+.modal-close {
+  width: 28px; height: 28px; border-radius: 6px; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.modal-close:hover { background: var(--surface-2); color: var(--text); }
+.modal-body { padding: 20px; overflow-y: auto; }
+.modal-footer {
+  padding: 12px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px; background: var(--surface-3);
+}
+
+/* ============ TOAST ============ */
+#toast-root {
+  position: fixed; top: 20px; right: 20px; z-index: 200;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 16px; min-width: 280px; box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  display: flex; align-items: flex-start; gap: 10px;
+  animation: slideIn 0.18s ease-out;
+  border-left: 3px solid var(--success);
+}
+.toast.error { border-left-color: var(--danger); }
+.toast.warn { border-left-color: var(--warning); }
+.toast.info { border-left-color: var(--info); }
+@keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast-icon { font-size: 16px; line-height: 1.2; }
+.toast.success .toast-icon { color: var(--success); }
+.toast.error .toast-icon { color: var(--danger); }
+.toast.warn .toast-icon { color: var(--warning); }
+.toast.info .toast-icon { color: var(--info); }
+.toast-title { font-weight: 600; font-size: 13px; }
+.toast-msg { color: var(--text-muted); font-size: 12.5px; margin-top: 2px; }
+
+/* key detail modal language list */
+.lang-translation-row {
+  display: grid; grid-template-columns: 150px 1fr 90px; gap: 12px;
+  padding: 8px 4px; border-bottom: 1px solid var(--border); align-items: center;
+}
+.lang-translation-row:last-child { border-bottom: none; }
+.lang-code { font-size: 12px; color: var(--text-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.lang-translation-row input { font-size: 13px; }
+
+/* code scanner */
+.scanner-progress {
+  background: var(--surface-2); border-radius: 8px; padding: 18px; margin-top: 14px;
+  display: none;
+}
+.scanner-progress.active { display: block; }
+.scanner-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px;
+}
+
+/* unused / new keys highlight */
+.similar-keys {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.similar-key-chip {
+  font-size: 11.5px; padding: 2px 8px; border-radius: 4px;
+  background: var(--info-soft); color: var(--info); cursor: pointer;
+}
+.similar-key-chip:hover { background: #c7d2fe; }
+
+/* mt provider */
+.mt-status-banner {
+  background: var(--warning-soft); border: 1px solid #fde68a;
+  border-radius: 8px; padding: 12px 16px; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.mt-status-banner.active { background: var(--success-soft); border-color: #a7f3d0; }
+.mt-status-banner-icon { font-size: 18px; }
+
+.history-diff {
+  display: flex; gap: 8px; align-items: center; font-size: 12.5px;
+}
+.diff-old {
+  color: var(--danger); text-decoration: line-through;
+  background: var(--danger-soft); padding: 1px 6px; border-radius: 3px;
+}
+.diff-arrow { color: var(--text-soft); }
+.diff-new {
+  color: var(--success); background: var(--success-soft);
+  padding: 1px 6px; border-radius: 3px;
+}
+
+.kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px; background: var(--surface-2); padding: 1px 6px;
+  border-radius: 3px; color: var(--text-muted);
+}
+
+/* checkbox */
+.checkbox { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.checkbox input { margin: 0; }
+
+/* radio group */
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+.radio-option {
+  border: 1px solid var(--border-strong); padding: 10px 12px;
+  border-radius: 6px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start;
+}
+.radio-option:hover { background: var(--surface-3); }
+.radio-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+.radio-option-title { font-weight: 500; font-size: 13px; }
+.radio-option-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* file upload */
+.file-drop {
+  border: 2px dashed var(--border-strong); border-radius: 8px;
+  padding: 32px; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.file-drop:hover { border-color: var(--primary); background: var(--primary-soft); }
+.file-drop.has-file { background: var(--success-soft); border-color: var(--success); }
+
+.subtle-divider {
+  height: 1px; background: var(--border); margin: 16px 0;
+}
+
+.import-summary-row {
+  display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;
+}
+
+/* hidden by default */
+.screen { display: none; }
+.screen.active { display: block; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <strong>Checker Admin</strong>
+    <span class="crumb-sep">›</span>
+    <span class="crumb-section">Translations</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-ghost" style="padding: 4px 8px;" title="Help">?</button>
+    <div class="user-chip">
+      <span class="user-avatar">VD</span>
+      <span style="font-size: 13px;">Vishav Deep</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <a class="nav-item active" data-screen="dashboard">Dashboard</a>
+    <a class="nav-item" data-screen="translations">Translations</a>
+    <a class="nav-item" data-screen="new-keys">New Keys <span class="badge">7</span></a>
+    <a class="nav-item" data-screen="languages">Languages</a>
+    <a class="nav-item" data-screen="unused-keys">Unused Keys <span class="badge subtle">12</span></a>
+    <a class="nav-item" data-screen="cleanup-report">Code Cleanup</a>
+    <div class="nav-section">Tools</div>
+    <a class="nav-item" data-screen="scanner">Code Scanner</a>
+    <a class="nav-item" data-screen="import-export">Import / Export</a>
+    <a class="nav-item" data-screen="history">History</a>
+    <div class="nav-section">Settings</div>
+    <a class="nav-item" data-screen="mt-settings">Machine Translation</a>
+  </nav>
+
+  <main class="content">
+
+    <!-- ========== DASHBOARD ========== -->
+    <section id="screen-dashboard" class="screen active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Translation Dashboard</div>
+          <div class="page-sub">Region: EU-Frankfurt &middot; 55 active languages &middot; 8,142 keys</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="navigate('scanner')">Run code scanner</button>
+          <button class="btn btn-primary" onclick="navigate('translations')">Open translations</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">TOTAL KEYS</div>
+          <div class="stat-value">8,142</div>
+          <div class="stat-delta up">+23 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">NEW KEYS (TRIAGE)</div>
+          <div class="stat-value" style="color: var(--danger);">7</div>
+          <div class="stat-delta">3 found by scanner, 4 auto-registered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">NEEDS REVIEW</div>
+          <div class="stat-value" style="color: var(--warning);">142</div>
+          <div class="stat-delta">across 12 languages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">AVG COVERAGE</div>
+          <div class="stat-value">94.2%</div>
+          <div class="stat-delta up">+0.3% this week</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Coverage by language</div>
+            <a class="btn-ghost" style="font-size: 12px;" onclick="navigate('languages')">View all 55 →</a>
+          </div>
+          <div id="coverage-list">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent activity</div>
+            <a class="btn-ghost" style="font-size: 12px;" onclick="navigate('history')">Full history →</a>
+          </div>
+          <div id="activity-list">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TRANSLATIONS ========== -->
+    <section id="screen-translations" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Translations</div>
+          <div class="page-sub">Edit translations inline. Click a key to view all 55 languages side by side.</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="openModal('find-replace')">Find &amp; replace</button>
+          <button class="btn btn-secondary" onclick="openModal('copy-column')">Copy column</button>
+          <button class="btn btn-secondary" onclick="openModal('bulk-review')">Bulk mark reviewed</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Language</span>
+          <select id="lang-picker" style="min-width: 220px;" onchange="renderTranslationsTable()">
+            <!-- populated by JS -->
+          </select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Status</span>
+          <select id="status-filter" onchange="renderTranslationsTable()">
+            <option value="all">All statuses</option>
+            <option value="translated">Translated</option>
+            <option value="needs_review">Needs review</option>
+            <option value="missing">Missing</option>
+            <option value="same_as_source">Same as source</option>
+          </select>
+        </div>
+        <input type="text" class="grow" id="search-input" placeholder="Search keys or English source text…" oninput="renderTranslationsTable()">
+        <button class="btn btn-ghost" onclick="document.getElementById('search-input').value=''; document.getElementById('status-filter').value='all'; renderTranslationsTable();">Reset</button>
+      </div>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30%;">Key</th>
+              <th style="width: 28%;">English (en_US)</th>
+              <th style="width: 28%;"><span id="selected-lang-header">Spanish (es_SP)</span></th>
+              <th style="width: 8%;">Status</th>
+              <th style="width: 6%; text-align: right;"></th>
+            </tr>
+          </thead>
+          <tbody id="translations-tbody"></tbody>
+        </table>
+      </div>
+      <div id="translations-pagination" style="text-align: center; padding: 14px; color: var(--text-muted); font-size: 12px;">
+        Showing 1–25 of 8,142 &middot; <a style="color: var(--primary);">Next page →</a>
+      </div>
+    </section>
+
+    <!-- ========== NEW KEYS ========== -->
+    <section id="screen-new-keys" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">New Keys Triage</div>
+          <div class="page-sub">Keys discovered by the code scanner or auto-registered at runtime. Translate or mark as duplicate.</div>
+        </div>
+        <button class="btn btn-secondary" onclick="navigate('scanner')">Run scanner now</button>
+      </div>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 26%;">Key</th>
+              <th style="width: 22%;">Source location</th>
+              <th style="width: 32%;">Similar existing keys</th>
+              <th style="width: 12%;">Discovered</th>
+              <th style="width: 8%; text-align: right;"></th>
+            </tr>
+          </thead>
+          <tbody id="new-keys-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== LANGUAGES ========== -->
+    <section id="screen-languages" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Languages</div>
+          <div class="page-sub">55 active languages. Disabled languages are hidden from runtime but their translations are preserved.</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-language')">+ Add language</button>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" class="grow" id="lang-search" placeholder="Search by code or name…" oninput="renderLanguagesTable()">
+        <div class="filter-group">
+          <span class="filter-label">Status</span>
+          <select id="lang-status-filter" onchange="renderLanguagesTable()">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Fallback</th>
+              <th>Coverage</th>
+              <th>Status</th>
+              <th style="text-align: right;"></th>
+            </tr>
+          </thead>
+          <tbody id="languages-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== UNUSED KEYS ========== -->
+    <section id="screen-unused-keys" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Unused Keys</div>
+          <div class="page-sub">Keys that exist in the database but no longer appear in any <span class="kbd">msg(...)</span> call. Last code scan: <strong>2 hours ago</strong>.</div>
+        </div>
+        <button class="btn btn-secondary" onclick="navigate('scanner')">Re-scan code</button>
+      </div>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>English source</th>
+              <th>Last seen in code</th>
+              <th>Last edited</th>
+              <th style="text-align: right;"></th>
+            </tr>
+          </thead>
+          <tbody id="unused-keys-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== CODE CLEANUP REPORT ========== -->
+    <section id="screen-cleanup-report" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Code Cleanup Report</div>
+          <div class="page-sub">When a PM marks a new key as a duplicate of an existing one, it appears here for developers to fix in code.</div>
+        </div>
+        <button class="btn btn-secondary" onclick="showToast('Report exported to CSV', 'success')">Export CSV</button>
+      </div>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Key in code</th>
+              <th>Should use instead</th>
+              <th>Files affected</th>
+              <th>Marked by</th>
+              <th>Marked at</th>
+            </tr>
+          </thead>
+          <tbody id="cleanup-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== CODE SCANNER ========== -->
+    <section id="screen-scanner" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Code Scanner</div>
+          <div class="page-sub">Walks the PHP codebase looking for <span class="kbd">msg('…')</span> calls. Runs as a background job to avoid server load.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 14px; font-weight: 600;">Scanner status</div>
+            <div style="color: var(--text-muted); font-size: 13px; margin-top: 2px;" id="scanner-status-text">
+              Idle &middot; last full scan completed 2 hours ago by Vishav Deep
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <label class="checkbox" style="font-size: 12.5px; color: var(--text-muted);">
+              <input type="checkbox" id="incremental-mode" checked> Incremental (changed files only)
+            </label>
+            <button class="btn btn-primary" id="run-scan-btn" onclick="startScan()">Run scan</button>
+          </div>
+        </div>
+
+        <div class="scanner-progress" id="scanner-progress">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-weight: 500; font-size: 13px;" id="scan-step">Initializing…</span>
+            <span style="font-size: 12px; color: var(--text-muted);" id="scan-pct">0%</span>
+          </div>
+          <div class="progress"><div class="progress-fill" id="scan-progress-fill" style="width: 0%"></div></div>
+          <div style="margin-top: 10px; color: var(--text-muted); font-size: 12.5px;" id="scan-detail">
+            Scanning… running in background, you can navigate away.
+          </div>
+        </div>
+
+        <div class="scanner-stats">
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted);">FILES SCANNED</div>
+            <div style="font-size: 22px; font-weight: 600; margin-top: 2px;">2,847</div>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted);">msg() CALLS FOUND</div>
+            <div style="font-size: 22px; font-weight: 600; margin-top: 2px;">8,135</div>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted);">NEW KEYS</div>
+            <div style="font-size: 22px; font-weight: 600; margin-top: 2px; color: var(--warning);">3</div>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted);">UNUSED KEYS</div>
+            <div style="font-size: 22px; font-weight: 600; margin-top: 2px; color: var(--text-muted);">12</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Scan history</div>
+        </div>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Started at</th>
+                <th>Triggered by</th>
+                <th>Mode</th>
+                <th>Duration</th>
+                <th>New / Unused</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>May 10, 2026 09:42</td>
+                <td>Vishav Deep</td>
+                <td>Incremental</td>
+                <td>0m 47s</td>
+                <td>3 / 12</td>
+                <td><span class="tag tag-success">Completed</span></td>
+              </tr>
+              <tr>
+                <td>May 9, 2026 22:00</td>
+                <td>System (post-deploy)</td>
+                <td>Full</td>
+                <td>2m 18s</td>
+                <td>5 / 10</td>
+                <td><span class="tag tag-success">Completed</span></td>
+              </tr>
+              <tr>
+                <td>May 8, 2026 11:15</td>
+                <td>Sarah Levy</td>
+                <td>Incremental</td>
+                <td>0m 33s</td>
+                <td>2 / 8</td>
+                <td><span class="tag tag-success">Completed</span></td>
+              </tr>
+              <tr>
+                <td>May 7, 2026 09:00</td>
+                <td>Itamar Cohen</td>
+                <td>Full</td>
+                <td>2m 45s</td>
+                <td>0 / 4</td>
+                <td><span class="tag tag-success">Completed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== IMPORT / EXPORT ========== -->
+    <section id="screen-import-export" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Import &amp; Export</div>
+          <div class="page-sub">Bring translations in or out as XLS. Imports are merged as deltas — never wipes existing data.</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="card">
+          <div class="card-title" style="margin-bottom: 12px;">Import XLS (delta merge)</div>
+          <div class="file-drop" id="file-drop" onclick="document.getElementById('xls-file').click()">
+            <div style="font-size: 22px; margin-bottom: 6px;">⬆</div>
+            <div style="font-weight: 500;">Drop XLS file here, or click to choose</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Accepts .xls (legacy format)</div>
+            <input type="file" id="xls-file" style="display: none;" accept=".xls" onchange="onFileSelected(this)">
+          </div>
+          <div id="file-selected-info" style="display: none; margin-top: 12px; font-size: 13px;">
+            <strong id="file-name"></strong> selected
+            <button class="btn btn-primary" style="margin-left: 12px;" onclick="previewImport()" id="preview-import-btn">Preview changes</button>
+          </div>
+          <div class="subtle-divider"></div>
+          <div style="font-size: 12.5px; color: var(--text-muted);">
+            <strong>How it works:</strong> the importer compares the uploaded XLS to current translations. You'll see exactly what will be added, modified, or quarantined before anything is applied.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="margin-bottom: 12px;">Export XLS</div>
+          <div class="field">
+            <label class="field-label">Scope</label>
+            <select id="export-scope">
+              <option value="full">Full database (all 55 languages, all 8,142 keys)</option>
+              <option value="single-lang">Single language</option>
+              <option value="missing">Missing translations only</option>
+              <option value="needs-review">Needs review only</option>
+            </select>
+          </div>
+          <div class="field" id="export-lang-field" style="display: none;">
+            <label class="field-label">Language</label>
+            <select id="export-lang">
+              <option>Spanish (es_SP)</option>
+              <option>German (de_DE)</option>
+              <option>French (fr_FR)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="exportXls()" id="export-btn">Generate XLS</button>
+          <div class="subtle-divider"></div>
+          <div style="font-size: 12.5px; color: var(--text-muted);">
+            <strong>Backup tip:</strong> A weekly full export is automatically saved to <span class="kbd">checker-files/translations/backup/</span>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== HISTORY ========== -->
+    <section id="screen-history" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">History</div>
+          <div class="page-sub">Append-only audit log. Retention: <strong>6 months</strong>, then deleted automatically.</div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" class="grow" placeholder="Search by key, value, or user…">
+        <div class="filter-group">
+          <span class="filter-label">Language</span>
+          <select>
+            <option>All languages</option>
+            <option>Spanish (es_SP)</option>
+            <option>German (de_DE)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">User</span>
+          <select>
+            <option>Anyone</option>
+            <option>Vishav Deep</option>
+            <option>Sarah Levy</option>
+            <option>Itamar Cohen</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Who</th>
+              <th>Key</th>
+              <th>Language</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== MT SETTINGS ========== -->
+    <section id="screen-mt-settings" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Machine Translation</div>
+          <div class="page-sub">Configure a provider to enable bulk pre-fill for new languages and missing translations.</div>
+        </div>
+      </div>
+
+      <div class="mt-status-banner" id="mt-banner">
+        <span class="mt-status-banner-icon">⚠</span>
+        <div>
+          <strong>Inactive</strong> — no provider credentials configured. Bulk pre-fill is disabled until you save credentials below.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom: 14px;">Provider configuration</div>
+        <div class="field">
+          <label class="field-label">Provider</label>
+          <select id="mt-provider">
+            <option value="">Select a provider…</option>
+            <option value="google">Google Cloud Translation</option>
+            <option value="deepl">DeepL Pro</option>
+            <option value="claude">Claude (Anthropic)</option>
+            <option value="azure">Azure Translator</option>
+          </select>
+          <div class="field-help">All providers are supported. You can switch providers at any time.</div>
+        </div>
+        <div class="field" id="mt-key-field">
+          <label class="field-label">API key</label>
+          <input type="password" id="mt-api-key" placeholder="Enter your provider API key">
+          <div class="field-error" id="mt-key-error">API key is required</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Auto-flag MT output as</label>
+          <select disabled>
+            <option>needs_review (recommended — human must approve)</option>
+          </select>
+          <div class="field-help">Cannot be changed — every machine-translated value must be reviewed by a PM before it's considered final.</div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <button class="btn btn-secondary" onclick="testMt()" id="test-mt-btn">Test connection</button>
+          <button class="btn btn-primary" onclick="saveMt()" id="save-mt-btn">Save credentials</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title" style="margin-bottom: 8px;">Usage history</div>
+        <div class="empty-state">
+          <div class="empty-state-icon">∅</div>
+          <div class="empty-state-title">No usage yet</div>
+          <div>Once you configure a provider and run a bulk pre-fill, history will appear here.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+
+<script>
+/* ============ SAMPLE DATA ============ */
+
+const LANGUAGES = [
+  { code: 'il_HE', name: 'Hebrew (Israel)', fallback: 'en_US', rtl: true, status: 'active', coverage: 99.4 },
+  { code: 'il_HEBAK', name: 'Hebrew - Bank variant', fallback: 'il_HE', rtl: true, status: 'active', coverage: 96.1 },
+  { code: 'il_HES', name: 'Hebrew - Short form', fallback: 'il_HE', rtl: true, status: 'active', coverage: 87.3 },
+  { code: 'en_US', name: 'English (US)', fallback: '—', rtl: false, status: 'active', coverage: 100 },
+  { code: 'en_AU', name: 'English (Australia)', fallback: 'en_US', rtl: false, status: 'active', coverage: 99.8 },
+  { code: 'en_UK', name: 'English (United Kingdom)', fallback: 'en_US', rtl: false, status: 'active', coverage: 99.6 },
+  { code: 'en_invision', name: 'English - Invision variant', fallback: 'en_US', rtl: false, status: 'active', coverage: 88.4 },
+  { code: 'de_DE', name: 'German (Germany)', fallback: 'en_US', rtl: false, status: 'active', coverage: 97.2 },
+  { code: 'de_CH', name: 'German (Switzerland)', fallback: 'de_DE', rtl: false, status: 'active', coverage: 91.8 },
+  { code: 'es_SP', name: 'Spanish (Spain)', fallback: 'en_US', rtl: false, status: 'active', coverage: 98.1 },
+  { code: 'es_SA', name: 'Spanish (South America)', fallback: 'es_SP', rtl: false, status: 'active', coverage: 95.4 },
+  { code: 'es_CA', name: 'Spanish (Catalonia)', fallback: 'es_SP', rtl: false, status: 'active', coverage: 78.2 },
+  { code: 'pt_BR', name: 'Portuguese (Brazil)', fallback: 'en_US', rtl: false, status: 'active', coverage: 96.7 },
+  { code: 'pt_PT', name: 'Portuguese (Portugal)', fallback: 'pt_BR', rtl: false, status: 'active', coverage: 92.1 },
+  { code: 'fr_FR', name: 'French (France)', fallback: 'en_US', rtl: false, status: 'active', coverage: 98.5 },
+  { code: 'fr_BE', name: 'French (Belgium)', fallback: 'fr_FR', rtl: false, status: 'active', coverage: 94.3 },
+  { code: 'it_IT', name: 'Italian', fallback: 'en_US', rtl: false, status: 'active', coverage: 95.8 },
+  { code: 'nl_NL', name: 'Dutch (Netherlands)', fallback: 'en_US', rtl: false, status: 'active', coverage: 93.4 },
+  { code: 'nl_BE', name: 'Dutch (Belgium)', fallback: 'nl_NL', rtl: false, status: 'active', coverage: 89.7 },
+  { code: 'ru_v2', name: 'Russian', fallback: 'en_US', rtl: false, status: 'active', coverage: 96.2 },
+  { code: 'ua_UA', name: 'Ukrainian', fallback: 'ru_v2', rtl: false, status: 'active', coverage: 91.5 },
+  { code: 'ua_RU', name: 'Ukrainian - Russian variant', fallback: 'ua_UA', rtl: false, status: 'active', coverage: 84.6 },
+  { code: 'ru_Romir_Toyota', name: 'Russian - Toyota client', fallback: 'ru_v2', rtl: false, status: 'active', coverage: 76.9 },
+  { code: 'pl_PL', name: 'Polish', fallback: 'en_US', rtl: false, status: 'active', coverage: 94.8 },
+  { code: 'cs_CZ', name: 'Czech', fallback: 'en_US', rtl: false, status: 'active', coverage: 92.3 },
+  { code: 'sk_SK', name: 'Slovak', fallback: 'cs_CZ', rtl: false, status: 'active', coverage: 88.1 },
+  { code: 'hu_HU', name: 'Hungarian', fallback: 'en_US', rtl: false, status: 'active', coverage: 90.6 },
+  { code: 'ro_RO', name: 'Romanian', fallback: 'en_US', rtl: false, status: 'active', coverage: 89.4 },
+  { code: 'bg_BG', name: 'Bulgarian', fallback: 'en_US', rtl: false, status: 'active', coverage: 87.8 },
+  { code: 'hr_CR', name: 'Croatian', fallback: 'en_US', rtl: false, status: 'active', coverage: 86.2 },
+  { code: 'sr_SR', name: 'Serbian', fallback: 'hr_CR', rtl: false, status: 'active', coverage: 81.4 },
+  { code: 'sl_SI', name: 'Slovenian', fallback: 'en_US', rtl: false, status: 'active', coverage: 84.7 },
+  { code: 'bs_BA', name: 'Bosnian', fallback: 'hr_CR', rtl: false, status: 'active', coverage: 79.3 },
+  { code: 'mk_MK', name: 'Macedonian', fallback: 'bg_BG', rtl: false, status: 'active', coverage: 75.6 },
+  { code: 'el_GR', name: 'Greek', fallback: 'en_US', rtl: false, status: 'active', coverage: 88.9 },
+  { code: 'tu_TUR', name: 'Turkish', fallback: 'en_US', rtl: false, status: 'active', coverage: 92.5 },
+  { code: 'ar_EG', name: 'Arabic (Egypt)', fallback: 'en_US', rtl: true, status: 'active', coverage: 91.2 },
+  { code: 'ar_AE', name: 'Arabic (UAE)', fallback: 'ar_EG', rtl: true, status: 'active', coverage: 88.4 },
+  { code: 'ar_SA', name: 'Arabic (Saudi Arabia)', fallback: 'ar_AE', rtl: true, status: 'active', coverage: 85.7 },
+  { code: 'ar_MA', name: 'Arabic (Morocco)', fallback: 'ar_EG', rtl: true, status: 'active', coverage: 79.1 },
+  { code: 'zh_SC', name: 'Chinese (Simplified)', fallback: 'en_US', rtl: false, status: 'active', coverage: 93.8 },
+  { code: 'zh_CM', name: 'Chinese (Mandarin)', fallback: 'zh_SC', rtl: false, status: 'active', coverage: 87.6 },
+  { code: 'jp_JP', name: 'Japanese', fallback: 'en_US', rtl: false, status: 'active', coverage: 91.9 },
+  { code: 'th_TH', name: 'Thai', fallback: 'en_US', rtl: false, status: 'active', coverage: 86.4 },
+  { code: 'vi-VN', name: 'Vietnamese', fallback: 'en_US', rtl: false, status: 'active', coverage: 88.7 },
+  { code: 'ka_GE', name: 'Georgian', fallback: 'en_US', rtl: false, status: 'active', coverage: 73.2 },
+  { code: 'lt_LTU', name: 'Lithuanian', fallback: 'en_US', rtl: false, status: 'active', coverage: 85.9 },
+  { code: 'lv_Latvian', name: 'Latvian', fallback: 'en_US', rtl: false, status: 'active', coverage: 83.4 },
+  { code: 'et_ET', name: 'Estonian', fallback: 'en_US', rtl: false, status: 'active', coverage: 81.7 },
+  { code: 'fi_FI', name: 'Finnish', fallback: 'en_US', rtl: false, status: 'active', coverage: 89.3 },
+  { code: 'da_DA', name: 'Danish', fallback: 'en_US', rtl: false, status: 'active', coverage: 90.6 },
+  { code: 'nn_NO', name: 'Norwegian (Nynorsk)', fallback: 'da_DA', rtl: false, status: 'active', coverage: 84.2 },
+  { code: 'en_v2', name: 'English (legacy v2)', fallback: 'en_US', rtl: false, status: 'disabled', coverage: 100 },
+  { code: 'en_SRV', name: 'English - Service variant', fallback: 'en_US', rtl: false, status: 'active', coverage: 78.4 },
+  { code: 'en_SRT', name: 'English - Survey variant', fallback: 'en_US', rtl: false, status: 'active', coverage: 81.6 },
+  { code: 'il_evaluations', name: 'Hebrew - Evaluations only', fallback: 'il_HE', rtl: true, status: 'active', coverage: 92.5 },
+];
+
+const TRANSLATIONS = [
+  { key: 'save', en: 'Save', es: 'Guardar', status: 'translated', updated: '2 days ago' },
+  { key: 'cancel', en: 'Cancel', es: 'Cancelar', status: 'translated', updated: '2 days ago' },
+  { key: 'logoff', en: 'Log Off', es: 'Cerrar sesión', status: 'translated', updated: '5 days ago' },
+  { key: 'aiqm monitor menu label', en: 'AI Queue Monitor', es: 'Monitor de cola de IA', status: 'needs_review', updated: '3 hours ago' },
+  { key: 'user profile title', en: 'User Profile', es: 'Perfil de usuario', status: 'translated', updated: '1 week ago' },
+  { key: 'export to pdf', en: 'Export to PDF', es: 'Exportar a PDF', status: 'translated', updated: '4 days ago' },
+  { key: 'evaluation submitted', en: 'Evaluation Submitted', es: 'Evaluación enviada', status: 'translated', updated: '6 days ago' },
+  { key: 'session expired', en: 'Session Expired', es: 'Sesión caducada', status: 'translated', updated: '1 month ago' },
+  { key: 'forgot password', en: 'Forgot Password?', es: '¿Olvidó su contraseña?', status: 'translated', updated: '2 weeks ago' },
+  { key: 'new evaluation', en: 'New Evaluation', es: 'Nueva evaluación', status: 'translated', updated: '3 days ago' },
+  { key: 'branch selector', en: 'Select Branch', es: 'Seleccionar sucursal', status: 'translated', updated: '5 days ago' },
+  { key: 'weekly report title', en: 'Weekly Report', es: 'Informe semanal', status: 'translated', updated: '1 week ago' },
+  { key: 'submit', en: 'Submit', es: 'Enviar', status: 'translated', updated: '2 weeks ago' },
+  { key: 'delete confirmation', en: 'Are you sure you want to delete?', es: '¿Está seguro de que desea eliminar?', status: 'translated', updated: '1 week ago' },
+  { key: 'no results found', en: 'No results found', es: 'No se encontraron resultados', status: 'translated', updated: '3 weeks ago' },
+  { key: 'loading', en: 'Loading…', es: 'Cargando…', status: 'translated', updated: '1 month ago' },
+  { key: 'task assigned to you', en: 'Task assigned to you', es: '', status: 'missing', updated: '—' },
+  { key: 'evaluation overdue', en: 'Evaluation Overdue', es: 'Evaluation Overdue', status: 'same_as_source', updated: '1 month ago' },
+  { key: 'completion rate label', en: 'Completion Rate', es: 'Tasa de finalización', status: 'needs_review', updated: '1 day ago' },
+  { key: 'manager dashboard heading', en: 'Manager Dashboard', es: 'Panel del gerente', status: 'translated', updated: '4 days ago' },
+  { key: 'audit trail tab', en: 'Audit Trail', es: 'Registro de auditoría', status: 'translated', updated: '1 week ago' },
+  { key: 'feedback received', en: 'Feedback Received', es: '', status: 'missing', updated: '—' },
+  { key: 'kpi summary', en: 'KPI Summary', es: 'Resumen de KPI', status: 'translated', updated: '2 weeks ago' },
+  { key: 'configure thresholds', en: 'Configure Thresholds', es: 'Configurar umbrales', status: 'translated', updated: '3 days ago' },
+  { key: 'team performance', en: 'Team Performance', es: 'Rendimiento del equipo', status: 'translated', updated: '5 days ago' },
+];
+
+const NEW_KEYS = [
+  { key: 'mystery shopper visit summary', file: 'admin/ms-visit-summary.php', line: 47, similar: ['mystery shopper visit', 'visit summary'], when: '12 min ago', source: 'scanner' },
+  { key: 'auto-escalation triggered', file: 'modules/escalation/handler.php', line: 142, similar: [], when: '2 hours ago', source: 'runtime' },
+  { key: 'export queue progress', file: 'admin/export-queue.php', line: 88, similar: ['export queue', 'export progress'], when: '3 hours ago', source: 'scanner' },
+  { key: 'monthly NPS chart title', file: 'reports/nps-monthly.php', line: 23, similar: ['NPS chart', 'monthly chart title'], when: '5 hours ago', source: 'runtime' },
+  { key: 'archive old evaluations', file: 'admin/archive-tool.php', line: 12, similar: ['archive evaluations'], when: '1 day ago', source: 'scanner' },
+  { key: 'new feedback received', file: 'modules/notifications.php', line: 67, similar: ['feedback received', 'new feedback'], when: '1 day ago', source: 'runtime' },
+  { key: 'survey response thank you', file: 'public/survey-thanks.php', line: 9, similar: ['thank you message', 'survey thanks'], when: '2 days ago', source: 'scanner' },
+];
+
+const UNUSED_KEYS = [
+  { key: 'old branch picker label', en: 'Choose your branch (legacy)', lastSeen: '8 months ago', lastEdited: '2 years ago' },
+  { key: 'invision welcome banner', en: 'Welcome to Invision', lastSeen: '1 year ago', lastEdited: '3 years ago' },
+  { key: 'beta feature notice', en: 'This is a beta feature', lastSeen: '6 months ago', lastEdited: '1 year ago' },
+  { key: 'survey v1 title', en: 'Customer Survey', lastSeen: '11 months ago', lastEdited: '2 years ago' },
+  { key: 'temporary maintenance', en: 'System under maintenance', lastSeen: '4 months ago', lastEdited: '1 year ago' },
+  { key: 'old kpi label', en: 'KPI (deprecated)', lastSeen: '7 months ago', lastEdited: '2 years ago' },
+  { key: 'legacy export button', en: 'Export (old format)', lastSeen: '5 months ago', lastEdited: '1 year ago' },
+  { key: 'pilot program signup', en: 'Join the pilot program', lastSeen: '9 months ago', lastEdited: '2 years ago' },
+  { key: 'discontinued integration', en: 'Connect to Salesforce Classic', lastSeen: '1 year ago', lastEdited: '3 years ago' },
+  { key: 'q1 2024 promo banner', en: 'New features released!', lastSeen: '10 months ago', lastEdited: '1 year ago' },
+  { key: 'mobile app v1 download', en: 'Download our app', lastSeen: '6 months ago', lastEdited: '2 years ago' },
+  { key: 'old dashboard widget', en: 'Performance Snapshot', lastSeen: '8 months ago', lastEdited: '2 years ago' },
+];
+
+const CLEANUP = [
+  { codeKey: 'feedback received', shouldUse: 'new feedback received', files: 3, by: 'Vishav Deep', at: 'May 9, 14:22' },
+  { codeKey: 'export queue progress', shouldUse: 'export queue', files: 2, by: 'Sarah Levy', at: 'May 8, 11:05' },
+  { codeKey: 'visit summary', shouldUse: 'mystery shopper visit', files: 1, by: 'Vishav Deep', at: 'May 6, 16:48' },
+  { codeKey: 'NPS chart', shouldUse: 'monthly NPS chart', files: 4, by: 'Itamar Cohen', at: 'May 4, 09:30' },
+];
+
+const HISTORY = [
+  { when: 'May 10, 09:48', who: 'Vishav Deep', key: 'aiqm monitor menu label', lang: 'es_SP', oldVal: 'Monitor IA', newVal: 'Monitor de cola de IA' },
+  { when: 'May 10, 09:42', who: 'Vishav Deep', key: 'completion rate label', lang: 'es_SP', oldVal: '', newVal: 'Tasa de finalización' },
+  { when: 'May 9, 17:21', who: 'Sarah Levy', key: 'save', lang: 'de_DE', oldVal: 'Speichern!', newVal: 'Speichern' },
+  { when: 'May 9, 14:22', who: 'Vishav Deep', key: 'feedback received', lang: '—', oldVal: '', newVal: 'marked as duplicate of "new feedback received"' },
+  { when: 'May 9, 11:08', who: 'Itamar Cohen', key: 'cancel', lang: 'fr_FR', oldVal: 'Annuler', newVal: 'Annuler' },
+  { when: 'May 8, 16:50', who: 'Sarah Levy', key: 'logoff', lang: 'pt_BR', oldVal: 'Sair', newVal: 'Encerrar sessão' },
+  { when: 'May 8, 11:05', who: 'Sarah Levy', key: 'export queue progress', lang: '—', oldVal: '', newVal: 'marked as duplicate of "export queue"' },
+  { when: 'May 7, 15:32', who: 'Vishav Deep', key: 'new evaluation', lang: 'ar_EG', oldVal: 'تقييم', newVal: 'تقييم جديد' },
+  { when: 'May 7, 10:11', who: 'Itamar Cohen', key: 'submit', lang: 'pl_PL', oldVal: 'Wyślij!', newVal: 'Wyślij' },
+  { when: 'May 6, 18:04', who: 'Vishav Deep', key: 'forgot password', lang: 'de_DE', oldVal: 'Passwort vergessen', newVal: 'Passwort vergessen?' },
+];
+
+/* sample translations for the key detail modal */
+const SAMPLE_KEY_DETAIL = {
+  key: 'aiqm monitor menu label',
+  en_source: 'AI Queue Monitor',
+  description: 'Sidebar navigation label for the AI Queue Monitor page in the admin app.',
+  translations: {
+    'il_HE': 'מוניטור תור AI', 'il_HEBAK': 'מוניטור תור AI', 'il_HES': 'תור AI',
+    'en_US': 'AI Queue Monitor', 'en_AU': 'AI Queue Monitor', 'en_UK': 'AI Queue Monitor',
+    'en_invision': 'AI Queue Monitor', 'de_DE': 'KI-Warteschlangenmonitor', 'de_CH': 'KI-Warteschlangenmonitor',
+    'es_SP': 'Monitor de cola de IA', 'es_SA': 'Monitor de cola de IA', 'es_CA': '',
+    'pt_BR': 'Monitor de fila de IA', 'pt_PT': 'Monitor de fila de IA',
+    'fr_FR': 'Moniteur de file d\'attente IA', 'fr_BE': 'Moniteur de file d\'attente IA',
+    'it_IT': 'Monitor coda IA', 'nl_NL': 'AI-wachtrijmonitor', 'nl_BE': 'AI-wachtrijmonitor',
+    'ru_v2': 'Монитор очереди ИИ', 'ua_UA': 'Монітор черги ШІ', 'ua_RU': '',
+    'pl_PL': 'Monitor kolejki AI', 'cs_CZ': 'Monitor fronty AI', 'sk_SK': 'Monitor frontu AI',
+    'hu_HU': 'AI várólista monitor', 'ro_RO': 'Monitor coadă AI', 'bg_BG': 'AI монитор на опашката',
+    'hr_CR': 'AI monitor reda', 'sl_SI': 'Monitor čakalne vrste AI', 'el_GR': 'Παρακολούθηση ουράς AI',
+    'tu_TUR': 'AI Sıra İzleyicisi', 'ar_EG': 'مراقب طابور الذكاء الاصطناعي', 'ar_AE': 'مراقب طابور الذكاء الاصطناعي',
+    'zh_SC': 'AI队列监控', 'jp_JP': 'AIキューモニター', 'th_TH': 'ตัวตรวจสอบคิว AI',
+    'vi-VN': 'Giám sát hàng đợi AI', 'fi_FI': 'AI-jonon valvonta', 'da_DA': 'AI-køovervågning'
+  }
+};
+
+/* ============ NAVIGATION ============ */
+function navigate(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.dataset.screen === name) n.classList.add('active');
+  });
+  // load screen data
+  if (name === 'translations') renderTranslationsTable();
+  if (name === 'new-keys') renderNewKeysTable();
+  if (name === 'languages') renderLanguagesTable();
+  if (name === 'unused-keys') renderUnusedKeysTable();
+  if (name === 'cleanup-report') renderCleanupTable();
+  if (name === 'history') renderHistoryTable();
+  if (name === 'dashboard') renderDashboard();
+}
+document.querySelectorAll('.nav-item').forEach(n => {
+  n.addEventListener('click', () => navigate(n.dataset.screen));
+});
+
+/* ============ TOAST ============ */
+function showToast(msg, type = 'success', title) {
+  const root = document.getElementById('toast-root');
+  const div = document.createElement('div');
+  div.className = 'toast ' + type;
+  const icon = { success: '✓', error: '✕', warn: '⚠', info: 'ⓘ' }[type] || '✓';
+  const titleText = title || ({ success: 'Success', error: 'Error', warn: 'Warning', info: 'Info' })[type];
+  div.innerHTML = `
+    <div class="toast-icon">${icon}</div>
+    <div>
+      <div class="toast-title">${titleText}</div>
+      <div class="toast-msg">${msg}</div>
+    </div>
+  `;
+  root.appendChild(div);
+  setTimeout(() => {
+    div.style.transition = 'opacity 0.25s, transform 0.25s';
+    div.style.opacity = '0';
+    div.style.transform = 'translateX(20px)';
+    setTimeout(() => div.remove(), 280);
+  }, 3500);
+}
+
+/* ============ MODAL ============ */
+function openModal(name, data) {
+  const root = document.getElementById('modal-root');
+  root.innerHTML = '';
+  const html = renderModal(name, data);
+  if (html) {
+    const wrap = document.createElement('div');
+    wrap.className = 'modal-backdrop';
+    wrap.id = 'active-modal-backdrop';
+    wrap.innerHTML = html;
+    wrap.addEventListener('click', (e) => {
+      if (e.target === wrap) closeModal();
+    });
+    root.appendChild(wrap);
+  }
+}
+function closeModal() {
+  const m = document.getElementById('active-modal-backdrop');
+  if (m) m.remove();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function renderModal(name, data) {
+  if (name === 'key-detail') return modalKeyDetail(data);
+  if (name === 'add-language') return modalAddLanguage();
+  if (name === 'disable-language') return modalDisableLanguage(data);
+  if (name === 'find-replace') return modalFindReplace();
+  if (name === 'copy-column') return modalCopyColumn();
+  if (name === 'bulk-review') return modalBulkReview();
+  if (name === 'mark-duplicate') return modalMarkDuplicate(data);
+  if (name === 'import-preview') return modalImportPreview(data);
+  if (name === 'mt-bulk') return modalBulkMt();
+  if (name === 'mt-test') return modalMtTest();
+  if (name === 'archive-key') return modalArchiveKey(data);
+  return null;
+}
+
+function modalKeyDetail(data) {
+  const d = SAMPLE_KEY_DETAIL;
+  let langRows = '';
+  LANGUAGES.forEach(l => {
+    const v = d.translations[l.code] || '';
+    const status = !v ? 'missing' : (v === d.en_source && l.code !== 'en_US' ? 'same-as-source' : 'translated');
+    langRows += `
+      <div class="lang-translation-row">
+        <div>
+          <div style="font-size: 13px;">${l.name}</div>
+          <div class="lang-code">${l.code}${l.rtl ? ' · RTL' : ''}</div>
+        </div>
+        <input type="text" value="${v.replace(/"/g, '&quot;')}" placeholder="Not translated" ${l.rtl ? 'dir="rtl"' : ''}>
+        <div class="status-pill"><span class="status-dot ${status}"></span>${status.replace('-', ' ')}</div>
+      </div>
+    `;
+  });
+  return `
+    <div class="modal large">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">${d.key}</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">All 55 languages · click any value to edit</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="card" style="background: var(--surface-3); margin-bottom: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">English source (en_US)</div>
+              <div style="font-size: 14px; margin-top: 4px;">${d.en_source}</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Description</div>
+              <div style="font-size: 13px; margin-top: 4px;">${d.description}</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center;">
+          <div style="font-size: 13px; color: var(--text-muted);">${LANGUAGES.length} languages</div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" placeholder="Filter languages…" style="width: 200px; font-size: 12.5px; padding: 5px 8px;">
+            <select style="font-size: 12.5px; padding: 5px 8px;">
+              <option>All statuses</option>
+              <option>Missing only</option>
+              <option>Translated only</option>
+            </select>
+          </div>
+        </div>
+        ${langRows}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveKeyDetail()">Save all changes</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalAddLanguage() {
+  return `
+    <div class="modal medium">
+      <div class="modal-header">
+        <div class="modal-title">Add a new language</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label class="field-label">Language code <span style="color: var(--danger);">*</span></label>
+          <input type="text" id="add-lang-code" placeholder="e.g., sv_SE">
+          <div class="field-help">2–20 characters, lowercase + underscore convention.</div>
+          <div class="field-error" id="add-lang-code-error">A unique code is required.</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Display name <span style="color: var(--danger);">*</span></label>
+          <input type="text" id="add-lang-name" placeholder="e.g., Swedish (Sweden)">
+          <div class="field-error" id="add-lang-name-error">Name is required.</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Fallback language</label>
+          <select id="add-lang-fallback">
+            <option value="en_US">English (US) — en_US</option>
+            <option value="">— None (use key text directly)</option>
+          </select>
+          <div class="field-help">If a translation is missing, the runtime will use this language instead before falling back to the key text.</div>
+        </div>
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox" id="add-lang-rtl"> Right-to-left script (RTL)
+          </label>
+        </div>
+        <div class="subtle-divider"></div>
+        <div class="field" style="margin-bottom: 0;">
+          <label class="field-label">Initial population</label>
+          <div class="radio-group">
+            <label class="radio-option selected" onclick="selectRadio(this)">
+              <input type="radio" name="init" checked>
+              <div>
+                <div class="radio-option-title">Empty (status = missing)</div>
+                <div class="radio-option-desc">8,142 keys created with no value. Runtime will fall back to en_US until you fill them in.</div>
+              </div>
+            </label>
+            <label class="radio-option" onclick="selectRadio(this)">
+              <input type="radio" name="init">
+              <div>
+                <div class="radio-option-title">Copy from another language</div>
+                <div class="radio-option-desc">Pre-populate from an existing language as a starting point (status = needs_review).</div>
+              </div>
+            </label>
+            <label class="radio-option" style="opacity: 0.55;" onclick="selectRadio(this)">
+              <input type="radio" name="init" disabled>
+              <div>
+                <div class="radio-option-title">Auto-translate with MT provider</div>
+                <div class="radio-option-desc">Disabled — configure a Machine Translation provider first.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" id="add-lang-btn" onclick="addLanguageSubmit()">Add language</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalDisableLanguage(data) {
+  return `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Disable ${data.name}?</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px;">Disabling <strong>${data.name}</strong> (<span class="kbd">${data.code}</span>) will:</p>
+        <ul style="margin-left: 20px; color: var(--text-muted); font-size: 13px; line-height: 2;">
+          <li>Hide it from the runtime — users cannot select this language</li>
+          <li>Preserve all ${data.coverage}% of existing translations</li>
+          <li>Allow you to re-enable it later without data loss</li>
+        </ul>
+        <div style="background: var(--warning-soft); border-radius: 6px; padding: 12px; margin-top: 14px; font-size: 12.5px;">
+          <strong>Note:</strong> Languages cannot be deleted in this system — only disabled. This protects against accidental data loss.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Keep enabled</button>
+        <button class="btn btn-danger" onclick="disableLanguageConfirm('${data.code}', '${data.name}')">Disable language</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalFindReplace() {
+  return `
+    <div class="modal medium">
+      <div class="modal-header">
+        <div class="modal-title">Find and replace</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label class="field-label">Language</label>
+          <select>
+            <option>Spanish (es_SP)</option>
+            <option>German (de_DE)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Find</label>
+          <input type="text" placeholder="Text to search for">
+        </div>
+        <div class="field">
+          <label class="field-label">Replace with</label>
+          <input type="text" placeholder="Replacement text">
+        </div>
+        <div class="field">
+          <label class="checkbox"><input type="checkbox"> Match case</label>
+          <label class="checkbox" style="margin-left: 16px;"><input type="checkbox"> Whole word only</label>
+        </div>
+        <div style="background: var(--surface-3); border-radius: 6px; padding: 12px; font-size: 12.5px; color: var(--text-muted);">
+          Preview will show all matches before any change is applied.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="closeModal(); showToast('Found 12 matches across 8 keys. Showing preview…', 'info', 'Preview ready');">Preview matches</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalCopyColumn() {
+  return `
+    <div class="modal medium">
+      <div class="modal-header">
+        <div class="modal-title">Copy translations between languages</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 30px 1fr; gap: 12px; align-items: end;">
+          <div class="field" style="margin-bottom: 0;">
+            <label class="field-label">From</label>
+            <select><option>Spanish (es_SP)</option><option>German (de_DE)</option></select>
+          </div>
+          <div style="text-align: center; font-size: 18px; padding-bottom: 10px;">→</div>
+          <div class="field" style="margin-bottom: 0;">
+            <label class="field-label">To</label>
+            <select><option>Spanish (Catalonia) - es_CA</option><option>Spanish (South America) - es_SA</option></select>
+          </div>
+        </div>
+        <div style="margin-top: 18px;">
+          <label class="field-label">What to copy</label>
+          <div class="radio-group">
+            <label class="radio-option selected" onclick="selectRadio(this)">
+              <input type="radio" name="copy" checked>
+              <div>
+                <div class="radio-option-title">Only missing translations in target</div>
+                <div class="radio-option-desc">Existing translations in the target language will not be overwritten.</div>
+              </div>
+            </label>
+            <label class="radio-option" onclick="selectRadio(this)">
+              <input type="radio" name="copy">
+              <div>
+                <div class="radio-option-title">All translations (overwrite)</div>
+                <div class="radio-option-desc">Replaces every value in the target. Old values go to history.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div style="background: var(--surface-3); border-radius: 6px; padding: 12px; margin-top: 14px; font-size: 12.5px;">
+          Copied translations are marked as <span class="tag tag-warning">needs_review</span> for the target language.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="closeModal(); showToast('Copied 1,847 translations from es_SP to es_CA — marked as needs_review.', 'success', 'Copy complete');">Copy translations</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalBulkReview() {
+  return `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Bulk mark as reviewed</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 14px;">Mark <strong>142 translations</strong> currently in <span class="tag tag-warning">needs_review</span> status as <span class="tag tag-success">translated</span>.</p>
+        <div class="field">
+          <label class="field-label">Filter (optional)</label>
+          <select>
+            <option>All needs_review across all languages</option>
+            <option>Only Spanish (es_SP) — 42 items</option>
+            <option>Only filtered grid — 18 items</option>
+          </select>
+        </div>
+        <div style="background: var(--warning-soft); border-radius: 6px; padding: 12px; font-size: 12.5px;">
+          <strong>Warning:</strong> This is irreversible (though it shows in history). Only do this if you've already manually verified the translations.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="closeModal(); showToast('142 translations marked as reviewed.', 'success');">Mark as reviewed</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalMarkDuplicate(data) {
+  return `
+    <div class="modal medium">
+      <div class="modal-header">
+        <div class="modal-title">Mark as duplicate</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 14px;">Mark <strong>"${data.key}"</strong> as a duplicate of an existing key. The new key will be discarded and developers will see this in the Code Cleanup Report.</p>
+        <div class="field">
+          <label class="field-label">Existing key to use instead</label>
+          <input type="text" placeholder="Search keys…" id="dup-search">
+        </div>
+        <div style="border: 1px solid var(--border); border-radius: 6px; max-height: 240px; overflow-y: auto;">
+          ${(data.similar || []).map(s => `
+            <div style="padding: 10px 14px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
+                 onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='transparent'"
+                 onclick="document.getElementById('dup-search').value='${s}'; document.querySelectorAll('#mark-dup-list > div').forEach(d=>d.style.background='transparent'); this.style.background='var(--primary-soft)';">
+              <div>
+                <div style="font-weight: 500;">${s}</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">English: similar phrasing &middot; 99% translated across 55 languages</div>
+              </div>
+              <span class="tag tag-success">Suggested</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="closeModal(); showToast('Marked as duplicate. Added to Code Cleanup Report for devs.', 'success');">Confirm duplicate</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalImportPreview(data) {
+  return `
+    <div class="modal medium">
+      <div class="modal-header">
+        <div class="modal-title">Import preview</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 14px;">Reviewing <strong>l10n-translations-may2026.xls</strong> (8,142 keys × 55 languages):</p>
+        <div style="background: var(--surface-3); border-radius: 8px; padding: 14px;">
+          <div class="import-summary-row">
+            <span><span class="status-dot translated" style="display: inline-block; margin-right: 6px;"></span>Modified translations</span>
+            <strong>1,247</strong>
+          </div>
+          <div class="import-summary-row">
+            <span><span class="status-dot needs-review" style="display: inline-block; margin-right: 6px;"></span>Newly added translations (existing keys)</span>
+            <strong>342</strong>
+          </div>
+          <div class="import-summary-row">
+            <span><span class="status-dot pending" style="display: inline-block; margin-right: 6px;"></span>Unchanged (skipped)</span>
+            <strong>446,963</strong>
+          </div>
+          <div class="import-summary-row" style="border-top: 1px solid var(--border); margin-top: 8px; padding-top: 12px;">
+            <span style="color: var(--warning);"><span class="status-dot missing" style="display: inline-block; margin-right: 6px;"></span><strong>Quarantined</strong> — unknown keys not in DB</span>
+            <strong style="color: var(--warning);">23</strong>
+          </div>
+        </div>
+        <div style="background: var(--warning-soft); border-radius: 6px; padding: 12px; margin-top: 14px; font-size: 12.5px;">
+          <strong>23 keys are not in the database.</strong> They will be quarantined for your review — you can either approve them as new keys or reject them. The rest of the import will proceed normally.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" id="apply-import-btn" onclick="applyImport()">Apply import</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalBulkMt() {
+  return `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Bulk machine-translate</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="empty-state" style="padding: 24px 12px;">
+          <div class="empty-state-icon">⚙</div>
+          <div class="empty-state-title">No MT provider configured</div>
+          <div style="margin-bottom: 14px;">Set up a Machine Translation provider in settings before using bulk pre-fill.</div>
+          <button class="btn btn-primary" onclick="closeModal(); navigate('mt-settings');">Configure provider</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function modalMtTest() {
+  return `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Connection test</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; padding: 16px 0;">
+          <div style="font-size: 32px; color: var(--success); margin-bottom: 10px;">✓</div>
+          <div style="font-weight: 600; margin-bottom: 4px;">Connection successful</div>
+          <div style="color: var(--text-muted); font-size: 13px;">DeepL Pro responded in 384ms. Quota: 487,000 / 500,000 chars remaining this month.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `;
+}
+
+function modalArchiveKey(data) {
+  return `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Archive unused key?</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Archive <strong>"${data.key}"</strong>?</p>
+        <p style="margin-top: 10px; color: var(--text-muted); font-size: 13px;">The key and all its translations will be hidden from normal views but preserved in the database. You can restore it later if it appears in code again.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="closeModal(); showToast('Key archived. It can be restored from Settings → Archive.', 'success');">Archive</button>
+      </div>
+    </div>
+  `;
+}
+
+function selectRadio(el) {
+  el.parentNode.querySelectorAll('.radio-option').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  const input = el.querySelector('input');
+  if (input) input.checked = true;
+}
+
+/* ============ FORM HANDLERS ============ */
+function addLanguageSubmit() {
+  const code = document.getElementById('add-lang-code').value.trim();
+  const name = document.getElementById('add-lang-name').value.trim();
+  let valid = true;
+  document.getElementById('add-lang-code').parentElement.classList.remove('has-error');
+  document.getElementById('add-lang-name').parentElement.classList.remove('has-error');
+  if (!code) {
+    document.getElementById('add-lang-code').parentElement.classList.add('has-error');
+    valid = false;
+  }
+  if (!name) {
+    document.getElementById('add-lang-name').parentElement.classList.add('has-error');
+    valid = false;
+  }
+  if (!valid) return;
+  const btn = document.getElementById('add-lang-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Creating language…';
+  setTimeout(() => {
+    closeModal();
+    showToast(`Language "${name}" (${code}) created with 8,142 keys in status: missing.`, 'success', 'Language added');
+    renderLanguagesTable();
+  }, 1100);
+}
+
+function disableLanguageConfirm(code, name) {
+  closeModal();
+  showToast(`${name} disabled. Translations preserved.`, 'success');
+}
+
+function saveKeyDetail() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Saving…';
+  setTimeout(() => {
+    closeModal();
+    showToast('Saved 4 translation changes. l10n_*.phpi files regenerated.', 'success');
+  }, 900);
+}
+
+function previewImport() {
+  const btn = document.getElementById('preview-import-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Analyzing XLS…';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = 'Preview changes';
+    openModal('import-preview');
+  }, 1400);
+}
+
+function applyImport() {
+  const btn = document.getElementById('apply-import-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Applying…';
+  setTimeout(() => {
+    closeModal();
+    showToast('Import applied. 23 unknown keys quarantined for your review.', 'success', 'Import complete');
+    document.getElementById('file-selected-info').style.display = 'none';
+    document.getElementById('file-drop').classList.remove('has-file');
+    document.getElementById('xls-file').value = '';
+  }, 1600);
+}
+
+function exportXls() {
+  const btn = document.getElementById('export-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generating XLS…';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = 'Generate XLS';
+    showToast('Export ready: l10n-translations-may10-2026.xls (3.8 MB)', 'success');
+  }, 1500);
+}
+
+function onFileSelected(input) {
+  if (input.files.length) {
+    document.getElementById('file-name').textContent = input.files[0].name;
+    document.getElementById('file-selected-info').style.display = 'block';
+    document.getElementById('file-drop').classList.add('has-file');
+  }
+}
+
+function testMt() {
+  const provider = document.getElementById('mt-provider').value;
+  const key = document.getElementById('mt-api-key').value;
+  if (!provider) {
+    showToast('Pick a provider first.', 'error');
+    return;
+  }
+  if (!key) {
+    document.getElementById('mt-key-field').classList.add('has-error');
+    return;
+  }
+  document.getElementById('mt-key-field').classList.remove('has-error');
+  const btn = document.getElementById('test-mt-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Testing…';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = 'Test connection';
+    openModal('mt-test');
+  }, 1200);
+}
+
+function saveMt() {
+  const provider = document.getElementById('mt-provider').value;
+  const key = document.getElementById('mt-api-key').value;
+  if (!provider) {
+    showToast('Pick a provider first.', 'error');
+    return;
+  }
+  if (!key) {
+    document.getElementById('mt-key-field').classList.add('has-error');
+    return;
+  }
+  document.getElementById('mt-key-field').classList.remove('has-error');
+  const btn = document.getElementById('save-mt-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Saving…';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = 'Save credentials';
+    const banner = document.getElementById('mt-banner');
+    banner.classList.add('active');
+    banner.innerHTML = '<span class="mt-status-banner-icon">✓</span><div><strong>Active</strong> — using DeepL Pro. Bulk pre-fill is now available across all language views.</div>';
+    showToast('MT provider configured. Bulk pre-fill is now enabled.', 'success');
+  }, 1100);
+}
+
+/* ============ SCANNER ============ */
+let scanInterval = null;
+function startScan() {
+  const btn = document.getElementById('run-scan-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Scanning…';
+  document.getElementById('scanner-status-text').textContent = 'Running… background job started by Vishav Deep';
+  const prog = document.getElementById('scanner-progress');
+  prog.classList.add('active');
+  let pct = 0;
+  const steps = [
+    { p: 8, step: 'Enumerating PHP files…', detail: 'Walking codebase from /www/checker/' },
+    { p: 22, step: 'Parsing AST…', detail: 'Extracting msg() calls (847 files done)' },
+    { p: 48, step: 'Extracting key references…', detail: '4,213 calls found so far' },
+    { p: 71, step: 'Comparing against database…', detail: 'Matching 8,135 keys against DB' },
+    { p: 88, step: 'Detecting unused keys…', detail: 'Cross-referencing DB keys with code' },
+    { p: 100, step: 'Done', detail: 'Scan complete in 47 seconds' },
+  ];
+  let i = 0;
+  scanInterval = setInterval(() => {
+    if (i >= steps.length) {
+      clearInterval(scanInterval);
+      btn.disabled = false;
+      btn.innerHTML = 'Run scan';
+      document.getElementById('scanner-status-text').textContent = 'Idle · last full scan completed just now by Vishav Deep';
+      showToast('Scan complete. 3 new keys queued for triage, 12 unused keys flagged.', 'success', 'Scanner finished');
+      return;
+    }
+    const s = steps[i];
+    document.getElementById('scan-step').textContent = s.step;
+    document.getElementById('scan-pct').textContent = s.p + '%';
+    document.getElementById('scan-progress-fill').style.width = s.p + '%';
+    document.getElementById('scan-detail').textContent = s.detail;
+    i++;
+  }, 700);
+}
+
+/* ============ TABLE RENDERERS ============ */
+function showSkeleton(tbody, rows, cols) {
+  let html = '';
+  for (let r = 0; r < rows; r++) {
+    html += '<tr class="skeleton-row">';
+    for (let c = 0; c < cols; c++) {
+      html += `<td><div class="skeleton-bar" style="width: ${50 + Math.random() * 40}%"></div></td>`;
+    }
+    html += '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function statusPill(status) {
+  const labels = {
+    'translated': 'Translated',
+    'needs_review': 'Needs review',
+    'missing': 'Missing',
+    'same_as_source': 'Same as source',
+    'pending_translation': 'Pending'
+  };
+  const dotClass = status.replace('_', '-');
+  return `<span class="status-pill"><span class="status-dot ${dotClass}"></span>${labels[status]}</span>`;
+}
+
+function renderTranslationsTable() {
+  const tbody = document.getElementById('translations-tbody');
+  const langCode = document.getElementById('lang-picker').value;
+  const langObj = LANGUAGES.find(l => l.code === langCode);
+  document.getElementById('selected-lang-header').textContent = `${langObj.name} (${langObj.code})`;
+  showSkeleton(tbody, 6, 5);
+  setTimeout(() => {
+    const filterStatus = document.getElementById('status-filter').value;
+    const search = document.getElementById('search-input').value.toLowerCase();
+    let rows = TRANSLATIONS.filter(t => {
+      if (filterStatus !== 'all' && t.status !== filterStatus) return false;
+      if (search && !t.key.toLowerCase().includes(search) && !t.en.toLowerCase().includes(search)) return false;
+      return true;
+    });
+    if (rows.length === 0) {
+      tbody.innerHTML = `
+        <tr><td colspan="5">
+          <div class="empty-state">
+            <div class="empty-state-icon">∅</div>
+            <div class="empty-state-title">No translations match your filters</div>
+            <div>Try clearing the search or switching status filter.</div>
+          </div>
+        </td></tr>
+      `;
+      return;
+    }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td><strong style="font-size: 13px;">${r.key}</strong></td>
+        <td style="color: var(--text-muted);">${r.en}</td>
+        <td>
+          <div class="editable-cell" onclick="this.contentEditable=true; this.classList.add('editing'); this.focus();"
+               onblur="this.contentEditable=false; this.classList.remove('editing'); showToast('Saved \\'${r.key}\\' for ${langObj.code}.', 'success');">
+            ${r.es || '<em style="color: var(--text-soft);">— missing —</em>'}
+          </div>
+        </td>
+        <td>${statusPill(r.status)}</td>
+        <td>
+          <div class="row-actions" style="justify-content: flex-end;">
+            <button class="btn-row" onclick="openModal('key-detail', { key: '${r.key}' })">View all 55</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }, 280);
+}
+
+function renderNewKeysTable() {
+  const tbody = document.getElementById('new-keys-tbody');
+  showSkeleton(tbody, 5, 5);
+  setTimeout(() => {
+    if (NEW_KEYS.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">✓</div><div class="empty-state-title">No new keys to triage</div><div>All recently discovered keys have been processed.</div></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = NEW_KEYS.map(n => `
+      <tr>
+        <td><strong>${n.key}</strong></td>
+        <td><span class="kbd">${n.file}:${n.line}</span></td>
+        <td>
+          ${n.similar.length === 0
+            ? '<span style="color: var(--text-soft); font-size: 12.5px; font-style: italic;">No similar keys found</span>'
+            : `<div class="similar-keys">${n.similar.map(s => `<span class="similar-key-chip" onclick="openModal('mark-duplicate', { key: '${n.key}', similar: ${JSON.stringify(n.similar).replace(/"/g, '&quot;')} })">${s}</span>`).join('')}</div>`
+          }
+        </td>
+        <td style="font-size: 12.5px; color: var(--text-muted);">
+          ${n.when}<br>
+          <span class="tag ${n.source === 'scanner' ? 'tag-info' : 'tag-muted'}" style="margin-top: 2px;">${n.source === 'scanner' ? 'Scanner' : 'Runtime'}</span>
+        </td>
+        <td>
+          <div class="row-actions" style="justify-content: flex-end;">
+            <button class="btn-row" onclick="openModal('key-detail', { key: '${n.key}' })">Translate</button>
+            <button class="btn-row" onclick="openModal('mark-duplicate', { key: '${n.key}', similar: ${JSON.stringify(n.similar).replace(/"/g, '&quot;')} })">Mark dup</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }, 250);
+}
+
+function renderLanguagesTable() {
+  const tbody = document.getElementById('languages-tbody');
+  showSkeleton(tbody, 6, 6);
+  setTimeout(() => {
+    const search = (document.getElementById('lang-search').value || '').toLowerCase();
+    const statusFilter = document.getElementById('lang-status-filter').value;
+    let rows = LANGUAGES.filter(l => {
+      if (search && !l.code.toLowerCase().includes(search) && !l.name.toLowerCase().includes(search)) return false;
+      if (statusFilter !== 'all' && l.status !== statusFilter) return false;
+      return true;
+    });
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">∅</div><div class="empty-state-title">No languages match</div><div>Try a different search.</div></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(l => {
+      const covColor = l.coverage > 95 ? 'var(--success)' : l.coverage > 85 ? 'var(--warning)' : 'var(--danger)';
+      return `
+        <tr>
+          <td><span class="kbd">${l.code}</span></td>
+          <td>
+            ${l.name}
+            ${l.rtl ? '<span class="tag tag-info" style="margin-left: 6px;">RTL</span>' : ''}
+          </td>
+          <td><span class="kbd">${l.fallback}</span></td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="progress" style="width: 100px;"><div class="progress-fill" style="width: ${l.coverage}%; background: ${covColor};"></div></div>
+              <span style="font-size: 12.5px; font-variant-numeric: tabular-nums;">${l.coverage.toFixed(1)}%</span>
+            </div>
+          </td>
+          <td>${l.status === 'active' ? '<span class="tag tag-success">Active</span>' : '<span class="tag tag-muted">Disabled</span>'}</td>
+          <td>
+            <div class="row-actions" style="justify-content: flex-end;">
+              <button class="btn-row" onclick="navigate('translations'); document.getElementById('lang-picker').value='${l.code}'; renderTranslationsTable();">View</button>
+              ${l.status === 'active'
+                ? `<button class="btn-row" onclick="openModal('disable-language', ${JSON.stringify(l).replace(/"/g, '&quot;')})">Disable</button>`
+                : `<button class="btn-row" onclick="showToast('${l.name} re-enabled.', 'success')">Re-enable</button>`}
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }, 240);
+}
+
+function renderUnusedKeysTable() {
+  const tbody = document.getElementById('unused-keys-tbody');
+  showSkeleton(tbody, 5, 5);
+  setTimeout(() => {
+    tbody.innerHTML = UNUSED_KEYS.map(u => `
+      <tr>
+        <td><strong>${u.key}</strong></td>
+        <td style="color: var(--text-muted);">${u.en}</td>
+        <td style="font-size: 12.5px; color: var(--text-muted);">${u.lastSeen}</td>
+        <td style="font-size: 12.5px; color: var(--text-muted);">${u.lastEdited}</td>
+        <td>
+          <div class="row-actions" style="justify-content: flex-end;">
+            <button class="btn-row" onclick="openModal('key-detail', { key: '${u.key}' })">View translations</button>
+            <button class="btn-row" onclick="openModal('archive-key', { key: '${u.key}' })">Archive</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }, 240);
+}
+
+function renderCleanupTable() {
+  const tbody = document.getElementById('cleanup-tbody');
+  showSkeleton(tbody, 4, 5);
+  setTimeout(() => {
+    if (CLEANUP.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">✓</div><div class="empty-state-title">All clean</div><div>No duplicate keys reported by PMs recently.</div></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = CLEANUP.map(c => `
+      <tr>
+        <td><strong>${c.codeKey}</strong></td>
+        <td style="color: var(--success);">→ ${c.shouldUse}</td>
+        <td>${c.files} file${c.files === 1 ? '' : 's'}</td>
+        <td>${c.by}</td>
+        <td style="font-size: 12.5px; color: var(--text-muted);">${c.at}</td>
+      </tr>
+    `).join('');
+  }, 230);
+}
+
+function renderHistoryTable() {
+  const tbody = document.getElementById('history-tbody');
+  showSkeleton(tbody, 6, 5);
+  setTimeout(() => {
+    tbody.innerHTML = HISTORY.map(h => `
+      <tr>
+        <td style="font-size: 12.5px; color: var(--text-muted);">${h.when}</td>
+        <td>${h.who}</td>
+        <td><strong style="font-size: 13px;">${h.key}</strong></td>
+        <td><span class="kbd">${h.lang}</span></td>
+        <td>
+          <div class="history-diff">
+            ${h.oldVal ? `<span class="diff-old">${h.oldVal}</span>` : '<span style="color: var(--text-soft); font-style: italic;">(empty)</span>'}
+            <span class="diff-arrow">→</span>
+            <span class="diff-new">${h.newVal}</span>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }, 240);
+}
+
+function renderDashboard() {
+  const cov = document.getElementById('coverage-list');
+  const top = LANGUAGES.slice(0, 9);
+  cov.innerHTML = top.map(l => {
+    const color = l.coverage > 95 ? 'var(--success)' : l.coverage > 85 ? 'var(--warning)' : 'var(--danger)';
+    return `
+      <div class="coverage-row">
+        <div class="lang">${l.name}</div>
+        <div class="progress"><div class="progress-fill" style="width: ${l.coverage}%; background: ${color};"></div></div>
+        <div class="pct">${l.coverage.toFixed(1)}%</div>
+      </div>
+    `;
+  }).join('');
+
+  const act = document.getElementById('activity-list');
+  const recent = HISTORY.slice(0, 6);
+  act.innerHTML = recent.map(h => {
+    const initials = h.who.split(' ').map(w => w[0]).join('').slice(0, 2);
+    return `
+      <div class="activity-item">
+        <div class="activity-avatar">${initials}</div>
+        <div style="flex: 1;">
+          <div class="activity-text"><strong>${h.who}</strong> updated <strong>${h.key}</strong>${h.lang !== '—' ? ` in <span class="kbd">${h.lang}</span>` : ''}</div>
+          <div class="activity-meta">${h.when}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ============ INIT ============ */
+function init() {
+  // populate language picker
+  const picker = document.getElementById('lang-picker');
+  LANGUAGES.filter(l => l.status === 'active').forEach(l => {
+    const opt = document.createElement('option');
+    opt.value = l.code;
+    opt.textContent = `${l.name} (${l.code})`;
+    if (l.code === 'es_SP') opt.selected = true;
+    picker.appendChild(opt);
+  });
+
+  // export scope handler
+  document.getElementById('export-scope').addEventListener('change', e => {
+    document.getElementById('export-lang-field').style.display = e.target.value === 'single-lang' ? 'block' : 'none';
+  });
+
+  // mt provider — show key field once provider chosen
+  document.getElementById('mt-provider').addEventListener('change', e => {
+    document.getElementById('mt-key-field').style.display = e.target.value ? 'block' : 'none';
+  });
+
+  // initial dashboard
+  renderDashboard();
+}
+init();
+</script>
+
+</body>
+</html>
