@@ -27,6 +27,10 @@
     --c-ai:     #059669; --bg-ai:     #ecfdf5; --br-ai:     #a7f3d0;
     --c-notify: #ea580c; --bg-notify: #fff7ed; --br-notify: #fed7aa;
     --c-ui:     #0891b2; --bg-ui:     #ecfeff; --br-ui:     #a5f3fc;
+    --c-shoppers:#be185d; --bg-shoppers:#fdf2f8; --br-shoppers:#fbcfe8;
+    --c-gatekeeper:#475569; --bg-gatekeeper:#f1f5f9; --br-gatekeeper:#cbd5e1;
+    --c-localization:#0d9488; --bg-localization:#f0fdfa; --br-localization:#99f6e4;
+    --c-admin:  #374151; --bg-admin:  #f3f4f6; --br-admin:  #d1d5db;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -82,7 +86,6 @@
     background: rgba(255,255,255,0.04); pointer-events: none;
   }
   .hero-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-  .hero-left {}
   .hero-label {
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
@@ -150,6 +153,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
+    align-items: start;
   }
 
   /* ── Card ── */
@@ -160,18 +164,22 @@
     text-decoration: none; color: inherit;
     display: flex; flex-direction: column; gap: 12px;
     animation: fadeUp .35s ease both;
+    position: relative;
   }
-  .card:hover {
+  .card:hover, .card:focus-within {
     transform: translateY(-3px); border-color: #93c5fd;
     box-shadow: 0 8px 32px rgba(37,99,235,.10), 0 2px 8px rgba(0,0,0,.06);
+    z-index: 10;
   }
-  .card:hover .card-arrow { opacity: 1; color: var(--accent); transform: translate(2px,-2px); }
+  .card:hover .card-arrow,
+  .card:focus-within .card-arrow { opacity: 1; color: var(--accent); transform: translate(2px,-2px); }
+  .card:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 
   @keyframes fadeUp {
     from { opacity:0; transform: translateY(12px); }
     to   { opacity:1; transform: translateY(0); }
   }
-  /* stagger first 29 cards */
+  /* stagger first 40 cards */
   .card:nth-child(1)  { animation-delay:.02s } .card:nth-child(2)  { animation-delay:.04s }
   .card:nth-child(3)  { animation-delay:.06s } .card:nth-child(4)  { animation-delay:.08s }
   .card:nth-child(5)  { animation-delay:.10s } .card:nth-child(6)  { animation-delay:.12s }
@@ -186,7 +194,12 @@
   .card:nth-child(23) { animation-delay:.46s } .card:nth-child(24) { animation-delay:.48s }
   .card:nth-child(25) { animation-delay:.50s } .card:nth-child(26) { animation-delay:.52s }
   .card:nth-child(27) { animation-delay:.54s } .card:nth-child(28) { animation-delay:.56s }
-  .card:nth-child(29) { animation-delay:.58s }
+  .card:nth-child(29) { animation-delay:.58s } .card:nth-child(30) { animation-delay:.60s }
+  .card:nth-child(31) { animation-delay:.62s } .card:nth-child(32) { animation-delay:.64s }
+  .card:nth-child(33) { animation-delay:.66s } .card:nth-child(34) { animation-delay:.68s }
+  .card:nth-child(35) { animation-delay:.70s } .card:nth-child(36) { animation-delay:.72s }
+  .card:nth-child(37) { animation-delay:.74s } .card:nth-child(38) { animation-delay:.76s }
+  .card:nth-child(39) { animation-delay:.78s } .card:nth-child(40) { animation-delay:.80s }
 
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .card-icon {
@@ -194,13 +207,33 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 19px; flex-shrink: 0;
   }
+  .card-actions { display: flex; gap: 8px; align-items: center; }
+  .card-copy {
+    background: none; border: none; cursor: pointer;
+    font-size: 16px; line-height: 1; padding: 4px;
+    border-radius: 4px; color: var(--faint);
+  }
+  .card-copy:hover { background: rgba(0,0,0,.06); color: var(--accent); }
+  .card-copy:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
   .card-arrow {
     opacity: 0; font-size: 17px;
     transition: opacity .18s, color .18s, transform .18s;
     color: var(--faint); margin-top: 2px;
   }
   .card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 5px; }
-  .card-desc  { font-size: 12.5px; color: var(--muted); line-height: 1.65; }
+  .card-desc  {
+    font-size: 12.5px; color: var(--muted); line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: max-height .2s ease;
+  }
+  .card:hover .card-desc,
+  .card:focus-within .card-desc {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
   .card-footer {
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
     padding-top: 10px; border-top: 1px solid var(--border); margin-top: auto;
@@ -217,11 +250,15 @@
   .tag-ai      { color:var(--c-ai);      background:var(--bg-ai);      border-color:var(--br-ai); }
   .tag-notify  { color:var(--c-notify);  background:var(--bg-notify);  border-color:var(--br-notify); }
   .tag-ui      { color:var(--c-ui);      background:var(--bg-ui);      border-color:var(--br-ui); }
+  .tag-shoppers{ color:var(--c-shoppers); background:var(--bg-shoppers); border-color:var(--br-shoppers); }
+  .tag-gatekeeper { color:var(--c-gatekeeper); background:var(--bg-gatekeeper); border-color:var(--br-gatekeeper); }
+  .tag-localization { color:var(--c-localization); background:var(--bg-localization); border-color:var(--br-localization); }
+  .tag-admin   { color:var(--c-admin);   background:var(--bg-admin);   border-color:var(--br-admin); }
 
   .icon-billing{background:var(--bg-billing)} .icon-fraud{background:var(--bg-fraud)}
   .icon-ops{background:var(--bg-ops)}         .icon-api{background:var(--bg-api)}
   .icon-ai{background:var(--bg-ai)}           .icon-notify{background:var(--bg-notify)}
-  .icon-ui{background:var(--bg-ui)}
+  .icon-ui{background:var(--bg-ui)}           .icon-shoppers{background:var(--bg-shoppers)}
 
   /* ── Section divider ── */
   .section-divider {
@@ -242,7 +279,7 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 10px; text-align: center; min-height: 160px;
-    animation: fadeUp .35s ease both; animation-delay:.60s;
+    animation: fadeUp .35s ease both; animation-delay:.82s;
   }
   .card-add-icon {
     width: 38px; height: 38px; border-radius: 9px;
@@ -263,6 +300,15 @@
   .empty h3 { font-size:18px; font-weight:700; margin-bottom:6px; color:var(--sub); }
   .empty p  { font-size:13px; }
 
+  /* ── Toast ── */
+  #toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); background: #111; color: #fff;
+    padding: 8px 14px; border-radius: 6px; font-size: 13px;
+    z-index: 9999; opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+
   /* ── Footer ── */
   footer {
     background: var(--surface); border-top: 1px solid var(--border);
@@ -278,35 +324,6 @@
     .count-badge { display:none; }
     .hero-stats { display:none; }
   }
-
-.card-actions{display:flex;gap:8px;align-items:center}
-.card-copy{background:none;border:none;cursor:pointer;font-size:16px;line-height:1;padding:4px;border-radius:4px;color:inherit}
-.card-copy:hover{background:rgba(0,0,0,.06)}
-.card-copy:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:stretch}
-.card{display:flex;flex-direction:column}
-
-.cards{align-items:start}
-.card{transition:transform .15s ease, box-shadow .15s ease; position:relative}
-.card-desc{
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  transition:max-height .2s ease;
-}
-.card:hover,.card:focus-within{
-  z-index:10;
-  transform:translateY(-2px);
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
-}
-.card:hover .card-desc,.card:focus-within .card-desc{
-  -webkit-line-clamp:unset;
-  overflow:visible;
-}
-.card:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
-
-
 </style>
 </head>
 <body>
@@ -318,7 +335,7 @@
     Checker
   </div>
   <div class="topbar-right">
-    <span class="topbar-pill">Mockup Hub &nbsp;·&nbsp; <span id="totalCount">29</span> pages</span>
+    <span class="topbar-pill">Mockup Hub &nbsp;·&nbsp; <span id="totalCount">40</span> pages</span>
   </div>
 </div>
 
@@ -331,9 +348,9 @@
       <p>All Checker platform mockup pages in one place. Browse by category, search by name, and open any page in a new tab instantly.</p>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num" id="statTotal">34</div><div class="hero-stat-label">Total Mockups</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">7</div><div class="hero-stat-label">Categories</div></div>
-      <div class="hero-stat"><div class="hero-stat-num" id="statVisible">34</div><div class="hero-stat-label">Showing</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="statTotal">40</div><div class="hero-stat-label">Total Mockups</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="statCategories">7</div><div class="hero-stat-label">Categories</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="statVisible">40</div><div class="hero-stat-label">Showing</div></div>
     </div>
   </div>
 </div>
@@ -351,11 +368,12 @@
     <button class="filter-btn" onclick="setFilter('billing',this)">💳 Billing</button>
     <button class="filter-btn" onclick="setFilter('fraud',this)">🛡 Fraud &amp; QA</button>
     <button class="filter-btn" onclick="setFilter('ops',this)">⚙️ Operations</button>
+    <button class="filter-btn" onclick="setFilter('shoppers',this)">👤 Shoppers</button>
     <button class="filter-btn" onclick="setFilter('api',this)">🔑 API &amp; Settings</button>
     <button class="filter-btn" onclick="setFilter('notify',this)">🔔 Notifications</button>
     <button class="filter-btn" onclick="setFilter('ui',this)">🎨 UI / UX</button>
   </div>
-  <div class="count-badge">Showing <strong id="visibleCount">29</strong> mockups</div>
+  <div class="count-badge">Showing <strong id="visibleCount">40</strong> mockups</div>
 </div>
 
 <!-- Grid -->
@@ -365,7 +383,7 @@
   <!-- ───── AI ───── -->
   <div class="section-divider"><span class="section-divider-label">🤖 AI Features</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-dynamic-prompt.html" target="_blank" data-tags="ai ops" data-name="dynamic QA prompt generator AI JSON grammar spelling coherence">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-dynamic-prompt.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="dynamic QA prompt generator AI JSON grammar spelling coherence">
     <div class="card-top"><div class="card-icon icon-ai">⚙️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -374,7 +392,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-poweredqa-adminpanel.html" target="_blank" data-tags="ai ops" data-name="AI QA admin panel confidence threshold auto-apply grammar spelling coherence">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-poweredqa-adminpanel.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI QA admin panel confidence threshold auto-apply grammar spelling coherence">
     <div class="card-top"><div class="card-icon icon-ai">🎛️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -383,7 +401,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-editreview.html" target="_blank" data-tags="ai fraud ops" data-name="AI QA edit review coherence grammar spelling location anomaly checker">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-editreview.html" target="_blank" rel="noopener" data-tags="ai fraud ops" data-name="AI QA edit review coherence grammar spelling location anomaly checker">
     <div class="card-top"><div class="card-icon icon-ai">✏️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -392,7 +410,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-fraud">Fraud &amp; QA</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-insight.html" target="_blank" data-tags="ai ops" data-name="AI QA insights reviews acceptance rate auto-resolved filter">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-insight.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI QA insights reviews acceptance rate auto-resolved filter">
     <div class="card-top"><div class="card-icon icon-ai">📈</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -401,7 +419,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-supportagent.html" target="_blank" data-tags="ai ops notify" data-name="AI support agent tickets instant chat deflection">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-supportagent.html" target="_blank" rel="noopener" data-tags="ai ops notify" data-name="AI support agent tickets instant chat deflection">
     <div class="card-top"><div class="card-icon icon-ai">💬</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -410,7 +428,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence mapping">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence mapping">
     <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -419,7 +437,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv1.html" target="_blank" data-tags="ai ops" data-name="AI answer recoding v1 survey">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv1.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI answer recoding v1 survey">
     <div class="card-top"><div class="card-icon icon-ai">🔄</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -428,7 +446,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/supportanalytics" target="_blank" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/supportanalytics" target="_blank" rel="noopener" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
     <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -437,7 +455,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq-agent-response-audit-apr2026.html" target="_blank" data-tags="ai qa audit kb" data-name="faq agent response audit kb coverage">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq-agent-response-audit-apr2026.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="faq agent response audit kb coverage">
     <div class="card-top"><div class="card-icon icon-ai">🧪</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -446,7 +464,7 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">QA</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq_manager.html" target="_blank" data-tags="faq manager" data-name="FAQ Manager Documentation Guide">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq_manager.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="FAQ Manager Documentation Guide">
     <div class="card-top"><div class="card-icon icon-ai">📖</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -455,8 +473,8 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Documentation</span></div>
   </a>
 
-   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-queue-monitor-mockup.html" target="_blank" data-tags="ui" data-name="AI Queue Monitor">
-    <div class="card-top"><div class="card-icon icon-ui">🤖</div><div class="card-actions">
+   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-queue-monitor-mockup.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI Queue Monitor">
+    <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
@@ -464,19 +482,19 @@
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai_agent_chip_drilldown_mockup.html" target="_blank" data-tags="ui" data-name="AI Agent Chip Drilldown">
-    <div class="card-top"><div class="card-icon icon-ui">🧩</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai_agent_chip_drilldown_mockup.html" target="_blank" rel="noopener" data-tags="ai ui" data-name="AI Agent Chip Drilldown">
+    <div class="card-top"><div class="card-icon icon-ai">🧩</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
-    <div><div class="card-title">AI Agent Chip Drilldown</div><div class="card-desc">Interactive three-level drill-down chip navigation mockup for the AI Support Agent chat widget. Enables users to explore topics, sub‑categories, and specific questions through an intuitive chip‑based interface. Includes a full navigation demo with pre‑defined topics like Surveys (3 questions), AI Features (2 questions), Reviews & Access (2 questions), and Quick Guides (3 questions).</div></div>
+    <div><div class="card-title">AI Agent Chip Drilldown</div><div class="card-desc">Interactive three-level drill-down chip navigation mockup for the AI Support Agent chat widget. Enables users to explore topics, sub‑categories, and specific questions through an intuitive chip‑based interface. Includes a full navigation demo with pre‑defined topics like Surveys (3 questions), AI Features (2 questions), Reviews &amp; Access (2 questions), and Quick Guides (3 questions).</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI/UX</span><span class="tag tag-ai">AI</span></div>
   </a>
 
   <!-- ───── Billing ───── -->
   <div class="section-divider"><span class="section-divider-label">💳 Billing</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" data-tags="billing notify" data-name="billing reminder schedule invoice business days">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" rel="noopener" data-tags="billing notify" data-name="billing reminder schedule invoice business days">
     <div class="card-top"><div class="card-icon icon-billing">🗓️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -485,7 +503,7 @@
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" data-tags="billing notify" data-name="billing reminders v2 invoice">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" rel="noopener" data-tags="billing notify" data-name="billing reminders v2 invoice">
     <div class="card-top"><div class="card-icon icon-billing">📆</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -494,7 +512,7 @@
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/specialservice" target="_blank" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/specialservice" target="_blank" rel="noopener" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
     <div class="card-top"><div class="card-icon icon-billing">📜</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -503,7 +521,7 @@
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apiplatformemail" target="_blank" data-tags="api billing notify gatekeeper" data-name="api key management tiered pricing usage control gatekeeper middleware billing postpaid quota rate limit notifications self service top-up upgrade downgrade">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apiplatformemail" target="_blank" rel="noopener" data-tags="api billing notify" data-name="api key management tiered pricing usage control gatekeeper middleware billing postpaid quota rate limit notifications self service top-up upgrade downgrade">
   <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -512,7 +530,7 @@
   <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span><span class="tag tag-gatekeeper">Gatekeeper</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/services-removal.html" target="_blank" data-tags="billing notify" data-name="service removal confirmation billing invoice monthly postpaid">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/services-removal.html" target="_blank" rel="noopener" data-tags="billing notify" data-name="service removal confirmation billing invoice monthly postpaid">
     <div class="card-top"><div class="card-icon icon-billing">🗑️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -524,7 +542,7 @@
   <!-- ───── Fraud & QA ───── -->
   <div class="section-divider"><span class="section-divider-label">🛡 Fraud &amp; QA</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" data-tags="fraud ops" data-name="image comparison viewer similarity shopper receipt">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" rel="noopener" data-tags="fraud ops" data-name="image comparison viewer similarity shopper receipt">
     <div class="card-top"><div class="card-icon icon-fraud">🔍</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -533,7 +551,7 @@
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" data-tags="fraud ops" data-name="image integrity dashboard duplicate reuse suspicious">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" rel="noopener" data-tags="fraud ops" data-name="image integrity dashboard duplicate reuse suspicious">
     <div class="card-top"><div class="card-icon icon-fraud">🖼️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -542,7 +560,7 @@
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" rel="noopener" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
     <div class="card-top"><div class="card-icon icon-fraud">🛡️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -551,7 +569,7 @@
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/returnreview" target="_blank" data-tags="notify ops" data-name="return review QA shopper notification email correction">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/returnreview" target="_blank" rel="noopener" data-tags="fraud notify ops" data-name="return review QA shopper notification email correction">
     <div class="card-top"><div class="card-icon icon-notify">↩️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -563,7 +581,7 @@
   <!-- ───── Operations ───── -->
   <div class="section-divider"><span class="section-divider-label">⚙️ Operations</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" data-tags="ops" data-name="mobile audit logs submission CAPI media partial">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" rel="noopener" data-tags="ops" data-name="mobile audit logs submission CAPI media partial">
     <div class="card-top"><div class="card-icon icon-ops">📱</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -572,7 +590,7 @@
     <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/oops" target="_blank" data-tags="ops" data-name="branch visit report scores mystery shopping">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/oops" target="_blank" rel="noopener" data-tags="ops" data-name="branch visit report scores mystery shopping">
     <div class="card-top"><div class="card-icon icon-ops">📋</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -581,7 +599,7 @@
     <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/export-collateral.html" target="_blank" data-tags="ops api" data-name="export collateral automated PDF SFTP profile schedule">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/export-collateral.html" target="_blank" rel="noopener" data-tags="ops api" data-name="export collateral automated PDF SFTP profile schedule">
     <div class="card-top"><div class="card-icon icon-ops">📤</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -590,7 +608,7 @@
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-api">API</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/checkerpartner" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/checkerpartner" target="_blank" rel="noopener" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
     <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -599,7 +617,7 @@
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/checker-partner.html" target="_blank" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/checker-partner.html" target="_blank" rel="noopener" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
     <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -608,7 +626,7 @@
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" data-tags="ui ops" data-name="main menu dashboard checker home overview assignments">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" rel="noopener" data-tags="ui ops" data-name="main menu dashboard checker home overview assignments">
     <div class="card-top"><div class="card-icon icon-ui">🏠</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -617,49 +635,49 @@
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/translation-admin-mockup.html" target="_blank" data-tags="localization" data-name="Translation Admin Dashboard">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/translation-admin-mockup.html" target="_blank" rel="noopener" data-tags="ops ui" data-name="Translation Admin Dashboard localization">
     <div class="card-top"><div class="card-icon icon-ui">🌐</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
     <div><div class="card-title">Translation Admin Dashboard</div><div class="card-desc">Centralized translation management for the AI support agent and interface. Overview of 55 active languages and 8,142 translation keys, with support for inline editing, code scanner integration, key triage, import/export (XLS), audit logging, and machine translation provider configuration. Helps maintain localization coverage and streamline translation workflows.</div></div>
     <div class="card-footer"><span class="tag tag-localization">Localization</span><span class="tag tag-admin">Admin</span></div>
-</a>
+  </a>
 
   <!-- ───── Shoppers ───── -->
   <div class="section-divider"><span class="section-divider-label">👤 Shoppers</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-adminpanel.html" target="_blank" data-tags="ops ui" data-name="interested shoppers admin panel management leads invite registration">
-    <div class="card-top"><div class="card-icon icon-ops">👥</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-adminpanel.html" target="_blank" rel="noopener" data-tags="shoppers ops ui" data-name="interested shoppers admin panel management leads invite registration">
+    <div class="card-top"><div class="card-icon icon-shoppers">👥</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
     <div><div class="card-title">Interested Shoppers — Admin Panel</div><div class="card-desc">Admin panel for managing pre-registered shopper leads. Filter by status (Interested, Invited, Registered, Expired, Declined), track invitation counts, record admin notes, and manage the conversion pipeline.</div></div>
-    <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
+    <div class="card-footer"><span class="tag tag-shoppers">Shoppers</span><span class="tag tag-ops">Operations</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-form.html" target="_blank" data-tags="ui" data-name="interested shopper form express interest become shopper public">
-    <div class="card-top"><div class="card-icon icon-ui">🙋</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-form.html" target="_blank" rel="noopener" data-tags="shoppers ui" data-name="interested shopper form express interest become shopper public">
+    <div class="card-top"><div class="card-icon icon-shoppers">🙋</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
     <div><div class="card-title">Interested Shopper — Public Form</div><div class="card-desc">Public-facing landing form for prospective mystery shoppers. Captures name, email, and phone number with a simple "Express My Interest" CTA and links to social profiles.</div></div>
-    <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
+    <div class="card-footer"><span class="tag tag-shoppers">Shoppers</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/registration%20form" target="_blank" data-tags="ui ops" data-name="registration form shopper onboarding multi-step">
-    <div class="card-top"><div class="card-icon icon-ui">📝</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/registration%20form" target="_blank" rel="noopener" data-tags="shoppers ui ops" data-name="registration form shopper onboarding multi-step">
+    <div class="card-top"><div class="card-icon icon-shoppers">📝</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
     <div><div class="card-title">Shopper Registration Form</div><div class="card-desc">Full multi-step registration form for onboarding new mystery shoppers. Covers basic info, address, contact details, experience level, and account settings with field validation.</div></div>
-    <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
+    <div class="card-footer"><span class="tag tag-shoppers">Shoppers</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
   <!-- ───── API & Settings ───── -->
   <div class="section-divider"><span class="section-divider-label">🔑 API &amp; Settings</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" data-tags="api" data-name="API key management generate revoke expiry secrets">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" rel="noopener" data-tags="api" data-name="API key management generate revoke expiry secrets">
     <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -668,7 +686,7 @@
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeyemails" target="_blank" data-tags="api" data-name="API key email configuration sender reply-to">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeyemails" target="_blank" rel="noopener" data-tags="api notify" data-name="API key email configuration sender reply-to">
     <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -677,7 +695,7 @@
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility authentication">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" rel="noopener" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility authentication">
     <div class="card-top"><div class="card-icon icon-api">💬</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -686,19 +704,19 @@
     <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-notify">Notifications</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeys-migration-script-logs" target="_blank" data-tags="api" data-name="API keys migration script logs">
-    <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeys-migration-script-logs" target="_blank" rel="noopener" data-tags="api" data-name="API keys migration script logs">
+    <div class="card-top"><div class="card-icon icon-api">🛠️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
-    <div><div class="card-title">API Key Migration log</div><div class="card-desc">To run API keys migration script and show migration logs.</div></div>
+    <div><div class="card-title">API Key Migration Log</div><div class="card-desc">To run API keys migration script and show migration logs.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
 
   <!-- ───── UI / UX ───── -->
   <div class="section-divider"><span class="section-divider-label">🎨 UI / UX Components</span><div class="section-divider-line"></div></div>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/alert.html" target="_blank" data-tags="notify ui" data-name="alert notification component banner dismiss">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/alert.html" target="_blank" rel="noopener" data-tags="notify ui" data-name="alert notification component banner dismiss">
     <div class="card-top"><div class="card-icon icon-notify">🔔</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -707,7 +725,7 @@
     <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/toggledemo.html" target="_blank" data-tags="ui" data-name="toggle demo accordion slide show hide component">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/toggledemo.html" target="_blank" rel="noopener" data-tags="ui" data-name="toggle demo accordion slide show hide component">
     <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -716,8 +734,8 @@
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/sftp.html" target="_blank" data-tags="ui" data-name="SFTP Key-Based Authentication">
-    <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/sftp.html" target="_blank" rel="noopener" data-tags="ui" data-name="SFTP Key-Based Authentication">
+    <div class="card-top"><div class="card-icon icon-ui">🔐</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
@@ -725,7 +743,7 @@
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/question-settings-for-reports.html" target="_blank" data-tags="ui" data-name="Question Settings for Reports">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/question-settings-for-reports.html" target="_blank" rel="noopener" data-tags="ui" data-name="Question Settings for Reports">
     <div class="card-top"><div class="card-icon icon-ui">📊</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
@@ -734,15 +752,15 @@
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
 
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/special_service_notifications.html" target="_blank" data-tags="ui" data-name="Special Service Order Notifications">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/special_service_notifications.html" target="_blank" rel="noopener" data-tags="ui billing notify" data-name="Special Service Order Notifications">
     <div class="card-top"><div class="card-icon icon-ui">📧</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
     </div></div>
     <div><div class="card-title">Special Service Order Notifications</div><div class="card-desc">Universal HTML email templates for the full special service workflow. Works across all email providers (Gmail, Outlook, Yahoo, Apple Mail) and support ticket threads. Covers four scenarios: agreement request to client, client confirmation to Checker team, billing confirmation after approval, and cancellation notice.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-billing">Billing</span></div>
-  </a>  
-  
+  </a>
+
   <!-- ── Add new placeholder ── -->
   <div class="card-add">
     <div class="card-add-icon">＋</div>
@@ -759,14 +777,31 @@
 </div>
 </div>
 
+<!-- Toast -->
+<div id="toast" role="status" aria-live="polite"></div>
+
 <!-- Footer -->
 <footer>
-  Checker Mockup Hub &nbsp;·&nbsp; <a href="https://techandlearn.in" target="_blank">techandlearn.in</a> &nbsp;·&nbsp; 29 mockups across 7 categories
+  Checker Mockup Hub &nbsp;·&nbsp; <a href="https://techandlearn.in" target="_blank" rel="noopener">techandlearn.in</a> &nbsp;·&nbsp; <span id="footerCount">40</span> mockups across <span id="footerCategories">7</span> categories
 </footer>
 
 <script>
   let activeFilter = 'all';
 
+  // --- Helpers ---
+  function getCards(){ return Array.from(document.querySelectorAll('#cardGrid > .card')); }
+
+  // --- Toast ---
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    if(!t) return;
+    t.textContent = msg;
+    t.style.opacity = 1;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = 0; }, 2000);
+  }
+
+  // --- Filter button click ---
   function setFilter(tag, btn) {
     activeFilter = tag;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -774,9 +809,10 @@
     filterCards();
   }
 
+  // --- Search + filter ---
   function filterCards() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
-    const cards = document.querySelectorAll('.card[data-tags]');
+    const cards = getCards();
     const dividers = document.querySelectorAll('.section-divider');
     let visible = 0;
 
@@ -785,7 +821,7 @@
       const tags  = (card.dataset.tags  || '').toLowerCase();
       const title = (card.querySelector('.card-title')?.textContent || '').toLowerCase();
       const desc  = (card.querySelector('.card-desc')?.textContent  || '').toLowerCase();
-      const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
+      const matchesFilter = activeFilter === 'all' || tags.split(/\s+/).includes(activeFilter);
       const matchesSearch = !query || name.includes(query) || title.includes(query) || desc.includes(query) || tags.includes(query);
       if (matchesFilter && matchesSearch) { card.style.display = ''; visible++; }
       else card.style.display = 'none';
@@ -808,99 +844,74 @@
     document.getElementById('statVisible').textContent  = visible;
     document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
   }
-</script>
 
-<script>
-// --- Utility: toast ---
-function showToast(msg){
-  let t=document.getElementById('toast'); 
-  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:6px;font-size:14px;z-index:9999;opacity:0;transition:opacity .2s';document.body.appendChild(t);}
-  t.textContent=msg;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,2000);
-}
+  // --- Update totals based on actual DOM ---
+  function updateTotalCounts(){
+    const cards = getCards();
+    const total = cards.length;
+    const dividers = document.querySelectorAll('.section-divider').length;
 
-// --- Core: re-query cards and update count ---
+    const totalEl   = document.getElementById('totalCount');
+    const statTotal = document.getElementById('statTotal');
+    const visEl     = document.getElementById('visibleCount');
+    const statVis   = document.getElementById('statVisible');
+    const catEl     = document.getElementById('statCategories');
+    const fCount    = document.getElementById('footerCount');
+    const fCats     = document.getElementById('footerCategories');
 
-
-// --- Copy URL handler ---
-document.addEventListener('click',function(e){
-  const btn=e.target.closest('.card-copy');
-  if(!btn) return;
-  e.preventDefault();e.stopPropagation();
-  const card=btn.closest('.card');
-  const url=card.href;
-  navigator.clipboard.writeText(url).then(()=>showToast('Link copied'));
-});
-
-// --- Keyboard: Shift+C to copy focused card ---
-document.addEventListener('keydown',function(e){
-  if(e.shiftKey && e.key.toLowerCase()==='c'){
-    const card=document.activeElement.closest('.card');
-    if(card){card.querySelector('.card-copy')?.click();}
+    if(totalEl)   totalEl.textContent   = total;
+    if(statTotal) statTotal.textContent = total;
+    if(visEl)     visEl.textContent     = total;
+    if(statVis)   statVis.textContent   = total;
+    if(catEl)     catEl.textContent     = dividers;
+    if(fCount)    fCount.textContent    = total;
+    if(fCats)     fCats.textContent     = dividers;
   }
-});
 
-// --- Hook: call reindex on DOM mutations for future dynamic adds ---
-const grid=document.querySelector('.cards');
-if(grid){
-  grid.setAttribute('role','list');
-  new MutationObserver(reindexAll).observe(grid,{childList:true});
-  getCards().forEach(c=>c.setAttribute('role','listitem'));
-}
-
-// --- Initial run ---
-document.addEventListener('DOMContentLoaded',reindexAll);
-</script>
-
-<script>
-// --- Core: get only actual cards ---
-function getCards(){ return Array.from(document.querySelectorAll('.cards > .card')); }
-
-// --- Core: update counts ---
-function updateTotalCount(){ 
-  const el=document.getElementById('totalCount'); 
-  if(el) el.textContent=getCards().length; 
-}
-
-function updateShowingCount(){
-  const visible = getCards().filter(c => {
-    const style = window.getComputedStyle(c);
-    return style.display !== 'none' && c.offsetParent !== null;
+  // --- Copy URL handler ---
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.card-copy');
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const card = btn.closest('.card');
+    if(!card) return;
+    const url = card.href;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url)
+        .then(() => showToast('Link copied'))
+        .catch(() => showToast('Could not copy link'));
+    } else {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast('Link copied'); }
+      catch(_) { showToast('Could not copy link'); }
+      document.body.removeChild(ta);
+    }
   });
-  const el=document.getElementById('showingCount');
-  if(el) el.textContent = visible.length;
-}
 
-function updateCategoryCount(){
-  const tags = new Set();
-  getCards().forEach(c => {
-    const t = c.dataset.tags;
-    if(t) t.split(/\s+/).forEach(tag => tag && tags.add(tag));
+  // --- Keyboard: Shift+C to copy focused card ---
+  document.addEventListener('keydown', function(e){
+    if(e.shiftKey && e.key.toLowerCase() === 'c'){
+      const card = document.activeElement?.closest?.('.card');
+      if(card){
+        const copyBtn = card.querySelector('.card-copy');
+        if(copyBtn) copyBtn.click();
+      }
+    }
   });
-  const el=document.getElementById('categoryCount');
-  if(el) el.textContent = tags.size;
-}
 
-// --- Unified reindex ---
-function reindexAll(){
-  updateTotalCount();
-  updateShowingCount();
-  updateCategoryCount();
-  if(window.buildSearchIndex) window.buildSearchIndex();
-  if(window.rebuildTagFilters) window.rebuildTagFilters();
-}
-
-// --- Hook search/filter inputs to update Showing ---
-document.addEventListener('input', function(e){
-  if(e.target.matches('#searchInput, .tag-filter')){
-    setTimeout(updateShowingCount, 0);
-  }
-});
-document.addEventListener('click', function(e){
-  if(e.target.matches('.tag-filter, #clearFilters')){
-    setTimeout(updateShowingCount, 0);
-  }
-});
-
+  // --- Initialize ---
+  document.addEventListener('DOMContentLoaded', function(){
+    updateTotalCounts();
+    getCards().forEach(c => c.setAttribute('role', 'listitem'));
+    const grid = document.getElementById('cardGrid');
+    if(grid) grid.setAttribute('role', 'list');
+  });
 </script>
+
 </body>
 </html>
