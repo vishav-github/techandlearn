@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Translation Module + CPN HUB — Flow Diagram</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --success: #059669;
+  --success-soft: #d1fae5;
+  --warning: #d97706;
+  --warning-soft: #fef3c7;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --info: #4f46e5;
+  --info-soft: #e0e7ff;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --text-soft: #9ca3af;
+  --surface: #ffffff;
+  --bg: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 32px 24px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.container { max-width: 1400px; margin: 0 auto; }
+
+/* HEADER */
+.doc-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.doc-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.doc-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.doc-meta {
+  display: flex;
+  gap: 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.doc-meta strong { color: var(--text); }
+
+/* LEGEND */
+.legend {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.legend-line { width: 24px; height: 2px; flex-shrink: 0; }
+
+/* PANEL */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-header.today {
+  background: linear-gradient(to right, #fef2f2, #fff);
+  border-bottom-color: #fecaca;
+}
+.panel-header.hub {
+  background: linear-gradient(to right, #ecfdf5, #fff);
+  border-bottom-color: #a7f3d0;
+}
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.panel-tag.today { background: var(--danger-soft); color: var(--danger); }
+.panel-tag.hub { background: var(--success-soft); color: var(--success); }
+.panel-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.panel-body { padding: 22px; }
+
+/* SVG container */
+.svg-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+svg { display: block; max-width: 100%; height: auto; }
+
+/* CALLOUTS */
+.callouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.callouts.three-col { grid-template-columns: 1fr 1fr 1fr; }
+.callout {
+  border-radius: 8px;
+  padding: 14px 16px;
+  border: 1px solid;
+}
+.callout.danger { background: var(--danger-soft); border-color: #fecaca; }
+.callout.warning { background: var(--warning-soft); border-color: #fde68a; }
+.callout.success { background: var(--success-soft); border-color: #a7f3d0; }
+.callout.info { background: var(--info-soft); border-color: #c7d2fe; }
+.callout.muted { background: #f3f4f6; border-color: var(--border-strong); }
+.callout-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.callout.danger .callout-title { color: var(--danger); }
+.callout.warning .callout-title { color: var(--warning); }
+.callout.success .callout-title { color: var(--success); }
+.callout.info .callout-title { color: var(--info); }
+.callout ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.callout li {
+  font-size: 12.5px;
+  color: var(--text);
+  padding: 3px 0 3px 14px;
+  position: relative;
+}
+.callout li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+/* TRANSITION ARROW between panels */
+.transition {
+  text-align: center;
+  margin: -8px 0 12px 0;
+  position: relative;
+}
+.transition-label {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+}
+
+/* Side-by-side comparison table */
+.compare-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-top: 24px;
+  overflow: hidden;
+}
+.compare-table-header {
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  background: #f9fafb;
+}
+.compare-table-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+.compare-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.compare-table th, .compare-table td {
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.compare-table th {
+  background: #f9fafb;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+.compare-table td:first-child {
+  font-weight: 500;
+  width: 26%;
+  background: #fafbfc;
+}
+.compare-table td.today-cell { background: #fef9f9; color: #7f1d1d; width: 37%; }
+.compare-table td.hub-cell { background: #f0fdf4; color: #14532d; width: 37%; }
+
+/* PRINT */
+@media print {
+  body { padding: 12px; background: white; }
+  .panel { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-title">Translation Module + CPN (Channel Partner Network)  HUB — Flow Diagram</div>
+    <div class="doc-subtitle">How translations move today vs. how they will move once the CPN HUB is available (Phase v1.5 — HUB read-only consumer).</div>
+    <div class="doc-meta">
+      <span><strong>Audience:</strong> Management &amp; server team</span>
+      <span><strong>Document:</strong> TM-HUB-FLOW v1.0</span>
+      <span><strong>Status:</strong> Draft for approval</span>
+      <span><strong>Date:</strong> May 2026</span>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch" style="background:#dbeafe;border:1px solid #93c5fd;"></span>Region (PHP server + DB + cache)</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#d1fae5;border:1px solid #6ee7b7;"></span>CPN HUB (new component)</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#fef3c7;border:1px solid #fde68a;"></span>Translation work (PM)</div>
+    <div class="legend-item"><span class="legend-line" style="background:#111827;"></span>Internal data flow</div>
+    <div class="legend-item"><span class="legend-line" style="background:#059669;"></span>HUB sync (new)</div>
+    <div class="legend-item"><span class="legend-line" style="background:#dc2626;border-top:2px dashed #dc2626;height:0;width:24px;"></span>Manual / rare</div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- PANEL 1: TODAY                                              -->
+  <!-- ========================================================== -->
+  <div class="panel">
+    <div class="panel-header today">
+      <div>
+        <div class="panel-title">
+          <span class="panel-tag today">Today</span>
+          Per-region isolated translation pipeline
+        </div>
+        <div class="panel-subtitle">Each region operates independently. Translations are uploaded via XLS to each region separately. No shared infrastructure.</div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <!-- TODAY SVG -->
+      <div class="svg-wrap">
+      <svg viewBox="0 0 1300 540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+        <!-- arrow head definitions -->
+        <defs>
+          <marker id="arrow-dark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#111827"/>
+          </marker>
+          <marker id="arrow-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+          </marker>
+        </defs>
+
+        <!-- PM Row at top -->
+        <g transform="translate(0, 20)">
+          <!-- Region 1 PM -->
+          <g transform="translate(120, 0)">
+            <rect x="0" y="0" width="220" height="50" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5"/>
+            <text x="110" y="20" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">PM (Region 1)</text>
+            <text x="110" y="37" text-anchor="middle" font-size="11" fill="#92400e">Maintains XLS for EU</text>
+          </g>
+          <!-- Region 2 PM -->
+          <g transform="translate(540, 0)">
+            <rect x="0" y="0" width="220" height="50" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5"/>
+            <text x="110" y="20" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">PM (Region 2)</text>
+            <text x="110" y="37" text-anchor="middle" font-size="11" fill="#92400e">Maintains XLS for US</text>
+          </g>
+          <!-- Region 3 PM -->
+          <g transform="translate(960, 0)">
+            <rect x="0" y="0" width="220" height="50" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5"/>
+            <text x="110" y="20" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">PM (Region 3)</text>
+            <text x="110" y="37" text-anchor="middle" font-size="11" fill="#92400e">Maintains XLS for Asia</text>
+          </g>
+        </g>
+
+        <!-- XLS upload arrows -->
+        <g stroke="#111827" stroke-width="2" fill="none" marker-end="url(#arrow-dark)">
+          <line x1="230" y1="75" x2="230" y2="115"/>
+          <line x1="650" y1="75" x2="650" y2="115"/>
+          <line x1="1070" y1="75" x2="1070" y2="115"/>
+        </g>
+        <g font-size="11" fill="#374151" text-anchor="middle">
+          <text x="265" y="100">upload XLS</text>
+          <text x="685" y="100">upload XLS</text>
+          <text x="1105" y="100">upload XLS</text>
+        </g>
+
+        <!-- Region boxes -->
+        <!-- Region 1 -->
+        <g transform="translate(70, 120)">
+          <rect x="0" y="0" width="320" height="370" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="160" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">REGION 1 — EU Frankfurt</text>
+          <text x="160" y="42" text-anchor="middle" font-size="11" fill="#3b82f6">~8,142 keys × 55 languages</text>
+
+          <!-- Legacy XLS importer -->
+          <rect x="40" y="60" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="82" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Legacy XLS importer</text>
+          <text x="160" y="98" text-anchor="middle" font-size="10" fill="#6b7280">m_update-lang-files.php</text>
+
+          <!-- arrow -->
+          <line x1="160" y1="113" x2="160" y2="143" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+
+          <!-- Regional DB -->
+          <rect x="40" y="148" width="240" height="60" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Regional DB</text>
+          <text x="160" y="188" text-anchor="middle" font-size="10" fill="#6b7280">translation_keys, translations,</text>
+          <text x="160" y="200" text-anchor="middle" font-size="10" fill="#6b7280">history (isolated)</text>
+
+          <!-- arrow -->
+          <line x1="160" y1="213" x2="160" y2="243" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+
+          <!-- .phpi cache -->
+          <rect x="40" y="248" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">.phpi cache files</text>
+          <text x="160" y="286" text-anchor="middle" font-size="10" fill="#6b7280">checker-files/l10n/</text>
+
+          <!-- arrow -->
+          <line x1="160" y1="301" x2="160" y2="328" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+
+          <!-- PHP servers -->
+          <rect x="40" y="333" width="240" height="28" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">PHP servers (multi-tenant)</text>
+        </g>
+
+        <!-- Region 2 -->
+        <g transform="translate(490, 120)">
+          <rect x="0" y="0" width="320" height="370" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="160" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">REGION 2 — US East</text>
+          <text x="160" y="42" text-anchor="middle" font-size="11" fill="#3b82f6">~8,142 keys × 55 languages</text>
+          <rect x="40" y="60" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="82" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Legacy XLS importer</text>
+          <text x="160" y="98" text-anchor="middle" font-size="10" fill="#6b7280">m_update-lang-files.php</text>
+          <line x1="160" y1="113" x2="160" y2="143" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+          <rect x="40" y="148" width="240" height="60" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Regional DB</text>
+          <text x="160" y="188" text-anchor="middle" font-size="10" fill="#6b7280">translation_keys, translations,</text>
+          <text x="160" y="200" text-anchor="middle" font-size="10" fill="#6b7280">history (isolated)</text>
+          <line x1="160" y1="213" x2="160" y2="243" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+          <rect x="40" y="248" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">.phpi cache files</text>
+          <text x="160" y="286" text-anchor="middle" font-size="10" fill="#6b7280">checker-files/l10n/</text>
+          <line x1="160" y1="301" x2="160" y2="328" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+          <rect x="40" y="333" width="240" height="28" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">PHP servers (multi-tenant)</text>
+        </g>
+
+        <!-- Region 3 -->
+        <g transform="translate(910, 120)">
+          <rect x="0" y="0" width="320" height="370" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="160" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">REGION 3 — Asia Pacific</text>
+          <text x="160" y="42" text-anchor="middle" font-size="11" fill="#3b82f6">~8,142 keys × 55 languages</text>
+          <rect x="40" y="60" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="82" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Legacy XLS importer</text>
+          <text x="160" y="98" text-anchor="middle" font-size="10" fill="#6b7280">m_update-lang-files.php</text>
+          <line x1="160" y1="113" x2="160" y2="143" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+          <rect x="40" y="148" width="240" height="60" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Regional DB</text>
+          <text x="160" y="188" text-anchor="middle" font-size="10" fill="#6b7280">translation_keys, translations,</text>
+          <text x="160" y="200" text-anchor="middle" font-size="10" fill="#6b7280">history (isolated)</text>
+          <line x1="160" y1="213" x2="160" y2="243" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+          <rect x="40" y="248" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">.phpi cache files</text>
+          <text x="160" y="286" text-anchor="middle" font-size="10" fill="#6b7280">checker-files/l10n/</text>
+          <line x1="160" y1="301" x2="160" y2="328" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark)"/>
+          <rect x="40" y="333" width="240" height="28" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">PHP servers (multi-tenant)</text>
+        </g>
+
+        <!-- Inter-region dashed lines (manual XLS sync) -->
+        <g stroke="#dc2626" stroke-width="1.5" stroke-dasharray="6,5" fill="none">
+          <path d="M 390 260 Q 440 220 490 260"/>
+          <path d="M 810 260 Q 860 220 910 260"/>
+        </g>
+        <text x="440" y="208" text-anchor="middle" font-size="10" font-style="italic" fill="#dc2626">manual XLS copy (drift)</text>
+        <text x="860" y="208" text-anchor="middle" font-size="10" font-style="italic" fill="#dc2626">manual XLS copy (drift)</text>
+
+        <!-- Bottom annotation -->
+        <g transform="translate(0, 505)">
+          <rect x="70" y="0" width="1160" height="30" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+          <text x="650" y="20" text-anchor="middle" font-size="12" fill="#7f1d1d" font-style="italic">
+            Every region pays its own translator effort, its own Machine  Machine Translation (MT) cost, its own PM time — for the same 8,142 keys
+          </text>
+        </g>
+      </svg>
+      </div>
+
+      <!-- TODAY CALLOUTS -->
+      <div class="callouts three-col">
+        <div class="callout danger">
+          <div class="callout-title">⚠ Pain points (Management-visible)</div>
+          <ul>
+            <li>Same 8,000 keys translated separately in each region</li>
+            <li>Translations drift between regions silently</li>
+            <li>MT API costs paid N times for identical source text</li>
+            <li>New region onboarding = months of translator work from scratch</li>
+            <li>New language rollout = N× translator effort</li>
+            <li>No global visibility into coverage or quality</li>
+          </ul>
+        </div>
+        <div class="callout warning">
+          <div class="callout-title">⚙ Operational waste</div>
+          <ul>
+            <li>PM in each region triages the same new keys independently</li>
+            <li>Brand terminology ("Checker", "Evaluation") can be translated differently</li>
+            <li>Manual XLS copy between regions is rare and error-prone</li>
+            <li>If a region's DB is lost, no off-site recovery of translations</li>
+            <li>Audit and compliance only visible region-by-region</li>
+          </ul>
+        </div>
+        <div class="callout muted">
+          <div class="callout-title">🛠 Current infrastructure (server team)</div>
+          <ul>
+            <li>Existing: one DB per region, N PHP servers per region</li>
+            <li>Existing: filesystem cache at <code>checker-files/l10n/</code></li>
+            <li>No cross-region connectivity for translations</li>
+            <li>No shared services</li>
+            <li>Each region fully self-contained — by design today</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSITION -->
+  <div class="transition">
+    <span class="transition-label">▼ Evolution to Phase v1.5 (HUB read-only consumer) ▼</span>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- PANEL 2: WITH HUB (v1.5)                                    -->
+  <!-- ========================================================== -->
+  <div class="panel">
+    <div class="panel-header hub">
+      <div>
+        <div class="panel-title">
+          <span class="panel-tag hub">With HUB · v1.5</span>
+          Centralized translation library with regional consumers
+        </div>
+        <div class="panel-subtitle">Translations are produced once on the HUB and distributed to all regions. Regions consume but don't yet publish back (that's v2). Existing per-region runtime is unchanged.</div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <!-- HUB SVG -->
+      <div class="svg-wrap">
+      <svg viewBox="0 0 1300 670" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+        <defs>
+          <marker id="arrow-success" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#059669"/>
+          </marker>
+          <marker id="arrow-dark2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#111827"/>
+          </marker>
+        </defs>
+
+        <!-- Global Translation Operations team (PM-level) -->
+        <g transform="translate(480, 10)">
+          <rect x="0" y="0" width="340" height="50" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5"/>
+          <text x="170" y="20" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">Global Translation Operations</text>
+          <text x="170" y="37" text-anchor="middle" font-size="11" fill="#92400e">Single PM team maintains canonical translations</text>
+        </g>
+
+        <!-- Arrow from PM team to HUB -->
+        <line x1="650" y1="65" x2="650" y2="95" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+        <text x="700" y="84" font-size="11" fill="#374151">edits via admin UI</text>
+
+        <!-- HUB Box - large, prominent -->
+        <g transform="translate(200, 100)">
+          <rect x="0" y="0" width="900" height="160" rx="14" fill="#d1fae5" stroke="#059669" stroke-width="2.5"/>
+          <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#064e3b">CPN HUB — Translation Service</text>
+          <text x="450" y="46" text-anchor="middle" font-size="11" fill="#047857">Shared by all Checker regions · single source of truth</text>
+
+          <!-- Inner components -->
+          <g transform="translate(30, 65)">
+            <!-- Canonical translation store -->
+            <rect x="0" y="0" width="195" height="80" rx="8" fill="#ffffff" stroke="#6ee7b7"/>
+            <text x="97" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#064e3b">Canonical store</text>
+            <text x="97" y="40" text-anchor="middle" font-size="10" fill="#374151">All keys × 55+ languages</text>
+            <text x="97" y="54" text-anchor="middle" font-size="10" fill="#374151">Status, history, audit</text>
+            <text x="97" y="68" text-anchor="middle" font-size="10" fill="#374151">Single DB at HUB</text>
+
+            <!-- Centralized MT (Machine Translation) -->
+            <rect x="210" y="0" width="195" height="80" rx="8" fill="#ffffff" stroke="#6ee7b7"/>
+            <text x="307" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#064e3b">Centralized MT</text>
+            <text x="307" y="40" text-anchor="middle" font-size="10" fill="#374151">One API key, one bill</text>
+            <text x="307" y="54" text-anchor="middle" font-size="10" fill="#374151">Bulk pre-fill once for all</text>
+            <text x="307" y="68" text-anchor="middle" font-size="10" fill="#374151">Provider: DeepL / Claude / etc.</text>
+
+            <!-- Glossary -->
+            <rect x="420" y="0" width="195" height="80" rx="8" fill="#ffffff" stroke="#6ee7b7"/>
+            <text x="517" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#064e3b">Brand glossary</text>
+            <text x="517" y="40" text-anchor="middle" font-size="10" fill="#374151">"Checker", "Evaluation"</text>
+            <text x="517" y="54" text-anchor="middle" font-size="10" fill="#374151">consistent across regions</text>
+            <text x="517" y="68" text-anchor="middle" font-size="10" fill="#374151">Enforced terminology</text>
+
+            <!-- Global view -->
+            <rect x="630" y="0" width="195" height="80" rx="8" fill="#ffffff" stroke="#6ee7b7"/>
+            <text x="727" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#064e3b">Global view</text>
+            <text x="727" y="40" text-anchor="middle" font-size="10" fill="#374151">Coverage per region</text>
+            <text x="727" y="54" text-anchor="middle" font-size="10" fill="#374151">Drift detection</text>
+            <text x="727" y="68" text-anchor="middle" font-size="10" fill="#374151">Cross-region dup search</text>
+          </g>
+        </g>
+
+        <!-- Distribution arrows from HUB to regions -->
+        <g stroke="#059669" stroke-width="2.5" fill="none" marker-end="url(#arrow-success)">
+          <path d="M 360 265 Q 360 295 230 320"/>
+          <path d="M 650 265 L 650 320"/>
+          <path d="M 940 265 Q 940 295 1070 320"/>
+        </g>
+        <g font-size="11" fill="#059669" font-weight="600">
+          <text x="225" y="305" text-anchor="middle">scheduled pull</text>
+          <text x="700" y="305">scheduled pull</text>
+          <text x="1075" y="305" text-anchor="middle">scheduled pull</text>
+        </g>
+
+        <!-- Region 1 (smaller, simpler than today) -->
+        <g transform="translate(70, 325)">
+          <rect x="0" y="0" width="320" height="285" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="160" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">REGION 1 — EU Frankfurt</text>
+          <text x="160" y="38" text-anchor="middle" font-size="10" fill="#3b82f6">consumer of HUB translations</text>
+
+          <!-- Sync agent (new) -->
+          <rect x="40" y="55" width="240" height="44" rx="6" fill="#d1fae5" stroke="#6ee7b7" stroke-dasharray="3,2"/>
+          <text x="160" y="76" text-anchor="middle" font-size="12" font-weight="600" fill="#064e3b">HUB sync agent (new)</text>
+          <text x="160" y="91" text-anchor="middle" font-size="10" fill="#047857">delta-merge into local DB</text>
+
+          <line x1="160" y1="103" x2="160" y2="128" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+
+          <!-- Regional DB -->
+          <rect x="40" y="133" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="155" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Regional DB (unchanged)</text>
+          <text x="160" y="171" text-anchor="middle" font-size="10" fill="#6b7280">local cache of HUB data</text>
+
+          <line x1="160" y1="186" x2="160" y2="208" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+
+          <!-- .phpi -->
+          <rect x="40" y="213" width="240" height="32" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="234" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">.phpi cache (unchanged)</text>
+
+          <line x1="160" y1="249" x2="160" y2="262" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+
+          <!-- PHP servers -->
+          <rect x="40" y="265" width="240" height="14" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="276" text-anchor="middle" font-size="11" font-weight="600" fill="#111827">PHP servers (multi-tenant) — unchanged</text>
+        </g>
+
+        <!-- Region 2 -->
+        <g transform="translate(490, 325)">
+          <rect x="0" y="0" width="320" height="285" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="160" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">REGION 2 — US East</text>
+          <text x="160" y="38" text-anchor="middle" font-size="10" fill="#3b82f6">consumer of HUB translations</text>
+          <rect x="40" y="55" width="240" height="44" rx="6" fill="#d1fae5" stroke="#6ee7b7" stroke-dasharray="3,2"/>
+          <text x="160" y="76" text-anchor="middle" font-size="12" font-weight="600" fill="#064e3b">HUB sync agent (new)</text>
+          <text x="160" y="91" text-anchor="middle" font-size="10" fill="#047857">delta-merge into local DB</text>
+          <line x1="160" y1="103" x2="160" y2="128" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+          <rect x="40" y="133" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="155" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Regional DB (unchanged)</text>
+          <text x="160" y="171" text-anchor="middle" font-size="10" fill="#6b7280">local cache of HUB data</text>
+          <line x1="160" y1="186" x2="160" y2="208" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+          <rect x="40" y="213" width="240" height="32" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="234" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">.phpi cache (unchanged)</text>
+          <line x1="160" y1="249" x2="160" y2="262" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+          <rect x="40" y="265" width="240" height="14" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="276" text-anchor="middle" font-size="11" font-weight="600" fill="#111827">PHP servers (multi-tenant) — unchanged</text>
+        </g>
+
+        <!-- Region 3 -->
+        <g transform="translate(910, 325)">
+          <rect x="0" y="0" width="320" height="285" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="160" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">REGION 3 — Asia Pacific</text>
+          <text x="160" y="38" text-anchor="middle" font-size="10" fill="#3b82f6">consumer of HUB translations</text>
+          <rect x="40" y="55" width="240" height="44" rx="6" fill="#d1fae5" stroke="#6ee7b7" stroke-dasharray="3,2"/>
+          <text x="160" y="76" text-anchor="middle" font-size="12" font-weight="600" fill="#064e3b">HUB sync agent (new)</text>
+          <text x="160" y="91" text-anchor="middle" font-size="10" fill="#047857">delta-merge into local DB</text>
+          <line x1="160" y1="103" x2="160" y2="128" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+          <rect x="40" y="133" width="240" height="48" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="155" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">Regional DB (unchanged)</text>
+          <text x="160" y="171" text-anchor="middle" font-size="10" fill="#6b7280">local cache of HUB data</text>
+          <line x1="160" y1="186" x2="160" y2="208" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+          <rect x="40" y="213" width="240" height="32" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="234" text-anchor="middle" font-size="12" font-weight="600" fill="#111827">.phpi cache (unchanged)</text>
+          <line x1="160" y1="249" x2="160" y2="262" stroke="#111827" stroke-width="2" marker-end="url(#arrow-dark2)"/>
+          <rect x="40" y="265" width="240" height="14" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="160" y="276" text-anchor="middle" font-size="11" font-weight="600" fill="#111827">PHP servers (multi-tenant) — unchanged</text>
+        </g>
+
+        <!-- Bottom annotation -->
+        <g transform="translate(0, 625)">
+          <rect x="70" y="0" width="1160" height="32" rx="6" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+          <text x="650" y="20" text-anchor="middle" font-size="12" fill="#064e3b" font-style="italic" font-weight="600">
+            One translation effort → instantly available in every region · One MT spend, not N · Brand terminology stays consistent globally
+          </text>
+        </g>
+      </svg>
+      </div>
+
+      <!-- HUB CALLOUTS -->
+      <div class="callouts three-col">
+        <div class="callout success">
+          <div class="callout-title">✓ Business benefits (Management-visible)</div>
+          <ul>
+            <li>~80% reduction in translator effort per new language</li>
+            <li>MT spend cut from N× to 1× across the fleet</li>
+            <li>New region onboarding: days instead of months</li>
+            <li>Brand terminology guaranteed consistent globally</li>
+            <li>Global coverage and quality dashboard for leadership</li>
+            <li>HUB doubles as off-site backup of translation data</li>
+          </ul>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">🔄 What changes operationally</div>
+          <ul>
+            <li>One global PM team replaces per-region PM duplication</li>
+            <li>New keys triaged once at HUB, propagated everywhere</li>
+            <li>Per-region admin UI becomes optional (for local exceptions only)</li>
+            <li>Each region keeps own DB + .phpi — runtime untouched</li>
+            <li>Regions can still override locally if needed (v2 feature)</li>
+          </ul>
+        </div>
+        <div class="callout warning">
+          <div class="callout-title">🛠 New infrastructure (server team)</div>
+          <ul>
+            <li><strong>HUB application servers</strong> — hosts admin UI and API</li>
+            <li><strong>HUB database</strong> — canonical translation store (~5 GB)</li>
+            <li><strong>HUB sync agent</strong> — runs on each region, polls HUB on schedule (e.g., every 15 min)</li>
+            <li><strong>Connectivity</strong> — HTTPS from each region to HUB; firewall allowlist</li>
+            <li><strong>HUB-side MT credentials</strong> — single provider account replacing N</li>
+            <li><strong>Authentication</strong> — region-to-HUB service tokens</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-table">
+    <div class="compare-table-header">
+      <div class="compare-table-title">At-a-glance comparison</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Today</th>
+          <th>With HUB (v1.5)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Source of truth for translations</td>
+          <td class="today-cell">Per-region DB; up to N divergent versions</td>
+          <td class="hub-cell">Single canonical store at HUB</td>
+        </tr>
+        <tr>
+          <td>Who maintains translations</td>
+          <td class="today-cell">A PM in every region, in parallel</td>
+          <td class="hub-cell">One global PM team</td>
+        </tr>
+        <tr>
+          <td>Cost of MT pre-fill</td>
+          <td class="today-cell">N × API charges (one per region)</td>
+          <td class="hub-cell">1 × API charges total</td>
+        </tr>
+        <tr>
+          <td>Onboarding a new region</td>
+          <td class="today-cell">Months — start from empty</td>
+          <td class="hub-cell">Days — inherits HUB content on first sync</td>
+        </tr>
+        <tr>
+          <td>Adding a new language</td>
+          <td class="today-cell">~8,000 translation cells × N regions</td>
+          <td class="hub-cell">~8,000 translation cells × 1</td>
+        </tr>
+        <tr>
+          <td>New-key triage</td>
+          <td class="today-cell">Done independently in each region</td>
+          <td class="hub-cell">Done once at HUB, propagated</td>
+        </tr>
+        <tr>
+          <td>Brand terminology consistency</td>
+          <td class="today-cell">Drift possible; not enforced</td>
+          <td class="hub-cell">Glossary enforced across all regions</td>
+        </tr>
+        <tr>
+          <td>Cross-region duplicate detection</td>
+          <td class="today-cell">Not possible</td>
+          <td class="hub-cell">Global fuzzy match available</td>
+        </tr>
+        <tr>
+          <td>Global coverage visibility</td>
+          <td class="today-cell">None — each region reports separately</td>
+          <td class="hub-cell">HUB dashboard shows all regions at once</td>
+        </tr>
+        <tr>
+          <td>Runtime behaviour</td>
+          <td class="today-cell">.phpi files served from local cache</td>
+          <td class="hub-cell">Identical — .phpi files served from local cache</td>
+        </tr>
+        <tr>
+          <td>Regional DB and PHP servers</td>
+          <td class="today-cell">Required</td>
+          <td class="hub-cell">Required (unchanged)</td>
+        </tr>
+        <tr>
+          <td>New infrastructure to procure</td>
+          <td class="today-cell">None</td>
+          <td class="hub-cell">HUB cluster (app server + DB); regional sync agent (lightweight)</td>
+        </tr>
+        <tr>
+          <td>Risk if HUB is unreachable</td>
+          <td class="today-cell">N/A</td>
+          <td class="hub-cell">Regions continue serving from last-synced .phpi files; no downtime</td>
+        </tr>
+        <tr>
+          <td>Direction of data flow</td>
+          <td class="today-cell">Bottom-up only (PM → XLS → region)</td>
+          <td class="hub-cell">v1.5: HUB → regions (one-way). v2 (future): bidirectional</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- WHAT WE'RE ASKING FOR -->
+  <div class="panel" style="margin-top: 24px;">
+    <div class="panel-header" style="background: linear-gradient(to right, #eff6ff, #fff); border-bottom-color: #bfdbfe;">
+      <div>
+        <div class="panel-title" style="color: var(--primary-dark);">📋 What we are asking for</div>
+        <div class="panel-subtitle">Three concrete decisions to unlock this evolution.</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="callouts">
+        <div class="callout info">
+          <div class="callout-title">For the Management — approval needed</div>
+          <ul>
+            <li>Approve incorporating the Translation Module as the first consumer of the CPN HUB infrastructure</li>
+            <li>Approve transition from per-region PM teams to one global PM team for translations</li>
+            <li>Approve scope: v1.5 (HUB read-only) ships after v1 launch; v2 (bidirectional) deferred to a later cycle</li>
+          </ul>
+        </div>
+        <div class="callout muted">
+          <div class="callout-title">For the server team — infrastructure to plan</div>
+          <ul>
+            <li>HUB application server(s) — sized for moderate write load and many read-only consumers</li>
+            <li>HUB database — single instance, ~5 GB initial, ~2× growth/year with audit retention</li>
+            <li>Lightweight sync agent installed in each region (PHP CLI cron job is sufficient)</li>
+            <li>HTTPS connectivity from each region to HUB; firewall rules; service auth tokens</li>
+            <li>One MT provider account at HUB-level (replaces N regional accounts)</li>
+            <li>Backup and DR plan for HUB DB (it now holds the global source of truth)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 24px; font-size: 11px; color: var(--text-soft);">
+    Translation Management Module · CPN HUB integration · TM-HUB-FLOW v1.0 · Draft for approval
+  </div>
+
+</div>
+</body>
+</html>
