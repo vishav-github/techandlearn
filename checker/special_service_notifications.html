@@ -1,412 +1,115 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Special Service Order Notifications</title>
-  <style>
-    body { margin: 0; padding: 0; background: #f0f2f5; font-family: Arial, sans-serif; }
-    .page-header { text-align: center; padding: 36px 20px 10px; }
-    .page-header h1 { font-size: 22px; color: #1a3a5c; margin: 0 0 6px 0; font-family: Arial, sans-serif; }
-    .page-header p { font-size: 13px; color: #777; margin: 0 0 4px 0; }
-    .workflow { text-align: center; font-size: 12px; color: #999; margin: 10px 0 30px; letter-spacing: 0.5px; }
-    .section-label { text-align: center; max-width: 600px; margin: 0 auto 10px; }
-    .section-label h2 { font-size: 13px; font-weight: bold; color: #1a3a5c; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 2px 0; font-family: Arial, sans-serif; }
-    .section-label p { font-size: 12px; color: #888; margin: 0; }
-    .section-label .direction { display: inline-block; font-size: 11px; color: #ffffff; background: #1a3a5c; padding: 2px 10px; border-radius: 20px; margin-top: 4px; }
-    .spacer { height: 40px; }
-    .divider { max-width: 600px; margin: 0 auto 40px; border: none; border-top: 1px dashed #ccc; }
-  </style>
-</head>
-<body>
+<div style="font-family: Arial, Helvetica, sans-serif; color:#1f2937; max-width:640px; margin:0 auto; padding:16px;">
 
-<!-- Page Header -->
-<div class="page-header">
-  <h1>Special Service Order — Notifications</h1>
-  <p>Universal HTML email templates for the special service workflow.</p>
-  <p style="font-size:12px; color:#aaa;">Works in Gmail, Outlook, Yahoo, Apple Mail and ticket threads.</p>
-  <div class="workflow">Ticket &rarr; Agreement Request &rarr; Client Confirms &rarr; Internal Approval &rarr; Billing Confirmation / Cancellation</div>
-</div>
+  <!-- =============================================================
+       SPECIAL SERVICE ORDER — EMAIL / TICKET-THREAD TEMPLATES
+       Placeholders: [Client Name] [Service Name] [CURRENCY_SYMBOL]
+       [AMOUNT] [DATETIME] [DUE_DATE] [TICKET_ID] [AGREE_LINK] [APPROVE_LINK]
+       Channel legend:  THREAD = posted to client-visible ticket thread
+                        INTERNAL = direct email to AM only (never in thread)
+       ============================================================= -->
 
-
-<!-- ════════════════════════════════════════════════
-     TEMPLATE 1 — Agreement Request (Checker → Client)
-     ════════════════════════════════════════════════ -->
-<div class="section-label">
-  <h2>1. Agreement Request</h2>
-  <p>Checker team → Client. Requesting formal acceptance of the service order.</p>
-  <span class="direction">Checker &rarr; Client</span>
-</div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="center" style="padding: 12px;">
-      <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
-
-        <tr>
-          <td style="padding:0 0 14px 0; border-bottom:2px solid #1a3a5c;">
-            <span style="font-size:17px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker</span>
-            <span style="font-size:13px; color:#888888; font-family:Arial,sans-serif; margin-left:8px;">| Confirmation Required – Special Service Order Agreement</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0;">
-            <p style="margin:0 0 10px 0; font-size:14px; color:#222222; font-family:Arial,sans-serif;">Dear <strong>[Client Name]</strong>,</p>
-            <p style="margin:0 0 14px 0; font-size:13.5px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              Thank you for choosing Checker's expert services. Based on the requirements discussed in your support ticket, we have prepared a Special Service Order for your review.
-            </p>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:0 0 0 0;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cccccc;">
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif; width:40%;">Service</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[Service Name]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Billing</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">Monthly Postpaid</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Invoice Date</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">1st of the following month</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; font-weight:bold; color:#222222; font-family:Arial,sans-serif;">Total Amount</td>
-                <td style="padding:9px 14px; font-size:14px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">[CURRENCY_SYMBOL][AMOUNT]</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:16px 0 0 0;">
-            <p style="margin:0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              The above total will be included in the invoice generated on the 1st day of the following month.
-            </p>
-          </td>
-        </tr>
-
-        <tr><td style="padding:16px 0 0 0;"><hr style="border:none; border-top:1px solid #dddddd; margin:0;" /></td></tr>
-
-        <tr>
-          <td style="padding:16px 0 0 0;">
-            <p style="margin:0 0 6px 0; font-size:12px; font-weight:bold; color:#222222; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:1px;">Action Required</p>
-            <p style="margin:0 0 10px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              Please review the order details above and click the link below to authorize Checker to proceed.
-            </p>
-            <p style="margin:0; font-size:13.5px; font-family:Arial,sans-serif;">
-              <a href="[AGREE_LINK]" style="color:#1a3a5c; font-weight:bold; text-decoration:underline;">&#10004; I Agree &amp; Authorize</a>
-            </p>
-          </td>
-        </tr>
-
-        <tr><td style="padding:16px 0 0 0;"><hr style="border:none; border-top:1px solid #dddddd; margin:0;" /></td></tr>
-
-        <tr>
-          <td style="padding:16px 0 0 0;">
-            <p style="margin:0 0 12px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              Once your authorization is received, the Checker team will proceed with the next internal review steps.
-            </p>
-            <p style="margin:0 0 20px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              Should you have any questions, please continue the discussion in your support ticket — we are happy to assist.
-            </p>
-            <p style="margin:0 0 2px 0; font-size:13px; color:#444444; font-family:Arial,sans-serif;">Warm regards,</p>
-            <p style="margin:0; font-size:13.5px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker Support Team</p>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0; border-top:1px solid #dddddd;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">checker-soft.com</td>
-                <td align="right" style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">&copy; 2026 Checker. All rights reserved.</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
+  <!-- ============ TEMPLATE 1 — Agreement Request (THREAD → Client) ============ -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:32px;">
+    <tr><td style="background:#0f2d52; color:#ffffff; padding:14px 20px; border-radius:8px 8px 0 0; font-size:13px; letter-spacing:.5px;">CHECKER &nbsp;|&nbsp; THREAD → CLIENT</td></tr>
+    <tr><td style="padding:24px 20px;">
+      <h2 style="margin:0 0 4px; font-size:18px; color:#0f2d52;">Confirmation Required – Special Service Order Agreement</h2>
+      <p>Dear <strong>[Client Name]</strong>,</p>
+      <p>Thank you for choosing Checker's expert services. Based on the requirements discussed in your support ticket, we have prepared a Special Service Order for your review.</p>
+      <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse; margin:16px 0; font-size:14px;">
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc; width:45%;">Service</td><td style="border:1px solid #e5e7eb;">[Service Name]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Billing</td><td style="border:1px solid #e5e7eb;">Monthly Postpaid</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Invoice Date</td><td style="border:1px solid #e5e7eb;">1st of the following month</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Total Amount</td><td style="border:1px solid #e5e7eb;">[CURRENCY_SYMBOL][AMOUNT]</td></tr>
       </table>
-    </td>
-  </tr>
-</table>
+      <p>The above total will be included in the invoice generated on the 1st day of the following month.</p>
+      <p style="margin:20px 0;"><a href="[AGREE_LINK]" style="background:#0f7a3d; color:#ffffff; text-decoration:none; padding:12px 22px; border-radius:6px; display:inline-block; font-weight:bold;">✔ I Agree &amp; Authorize</a></p>
+      <p style="font-size:13px; color:#6b7280;"><em>Please note: cancellation is available only before you authorize this order. Once authorized, the order proceeds to billing.</em></p>
+      <p>Should you have any questions, please continue the discussion in your support ticket.</p>
+      <p style="margin-top:20px;">Warm regards,<br>Checker Support Team</p>
+    </td></tr>
+    <tr><td style="background:#f8fafc; color:#6b7280; padding:10px 20px; font-size:12px; border-radius:0 0 8px 8px;">checker-soft.com &nbsp;•&nbsp; © 2026 Checker. All rights reserved.</td></tr>
+  </table>
 
-<hr class="divider" />
-
-
-<!-- ════════════════════════════════════════════════
-     TEMPLATE 2 — Client Agreement Confirmed (Client → Checker)
-     ════════════════════════════════════════════════ -->
-<div class="section-label">
-  <h2>2. Client Agreement Confirmed</h2>
-  <p>Auto-notification to Checker team after client clicks "I Agree".</p>
-  <span class="direction">Client &rarr; Checker</span>
-</div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="center" style="padding: 12px;">
-      <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
-
-        <tr>
-          <td style="padding:0 0 14px 0; border-bottom:2px solid #1a3a5c;">
-            <span style="font-size:17px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker</span>
-            <span style="font-size:13px; color:#888888; font-family:Arial,sans-serif; margin-left:8px;">| Special Service Order Agreement Confirmed</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0;">
-            <p style="margin:0 0 10px 0; font-size:14px; color:#222222; font-family:Arial,sans-serif;">Dear <strong>Checker Team</strong>,</p>
-            <p style="margin:0 0 14px 0; font-size:13.5px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              The client has confirmed the agreement for the Special Service Order as outlined in the support ticket. Details are below.
-            </p>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cccccc;">
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif; width:40%;">Client</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[Client Name]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Service</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[Service Name]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Agreed Amount</td>
-                <td style="padding:9px 14px; font-size:13px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">[CURRENCY_SYMBOL][AMOUNT]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Billing</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">Monthly Postpaid — next invoice cycle</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Confirmed At</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[DATETIME]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Support Ticket</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">#[TICKET_ID]</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr><td style="padding:16px 0 0 0;"><hr style="border:none; border-top:1px solid #dddddd; margin:0;" /></td></tr>
-
-        <tr>
-          <td style="padding:16px 0 0 0;">
-            <p style="margin:0 0 6px 0; font-size:12px; font-weight:bold; color:#222222; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:1px;">Next Step</p>
-            <p style="margin:0 0 20px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              The request is now ready for <strong>Account Manager review and approval</strong> before scheduling. Please proceed accordingly.
-            </p>
-            <p style="margin:0 0 2px 0; font-size:13px; color:#444444; font-family:Arial,sans-serif;">Regards,</p>
-            <p style="margin:0; font-size:13.5px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker System</p>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0; border-top:1px solid #dddddd;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">checker-soft.com</td>
-                <td align="right" style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">&copy; 2026 Checker. All rights reserved.</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
+  <!-- ============ TEMPLATE 2 — Agreement Received / Work to Begin (THREAD → Client + Team) ============ -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:32px;">
+    <tr><td style="background:#0f2d52; color:#ffffff; padding:14px 20px; border-radius:8px 8px 0 0; font-size:13px; letter-spacing:.5px;">CHECKER &nbsp;|&nbsp; THREAD → CLIENT + TEAM</td></tr>
+    <tr><td style="padding:24px 20px;">
+      <h2 style="margin:0 0 4px; font-size:18px; color:#0f2d52;">Special Service Order Authorized – Proceeding with Your Request</h2>
+      <p>Dear <strong>[Client Name]</strong>,</p>
+      <p>Thank you for authorizing your Special Service Order. Following your confirmation to proceed, our team will now begin work on your request.</p>
+      <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse; margin:16px 0; font-size:14px;">
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc; width:45%;">Service</td><td style="border:1px solid #e5e7eb;">[Service Name]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Status</td><td style="border:1px solid #e5e7eb;">Authorized by Client — Work to Begin</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Agreed Amount</td><td style="border:1px solid #e5e7eb;">[CURRENCY_SYMBOL][AMOUNT]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Billing</td><td style="border:1px solid #e5e7eb;">Monthly Postpaid</td></tr>
       </table>
-    </td>
-  </tr>
-</table>
+      <p>We will update you through this support ticket once the work has been completed.</p>
+      <p style="margin-top:20px;">Warm regards,<br>Checker Support Team</p>
+      <p style="font-size:12px; color:#9ca3af; border-top:1px dashed #e5e7eb; padding-top:10px;"><em>Build note: no due date here — internal due date stays on the order record and in Template 3 only.</em></p>
+    </td></tr>
+    <tr><td style="background:#f8fafc; color:#6b7280; padding:10px 20px; font-size:12px; border-radius:0 0 8px 8px;">checker-soft.com &nbsp;•&nbsp; © 2026 Checker. All rights reserved.</td></tr>
+  </table>
 
-<hr class="divider" />
-
-
-<!-- ════════════════════════════════════════════════
-     TEMPLATE 3 — Billing Confirmation After Approval
-     ════════════════════════════════════════════════ -->
-<div class="section-label">
-  <h2>3. Billing Confirmation After Approval</h2>
-  <p>Client-facing billing notice after internal approval.</p>
-  <span class="direction">Checker &rarr; Client</span>
-</div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="center" style="padding: 12px;">
-      <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
-
-        <tr>
-          <td style="padding:0 0 14px 0; border-bottom:2px solid #1a3a5c;">
-            <span style="font-size:17px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker</span>
-            <span style="font-size:13px; color:#888888; font-family:Arial,sans-serif; margin-left:8px;">| Billing Information – Special Service Order Approved</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0;">
-            <p style="margin:0 0 10px 0; font-size:14px; color:#222222; font-family:Arial,sans-serif;">Dear <strong>[Client Name]</strong>,</p>
-            <p style="margin:0 0 14px 0; font-size:13.5px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              This is to confirm that your Special Service Order has been approved and scheduled for execution. Please find the billing details below.
-            </p>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cccccc;">
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif; width:40%;">Service</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[Service Name]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Status</td>
-                <td style="padding:9px 14px; font-size:13px; font-weight:bold; color:#222222; font-family:Arial,sans-serif;">Approved &amp; Scheduled</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Billing</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">Monthly Postpaid</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Invoice Date</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">1st of the following month</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; font-weight:bold; color:#222222; font-family:Arial,sans-serif;">Total Amount</td>
-                <td style="padding:9px 14px; font-size:14px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">[CURRENCY_SYMBOL][AMOUNT]</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr><td style="padding:16px 0 0 0;"><hr style="border:none; border-top:1px solid #dddddd; margin:0;" /></td></tr>
-
-        <tr>
-          <td style="padding:16px 0 0 0;">
-            <p style="margin:0 0 12px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              Our team will proceed with the requested work and will update you through the support ticket once the service has been completed.
-            </p>
-            <p style="margin:0 0 20px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              <strong>Please note:</strong> Once the order has been approved and scheduled, cancellation is no longer available under the standard workflow.
-            </p>
-            <p style="margin:0 0 2px 0; font-size:13px; color:#444444; font-family:Arial,sans-serif;">Warm regards,</p>
-            <p style="margin:0; font-size:13.5px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker Support Team</p>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0; border-top:1px solid #dddddd;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">checker-soft.com</td>
-                <td align="right" style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">&copy; 2026 Checker. All rights reserved.</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
+  <!-- ============ TEMPLATE 3 — Billing Approval Reminder (INTERNAL → AM only — NOT in thread) ============ -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:2px solid #b45309; border-radius:8px; margin-bottom:32px;">
+    <tr><td style="background:#b45309; color:#ffffff; padding:14px 20px; border-radius:6px 6px 0 0; font-size:13px; letter-spacing:.5px;">CHECKER &nbsp;|&nbsp; INTERNAL → AM ONLY &nbsp;•&nbsp; DO NOT POST TO TICKET THREAD</td></tr>
+    <tr><td style="padding:24px 20px;">
+      <h2 style="margin:0 0 4px; font-size:18px; color:#b45309;">Reminder – Approve Billing for Special Service Order (Ticket #[TICKET_ID])</h2>
+      <p>Dear <strong>Account Manager</strong>,</p>
+      <p>The internal due date for the following Special Service Order has been reached. Please approve billing to charge the client via the auto monthly invoice.</p>
+      <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse; margin:16px 0; font-size:14px;">
+        <tr><td style="border:1px solid #e5e7eb; background:#fffbeb; width:45%;">Client</td><td style="border:1px solid #e5e7eb;">[Client Name]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#fffbeb;">Service</td><td style="border:1px solid #e5e7eb;">[Service Name]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#fffbeb;">Amount</td><td style="border:1px solid #e5e7eb;">[CURRENCY_SYMBOL][AMOUNT]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#fffbeb;">Internal Due Date</td><td style="border:1px solid #e5e7eb;">[DUE_DATE]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#fffbeb;">Support Ticket</td><td style="border:1px solid #e5e7eb;">#[TICKET_ID]</td></tr>
       </table>
-    </td>
-  </tr>
-</table>
+      <p style="font-size:14px;"><strong>Action Required</strong> — Approve <strong>only once delivery has been confirmed</strong>. Approving creates the billing entry; the <strong>approval date</strong> determines the invoice cycle (order appears on the invoice generated the 1st of the following month). If the work is not yet delivered, hold off — billing will follow whenever you approve.</p>
+      <p style="margin:20px 0;"><a href="[APPROVE_LINK]" style="background:#b45309; color:#ffffff; text-decoration:none; padding:12px 22px; border-radius:6px; display:inline-block; font-weight:bold;">✔ Approve &amp; Create Billing Entry</a></p>
+      <p style="margin-top:20px;">Regards,<br>Checker System</p>
+    </td></tr>
+    <tr><td style="background:#fffbeb; color:#92400e; padding:10px 20px; font-size:12px; border-radius:0 0 6px 6px;">Internal use only — not visible to the client.</td></tr>
+  </table>
 
-<hr class="divider" />
-
-
-<!-- ════════════════════════════════════════════════
-     TEMPLATE 4 — Cancellation Confirmation
-     ════════════════════════════════════════════════ -->
-<div class="section-label">
-  <h2>4. Cancellation Confirmation</h2>
-  <p>Client-facing cancellation notice before internal approval.</p>
-  <span class="direction">Checker &rarr; Client</span>
-</div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="center" style="padding: 12px;">
-      <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
-
-        <tr>
-          <td style="padding:0 0 14px 0; border-bottom:2px solid #1a3a5c;">
-            <span style="font-size:17px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker</span>
-            <span style="font-size:13px; color:#888888; font-family:Arial,sans-serif; margin-left:8px;">| Special Service Order Cancellation Confirmation</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0;">
-            <p style="margin:0 0 10px 0; font-size:14px; color:#222222; font-family:Arial,sans-serif;">Dear <strong>[Client Name]</strong>,</p>
-            <p style="margin:0 0 14px 0; font-size:13.5px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              We confirm that your Special Service Order has been cancelled as per your request. Details are below.
-            </p>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cccccc;">
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif; width:40%;">Service</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[Service Name]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Cancelled Amount</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[CURRENCY_SYMBOL][AMOUNT]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; color:#666666; font-family:Arial,sans-serif;">Cancelled At</td>
-                <td style="padding:9px 14px; font-size:13px; color:#222222; font-family:Arial,sans-serif;">[DATETIME]</td>
-              </tr>
-              <tr>
-                <td style="padding:9px 14px; font-size:13px; font-weight:bold; color:#222222; font-family:Arial,sans-serif;">Billing Impact</td>
-                <td style="padding:9px 14px; font-size:13px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">No charge — cancelled before approval</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr><td style="padding:16px 0 0 0;"><hr style="border:none; border-top:1px solid #dddddd; margin:0;" /></td></tr>
-
-        <tr>
-          <td style="padding:16px 0 0 0;">
-            <p style="margin:0 0 12px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              As the cancellation was made before approval and scheduling, <strong>no charge will be applied</strong> and this order will not appear on your monthly invoice.
-            </p>
-            <p style="margin:0 0 20px 0; font-size:13px; color:#444444; line-height:1.7; font-family:Arial,sans-serif;">
-              If you would like to submit a revised request or proceed with a new service order, please continue the discussion through your support ticket.
-            </p>
-            <p style="margin:0 0 2px 0; font-size:13px; color:#444444; font-family:Arial,sans-serif;">Warm regards,</p>
-            <p style="margin:0; font-size:13.5px; font-weight:bold; color:#1a3a5c; font-family:Arial,sans-serif;">Checker Support Team</p>
-          </td>
-        </tr>
-
-        <tr>
-          <td style="padding:20px 0 0 0; border-top:1px solid #dddddd;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">checker-soft.com</td>
-                <td align="right" style="padding:12px 0 0 0; font-size:11px; color:#999999; font-family:Arial,sans-serif;">&copy; 2026 Checker. All rights reserved.</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
+  <!-- ============ TEMPLATE 4 — Completion & Billing Notification (THREAD → Client) ============ -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:32px;">
+    <tr><td style="background:#0f2d52; color:#ffffff; padding:14px 20px; border-radius:8px 8px 0 0; font-size:13px; letter-spacing:.5px;">CHECKER &nbsp;|&nbsp; THREAD → CLIENT</td></tr>
+    <tr><td style="padding:24px 20px;">
+      <h2 style="margin:0 0 4px; font-size:18px; color:#0f2d52;">Special Service Order Completed – Billing Notification</h2>
+      <p>Dear <strong>[Client Name]</strong>,</p>
+      <p>We are pleased to inform you that your Special Service Order has been <strong>completed and delivered</strong>. Please find the details below for your records.</p>
+      <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse; margin:16px 0; font-size:14px;">
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc; width:45%;">Service</td><td style="border:1px solid #e5e7eb;">[Service Name]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Status</td><td style="border:1px solid #e5e7eb;">Completed &amp; Delivered</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Completed On</td><td style="border:1px solid #e5e7eb;">[DATETIME]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Billing</td><td style="border:1px solid #e5e7eb;">Monthly Postpaid</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Total Amount</td><td style="border:1px solid #e5e7eb;">[CURRENCY_SYMBOL][AMOUNT]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Invoice Date</td><td style="border:1px solid #e5e7eb;">1st of the following month</td></tr>
       </table>
-    </td>
-  </tr>
-</table>
+      <p>This amount will be <strong>included automatically in your monthly postpaid invoice</strong>, generated on the 1st of the following month. No further action is required on your part.</p>
+      <p>Should you have any questions regarding this service or its billing, please continue the discussion in your support ticket.</p>
+      <p style="margin-top:20px;">Warm regards,<br>Checker Support Team</p>
+    </td></tr>
+    <tr><td style="background:#f8fafc; color:#6b7280; padding:10px 20px; font-size:12px; border-radius:0 0 8px 8px;">checker-soft.com &nbsp;•&nbsp; © 2026 Checker. All rights reserved.</td></tr>
+  </table>
 
-<div style="height:40px;"></div>
+  <!-- ============ TEMPLATE 5 — Cancellation Confirmation (THREAD → Client) ============ -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb; border-radius:8px; margin-bottom:8px;">
+    <tr><td style="background:#0f2d52; color:#ffffff; padding:14px 20px; border-radius:8px 8px 0 0; font-size:13px; letter-spacing:.5px;">CHECKER &nbsp;|&nbsp; THREAD → CLIENT</td></tr>
+    <tr><td style="padding:24px 20px;">
+      <h2 style="margin:0 0 4px; font-size:18px; color:#0f2d52;">Special Service Order Cancellation Confirmation</h2>
+      <p>Dear <strong>[Client Name]</strong>,</p>
+      <p>We confirm that your Special Service Order has been cancelled. Details are below.</p>
+      <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse; margin:16px 0; font-size:14px;">
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc; width:45%;">Service</td><td style="border:1px solid #e5e7eb;">[Service Name]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Cancelled Amount</td><td style="border:1px solid #e5e7eb;">[CURRENCY_SYMBOL][AMOUNT]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Cancelled At</td><td style="border:1px solid #e5e7eb;">[DATETIME]</td></tr>
+        <tr><td style="border:1px solid #e5e7eb; background:#f8fafc;">Billing Impact</td><td style="border:1px solid #e5e7eb;">No charge — cancelled before agreement</td></tr>
+      </table>
+      <p>As the cancellation was made before agreement, <strong>no charge will be applied</strong> and this order will not appear on your monthly invoice. To submit a revised request, please continue the discussion through your support ticket.</p>
+      <p style="margin-top:20px;">Warm regards,<br>Checker Support Team</p>
+    </td></tr>
+    <tr><td style="background:#f8fafc; color:#6b7280; padding:10px 20px; font-size:12px; border-radius:0 0 8px 8px;">checker-soft.com &nbsp;•&nbsp; © 2026 Checker. All rights reserved.</td></tr>
+  </table>
 
-</body>
-</html>
+</div>
