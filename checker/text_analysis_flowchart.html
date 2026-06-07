@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; color: var(--text-primary, #1a1a1a); }
+
+  .diagram { padding: 20px; max-width: 860px; margin: 0 auto; }
+  h2.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+  /* Lane headers */
+  .lanes { display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 0; margin-bottom: 8px; }
+  .lane-header { text-align: center; font-weight: 700; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; padding: 6px 4px; border-radius: 6px; }
+  .lane-ui    { background: #e8f4fd; color: #1a6fa8; }
+  .lane-proc  { background: #eaf7ea; color: #1a7a2e; }
+  .lane-ai    { background: #fdf3e8; color: #a0520f; }
+  .lane-db    { background: #f3eafd; color: #6a1fa8; }
+
+  /* Box styles */
+  .box {
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    position: relative;
+    text-align: center;
+  }
+  .box-title { font-weight: 700; margin-bottom: 2px; font-size: 12px; }
+  .box-sub   { font-size: 11px; opacity: .75; }
+
+  .b-ui   { background: #daeefa; border: 1.5px solid #7dc4ee; color: #0d4f7a; }
+  .b-proc { background: #d6f0d6; border: 1.5px solid #7ec87e; color: #165216; }
+  .b-ai   { background: #fde8c8; border: 1.5px solid #f0a84a; color: #7a3700; }
+  .b-db   { background: #ecdcfa; border: 1.5px solid #c07ee0; color: #4a0f80; }
+  .b-decision { background: #fff6cc; border: 1.5px solid #e6c200; color: #5a4400; clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%); padding: 22px 16px; min-height: 68px; display: flex; align-items: center; justify-content: center; }
+  .b-decision .box-title { font-size: 11px; }
+
+  /* Arrow */
+  .arrow { display: flex; align-items: center; justify-content: center; color: #888; font-size: 18px; line-height: 1; margin: 0 auto; }
+  .arrow-down { height: 22px; }
+  .arrow-right { width: 28px; }
+
+  /* Row layout */
+  .row { display: grid; gap: 10px; margin-bottom: 0; align-items: center; }
+  .r4 { grid-template-columns: 140px 1fr 1fr 1fr; }
+  .r3 { grid-template-columns: 140px 1fr 1fr; }
+  .r2 { grid-template-columns: 140px 1fr; }
+  .r1 { grid-template-columns: 1fr; }
+
+  .spacer { height: 6px; }
+  .arrow-col { display: flex; flex-direction: column; align-items: center; }
+
+  /* Section label (left column) */
+  .section-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: #888; display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 12px; border-right: 2px solid #ddd; height: 100%;
+  }
+
+  /* Connector lines drawn via flex */
+  .connector { display: flex; align-items: center; gap: 0; }
+  .line-h { height: 2px; background: #bbb; flex: 1; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #bbb; flex-shrink: 0; }
+
+  /* Legend */
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; padding-top: 10px; border-top: 1px solid #e0e0e0; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  .phase-divider { border: none; border-top: 1.5px dashed #ddd; margin: 10px 0; }
+</style>
+</head>
+<body>
+<div class="diagram">
+  <h2 class="sr-only">Flowchart of the Checker AI Text Analysis pipeline, from user interaction through queue processing to report display.</h2>
+
+  <!-- Lane headers -->
+  <div class="lanes">
+    <div></div>
+    <div class="lane-header lane-ui">UI / Report</div>
+    <div class="lane-header lane-proc">Server Processing</div>
+    <div class="lane-header lane-ai">Azure OpenAI / Gemini</div>
+  </div>
+
+  <!-- STEP 1: User opens report -->
+  <div class="row r4">
+    <div class="section-label">1. Configure</div>
+    <div class="box b-ui">
+      <div class="box-title">report-text-analysis.php</div>
+      <div class="box-sub">Select Client, Branch, Date, Questions</div>
+    </div>
+    <div class="box b-ui">
+      <div class="box-title">Choose Model Type</div>
+      <div class="box-sub">Sentiment (0) · Keywords (3) · Ask AI (-1)</div>
+    </div>
+    <div></div>
+  </div>
+
+  <div class="row r4"><div></div>
+    <div class="arrow arrow-down">↓</div>
+    <div class="arrow arrow-down">↓</div>
+    <div></div>
+  </div>
+
+  <!-- STEP 2: DB query -->
+  <div class="row r4">
+    <div class="section-label">2. Fetch Data</div>
+    <div class="box b-db" style="grid-column: 2 / 4;">
+      <div class="box-title">SQL Query — CritData + CritMandatoryFreeText + AITextAnalyticsData</div>
+      <div class="box-sub">Pulls free-text answers and any existing AI results per QuestionID × CritID</div>
+    </div>
+    <div></div>
+  </div>
+
+  <div class="row r4"><div></div>
+    <div class="arrow arrow-down" style="grid-column:2/4; text-align:center">↓</div>
+    <div></div>
+  </div>
+
+  <!-- STEP 3: Already processed? -->
+  <div class="row r4">
+    <div class="section-label">3. Check Cache</div>
+    <div style="grid-column:2/4; display:flex; flex-direction:column; align-items:center; gap:6px;">
+      <div class="box b-decision" style="width:200px;">
+        <div class="box-title">AI result already in DB?</div>
+      </div>
+      <div style="display:flex; gap:60px; align-items:flex-start; margin-top:4px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <div style="font-size:11px; color:#888;">YES</div>
+          <div class="arrow">↓</div>
+          <div class="box b-proc" style="width:130px;"><div class="box-title">Skip to Display</div><div class="box-sub">Use cached results</div></div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <div style="font-size:11px; color:#888;">NO</div>
+          <div class="arrow">↓</div>
+          <div class="box b-proc" style="width:130px;"><div class="box-title">Proceed to Queue</div></div>
+        </div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+
+  <hr class="phase-divider">
+
+  <!-- STEP 4: Build prompt -->
+  <div class="row r4">
+    <div class="section-label">4. Build Prompt</div>
+    <div class="box b-ui">
+      <div class="box-title">Construct System Prompt</div>
+      <div class="box-sub">Sentiment or Keyword instructions with JSON schema</div>
+    </div>
+    <div class="box b-proc">
+      <div class="box-title">Export to JSON File</div>
+      <div class="box-sub">Free-text rows → ExportFilesInfo + temp file</div>
+    </div>
+    <div class="box b-proc">
+      <div class="box-title">POST → ai-data-process.php</div>
+      <div class="box-sub">efID, ClientID, encodedSendQuestion, modelType</div>
+    </div>
+  </div>
+
+  <div class="row r4"><div></div><div></div>
+    <div class="arrow arrow-down">↓</div>
+    <div></div>
+  </div>
+
+  <!-- STEP 5: Queue creation -->
+  <div class="row r4">
+    <div class="section-label">5. Enqueue</div>
+    <div></div>
+    <div class="box b-proc">
+      <div class="box-title">createQueue()</div>
+      <div class="box-sub">Batch by QID, chunk at 4 000 tokens → AITextAnalyticsQueue</div>
+    </div>
+    <div class="box b-db">
+      <div class="box-title">AITextAnalyticsQueue</div>
+      <div class="box-sub">System_msg · User_msg · CritList · Type</div>
+    </div>
+  </div>
+
+  <div class="row r4"><div></div><div></div>
+    <div class="arrow arrow-down">↓</div>
+    <div></div>
+  </div>
+
+  <!-- STEP 6: Cron -->
+  <div class="row r4">
+    <div class="section-label">6. Cron Worker</div>
+    <div></div>
+    <div class="box b-proc">
+      <div class="box-title">text-AI-process-queue.php</div>
+      <div class="box-sub">Semaphore lock · Credit limit check · Poll queue rows</div>
+    </div>
+    <div class="box b-proc">
+      <div class="box-title">AI_execution()</div>
+      <div class="box-sub">Azure OpenAI Chat Completion API call</div>
+    </div>
+  </div>
+
+  <div class="row r4"><div></div><div></div><div></div>
+    <div class="arrow arrow-down">↓</div>
+  </div>
+
+  <!-- STEP 7: AI -->
+  <div class="row r4">
+    <div class="section-label">7. AI Response</div>
+    <div></div>
+    <div></div>
+    <div class="box b-ai">
+      <div class="box-title">Azure OpenAI GPT-4o</div>
+      <div class="box-sub">Returns JSON: Sentiment scores or Keywords + Sentiment + Relevancy</div>
+    </div>
+  </div>
+
+  <div class="row r4"><div></div><div></div>
+    <div class="arrow arrow-down">↓</div>
+    <div class="arrow arrow-down">↓</div>
+  </div>
+
+  <!-- STEP 8: Parse & Save -->
+  <div class="row r4">
+    <div class="section-label">8. Parse & Save</div>
+    <div></div>
+    <div class="box b-proc">
+      <div class="box-title">Parse JSON Response</div>
+      <div class="box-sub">fix_json() · complete_json_structure() · split on ||| delimiter</div>
+    </div>
+    <div class="box b-db">
+      <div class="box-title">AITextAnalyticsData</div>
+      <div class="box-sub">AiSentimentResponse · AiKeywordKeyword · Sentiment · Relevancy</div>
+    </div>
+  </div>
+
+  <div class="row r4"><div></div><div></div>
+    <div class="arrow arrow-down">↓</div>
+    <div></div>
+  </div>
+
+  <!-- STEP 9: Notify -->
+  <div class="row r4">
+    <div class="section-label">9. Notify</div>
+    <div></div>
+    <div class="box b-proc">
+      <div class="box-title">Email Notification</div>
+      <div class="box-sub">checkerai_ready.phtml · token_count_exceed · pause</div>
+    </div>
+    <div></div>
+  </div>
+
+  <hr class="phase-divider">
+
+  <!-- STEP 10: Display -->
+  <div class="row r4">
+    <div class="section-label">10. Display</div>
+    <div class="box b-ui" style="grid-column:2/4;">
+      <div class="box-title">report-text-analysis.php — Report View</div>
+      <div class="box-sub">Reads AITextAnalyticsData · repeatKeywordData() · FusionChart word cloud / bar chart · Sentiment colour coding</div>
+    </div>
+    <div></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#daeefa;border:1.5px solid #7dc4ee;"></div> UI / Report layer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d6f0d6;border:1.5px solid #7ec87e;"></div> Server processing</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fde8c8;border:1.5px solid #f0a84a;"></div> Azure OpenAI / Gemini</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ecdcfa;border:1.5px solid #c07ee0;"></div> Database</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fff6cc;border:1.5px solid #e6c200;"></div> Decision</div>
+  </div>
+</div>
+</body>
+</html>
