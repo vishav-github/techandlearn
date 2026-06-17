@@ -1,0 +1,244 @@
+<!--
+  Translation Update Instructions Panel
+  ─────────────────────────────────────
+  Embed this snippet inside m_update-lang-files.php, ideally above the upload
+  form. All CSS is scoped to the .tu-help wrapper class to avoid colliding
+  with the existing admin app's styles. Self-contained — no external files.
+-->
+
+<style>
+.tu-help { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #111827; line-height: 1.55; max-width: 1100px; margin: 0 0 24px 0; }
+.tu-help * { box-sizing: border-box; }
+.tu-help .tu-header { background: linear-gradient(to right, #eff6ff, #fff); border: 1px solid #bfdbfe; border-radius: 10px; padding: 18px 22px; margin-bottom: 18px; }
+.tu-help .tu-header h2 { margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: #1e3a8a; }
+.tu-help .tu-header p { margin: 0; font-size: 13.5px; color: #1e40af; }
+.tu-help .tu-section { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; }
+.tu-help .tu-section h3 { margin: 0 0 12px 0; font-size: 15px; font-weight: 700; color: #111827; display: flex; align-items: center; gap: 8px; }
+.tu-help .tu-section h3 .tu-num { background: #2563eb; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.tu-help .tu-section p { margin: 0 0 10px 0; font-size: 13.5px; }
+.tu-help .tu-section p:last-child { margin-bottom: 0; }
+.tu-help .tu-section ol, .tu-help .tu-section ul { margin: 0 0 10px 0; padding-left: 22px; }
+.tu-help .tu-section li { font-size: 13.5px; margin-bottom: 4px; }
+.tu-help .tu-section code { background: #f3f4f6; color: #1f2937; padding: 1.5px 6px; border-radius: 4px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+.tu-help .tu-section .tu-kbd { display: inline-block; background: #1f2937; color: #f9fafb; padding: 2px 7px; border-radius: 4px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.tu-help .tu-callout { border-radius: 8px; padding: 12px 14px; margin: 10px 0 0 0; border-left: 4px solid; font-size: 13px; }
+.tu-help .tu-callout.tip { background: #f0fdf4; border-color: #059669; color: #064e3b; }
+.tu-help .tu-callout.warn { background: #fef3c7; border-color: #d97706; color: #78350f; }
+.tu-help .tu-callout.danger { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+.tu-help .tu-callout strong { font-weight: 700; }
+.tu-help .tu-quick-ref { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; }
+.tu-help .tu-quick-ref h3 { margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.04em; }
+.tu-help table.tu-cols { width: 100%; border-collapse: collapse; font-size: 12.5px; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 0 0 1px #e5e7eb; }
+.tu-help table.tu-cols th { background: #f3f4f6; padding: 8px 10px; text-align: left; font-weight: 600; color: #6b7280; text-transform: uppercase; font-size: 11px; letter-spacing: 0.03em; border-bottom: 1px solid #e5e7eb; }
+.tu-help table.tu-cols td { padding: 6px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+.tu-help table.tu-cols td:first-child { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; color: #2563eb; width: 60px; }
+.tu-help table.tu-cols td:nth-child(2) { font-family: ui-monospace, Menlo, Consolas, monospace; color: #1f2937; width: 160px; }
+.tu-help table.tu-cols td:last-child { color: #6b7280; }
+.tu-help table.tu-cols tr:last-child td { border-bottom: none; }
+.tu-help .tu-cols-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (max-width: 900px) { .tu-help .tu-cols-grid { grid-template-columns: 1fr; } }
+.tu-help .tu-example { background: #1f2937; color: #f9fafb; padding: 12px 14px; border-radius: 6px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; margin: 10px 0; overflow-x: auto; }
+.tu-help .tu-example .tu-row { white-space: nowrap; }
+.tu-help .tu-example .tu-empty { color: #6b7280; font-style: italic; }
+.tu-help .tu-example .tu-new { color: #34d399; }
+.tu-help details { margin-top: 8px; }
+.tu-help details summary { cursor: pointer; color: #2563eb; font-size: 13px; font-weight: 500; padding: 6px 0; }
+.tu-help details summary:hover { color: #1d4ed8; }
+</style>
+
+<div class="tu-help">
+
+  <!-- HEADER -->
+  <div class="tu-header">
+    <h2>Translation Update Instructions</h2>
+    <p>Read this once before uploading. Most issues are caused by the column order being changed or by uploading the wrong file format.</p>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="tu-section">
+    <h3><span class="tu-num">1</span>How this upload works</h3>
+    <p>Uploads are <strong>merged</strong> with the existing translations. Keys that are not in your file are kept as-is — they are <strong>not deleted</strong>. This means you can upload a small file containing only the keys you are adding or updating; you do not need to include all 8,000 keys every time.</p>
+    <p>Empty cells in your file mean &ldquo;leave the existing value alone&rdquo;. The importer will not clear or remove an existing translation just because the cell is empty in your upload. Removing or replacing existing translations is done by uploading the new value in the same cell.</p>
+  </div>
+
+  <!-- COLUMN ORDER REFERENCE -->
+  <div class="tu-quick-ref">
+    <h3>Required column order — do not change</h3>
+    <p style="margin:0 0 12px 0; font-size:13px; color:#374151;">
+      The importer identifies each language by its column position. Column A is always the translation key. Columns B onwards must match the order below exactly. <strong>If you rearrange, insert, or delete a column, your upload will write values to the wrong languages with no warning.</strong>
+    </p>
+
+    <div class="tu-cols-grid">
+      <table class="tu-cols">
+        <thead><tr><th>Col</th><th>Code</th><th>Language</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>(key)</td><td>Translation key</td></tr>
+          <tr><td>B</td><td>il_HE</td><td>Hebrew (Israel)</td></tr>
+          <tr><td>C</td><td>il_HEBAK</td><td>Hebrew (Bank variant)</td></tr>
+          <tr><td>D</td><td>il_HES</td><td>Hebrew (Short)</td></tr>
+          <tr><td>E</td><td>en_US</td><td>English (US)</td></tr>
+          <tr><td>F</td><td>en_AU</td><td>English (Australia)</td></tr>
+          <tr><td>G</td><td>en_UK</td><td>English (UK)</td></tr>
+          <tr><td>H</td><td>en_invision</td><td>English (Invision)</td></tr>
+          <tr><td>I</td><td>de_DE</td><td>German (Germany)</td></tr>
+          <tr><td>J</td><td>es_SP</td><td>Spanish (Spain)</td></tr>
+          <tr><td>K</td><td>es_SA</td><td>Spanish (South America)</td></tr>
+          <tr><td>L</td><td>pt_BR</td><td>Portuguese (Brazil)</td></tr>
+          <tr><td>M</td><td>ua_RU</td><td>Ukrainian (RU variant)</td></tr>
+          <tr><td>N</td><td>fr_FR</td><td>French (France)</td></tr>
+          <tr><td>O</td><td>fr_BE</td><td>French (Belgium)</td></tr>
+          <tr><td>P</td><td>en_v2</td><td>English (legacy v2)</td></tr>
+          <tr><td>Q</td><td>lt_LTU</td><td>Lithuanian</td></tr>
+          <tr><td>R</td><td>ro_RO</td><td>Romanian</td></tr>
+          <tr><td>S</td><td>tu_TUR</td><td>Turkish</td></tr>
+          <tr><td>T</td><td>zh_SC</td><td>Chinese (Simplified)</td></tr>
+          <tr><td>U</td><td>et_ET</td><td>Estonian</td></tr>
+          <tr><td>V</td><td>hu_HU</td><td>Hungarian</td></tr>
+          <tr><td>W</td><td>bg_BG</td><td>Bulgarian</td></tr>
+          <tr><td>X</td><td>ru_v2</td><td>Russian (v2)</td></tr>
+          <tr><td>Y</td><td>ua_UA</td><td>Ukrainian</td></tr>
+          <tr><td>Z</td><td>pl_PL</td><td>Polish</td></tr>
+          <tr><td>AA</td><td>hr_CR</td><td>Croatian</td></tr>
+          <tr><td>AB</td><td>sk_SK</td><td>Slovak</td></tr>
+        </tbody>
+      </table>
+      <table class="tu-cols">
+        <thead><tr><th>Col</th><th>Code</th><th>Language</th></tr></thead>
+        <tbody>
+          <tr><td>AC</td><td>jp_JP</td><td>Japanese</td></tr>
+          <tr><td>AD</td><td>ar_EG</td><td>Arabic (Egypt)</td></tr>
+          <tr><td>AE</td><td>mk_MK</td><td>Macedonian</td></tr>
+          <tr><td>AF</td><td>cs_CZ</td><td>Czech</td></tr>
+          <tr><td>AG</td><td>bs_BA</td><td>Bosnian</td></tr>
+          <tr><td>AH</td><td>ar_AE</td><td>Arabic (UAE)</td></tr>
+          <tr><td>AI</td><td>sr_SR</td><td>Serbian</td></tr>
+          <tr><td>AJ</td><td>nl_NL</td><td>Dutch (Netherlands)</td></tr>
+          <tr><td>AK</td><td>sl_SI</td><td>Slovenian</td></tr>
+          <tr><td>AL</td><td>zh_CM</td><td>Chinese (Mandarin)</td></tr>
+          <tr><td>AM</td><td>th_TH</td><td>Thai</td></tr>
+          <tr><td>AN</td><td>es_CA</td><td>Spanish (Catalonia)</td></tr>
+          <tr><td>AO</td><td>ar_SA</td><td>Arabic (Saudi Arabia)</td></tr>
+          <tr><td>AP</td><td>nl_BE</td><td>Dutch (Belgium)</td></tr>
+          <tr><td>AQ</td><td>it_IT</td><td>Italian</td></tr>
+          <tr><td>AR</td><td>pt_PT</td><td>Portuguese (Portugal)</td></tr>
+          <tr><td>AS</td><td>en_SRV</td><td>English (Service)</td></tr>
+          <tr><td>AT</td><td>en_SRT</td><td>English (Survey)</td></tr>
+          <tr><td>AU</td><td>ka_GE</td><td>Georgian</td></tr>
+          <tr><td>AV</td><td>nn_NO</td><td>Norwegian (Nynorsk)</td></tr>
+          <tr><td>AW</td><td>ru_Romir_Toyota</td><td>Russian (Toyota client)</td></tr>
+          <tr><td>AX</td><td>lv_Latvian</td><td>Latvian</td></tr>
+          <tr><td>AY</td><td>il_evaluations</td><td>Hebrew (Evaluations)</td></tr>
+          <tr><td>AZ</td><td>da_DA</td><td>Danish</td></tr>
+          <tr><td>BA</td><td>vi-VN</td><td>Vietnamese</td></tr>
+          <tr><td>BB</td><td>el_GR</td><td>Greek</td></tr>
+          <tr><td>BC</td><td>de_CH</td><td>German (Switzerland)</td></tr>
+          <tr><td>BD</td><td>fi_FI</td><td>Finnish</td></tr>
+          <tr><td>BE</td><td>ar_MA</td><td>Arabic (Morocco)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tu-callout danger" style="margin-top:14px;">
+      <strong>Do not rearrange columns.</strong> The importer trusts the column position to identify each language. If you accidentally insert a column or move one, values will be written to the wrong language file and you will not see an error. Always start from the master template.
+    </div>
+  </div>
+
+  <!-- HOW TO UPDATE EXISTING TRANSLATIONS -->
+  <div class="tu-section">
+    <h3><span class="tu-num">2</span>How to update existing translations</h3>
+    <ol>
+      <li>Open the master XLS template.</li>
+      <li>Add a row for each key you want to update. Put the key in column A.</li>
+      <li>Fill the languages you want to change with the new values.</li>
+      <li>Leave empty any languages you don't want to touch.</li>
+      <li>Save as <strong>.xls</strong> (Excel 97–2003 Workbook), not <strong>.xlsx</strong>.</li>
+      <li>Use the upload form below.</li>
+    </ol>
+
+    <div class="tu-example">
+      <div class="tu-row">  A           B (il_HE)   C (il_HEBAK)  D (il_HES)  E (en_US)   F (en_AU)   …</div>
+      <div class="tu-row">┌─────────────┬───────────┬─────────────┬───────────┬───────────┬───────────┐</div>
+      <div class="tu-row">│ save        │ <span class="tu-empty">(empty)</span>   │ <span class="tu-empty">(empty)</span>     │ <span class="tu-empty">(empty)</span>   │ <span class="tu-new">Save now</span>  │ <span class="tu-empty">(empty)</span>   │</div>
+      <div class="tu-row">│ cancel      │ <span class="tu-empty">(empty)</span>   │ <span class="tu-empty">(empty)</span>     │ <span class="tu-empty">(empty)</span>   │ <span class="tu-new">Cancel</span>    │ <span class="tu-empty">(empty)</span>   │</div>
+      <div class="tu-row">└─────────────┴───────────┴─────────────┴───────────┴───────────┴───────────┘</div>
+    </div>
+
+    <p style="font-size:13px; color:#6b7280;">In the example above, only the <code>en_US</code> values for <code>save</code> and <code>cancel</code> are being updated. All other languages and all other keys remain unchanged.</p>
+  </div>
+
+  <!-- HOW TO UPDATE ONLY ONE LANGUAGE -->
+  <div class="tu-section">
+    <h3><span class="tu-num">3</span>How to update only one language</h3>
+    <p>To update <strong>just one language</strong>, put the new value in that language's column and leave every other language column empty in the same row. The merge logic preserves all the empty cells. For example, to update only German for several keys:</p>
+
+    <div class="tu-example">
+      <div class="tu-row">  A                   …   I (de_DE)            …</div>
+      <div class="tu-row">┌─────────────────────┬─┬─────────────────────┬─┐</div>
+      <div class="tu-row">│ welcome_message     │…│ <span class="tu-new">Willkommen!</span>         │…│</div>
+      <div class="tu-row">│ logout_button       │…│ <span class="tu-new">Abmelden</span>            │…│</div>
+      <div class="tu-row">│ session_expired     │…│ <span class="tu-new">Sitzung abgelaufen</span>  │…│</div>
+      <div class="tu-row">└─────────────────────┴─┴─────────────────────┴─┘</div>
+    </div>
+
+    <div class="tu-callout tip">
+      <strong>Tip:</strong> Even when you only intend to update one language, your file <strong>must still contain all 56 language columns in the correct order</strong> (with the other columns empty). The importer reads columns by position, not by header name.
+    </div>
+  </div>
+
+  <!-- HOW TO ADD A NEW KEY -->
+  <div class="tu-section">
+    <h3><span class="tu-num">4</span>How to add a brand-new key</h3>
+    <p>Adding a new key is the same as updating an existing one. Just type the new key in column A and fill in the translations you have. Any language column you leave empty will fall back to the en_US value (or to the key itself if en_US is also empty), so it's fine to add a key with only one or two languages filled in initially and complete the rest in a later upload.</p>
+
+    <div class="tu-callout tip">
+      <strong>Tip:</strong> At minimum, fill the en_US value for every new key. This ensures the fallback chain produces a readable string in any language until the proper translation is added.
+    </div>
+  </div>
+
+  <!-- HOW TO ADD A NEW LANGUAGE -->
+  <div class="tu-section">
+    <h3><span class="tu-num">5</span>How to add a new language</h3>
+    <p>Adding a new language is <strong>not done through this page</strong>. Each language column is hard-mapped in the importer's code, so adding a new language requires a development team change. The process is:</p>
+    <ol>
+      <li>Send a request to the development team with the new language code (e.g. <code>sv_SE</code>) and display name (e.g. &ldquo;Swedish (Sweden)&rdquo;).</li>
+      <li>The team appends the new language to the importer's language map, picking the next free column letter (e.g. <code>BF</code>) and deploys the change.</li>
+      <li>The team sends you back the updated master XLS template with the new column added at the agreed position.</li>
+      <li>You can then upload translations for the new language using the new template, exactly the same way as for any other language.</li>
+    </ol>
+    <div class="tu-callout warn">
+      <strong>Important:</strong> Always use the updated template the development team sends you. Adding a column yourself in Excel without the matching code deployment will cause every column after it to be misaligned by one position, writing your values into the wrong languages.
+    </div>
+  </div>
+
+  <!-- BEFORE YOU UPLOAD -->
+  <div class="tu-section">
+    <h3><span class="tu-num">6</span>Before you upload &mdash; quick checklist</h3>
+    <ul>
+      <li>The file is saved as <strong>.xls</strong>, not <strong>.xlsx</strong>.</li>
+      <li>The column order in your file exactly matches the reference table above.</li>
+      <li>You have not inserted, deleted, or rearranged any columns.</li>
+      <li>You have not added formulas in translation cells — paste only values.</li>
+      <li>You have a backup or version history of the file before you change it.</li>
+      <li>You only want to change what is in this file; everything else stays as it is today.</li>
+    </ul>
+
+    <div class="tu-callout tip">
+      <strong>After upload:</strong> the page will show a success message with the count of keys added and updated. To verify the change on a customer page, do a hard reload (<span class="tu-kbd">Ctrl + Shift + R</span> on Windows, <span class="tu-kbd">Cmd + Shift + R</span> on Mac) or open the page in a private browsing window so your browser cache does not show the old value.
+    </div>
+  </div>
+
+  <details>
+    <summary>Frequently asked questions</summary>
+    <div class="tu-section" style="margin-top:8px;">
+      <p><strong>What happens if I leave a key out of my file?</strong><br>Nothing — it stays as it is in the system. Only the keys you include are touched.</p>
+      <p style="margin-top:10px;"><strong>What if I upload a small file by mistake — do I lose all the other translations?</strong><br>No. The importer merges into existing translations. Anything not in your upload is left alone.</p>
+      <p style="margin-top:10px;"><strong>How long does an upload take?</strong><br>A small file (under 100 keys) should complete within a few seconds. The original full master file may take longer because of its size; that file is only needed for the one-time baseline upload.</p>
+      <p style="margin-top:10px;"><strong>Can I undo an upload?</strong><br>Not from this page. If you've made a mistake, prepare a corrected file and upload it with the corrected values. For larger mistakes, contact the development team — there is a backup snapshot from the day the new importer went live.</p>
+      <p style="margin-top:10px;"><strong>Why .xls and not .xlsx?</strong><br>The importer uses the older PHPExcel library, which reads <code>.xls</code> reliably. The full Translation Management Module (in development) will switch to PhpSpreadsheet and accept <code>.xlsx</code>.</p>
+      <p style="margin-top:10px;"><strong>How do I remove a translation I no longer want?</strong><br>Removing existing translations is not supported through this upload in this phase. Translations can only be updated to a new value, not cleared. If you need an existing translation removed, contact the development team.</p>
+    </div>
+  </details>
+
+</div>
+
+<!-- End of translation update instructions panel -->
