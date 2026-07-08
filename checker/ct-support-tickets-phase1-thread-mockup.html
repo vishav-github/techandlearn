@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Ticket Edit — Phase 1 Full Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#eef1f6; --surface:#fff; --border:#e2e8f0; --text:#1e293b; --muted:#64748b;
+      --primary:#2563eb; --primary-soft:#eff6ff; --success:#059669; --success-bg:#ecfdf5;
+      --warn:#d97706; --warn-bg:#fffbeb; --superseded:#94a3b8; --superseded-bg:#f1f5f9;
+      --shadow:0 1px 3px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:50}
+    .topbar h1{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .badge-proto{font-size:11px;font-weight:600;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:99px}
+    .state-tabs{display:flex;gap:6px;flex-wrap:wrap}
+    .state-tab{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer}
+    .state-tab.active{background:var(--primary-soft);border-color:#93c5fd;color:var(--primary)}
+    .page{max-width:960px;margin:16px auto 40px;padding:0 16px}
+    .edit-title{font-size:18px;font-weight:700;margin-bottom:14px}
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+    .panel-body{padding:16px 20px}
+    .section-sep{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border)}
+    .section-sep:first-child{margin-top:0;padding-top:0;border-top:none}
+    /* CheckerMasters — compact, scalable */
+    .cmasters{background:#f8fafc;border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden}
+    .cmasters-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:transparent;border:none;cursor:pointer;font:inherit;text-align:left}
+    .cmasters-toggle:hover{background:#f1f5f9}
+    .cmasters-toggle-left{display:flex;align-items:center;gap:8px;min-width:0}
+    .cmasters-icon{font-size:16px;flex-shrink:0}
+    .cmasters-title{font-size:13px;font-weight:600;color:var(--text)}
+    .cmasters-count{font-size:11px;font-weight:600;color:var(--muted);background:#e2e8f0;padding:2px 8px;border-radius:99px;flex-shrink:0}
+    .cmasters-chevron{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+    .cmasters.open .cmasters-chevron{transform:rotate(180deg)}
+    .cmasters-preview{padding:0 14px 10px;display:flex;flex-wrap:wrap;gap:6px}
+    .cmasters.open .cmasters-preview{display:none}
+    .cmaster-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:99px;font-size:12px;color:var(--text)}
+    .cmaster-chip a{color:var(--primary);text-decoration:none;font-size:11px}
+    .cmaster-chip a:hover{text-decoration:underline}
+    .cmaster-chip-more{background:#e2e8f0;border-color:#cbd5e1;color:var(--muted);font-weight:600}
+    .cmasters-body{max-height:0;overflow:hidden;transition:max-height .25s ease}
+    .cmasters.open .cmasters-body{max-height:220px}
+    .cmasters-list{padding:0 14px 12px;max-height:200px;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .cmaster-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:0}
+    .cmaster-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .cmaster-row a{color:var(--primary);text-decoration:none;font-size:11px;flex-shrink:0}
+    @media(max-width:640px){.cmasters-list{grid-template-columns:1fr}}
+    /* Fields */
+    .fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}
+    .field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+    .field input,.field select,.field textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font:inherit;font-size:13px}
+    .field.locked input,.field.locked select{background:#f1f5f9;color:var(--muted);border-style:dashed}
+    .field.full{grid-column:1/-1}
+    .field-hint{font-size:11px;color:var(--muted);margin-top:4px}
+    /* Chips & workflow */
+    .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+    .chip{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
+    .chip-pending{background:var(--warn-bg);color:var(--warn)}
+    .chip-internal{background:#f3e8ff;color:#7c3aed}
+    .chip-new{background:var(--success-bg);color:var(--success)}
+    .chip-closed{background:var(--superseded-bg);color:var(--superseded)}
+    .workflow{display:flex;padding:14px 20px;background:#f8fafc;border-bottom:1px solid var(--border);overflow-x:auto}
+    .wf-step{flex:1;min-width:100px;text-align:center;position:relative;padding:0 6px}
+    .wf-step:not(:last-child)::after{content:'';position:absolute;top:13px;right:-50%;width:100%;height:2px;background:var(--border);z-index:0}
+    .wf-step.done:not(:last-child)::after{background:var(--success)}
+    .wf-dot{width:26px;height:26px;border-radius:50%;background:var(--border);color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;position:relative;z-index:1}
+    .wf-step.done .wf-dot{background:var(--success);color:#fff}
+    .wf-step.current .wf-dot{background:var(--primary);color:#fff;box-shadow:0 0 0 3px var(--primary-soft)}
+    .wf-step.future .wf-dot{background:#e2e8f0}
+    .wf-label{font-size:10px;font-weight:600;color:var(--muted)}
+    .wf-step.done .wf-label,.wf-step.current .wf-label{color:var(--text)}
+    .workflow-hidden{display:none!important}
+    /* Thread */
+    .msg{display:flex;gap:10px;margin-bottom:14px}
+    .msg-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+    .av-client{background:#dbeafe;color:#1d4ed8}.av-team{background:#d1fae5;color:#047857}.av-system{background:#e2e8f0;color:#475569}
+    .msg-body{flex:1;background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+    .msg-body.system{background:#f1f5f9;border-style:dashed}
+    .msg-who{font-weight:600;font-size:13px}.msg-when{font-size:11px;color:var(--muted);margin:2px 0 6px}.msg-text{font-size:13px;color:#334155}
+    /* Agreement cards */
+    .agreement-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:8px;background:var(--surface)}
+    .agreement-card.superseded{opacity:.75;background:var(--superseded-bg)}
+    .agreement-card.active{border-color:#93c5fd;box-shadow:0 0 0 2px var(--primary-soft)}
+    .agreement-card.agreed{border-color:#6ee7b7}
+    .agreement-head{padding:8px 12px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px;font-weight:700}
+    .agreement-ver{font-size:11px;color:var(--muted);font-weight:600}
+    .agreement-body{padding:10px 12px}
+    .agreement-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:12px;margin-bottom:10px}
+    .agreement-grid dt{color:var(--muted)}.agreement-grid dd{font-weight:600;margin:0}
+    .btn-agree{background:#0f7a3d;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+    .status-badge{display:inline-flex;font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px}
+    .status-agreed{background:var(--success-bg);color:var(--success)}
+    .status-superseded{background:var(--superseded-bg);color:var(--superseded)}
+    /* SSO */
+    .sso-card{border:1px solid #bfdbfe;border-radius:8px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);padding:14px;margin-top:4px}
+    .sso-card.muted-sso{background:#f8fafc;border-color:var(--border)}
+    .sso-card h3{font-size:14px;font-weight:700;color:#1e40af;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .sso-card.muted-sso h3{color:var(--text)}
+    .sso-sub,.sso-hint{font-size:12px;color:var(--muted);margin-bottom:10px}
+    .sso-hint.warn{color:#92400e;background:#fffbeb;border:1px solid #fde68a;padding:8px 10px;border-radius:6px}
+    .sso-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+    .sso-fields label{font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px}
+    .sso-fields input,.sso-fields select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font:inherit;font-size:13px}
+    .sso-fields .locked{background:#f1f5f9;color:var(--muted);border-style:dashed}
+    .units-field.full{grid-column:1/-1}
+    .units-note{font-size:11px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;margin-top:8px;line-height:1.55}
+    .units-note strong{color:var(--text)}
+    .units-note .min-warn{color:#b45309;font-weight:600}
+    .credit-ok{font-size:12px;color:var(--success)}
+    .credit-warn{font-size:12px;color:#b45309}
+    .hidden-block{display:none!important}
+    /* Files */
+    .files-fieldset{border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-top:14px}
+    .files-fieldset legend{font-weight:700;font-size:13px;padding:0 6px}
+    .file-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#f8fafc;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;font-size:13px}
+    .file-row a{color:var(--primary)}
+    .upload-row{margin-top:10px;font-size:13px;color:var(--muted)}
+    /* Actions — single row */
+    .actions-bar{padding:14px 20px;border-top:1px solid var(--border);background:#fafbfc;display:flex;flex-wrap:nowrap;align-items:center;gap:10px;overflow-x:auto}
+    .btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;white-space:nowrap;flex-shrink:0}
+    .btn-save{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:disabled{opacity:.45;cursor:not-allowed}
+    .btn-cancel{background:transparent;color:var(--muted);text-decoration:none;padding:10px 14px;white-space:nowrap}
+    /* Button tooltips */
+    .btn-tip{position:relative}
+    .btn-tip::after{
+      content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+      background:#1e293b;color:#fff;font-size:11px;font-weight:500;line-height:1.45;
+      padding:8px 10px;border-radius:6px;width:max-content;max-width:280px;
+      white-space:normal;text-align:center;pointer-events:none;opacity:0;visibility:hidden;
+      transition:opacity .15s,visibility .15s;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.15)
+    }
+    .btn-tip::before{
+      content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);
+      border:6px solid transparent;border-top-color:#1e293b;opacity:0;visibility:hidden;
+      transition:opacity .15s,visibility .15s;z-index:100
+    }
+    .btn-tip:hover::after,.btn-tip:hover::before,.btn-tip:focus-visible::after,.btn-tip:focus-visible::before{opacity:1;visibility:visible}
+    .actions-hint{width:100%;font-size:11px;color:var(--muted);padding:0 20px 12px;background:#fafbfc;margin-top:-4px}
+    .actions-hint kbd{background:#e2e8f0;padding:1px 5px;border-radius:4px;font-size:10px}
+    .back-link{display:inline-block;margin-top:16px;color:var(--primary);font-size:14px;font-weight:600;text-decoration:none}
+    .back-link:hover{text-decoration:underline}
+    .demo-box{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#0369a1}
+    .state-view{display:none}.state-view.active{display:block}
+    .proto-footer{text-align:center;font-size:12px;color:var(--muted);padding:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;margin-top:8px}
+    @media(max-width:640px){.fields-grid,.sso-fields,.agreement-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <h1>Edit <span class="badge-proto">Phase 1 — full edit screen mockup</span></h1>
+  <nav class="state-tabs">
+    <button class="state-tab active" data-state="general">0 · General</button>
+    <button class="state-tab" data-state="draft">1 · SSO draft</button>
+    <button class="state-tab" data-state="awaiting">2 · Awaiting agree</button>
+    <button class="state-tab" data-state="agreed">3 · Client agreed</button>
+    <button class="state-tab" data-state="approved">4 · Approved</button>
+  </nav>
+</header>
+
+<main class="page">
+
+<!-- ═══ TAB 0: GENERAL TICKET ═══ -->
+<div class="state-view active" id="state-general">
+  <h2 class="edit-title">Edit</h2>
+
+  <div class="cmasters" id="cmasters-general">
+    <button type="button" class="cmasters-toggle" aria-expanded="false">
+      <span class="cmasters-toggle-left">
+        <span class="cmasters-icon">👥</span>
+        <span class="cmasters-title">Formal CheckerMasters</span>
+        <span class="cmasters-count">6 contacts</span>
+      </span>
+      <span class="cmasters-chevron">▼</span>
+    </button>
+    <div class="cmasters-preview">
+      <span class="cmaster-chip">John Smith <a href="mailto:john@betacorp.com">email</a></span>
+      <span class="cmaster-chip">Mary Lee <a href="mailto:mary@betacorp.com">email</a></span>
+      <span class="cmaster-chip cmaster-chip-more">+4 more</span>
+    </div>
+    <div class="cmasters-body">
+      <div class="cmasters-list">
+        <div class="cmaster-row"><span>John Smith</span><a href="mailto:john@betacorp.com">email</a></div>
+        <div class="cmaster-row"><span>Mary Lee</span><a href="mailto:mary@betacorp.com">email</a></div>
+        <div class="cmaster-row"><span>David Chen</span><a href="mailto:david@betacorp.com">email</a></div>
+        <div class="cmaster-row"><span>Sarah Park</span><a href="mailto:sarah@betacorp.com">email</a></div>
+        <div class="cmaster-row"><span>James Wilson</span><a href="mailto:james@betacorp.com">email</a></div>
+        <div class="cmaster-row"><span>Lisa Adams</span><a href="mailto:lisa@betacorp.com">email</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-body">
+      <div class="section-sep">Client support ticket</div>
+      <div class="fields-grid">
+        <div class="field locked full"><label>Title</label><input readonly value="Export fails on large reports"></div>
+        <div class="field locked"><label>Creation date</label><input readonly value="8 Jul 2026, 08:30"></div>
+        <div class="field locked"><label>Priority</label><input readonly value="5 - Medium"></div>
+        <div class="field locked full"><label>Page link</label><input readonly value="reports.php?export=1"></div>
+        <div class="field"><label>Ticket status</label>
+          <select><option>New</option><option selected>Pending</option><option>Closed</option></select></div>
+        <div class="field"><label>Internal status</label>
+          <select>
+            <option value="0">None</option>
+            <option value="1">Additional check needed</option>
+            <option value="2">Client is waiting for Checker</option>
+            <option value="3">Checker is waiting for client</option>
+            <option value="4" selected>In development: Bug reported</option>
+            <option value="5">In development: Feature requested</option>
+            <option value="6">Case closed</option>
+            <option value="7">Special postpaid service request</option>
+          </select></div>
+        <div class="field"><label>Due date</label><input value="15.07.2026"></div>
+        <div class="field"><label>Handling user</label><select><option>Alex T.</option></select></div>
+      </div>
+
+      <div class="section-sep">Conversation</div>
+      <div class="msg"><div class="msg-avatar av-client">JS</div><div class="msg-body"><div class="msg-who">John Smith</div><div class="msg-when">8 Jul 2026, 08:30</div><div class="msg-text">When I export a report with more than 5,000 rows, the download fails with a timeout error.</div></div></div>
+      <div class="msg"><div class="msg-avatar av-team">AT</div><div class="msg-body"><div class="msg-who">Alex T.</div><div class="msg-when">8 Jul 2026, 09:45</div><div class="msg-text">Thanks — we've logged this for the dev team. We'll update you when we have a fix.</div></div></div>
+
+      <div class="section-sep">Checker Team reply</div>
+      <div class="field full">
+        <textarea rows="4" placeholder="Enter your reply to the client…"></textarea>
+        <div class="field-hint">If you enter a reply and click <strong>Save</strong>, the client will be notified by email (same as today).</div>
+      </div>
+
+      <div class="section-sep">KeyWords</div>
+      <div class="field full"><textarea rows="2" placeholder="Internal search tags (not sent to client)…">export, timeout, large report</textarea></div>
+
+      <!-- No SSO section: no service type selected, no SpecialServiceOrder row -->
+    </div>
+
+    <footer class="actions-bar">
+      <button type="button" class="btn btn-save btn-tip" data-tip="Save ticket fields, keywords, and reply. The client is emailed only if Checker Team reply contains text.">Save</button>
+      <a class="btn btn-cancel btn-tip" href="#" data-tip="Leave this page without saving changes.">Cancel</a>
+    </footer>
+    <div class="actions-hint">General ticket — one row: <kbd>Save</kbd> + <kbd>Cancel</kbd> only. No SSO primary (no service type / no order).</div>
+  </div>
+
+  <fieldset class="files-fieldset panel-body">
+    <legend>Files</legend>
+    <div class="file-row"><span>📎 error-screenshot.png</span><a href="#">Download</a></div>
+    <div class="upload-row"><input type="file"> Upload attachment</div>
+  </fieldset>
+
+  <a class="back-link" href="#">← Back to main menu</a>
+</div>
+
+<!-- ═══ TAB 1: SSO DRAFT (interactive) ═══ -->
+<div class="state-view" id="state-draft">
+  <h2 class="edit-title">Edit</h2>
+
+  <div class="cmasters">
+    <button type="button" class="cmasters-toggle" aria-expanded="false">
+      <span class="cmasters-toggle-left">
+        <span class="cmasters-icon">👥</span>
+        <span class="cmasters-title">Formal CheckerMasters</span>
+        <span class="cmasters-count">2 contacts</span>
+      </span>
+      <span class="cmasters-chevron">▼</span>
+    </button>
+    <div class="cmasters-preview">
+      <span class="cmaster-chip">Jane Miller <a href="mailto:jane@acme.com">email</a></span>
+      <span class="cmaster-chip">Tom Brown <a href="mailto:tom@acme.com">email</a></span>
+    </div>
+    <div class="cmasters-body">
+      <div class="cmasters-list">
+        <div class="cmaster-row"><span>Jane Miller</span><a href="mailto:jane@acme.com">email</a></div>
+        <div class="cmaster-row"><span>Tom Brown</span><a href="mailto:tom@acme.com">email</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="workflow" id="draft-workflow">
+      <div class="wf-step current"><div class="wf-dot">1</div><div class="wf-label">Quote drafted</div></div>
+      <div class="wf-step future"><div class="wf-dot">2</div><div class="wf-label">Sent to client</div></div>
+      <div class="wf-step future"><div class="wf-dot">3</div><div class="wf-label">Client agreed</div></div>
+      <div class="wf-step future"><div class="wf-dot">4</div><div class="wf-label">Billing approved</div></div>
+    </div>
+    <div class="panel-body">
+      <div class="demo-box"><strong>Tab 1:</strong> Pick service type → enter <em>total amount</em> (hours × per-hour rate). Try amount &lt; 850 to see minimum warning. Hover buttons for tooltips.</div>
+
+      <div class="section-sep">Client support ticket</div>
+      <div class="fields-grid">
+        <div class="field locked full"><label>Title</label><input readonly value="Outsource: 50 mystery shops — Q3 campaign"></div>
+        <div class="field locked"><label>Creation date</label><input readonly value="8 Jul 2026, 09:14"></div>
+        <div class="field locked"><label>Priority</label><input readonly value="3"></div>
+        <div class="field"><label>Ticket status</label><select><option selected>Pending</option></select></div>
+        <div class="field"><label>Internal status</label>
+          <select id="draft-internal">
+            <option value="0">None</option>
+            <option value="1">Additional check needed</option>
+            <option value="2">Client is waiting for Checker</option>
+            <option value="3">Checker is waiting for client</option>
+            <option value="4">In development: Bug reported</option>
+            <option value="5">In development: Feature requested</option>
+            <option value="6">Case closed</option>
+            <option value="7" selected>Special postpaid service request</option>
+          </select></div>
+        <div class="field"><label>Due date</label><input value="12.07.2026"></div>
+        <div class="field"><label>Handling user</label><select><option>Alex T.</option></select></div>
+      </div>
+
+      <div class="section-sep">Conversation</div>
+      <div class="msg"><div class="msg-avatar av-client">JM</div><div class="msg-body"><div class="msg-who">Jane Miller</div><div class="msg-when">8 Jul 2026, 09:14</div><div class="msg-text">We need 50 mystery shops across our Q3 stores. Please confirm pricing.</div></div></div>
+
+      <div class="section-sep">Checker Team reply</div>
+      <div class="field full"><textarea rows="4" placeholder="Optional reply when sending agreement…"></textarea>
+        <div class="field-hint">Included in client email when you use the agreement action or when Save is used with reply text.</div></div>
+
+      <div class="section-sep">KeyWords</div>
+      <div class="field full"><textarea rows="2">outsource, Q3, mystery shop</textarea></div>
+
+      <div class="section-sep">Special service order details</div>
+      <div id="draft-sso-wrap" class="sso-card">
+        <h3>Special service order <span class="chip chip-new">Not sent yet</span></h3>
+        <div class="sso-sub">Order status: — · Select a service type below to define the quote.</div>
+        <div id="draft-type-hint" class="sso-hint warn">Select a service type to enter the quote amount and enable <strong>Send agreement to client</strong>.</div>
+        <div class="sso-fields">
+          <div><label>Service type</label>
+            <select id="draft-service-type">
+              <option value="">— Please select services —</option>
+              <option value="outsource">Mystery shopping — outsource</option>
+              <option value="phonesurvey">Phone surveys</option>
+              <option value="reportbug">Report a bug</option>
+            </select></div>
+        </div>
+        <div id="draft-units-wrap" class="units-field full hidden-block">
+          <label>Total amount (hours × per-hour rate)</label>
+          <input type="number" id="draft-units-input" value="4250" min="850" step="1">
+          <div class="units-note">
+            <strong>How to calculate:</strong> Consult the <strong>internal team</strong> to confirm estimated hours for this job, then multiply <em>number of hours × per-hour rate</em> for the selected service. Enter that <strong>total amount</strong> here.
+            <br><span class="min-warn">Minimum for this service: US$ 850.00 — values below minimum cannot be saved.</span>
+          </div>
+        </div>
+        <div class="credit-ok hidden-block" id="draft-credit">✓ Amount meets minimum (US$ 850.00)</div>
+        <div class="credit-warn hidden-block" id="draft-credit-warn">⚠ Below minimum US$ 850.00 — increase amount or confirm hours with internal team.</div>
+      </div>
+    </div>
+
+    <footer class="actions-bar">
+      <button type="button" class="btn btn-save btn-tip" data-tip="Save ticket fields, keywords, and reply. Client is emailed only if Checker Team reply has text.">Save</button>
+      <button type="button" class="btn btn-primary hidden-block btn-tip" id="draft-btn-agreement"
+        data-tip="Save the quote and email the agreement to the client. Appends an agreement card to the thread.">Send agreement to client</button>
+      <button type="button" class="btn btn-primary hidden-block btn-tip" id="draft-btn-approve"
+        data-tip="Approve the order for monthly billing. Only available after the client has agreed.">Approve for billing</button>
+      <a class="btn btn-cancel btn-tip" href="#" data-tip="Leave without saving changes.">Cancel</a>
+    </footer>
+    <div class="actions-hint" id="draft-hint">Select service type → shows <kbd>Send agreement to client</kbd> (backend: <kbd>sendforagreement</kbd>). Not agreed → no Approve button.</div>
+  </div>
+
+  <fieldset class="files-fieldset panel-body">
+    <legend>Files</legend>
+    <div class="file-row"><span>📎 brief-q3-stores.pdf</span><a href="#">Download</a></div>
+    <div class="upload-row"><input type="file"> Upload attachment</div>
+  </fieldset>
+  <a class="back-link" href="#">← Back to main menu</a>
+</div>
+
+<!-- ═══ TAB 2: AWAITING AGREEMENT (not agreed) ═══ -->
+<div class="state-view" id="state-awaiting">
+  <h2 class="edit-title">Edit</h2>
+  <div class="cmasters">
+    <button type="button" class="cmasters-toggle" aria-expanded="false">
+      <span class="cmasters-toggle-left">
+        <span class="cmasters-icon">👥</span>
+        <span class="cmasters-title">Formal CheckerMasters</span>
+        <span class="cmasters-count">1 contact</span>
+      </span>
+      <span class="cmasters-chevron">▼</span>
+    </button>
+    <div class="cmasters-preview">
+      <span class="cmaster-chip">Jane Miller <a href="mailto:jane@acme.com">email</a></span>
+    </div>
+    <div class="cmasters-body">
+      <div class="cmasters-list">
+        <div class="cmaster-row"><span>Jane Miller</span><a href="mailto:jane@acme.com">email</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="workflow">
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Quote drafted</div></div>
+      <div class="wf-step current"><div class="wf-dot">2</div><div class="wf-label">Sent to client</div></div>
+      <div class="wf-step future"><div class="wf-dot">3</div><div class="wf-label">Client agreed</div></div>
+      <div class="wf-step future"><div class="wf-dot">4</div><div class="wf-label">Billing approved</div></div>
+    </div>
+    <div class="panel-body">
+      <div class="section-sep">Client support ticket</div>
+      <div class="fields-grid">
+        <div class="field locked full"><label>Title</label><input readonly value="Outsource: 50 mystery shops — Q3 campaign"></div>
+        <div class="field"><label>Internal status</label>
+          <select>
+            <option value="2">Client is waiting for Checker</option>
+            <option value="3" selected>Checker is waiting for client</option>
+            <option value="7">Special postpaid service request</option>
+          </select></div>
+        <div class="field"><label>Due date</label><input value="12.07.2026"></div>
+        <div class="field"><label>Handling user</label><select><option>Alex T.</option></select></div>
+      </div>
+
+      <div class="section-sep">Conversation</div>
+      <div class="msg"><div class="msg-avatar av-system">📋</div><div class="msg-body system"><div class="msg-who">Agreement v1 · Superseded</div>
+        <div class="agreement-card superseded"><div class="agreement-body"><dl class="agreement-grid"><dt>Total amount</dt><dd>US$ 3,400</dd><dt>Basis</dt><dd>40 hrs × US$ 85/hr</dd></dl><span class="status-badge status-superseded">Superseded</span></div></div></div></div>
+      <div class="msg"><div class="msg-avatar av-system">📋</div><div class="msg-body system"><div class="msg-who">Agreement v2 · Current</div>
+        <div class="agreement-card active"><div class="agreement-body"><dl class="agreement-grid"><dt>Total amount</dt><dd>US$ 4,250</dd><dt>Basis</dt><dd>50 hrs × US$ 85/hr</dd></dl><button class="btn-agree">✓ I Agree &amp; Authorize</button> <span style="font-size:11px;color:var(--muted)">(client view — only v2 active)</span></div></div></div></div>
+
+      <div class="section-sep">Checker Team reply</div>
+      <div class="field full"><textarea rows="3" placeholder="Optional note…"></textarea></div>
+      <div class="section-sep">KeyWords</div>
+      <div class="field full"><textarea rows="2">outsource, Q3</textarea></div>
+
+      <div class="section-sep">Special service order details</div>
+      <div class="sso-card">
+        <h3>Special service order <span class="chip chip-pending">Waiting for agreement</span></h3>
+        <div class="sso-sub">Order status: Waiting for agreement · <strong>IsAgreed = 0</strong></div>
+        <div class="sso-fields">
+          <div><label>Service type</label><select><option selected>Mystery shopping — outsource</option></select></div>
+        </div>
+        <div class="units-field full">
+          <label>Total amount (hours × per-hour rate)</label>
+          <input type="number" value="4250" min="850">
+          <div class="units-note">
+            <strong>How to calculate:</strong> Confirm hours with the <strong>internal team</strong>, then multiply <em>hours × per-hour rate</em>. Enter the total here.
+            <br><span class="min-warn">Minimum: US$ 850.00 — cannot save below this amount.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="actions-bar">
+      <button type="button" class="btn btn-save btn-tip" data-tip="Save ticket fields and reply. Does not resend agreement unless you use the agreement button.">Save</button>
+      <button type="button" class="btn btn-primary btn-tip"
+        data-tip="Update the quote total and email a revised agreement. Previous Agree buttons in the thread are marked superseded.">Update &amp; resend agreement</button>
+      <a class="btn btn-cancel btn-tip" href="#" data-tip="Leave without saving changes.">Cancel</a>
+    </footer>
+    <div class="actions-hint">Not agreed → single agreement button only (label <strong>Update &amp; resend</strong> because SSO exists). Backend: <kbd>saveandupdateorder</kbd> if quote changed, else plain save. No <kbd>approve</kbd>.</div>
+  </div>
+
+  <fieldset class="files-fieldset panel-body"><legend>Files</legend><div class="upload-row"><input type="file"> Upload attachment</div></fieldset>
+  <a class="back-link" href="#">← Back to main menu</a>
+</div>
+
+<!-- ═══ TAB 3: CLIENT AGREED ═══ -->
+<div class="state-view" id="state-agreed">
+  <h2 class="edit-title">Edit</h2>
+  <div class="cmasters">
+    <button type="button" class="cmasters-toggle" aria-expanded="false">
+      <span class="cmasters-toggle-left">
+        <span class="cmasters-icon">👥</span>
+        <span class="cmasters-title">Formal CheckerMasters</span>
+        <span class="cmasters-count">1 contact</span>
+      </span>
+      <span class="cmasters-chevron">▼</span>
+    </button>
+    <div class="cmasters-preview">
+      <span class="cmaster-chip">Jane Miller <a href="mailto:jane@acme.com">email</a></span>
+    </div>
+    <div class="cmasters-body">
+      <div class="cmasters-list">
+        <div class="cmaster-row"><span>Jane Miller</span><a href="mailto:jane@acme.com">email</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="workflow">
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Quote drafted</div></div>
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Sent to client</div></div>
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Client agreed</div></div>
+      <div class="wf-step current"><div class="wf-dot">4</div><div class="wf-label">Billing approved</div></div>
+    </div>
+    <div class="panel-body">
+      <div class="fields-grid">
+        <div class="field"><label>Internal status</label>
+          <select><option value="2" selected>Client is waiting for Checker</option><option value="7">Special postpaid service request</option></select></div>
+        <div class="field"><label>Handling user</label><select><option>Alex T.</option></select></div>
+      </div>
+
+      <div class="section-sep">Conversation</div>
+      <div class="msg"><div class="msg-avatar av-system">📋</div><div class="msg-body system">
+        <div class="agreement-card agreed"><div class="agreement-head"><span>Quote v2</span><span class="agreement-ver">Agreed 8 Jul 14:02</span></div>
+        <div class="agreement-body"><span class="status-badge status-agreed">✓ Agreed by Jane Miller — no Agree button</span></div></div></div></div>
+
+      <div class="section-sep">Checker Team reply</div>
+      <div class="field full"><textarea rows="3"></textarea></div>
+      <div class="section-sep">KeyWords</div>
+      <div class="field full"><textarea rows="2">outsource</textarea></div>
+
+      <div class="section-sep">Special service order details</div>
+      <div class="sso-card muted-sso">
+        <h3>Special service order <span class="chip chip-new">Waiting for approval</span></h3>
+        <div class="sso-sub">Type &amp; units locked · <strong>IsAgreed = 1</strong></div>
+        <div class="sso-fields">
+          <div><label>Service type</label><input class="locked" readonly value="Mystery shopping — outsource"></div>
+          <div><label>Total amount</label><input class="locked" readonly value="US$ 4,250 (50 hrs × US$ 85/hr)"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="actions-bar">
+      <button type="button" class="btn btn-save btn-tip" data-tip="Save ticket fields and reply. Quote is locked — cannot change amount after client agreed.">Save</button>
+      <button type="button" class="btn btn-primary btn-tip"
+        data-tip="Confirm delivery and create the billing entry for monthly invoice. Client must have agreed first.">Approve for billing</button>
+      <a class="btn btn-cancel btn-tip" href="#" data-tip="Leave without saving changes.">Cancel</a>
+    </footer>
+    <div class="actions-hint">Client agreed → <kbd>Approve for billing</kbd> only (<kbd>approve</kbd>). Send / Update &amp; resend hidden.</div>
+  </div>
+
+  <fieldset class="files-fieldset panel-body"><legend>Files</legend><div class="file-row"><span>📎 brief-q3-stores.pdf</span><a href="#">Download</a></div></fieldset>
+  <a class="back-link" href="#">← Back to main menu</a>
+</div>
+
+<!-- ═══ TAB 4: APPROVED (terminal) ═══ -->
+<div class="state-view" id="state-approved">
+  <h2 class="edit-title">Edit</h2>
+  <div class="cmasters">
+    <button type="button" class="cmasters-toggle" aria-expanded="false">
+      <span class="cmasters-toggle-left">
+        <span class="cmasters-icon">👥</span>
+        <span class="cmasters-title">Formal CheckerMasters</span>
+        <span class="cmasters-count">1 contact</span>
+      </span>
+      <span class="cmasters-chevron">▼</span>
+    </button>
+    <div class="cmasters-preview">
+      <span class="cmaster-chip">Jane Miller <a href="mailto:jane@acme.com">email</a></span>
+    </div>
+    <div class="cmasters-body">
+      <div class="cmasters-list">
+        <div class="cmaster-row"><span>Jane Miller</span><a href="mailto:jane@acme.com">email</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="workflow">
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Quote drafted</div></div>
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Sent</div></div>
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Agreed</div></div>
+      <div class="wf-step done"><div class="wf-dot">✓</div><div class="wf-label">Approved</div></div>
+    </div>
+    <div class="panel-body">
+      <div class="field"><label>Internal status</label><select><option value="6">Case closed</option><option value="2">Client is waiting for Checker</option></select></div>
+      <div class="section-sep">Conversation</div>
+      <div class="msg"><div class="msg-avatar av-system">⚙</div><div class="msg-body system"><div class="msg-text">Billing approved 10 Jul 2026 — order locked.</div></div></div>
+      <div class="section-sep">Checker Team reply</div>
+      <div class="field full"><textarea rows="3"></textarea></div>
+      <div class="section-sep">KeyWords</div>
+      <div class="field full"><textarea rows="2"></textarea></div>
+      <div class="section-sep">Special service order details</div>
+      <div class="sso-card muted-sso">
+        <h3>Special service order <span class="chip chip-closed">Approved</span></h3>
+        <div class="sso-fields">
+          <div><label>Service</label><input class="locked" readonly value="Mystery shopping — outsource"></div>
+          <div><label>Total amount</label><input class="locked" readonly value="US$ 4,250"></div>
+        </div>
+      </div>
+    </div>
+    <footer class="actions-bar">
+      <button type="button" class="btn btn-save btn-tip" data-tip="Save ticket fields and optional reply. Order is locked after billing approval.">Save</button>
+      <a class="btn btn-cancel btn-tip" href="#" data-tip="Leave without saving changes.">Cancel</a>
+    </footer>
+    <div class="actions-hint">Terminal state — <kbd>Save</kbd> + <kbd>Cancel</kbd> only.</div>
+  </div>
+  <fieldset class="files-fieldset panel-body"><legend>Files</legend><div class="file-row"><span>📎 delivery-report.pdf</span><a href="#">Download</a></div></fieldset>
+  <a class="back-link" href="#">← Back to main menu</a>
+</div>
+
+<p class="proto-footer">
+  <strong>Unified button row:</strong> <kbd>Save</kbd> always · one SSO primary when applicable · <kbd>Cancel</kbd>.<br>
+  SSO primary = <em>Send agreement to client</em> (first send, <kbd>sendforagreement</kbd>) OR <em>Update &amp; resend agreement</em> (order exists, not agreed, <kbd>saveandupdateorder</kbd>) — same button, label from backend.<br>
+  When <strong>IsAgreed</strong> → <em>Approve for billing</em> only. Quote field = <em>hours × per-hour rate</em> (minimum enforced). CheckerMasters list is collapsible.
+</p>
+</main>
+
+<script>
+  /* CheckerMasters expand/collapse */
+  document.querySelectorAll('.cmasters-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var box = btn.closest('.cmasters');
+      var open = box.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  document.querySelectorAll('.state-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.state-tab').forEach(function (t) { t.classList.remove('active'); });
+      document.querySelectorAll('.state-view').forEach(function (v) { v.classList.remove('active'); });
+      tab.classList.add('active');
+      var el = document.getElementById('state-' + tab.getAttribute('data-state'));
+      if (el) el.classList.add('active');
+    });
+  });
+
+  /* Tab 1: SSO visibility + unified agreement button */
+  (function () {
+    var typeSel = document.getElementById('draft-service-type');
+    if (!typeSel) return;
+    var typeHint = document.getElementById('draft-type-hint');
+    var unitsWrap = document.getElementById('draft-units-wrap');
+    var unitsInput = document.getElementById('draft-units-input');
+    var credit = document.getElementById('draft-credit');
+    var creditWarn = document.getElementById('draft-credit-warn');
+    var btnAgree = document.getElementById('draft-btn-agreement');
+    var btnApprove = document.getElementById('draft-btn-approve');
+    var hint = document.getElementById('draft-hint');
+    var workflow = document.getElementById('draft-workflow');
+    var MIN_AMOUNT = 850;
+
+    function checkMinimum() {
+      if (!unitsInput) return;
+      var val = parseFloat(unitsInput.value) || 0;
+      if (val >= MIN_AMOUNT) {
+        credit.classList.remove('hidden-block');
+        creditWarn.classList.add('hidden-block');
+        btnAgree.disabled = false;
+      } else {
+        credit.classList.add('hidden-block');
+        creditWarn.classList.remove('hidden-block');
+        btnAgree.disabled = true;
+      }
+    }
+
+    function update() {
+      var v = typeSel.value;
+      var isBug = v === 'reportbug';
+
+      if (v === '') {
+        workflow.classList.add('workflow-hidden');
+        typeHint.classList.remove('hidden-block');
+        unitsWrap.classList.add('hidden-block');
+        credit.classList.add('hidden-block');
+        creditWarn.classList.add('hidden-block');
+        btnAgree.classList.add('hidden-block');
+        btnApprove.classList.add('hidden-block');
+        hint.textContent = 'Pick a service type, then enter total amount (hours × per-hour rate).';
+        return;
+      }
+
+      workflow.classList.remove('workflow-hidden');
+
+      if (isBug) {
+        typeHint.classList.add('hidden-block');
+        unitsWrap.classList.add('hidden-block');
+        credit.classList.add('hidden-block');
+        creditWarn.classList.add('hidden-block');
+        btnAgree.classList.add('hidden-block');
+        btnApprove.classList.add('hidden-block');
+        hint.textContent = 'Report a bug — no agreement workflow. Save + Cancel only.';
+        return;
+      }
+
+      typeHint.classList.add('hidden-block');
+      unitsWrap.classList.remove('hidden-block');
+      btnAgree.classList.remove('hidden-block');
+      btnAgree.textContent = 'Send agreement to client';
+      btnApprove.classList.add('hidden-block');
+      checkMinimum();
+      hint.textContent = 'Enter total (hours × rate). Hover buttons for tooltips. Below minimum blocks Send agreement.';
+    }
+
+    typeSel.addEventListener('change', update);
+    if (unitsInput) {
+      unitsInput.addEventListener('input', checkMinimum);
+      unitsInput.addEventListener('change', checkMinimum);
+    }
+    update();
+  })();
+</script>
+</body>
+</html>
