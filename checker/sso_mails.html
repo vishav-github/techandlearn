@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSO Email Templates — Combined Mockup</title>
+  <style>
+    body { margin: 0; padding: 24px; background: #e8eaf0; font-family: Roboto, Arial, sans-serif; }
+    .page-note { max-width: 640px; margin: 0 auto 28px; padding: 14px 18px; background: #fff; border-left: 4px solid #4D5677; color: #4D4C4C; font-size: 13px; line-height: 1.5; }
+    .section-label { max-width: 600px; margin: 36px auto 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #4D5677; }
+    .section-meta { max-width: 600px; margin: 0 auto 10px; font-size: 12px; color: #6b7280; line-height: 1.45; }
+  </style>
+</head>
+<body>
+
+  <div class="page-note">
+    <b>SSO outbound email mockups (review only)</b><br>
+    Checker logo: <code>https://www.checker-soft.com/wp-content/uploads/2020/05/logo.png</code><br>
+    Client logo: company system logo (<code>$_ImagePrefix$_LogoFilename</code>) — placeholder shown here.<br>
+    Header banners: max height <b>150px</b> · Brand table border <b>#4D5677</b><br>
+    Assets folder: <code>docs/sso-email-mockups/assets/</code>
+  </div>
+
+  <!-- ================================================================== -->
+  <div class="section-label">Email 1 — Client agreed → Assaf</div>
+  <div class="section-meta">
+    Subject: <b>SSO confirmed — Acme Retail Group — #28451</b><br>
+    To (prod): assaf.shany@checker-solutions.com · From: company default From + footer<br>
+    ★ Test/Preprod: vishav.singh@checker-soft.com — <b>REMOVE OVERRIDE AFTER PRODUCTION RELEASE</b>
+  </div>
+
+  <table style="border-collapse:collapse;border-spacing:0;margin:0 auto;padding:0;width:100%;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
+    <tr>
+      <td style="background:#fff;" bgcolor="#fff" align="center">
+        <table style="border-collapse:collapse;border-spacing:0;padding:0;max-width:600px;width:100%;background:#fff;" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#fff" align="center">
+          <tr>
+            <td style="padding:10px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:12px;line-height:1.4;color:#7c2d12;background:#fff7ed;">
+              <div style="border:1px dashed #c2410c;border-radius:4px;padding:8px 12px;background:#ffedd5;">
+                <b>★ TEST / PREPROD OVERRIDE — REMOVE AFTER PRODUCTION RELEASE</b><br>
+                Recipient is <b>vishav.singh@checker-soft.com</b> (not Assaf).
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table width="100%" style="width:100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding:22px 0 0 34px;" valign="middle" align="left">
+                    <img src="https://www.checker-soft.com/wp-content/uploads/2020/05/logo.png" alt="Checker" width="120"
+                      style="max-width:120px;height:auto;display:block;border:0;outline:none;">
+                  </td>
+                  <td style="padding:22px 34px 0 0;" valign="middle" align="right">
+                    <!-- Production: company logo from client system ($_ImagePrefix.$_LogoFilename) -->
+                    <img src="assets/client-logo-placeholder.svg" alt="Client company logo" height="40"
+                      style="max-height:40px;max-width:140px;height:40px;width:auto;display:inline-block;border:0;outline:none;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 34px 0 34px;" align="center">
+              <img src="assets/sso-banner-client-confirmed-h150.png" alt="Special Service Order — Client Confirmed"
+                width="532" height="150"
+                style="max-width:532px;width:100%;height:150px;object-fit:cover;display:block;border:0;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              <b style="font-size:16px;color:#272727;">Dear Assaf,</b><br><br>
+              A Special Service Order has been <b>confirmed by the client</b>. Delivery work may now proceed under the agreed scope and amount.
+              This is an automated Accounts / operations copy — the client has already authorized the order in Self-billing / the support ticket.
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 34px 0 34px;">
+              <table style="width:100%;border-collapse:collapse;border-top:2px solid #4D5677;" width="100%" cellspacing="0" cellpadding="0">
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);">
+                  <td style="font-family:Roboto,Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:10px 11px 14px;width:38%;color:#494949;">Field</td>
+                  <td style="font-family:Roboto,Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:10px 11px 14px;color:#494949;">Value</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Company</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Acme Retail Group</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Client</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Jane Client &lt;jane@acme.example&gt;</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Service</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Online Training</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Status</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Authorized by client — work to begin</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Agreed amount</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">US$ 450.00</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Hours / rate</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">3 / US$ 150.00</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Billing</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Monthly postpaid</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Ticket</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">#28451 — Online training for new managers</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Confirmed at</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">20/08/2026 14:32</td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              <b>Next step for operations:</b> complete and deliver the work, then approve billing on the ticket when ready.
+              The charge will appear on the client’s <b>monthly postpaid invoice</b> after billing approval (typically on the <b>1st of the following month</b>).
+              No Accounts action is required until that approval.<br><br>
+              <a href="#" style="color:#4D5677;">Open support ticket #28451</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 34px 28px 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              Warm regards,<br>Checker Support Team<br>
+              <span style="color:#6b7280;font-size:12px;">(Automated — Special Service Order)</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ================================================================== -->
+  <div class="section-label">Email 2a — AM approved → Client</div>
+  <div class="section-meta">
+    Subject: <b>Service completed — Online Training — #28451</b><br>
+    To: client email (individual) · From: support@checker-soft.com · Assaf not CC’d
+  </div>
+
+  <table style="border-collapse:collapse;border-spacing:0;margin:0 auto;padding:0;width:100%;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
+    <tr>
+      <td style="background:#fff;" bgcolor="#fff" align="center">
+        <table style="border-collapse:collapse;border-spacing:0;padding:0;max-width:600px;width:100%;background:#fff;" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#fff" align="center">
+          <tr>
+            <td>
+              <table width="100%" style="width:100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding:22px 0 0 34px;" valign="middle" align="left">
+                    <img src="https://www.checker-soft.com/wp-content/uploads/2020/05/logo.png" alt="Checker" width="120"
+                      style="max-width:120px;height:auto;display:block;border:0;outline:none;">
+                  </td>
+                  <td style="padding:22px 34px 0 0;" valign="middle" align="right">
+                    <img src="assets/client-logo-placeholder.svg" alt="Client company logo" height="40"
+                      style="max-height:40px;max-width:140px;height:40px;width:auto;display:inline-block;border:0;outline:none;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 34px 0 34px;" align="center">
+              <img src="assets/sso-banner-billing-approved-h150.png" alt="Special Service Order — Completed &amp; Billing Approved"
+                width="532" height="150"
+                style="max-width:532px;width:100%;height:150px;object-fit:cover;display:block;border:0;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              <b style="font-size:16px;color:#272727;">Dear Jane Client,</b><br><br>
+              Thank you for working with Checker. Your Special Service Order has been <b>completed and delivered</b>,
+              and billing for this order has been <b>approved</b> by your Account Manager.
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 34px 0 34px;">
+              <table style="width:100%;border-collapse:collapse;border-top:2px solid #4D5677;" width="100%" cellspacing="0" cellpadding="0">
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);">
+                  <td style="font-family:Roboto,Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:10px 11px 14px;width:38%;color:#494949;">Field</td>
+                  <td style="font-family:Roboto,Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:10px 11px 14px;color:#494949;">Value</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Company</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Acme Retail Group</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Service</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Online Training</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Status</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Completed &amp; delivered — billing approved</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Completed on</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">20/08/2026 16:10</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Approved by</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Alex Manager</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Total amount</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">US$ 450.00</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Hours / rate</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">3 / US$ 150.00</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Billing</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Monthly postpaid</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Invoice timing</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">1st of the following month</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Ticket</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">#28451 — Online training for new managers</td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              <b>What happens next:</b> this amount will be <b>added automatically</b> to your next monthly postpaid invoice.
+              You do not need to place a new order or take any further action for this charge.
+              When the invoice is issued, you will receive it through the usual Self-billing / invoice channel.<br><br>
+              Questions about the work or the charge can be raised on the same support ticket:
+              <a href="#" style="color:#4D5677;">Open ticket #28451</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 34px 28px 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              Warm regards,<br>Checker Support Team
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ================================================================== -->
+  <div class="section-label">Email 2b — AM approved → Assaf (separate send)</div>
+  <div class="section-meta">
+    Subject: <b>SSO billing approved — Acme Retail Group — #28451</b><br>
+    To (prod): assaf.shany@checker-solutions.com · From: support@checker-soft.com · Not CC on client mail<br>
+    ★ Test/Preprod: vishav.singh@checker-soft.com — <b>REMOVE OVERRIDE AFTER PRODUCTION RELEASE</b>
+  </div>
+
+  <table style="border-collapse:collapse;border-spacing:0;margin:0 auto 48px;padding:0;width:100%;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
+    <tr>
+      <td style="background:#fff;" bgcolor="#fff" align="center">
+        <table style="border-collapse:collapse;border-spacing:0;padding:0;max-width:600px;width:100%;background:#fff;" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#fff" align="center">
+          <tr>
+            <td style="padding:10px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:12px;line-height:1.4;color:#7c2d12;background:#fff7ed;">
+              <div style="border:1px dashed #c2410c;border-radius:4px;padding:8px 12px;background:#ffedd5;">
+                <b>★ TEST / PREPROD OVERRIDE — REMOVE AFTER PRODUCTION RELEASE</b><br>
+                Recipient is <b>vishav.singh@checker-soft.com</b> (not Assaf).
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table width="100%" style="width:100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding:22px 0 0 34px;" valign="middle" align="left">
+                    <img src="https://www.checker-soft.com/wp-content/uploads/2020/05/logo.png" alt="Checker" width="120"
+                      style="max-width:120px;height:auto;display:block;border:0;outline:none;">
+                  </td>
+                  <td style="padding:22px 34px 0 0;" valign="middle" align="right">
+                    <img src="assets/client-logo-placeholder.svg" alt="Client company logo" height="40"
+                      style="max-height:40px;max-width:140px;height:40px;width:auto;display:inline-block;border:0;outline:none;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 34px 0 34px;" align="center">
+              <img src="assets/sso-banner-billing-approved-h150.png" alt="Special Service Order — Billing Approved"
+                width="532" height="150"
+                style="max-width:532px;width:100%;height:150px;object-fit:cover;display:block;border:0;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              <b style="font-size:16px;color:#272727;">Dear Assaf,</b><br><br>
+              Billing has been <b>approved</b> for a completed Special Service Order.
+              The amount below is eligible for the client’s <b>monthly postpaid invoice</b>
+              (Self-billing monthly services invoice for the approval month).
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 34px 0 34px;">
+              <table style="width:100%;border-collapse:collapse;border-top:2px solid #4D5677;" width="100%" cellspacing="0" cellpadding="0">
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);">
+                  <td style="font-family:Roboto,Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:10px 11px 14px;width:38%;color:#494949;">Field</td>
+                  <td style="font-family:Roboto,Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:10px 11px 14px;color:#494949;">Value</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Company</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Acme Retail Group</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Client</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Jane Client &lt;jane@acme.example&gt;</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Service</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Online Training</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Status</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Completed &amp; delivered — billing approved</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Completed on</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">20/08/2026 16:10</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Approved by</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Alex Manager</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Amount to invoice</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">US$ 450.00</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Hours / rate</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">3 / US$ 150.00</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.05);"><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">Ticket</td><td style="font-family:Roboto,Arial,sans-serif;font-size:14px;padding:10px 11px;color:#000;">#28451 — Online training for new managers</td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 34px 0 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              The client has been notified separately of completion and billing approval.
+              No manual invoice creation is required for this line unless the monthly job fails —
+              treat this as the Accounts heads-up that the SSO is locked for charging.<br><br>
+              <a href="#" style="color:#4D5677;">Open support ticket #28451</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 34px 28px 34px;font-family:Roboto,Arial,sans-serif;font-size:14px;line-height:150%;color:#4D4C4C;" align="left">
+              Warm regards,<br>Checker Support Team<br>
+              <span style="color:#6b7280;font-size:12px;">(Automated — Special Service Order)</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
