@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Configure Email Sending Pricing (Package + Overage)</title>
+  <style>
+    :root {
+      --navy: #4D5677;
+      --navy-dark: #3a425c;
+      --blue: #0d6efd;
+      --red: #dc3545;
+      --border: #cfd3dc;
+      --bg: #e8eaf0;
+      --muted: #6b7280;
+      --ok: #155724;
+      --ok-bg: #d4edda;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px 16px 48px;
+      font-family: Roboto, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: #222;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .page-note {
+      max-width: 920px;
+      margin: 0 auto 20px;
+      padding: 12px 16px;
+      background: #fff;
+      border-left: 4px solid var(--navy);
+      color: #444;
+    }
+    .page-note b { color: #111; }
+    .shell {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #f7f8fb;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+    }
+    .shell h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: var(--navy);
+    }
+    .pricing-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: #eef1f8;
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .btn {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    .btn-danger {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+    .btn:hover { filter: brightness(0.97); }
+
+    /* Modal */
+    .modal-backdrop {
+      max-width: 920px;
+      margin: 0 auto;
+      background: rgba(30, 34, 48, 0.35);
+      padding: 24px 12px;
+      border-radius: 8px;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+    .modal-titlebar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f0f0f0;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 14px;
+      color: #222;
+    }
+    .modal-body { padding: 14px 16px 8px; }
+    .hint {
+      margin: 0 0 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .section-label {
+      margin: 14px 0 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    table.grid {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    table.grid th,
+    table.grid td {
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    table.grid th {
+      background: #f0f0f0;
+      font-weight: 700;
+    }
+    table.grid td.num,
+    table.grid th.num { text-align: right; }
+    table.grid input[type="text"],
+    table.grid input[type="number"] {
+      width: 100%;
+      max-width: 120px;
+      padding: 4px 6px;
+      border: 1px solid #bbc1ce;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: inherit;
+      text-align: right;
+    }
+    table.grid input.wide { max-width: 140px; }
+    .edited { color: var(--blue); font-weight: 700; }
+    .ro { color: #888; }
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .rule-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fafbfe;
+    }
+    .rule-card label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .rule-card input {
+      width: 100%;
+      padding: 5px 8px;
+      border: 1px solid #bbc1ce;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .rule-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .calc {
+      border: 1px solid #b8c4e0;
+      background: #f5f8ff;
+      border-radius: 4px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+    .calc h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--navy);
+    }
+    .calc-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+    .calc-row label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .calc-row input {
+      padding: 5px 8px;
+      border: 1px solid #bbc1ce;
+      border-radius: 3px;
+      font-size: 12px;
+      width: 140px;
+      font-family: inherit;
+    }
+    .breakdown {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: #fff;
+    }
+    .breakdown td {
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+    }
+    .breakdown td.k { width: 42%; color: #555; }
+    .breakdown td.v { font-weight: 600; }
+    .total-row td { background: #eef4ff; font-size: 13px; }
+    .compare { color: var(--muted); font-weight: 400 !important; }
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px 14px;
+      border-top: 1px solid #ddd;
+      margin-top: 8px;
+    }
+    .footer-right { display: flex; gap: 6px; }
+    .toast {
+      display: none;
+      margin: 12px auto 0;
+      max-width: 920px;
+      padding: 8px 14px;
+      border-radius: 4px;
+      background: var(--ok-bg);
+      border: 1px solid #c3e6cb;
+      color: var(--ok);
+      font-size: 12px;
+    }
+    .legend {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-note">
+    <b>UX mockup only — not live product.</b><br>
+    Proposed: <b>Configure Email Sending Pricing</b> modal on management company pricing
+    (same pattern as API Subscription pricing dialog).<br>
+    Model: <b>Package fee + overage</b> for monthly postpaid Email Sending Service.<br>
+    Open this file in a browser to try the live example calculator.
+  </div>
+
+  <!-- Fake pricing list context -->
+  <div class="shell">
+    <h2>m_company-pricing.php — Email Sending Service (context)</h2>
+    <div class="pricing-row">
+      <span class="badge">Monthly service</span>
+      <strong>Email Sending Service</strong>
+            <span class="badge">Package + overage · 5 tiers</span>
+      <button type="button" class="btn btn-primary" id="btn-open" onclick="document.getElementById('backdrop').scrollIntoView({behavior:'smooth', block:'start'})">
+        Configure Email Sending Pricing
+      </button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="backdrop">
+    <div class="modal" role="dialog" aria-label="Configure Email Sending Pricing">
+      <div class="modal-titlebar">
+        <span>Configure Email Sending Pricing</span>
+        <span style="font-weight:400;color:#888;font-size:12px;">Company currency: USD</span>
+      </div>
+
+      <div class="modal-body">
+        <p class="section-label">Tier packages (defaults from config — edit company overrides):</p>
+        <p class="legend">Blue values = company override vs default. Included emails are config defaults (read-only in v1).</p>
+        <p class="hint" style="margin-top:0;">
+          Charge = <b>package fee</b> for the largest included block ≤ usage, plus <b>overage</b> for extras.
+          Tier 1 package fee is the floor when usage is within that block (e.g. $40 for 20,000).
+          This is <b>not</b> “all volume × one unit rate”.
+        </p>
+
+        <table class="grid" id="tier-table">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th class="num">Included emails</th>
+              <th class="num">Package fee</th>
+              <th class="num">Overage / email</th>
+              <th class="num">Boundary check<br><span style="font-weight:400">(fee ≈ included × overage)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-tier="1">
+              <td><strong>Tier 1</strong></td>
+              <td class="num ro">20,000</td>
+              <td class="num"><input type="number" step="0.01" class="fee" value="40.00" data-default="40.00"></td>
+              <td class="num"><input type="number" step="0.00000001" class="overage wide" value="0.00199380" data-default="0.00199380"></td>
+              <td class="num ro boundary">—</td>
+            </tr>
+            <tr data-tier="2">
+              <td><strong>Tier 2</strong></td>
+              <td class="num ro">50,000</td>
+              <td class="num"><input type="number" step="0.01" class="fee" value="82.00" data-default="82.00"></td>
+              <td class="num"><input type="number" step="0.00000001" class="overage wide" value="0.00163426" data-default="0.00163426"></td>
+              <td class="num ro boundary">—</td>
+            </tr>
+            <tr data-tier="3">
+              <td><strong>Tier 3</strong></td>
+              <td class="num ro">100,000</td>
+              <td class="num"><input type="number" step="0.01" class="fee" value="134.00" data-default="134.00"></td>
+              <td class="num"><input type="number" step="0.00000001" class="overage wide" value="0.00133956" data-default="0.00133956"></td>
+              <td class="num ro boundary">—</td>
+            </tr>
+            <tr data-tier="4">
+              <td><strong>Tier 4</strong></td>
+              <td class="num ro">500,000</td>
+              <td class="num"><input type="number" step="0.01" class="fee edited" value="549.00" data-default="549.00"></td>
+              <td class="num"><input type="number" step="0.00000001" class="overage wide" value="0.00109800" data-default="0.00109800"></td>
+              <td class="num ro boundary">—</td>
+            </tr>
+            <tr data-tier="5">
+              <td><strong>Tier 5</strong></td>
+              <td class="num ro">1,000,000</td>
+              <td class="num"><input type="number" step="0.01" class="fee" value="900.00" data-default="900.00"></td>
+              <td class="num"><input type="number" step="0.00000001" class="overage wide" value="0.00090000" data-default="0.00090000"></td>
+              <td class="num ro boundary">—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="calc">
+          <h3>Live example calculator</h3>
+          <div class="calc-row">
+            <div>
+              <label>Sample volume (emails tried)</label>
+              <input type="number" id="sample-vol" value="50010" min="0" step="1">
+            </div>
+            <button type="button" class="btn" onclick="setVol(25150)">25,150</button>
+            <button type="button" class="btn" onclick="setVol(50010)">50,010</button>
+            <button type="button" class="btn" onclick="setVol(1000000)">1,000,000</button>
+          </div>
+
+          <table class="breakdown" id="breakdown">
+            <tr><td class="k">Selected tier</td><td class="v" id="b-tier">—</td></tr>
+            <tr><td class="k">Included emails</td><td class="v" id="b-incl">—</td></tr>
+            <tr><td class="k">Package fee</td><td class="v" id="b-fee">—</td></tr>
+            <tr><td class="k">Extra emails</td><td class="v" id="b-extra">—</td></tr>
+            <tr><td class="k">Overage amount</td><td class="v" id="b-over">—</td></tr>
+            <tr class="total-row"><td class="k"><b>Total to pay (proposed)</b></td><td class="v" id="b-total">—</td></tr>
+            <tr>
+              <td class="k">Compare — existing model<br><span style="font-weight:400;color:#888;">usage × overage rate of selected tier</span></td>
+              <td class="v compare" id="b-old">—</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="resetDefaults()">Reset All to Default</button>
+        <div class="footer-right">
+          <button type="button" class="btn" onclick="alert('Mockup: Cancel — no changes saved.')">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="fakeSave()">Save Pricing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Mockup: pricing saved for this company (no backend).</div>
+
+  <div class="page-note" style="margin-top:20px;">
+    <b>Invoice line preview (v1)</b><br>
+    <code style="font-size:12px;">Email Sending: Package 50,000 ($82.00) + 10 extras × $0.00163426 = $82.02</code>
+  </div>
+
+<script>
+  var INCLUDED = [20000, 50000, 100000, 500000, 1000000];
+
+  function money(n) {
+    return '$' + (Math.round(n * 100) / 100).toFixed(2);
+  }
+
+  function markEdited(input) {
+    var def = parseFloat(input.getAttribute('data-default'));
+    var cur = parseFloat(input.value);
+    if (Math.abs(cur - def) > 1e-12) input.classList.add('edited');
+    else input.classList.remove('edited');
+  }
+
+  function readTiers() {
+    var rows = document.querySelectorAll('#tier-table tbody tr');
+    var tiers = [];
+    rows.forEach(function (tr, i) {
+      var fee = parseFloat(tr.querySelector('.fee').value) || 0;
+      var over = parseFloat(tr.querySelector('.overage').value) || 0;
+      var incl = INCLUDED[i];
+      tiers.push({ tier: i + 1, included: incl, fee: fee, overage: over });
+      var boundary = incl * over;
+      tr.querySelector('.boundary').textContent = money(boundary);
+      markEdited(tr.querySelector('.fee'));
+      markEdited(tr.querySelector('.overage'));
+    });
+    return tiers;
+  }
+
+  function pickTier(vol, tiers) {
+    var chosen = tiers[0];
+    for (var i = 0; i < tiers.length; i++) {
+      if (vol >= tiers[i].included) chosen = tiers[i];
+    }
+    return chosen;
+  }
+
+  function recalc() {
+    var tiers = readTiers();
+    var vol = parseInt(document.getElementById('sample-vol').value, 10) || 0;
+
+    var t = pickTier(vol, tiers);
+    var fee = t.fee;
+    var overRate = t.overage;
+    var extra = Math.max(0, vol - t.included);
+    var overAmt = extra * overRate;
+    var total = fee + overAmt;
+    var oldModel = vol * overRate;
+
+    document.getElementById('b-tier').textContent = 'Tier ' + t.tier;
+    document.getElementById('b-incl').textContent = t.included.toLocaleString();
+    document.getElementById('b-fee').textContent = money(fee);
+    document.getElementById('b-extra').textContent = extra.toLocaleString();
+    document.getElementById('b-over').textContent = money(overAmt) + '  (' + extra.toLocaleString() + ' × ' + overRate.toFixed(8) + ')';
+    document.getElementById('b-total').textContent = money(total);
+    document.getElementById('b-old').textContent = money(oldModel) + '  (for discussion only)';
+  }
+
+  function setVol(v) {
+    document.getElementById('sample-vol').value = v;
+    recalc();
+  }
+
+  function resetDefaults() {
+    document.querySelectorAll('#tier-table input').forEach(function (inp) {
+      inp.value = inp.getAttribute('data-default');
+    });
+    recalc();
+  }
+
+  function fakeSave() {
+    var el = document.getElementById('toast');
+    el.style.display = 'block';
+    setTimeout(function () { el.style.display = 'none'; }, 2500);
+  }
+
+  document.querySelectorAll('#tier-table input, #sample-vol').forEach(function (el) {
+    el.addEventListener('input', recalc);
+    el.addEventListener('change', recalc);
+  });
+
+  recalc();
+</script>
+</body>
+</html>
