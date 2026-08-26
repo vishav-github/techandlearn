@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Checker release procedure: full QA on Testing, partial QA on Preproduction, and what must be done before an update reaches production.">
+<meta name="robots" content="noindex">
+<title>Checker Release Gates</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F3F6F5; --surface:#FFFFFF; --ink:#141A19; --muted:#596664; --line:#DBE3E1;
+  --accent:#0E6E72; --accent-soft:#E3EFEF;
+  --stop:#A8241C; --stop-soft:#FAEAE8;
+  --hold:#84520A; --hold-soft:#F8F0DE;
+  --go:#2B6B45; --go-soft:#E4F0E8;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1413; --surface:#161D1C; --ink:#E6EDEB; --muted:#93A2A0; --line:#28312F;
+    --accent:#5FB9BC; --accent-soft:#15302F;
+    --stop:#F09189; --stop-soft:#2E1F1D;
+    --hold:#DCA646; --hold-soft:#2B2317;
+    --go:#7FC697; --go-soft:#19291F;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1413; --surface:#161D1C; --ink:#E6EDEB; --muted:#93A2A0; --line:#28312F;
+  --accent:#5FB9BC; --accent-soft:#15302F;
+  --stop:#F09189; --stop-soft:#2E1F1D;
+  --hold:#DCA646; --hold-soft:#2B2317;
+  --go:#7FC697; --go-soft:#19291F;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:880px; margin:0 auto; padding:48px 24px 96px; display:flex; flex-direction:column; gap:44px}
+p{margin:0; max-width:68ch}
+.stack{display:flex; flex-direction:column; gap:14px}
+
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin:0;
+}
+h1{
+  font-family:var(--serif); font-weight:600; font-size:clamp(30px,5vw,42px);
+  line-height:1.15; margin:0; text-wrap:balance; letter-spacing:-.01em;
+}
+.standfirst{font-size:18px; color:var(--muted); max-width:60ch}
+header{border-bottom:1px solid var(--line); padding-bottom:32px; display:flex; flex-direction:column; gap:12px}
+
+h2{
+  font-family:var(--serif); font-weight:600; font-size:22px; margin:0;
+  display:flex; align-items:baseline; gap:12px; text-wrap:balance; flex-wrap:wrap;
+}
+h2 .num{font-family:var(--mono); font-size:12px; color:var(--accent); font-weight:500}
+section{display:flex; flex-direction:column; gap:18px}
+
+figure{margin:0; display:flex; flex-direction:column; gap:12px}
+.scroll{overflow-x:auto; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px}
+svg.flow{display:block; min-width:800px; width:100%; height:auto}
+figcaption{font-size:14px; color:var(--muted); max-width:68ch}
+
+.n{fill:var(--surface); stroke:var(--line); stroke-width:1.5}
+.n-key{fill:var(--accent-soft); stroke:var(--accent); stroke-width:2}
+.n-bad{fill:var(--stop-soft); stroke:var(--stop); stroke-width:1.5; stroke-dasharray:5 4}
+.nt{font-family:var(--sans); font-size:13px; fill:var(--ink); text-anchor:middle}
+.nt-b{font-weight:600}
+.cap{font-family:var(--sans); font-size:11.5px; fill:var(--muted); text-anchor:middle}
+.tag{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-anchor:middle; fill:var(--accent)}
+.tag-bad{fill:var(--stop)}
+.tag-l{text-anchor:start}
+.tag-r{text-anchor:end}
+.ln{stroke:var(--muted); stroke-width:1.5; fill:none}
+.ln-acc{stroke:var(--accent); stroke-width:1.75; fill:none}
+.ln-bad{stroke:var(--stop); stroke-width:1.75; fill:none; stroke-dasharray:6 5}
+.gate{fill:var(--accent-soft); stroke:var(--accent); stroke-width:2}
+.gt{font-family:var(--mono); font-size:12px; font-weight:500; fill:var(--accent); text-anchor:middle}
+.xmark{stroke:var(--stop); stroke-width:2.5; stroke-linecap:round}
+
+.rules{display:flex; flex-direction:column; gap:12px}
+.rule{
+  display:grid; grid-template-columns:44px 1fr; gap:16px; align-items:start;
+  background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:8px; padding:16px 18px;
+}
+.rule .id{font-family:var(--mono); font-size:12px; color:var(--accent); font-weight:500; padding-top:2px}
+.rule p{font-size:15px}
+.rule strong{font-weight:600}
+
+.tbl{width:100%; border-collapse:collapse; font-size:14.5px}
+.tbl th,.tbl td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+.tbl thead th{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); font-weight:500; background:var(--surface);
+}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl td:first-child{font-weight:600}
+.tblwrap{overflow-x:auto; background:var(--surface); border:1px solid var(--line); border-radius:10px}
+.tbl th:first-child,.tbl td:first-child{padding-left:18px}
+.tbl th:last-child,.tbl td:last-child{padding-right:18px}
+
+.pill{
+  display:inline-block; font-family:var(--mono); font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; padding:3px 8px; border-radius:99px; white-space:nowrap;
+}
+.pill-req{background:var(--stop-soft); color:var(--stop)}
+.pill-opt{background:var(--go-soft); color:var(--go)}
+.pill-prop{background:var(--hold-soft); color:var(--hold)}
+
+.note{
+  background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  padding:18px 20px; display:flex; flex-direction:column; gap:10px;
+}
+.note h3{font-family:var(--sans); font-size:14px; margin:0; font-weight:600}
+.note p{font-size:14.5px; color:var(--muted)}
+.note-flag{border-left:3px solid var(--hold)}
+
+ul{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; max-width:68ch; font-size:15px}
+li::marker{color:var(--accent)}
+
+footer{border-top:1px solid var(--line); padding-top:28px; font-size:13.5px; color:var(--muted)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Release procedure · effective from the next release</p>
+  <h1>Release Gates</h1>
+  <p class="standfirst">Everything is tested on Testing. Preproduction is partially re-tested. Nothing reaches production before the change is documented and the team is briefed.</p>
+</header>
+
+<section class="stack">
+  <h2><span class="num">01</span> Purpose</h2>
+  <p>This is the release procedure for Checker: what gets tested where, what has to be ready before an update reaches production, and who signs it off. It is written down so it can be followed exactly and referred to in a ticket.</p>
+  <p>Updates reach clients only through these gates. A change that has not passed them does not go out — regardless of how small it looks or where it was applied. The documentation and briefing steps apply when a release contains enhancements or behaviour changes; a release made up of bug fixes alone keeps the shorter path, so routine fixes are not delayed.</p>
+</section>
+
+<section>
+  <h2><span class="num">02</span> The path a change takes</h2>
+  <figure>
+    <div class="scroll">
+      <svg class="flow" viewBox="0 0 1000 400" role="img" aria-label="Flow diagram: a change moves from Develop and PR review to Testing on master2026, passes Gate 1 full QA on Testing, reaches Preproduction Deployment, passes Gate 2 partial QA covering enhancements and changes made directly on Preproduction, then Gate 3 release approval, then goes live to production, and clients are emailed at go-live. Branching from Preproduction, the behaviour-change lane requires documenting the change and briefing the team, both completed before release approval. A change made directly on Preproduction is never released untested; it is covered by Gate 2.">
+        <defs>
+          <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--muted)"></path>
+          </marker>
+          <marker id="arwacc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--accent)"></path>
+          </marker>
+          <marker id="arwbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--stop)"></path>
+          </marker>
+        </defs>
+
+        <!-- direct change on preproduction -->
+        <rect class="n-bad" x="440" y="26" width="136" height="46" rx="6"></rect>
+        <text class="nt" x="508" y="46">Direct change</text>
+        <text class="nt" x="508" y="63">on Preproduction</text>
+
+        <path class="ln-bad" d="M576 49 C 700 38, 880 52, 926 150" marker-end="url(#arwbad)"></path>
+        <line class="xmark" x1="742" y1="34" x2="766" y2="58"></line>
+        <line class="xmark" x1="766" y1="34" x2="742" y2="58"></line>
+        <text class="tag tag-bad" x="754" y="82">NEVER RELEASED</text>
+        <text class="tag tag-bad" x="754" y="96">UNTESTED</text>
+
+        <path class="ln-acc" d="M508 72 L508 152" marker-end="url(#arwacc)"></path>
+        <text class="tag tag-l" x="518" y="118">COVERED BY GATE 2</text>
+
+        <!-- spine -->
+        <rect class="n" x="20" y="158" width="136" height="56" rx="6"></rect>
+        <text class="nt nt-b" x="88" y="182">Develop</text>
+        <text class="nt" x="88" y="199">+ PR review</text>
+
+        <rect class="n" x="230" y="158" width="136" height="56" rx="6"></rect>
+        <text class="nt nt-b" x="298" y="182">Testing</text>
+        <text class="nt" x="298" y="199">master2026</text>
+
+        <rect class="n" x="440" y="158" width="136" height="56" rx="6"></rect>
+        <text class="nt nt-b" x="508" y="182">Preproduction</text>
+        <text class="nt" x="508" y="199">Deployment</text>
+
+        <rect class="n-key" x="650" y="158" width="136" height="56" rx="6"></rect>
+        <text class="tag" x="718" y="148">GATE 3</text>
+        <text class="nt nt-b" x="718" y="182">Release</text>
+        <text class="nt" x="718" y="199">approval</text>
+
+        <rect class="n" x="860" y="158" width="136" height="56" rx="6"></rect>
+        <text class="nt nt-b" x="928" y="182">Live</text>
+        <text class="nt" x="928" y="199">production</text>
+
+        <line class="ln" x1="156" y1="186" x2="224" y2="186" marker-end="url(#arw)"></line>
+        <text class="tag" x="190" y="172">MERGE</text>
+
+        <line class="ln" x1="366" y1="186" x2="386" y2="186"></line>
+        <circle class="gate" cx="403" cy="186" r="15"></circle>
+        <text class="gt" x="403" y="191">1</text>
+        <line class="ln" x1="420" y1="186" x2="434" y2="186" marker-end="url(#arw)"></line>
+        <text class="cap" x="403" y="238">Full QA on</text>
+        <text class="cap" x="403" y="253">Testing</text>
+
+        <line class="ln" x1="576" y1="186" x2="596" y2="186"></line>
+        <circle class="gate" cx="613" cy="186" r="15"></circle>
+        <text class="gt" x="613" y="191">2</text>
+        <line class="ln" x1="630" y1="186" x2="644" y2="186" marker-end="url(#arw)"></line>
+        <text class="cap" x="613" y="238">Partial QA on</text>
+        <text class="cap" x="613" y="253">Preproduction</text>
+
+        <line class="ln" x1="786" y1="186" x2="854" y2="186" marker-end="url(#arw)"></line>
+        <text class="tag" x="820" y="172">WINDOW</text>
+
+        <!-- behaviour-change lane, branching from Preproduction -->
+        <path class="ln-acc" d="M508 214 L508 318" marker-end="url(#arwacc)"></path>
+        <text class="tag tag-r" x="498" y="292">IF BEHAVIOUR CHANGES</text>
+
+        <rect class="n" x="440" y="320" width="136" height="48" rx="6"></rect>
+        <text class="nt" x="508" y="341">Document</text>
+        <text class="nt" x="508" y="358">the change</text>
+
+        <rect class="n" x="650" y="320" width="136" height="48" rx="6"></rect>
+        <text class="nt" x="718" y="341">Brief</text>
+        <text class="nt" x="718" y="358">the team</text>
+
+        <line class="ln" x1="576" y1="344" x2="644" y2="344" marker-end="url(#arw)"></line>
+
+        <path class="ln-acc" d="M718 320 L718 220" marker-end="url(#arwacc)"></path>
+        <text class="tag tag-l" x="728" y="292">BEFORE RELEASE</text>
+
+        <text class="tag tag-r" x="424" y="340">BEHAVIOUR-CHANGE</text>
+        <text class="tag tag-r" x="424" y="354">LANE</text>
+
+        <!-- client email at go-live -->
+        <path class="ln-acc" d="M928 214 L928 318" marker-end="url(#arwacc)"></path>
+        <text class="tag tag-r" x="918" y="292">AT GO-LIVE</text>
+
+        <rect class="n" x="860" y="320" width="136" height="48" rx="6"></rect>
+        <text class="nt" x="928" y="341">Email</text>
+        <text class="nt" x="928" y="358">clients</text>
+      </svg>
+    </div>
+    <figcaption>Enhancements and bug fixes are both fully tested on Testing at Gate 1. Preproduction gets a partial QA at Gate 2, covering enhancements and anything applied directly there. The behaviour-change lane branches from Preproduction and must finish before release approval. Clients are emailed once the update is live.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="num">03</span> Non-negotiable rules</h2>
+  <div class="rules">
+    <div class="rule">
+      <span class="id">R1</span>
+      <p><strong>Everything is tested on Testing first.</strong> Enhancements and bug fixes alike pass full QA on master2026 before they move to Preproduction. There is no route to Preproduction that skips this.</p>
+    </div>
+    <div class="rule">
+      <span class="id">R2</span>
+      <p><strong>Preproduction gets a partial QA before release.</strong> Gate 2 covers the enhancements in the release and any fix applied directly on Preproduction. A change made straight on Preproduction is never released untested because it was already there.</p>
+    </div>
+    <div class="rule">
+      <span class="id">R3</span>
+      <p><strong>No production release before the change is documented and the team is briefed.</strong> Both are completed before release approval — not written up afterwards. If either is missing, the release waits.</p>
+    </div>
+    <div class="rule">
+      <span class="id">R4</span>
+      <p><strong>Clients are emailed once the update is live.</strong> The client notice goes out at go-live, describing what changed, so nobody is told about behaviour they cannot yet see and nobody meets a change they were never told about.</p>
+    </div>
+    <div class="rule">
+      <span class="id">R5</span>
+      <p><strong>A bug-only release may skip the documentation and the briefing — and nothing else.</strong> Both QA gates, the confirmed timing, and the go-live client notice still apply. This is the only shortcut in the procedure.</p>
+    </div>
+    <div class="rule">
+      <span class="id">R6</span>
+      <p><strong>No partial releases.</strong> The approved scope ships whole. Nothing is split out at the last minute, and nothing that failed a gate travels with the rest of the release.</p>
+    </div>
+    <div class="rule">
+      <span class="id">R7</span>
+      <p><strong>Release timing is confirmed in writing, and never falls on a weekend.</strong> The release is scheduled only once the deployment owner has confirmed a slot, and no production release happens on Friday, Saturday or Sunday. If no confirmation arrives by the agreed cut-off, the release moves to the next window rather than going ahead unconfirmed.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span> What a bug-only release may skip</h2>
+  <p>The documentation and briefing steps apply when the release contains enhancements or behaviour changes. A release made up of bug fixes alone keeps the shorter path — this is what stops the procedure from adding delay to every general update.</p>
+  <div class="tblwrap">
+    <table class="tbl">
+      <thead>
+        <tr><th>Step</th><th>Bug fixes only</th><th>Includes enhancement or behaviour change</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Full QA on Testing — Gate 1</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
+        <tr><td>Partial QA on Preproduction — Gate 2</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
+        <tr><td>Document the change</td><td><span class="pill pill-opt">May skip</span></td><td><span class="pill pill-req">Required</span> — before approval</td></tr>
+        <tr><td>Brief the team</td><td><span class="pill pill-opt">May skip</span></td><td><span class="pill pill-req">Required</span> — before approval</td></tr>
+        <tr><td>Email clients at go-live</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
+        <tr><td>Timing confirmed, not a weekend</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
+        <tr><td>Release shipped whole</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <h3>Deciding which column applies</h3>
+    <p>If a user could notice the difference without being told, it is a behaviour change. Wording, alerts, comments, defaults, added or moved controls, and anything that changes an existing workflow take the right-hand column. A fix that restores intended behaviour takes the left.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span> Who signs off at each gate</h2>
+  <div class="tblwrap">
+    <table class="tbl">
+      <thead>
+        <tr><th>Gate</th><th>Owner</th><th>Evidence required to pass</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Gate 1 — Full QA on Testing</td>
+          <td>Product &amp; QA</td>
+          <td>QA report on master2026 covering every enhancement and fix in the release, with no open Critical or High findings.</td>
+        </tr>
+        <tr>
+          <td>Gate 2 — Partial QA on Preproduction</td>
+          <td>Product &amp; QA</td>
+          <td>Targeted re-test on Preproduction covering the enhancements and any fix applied directly there, plus a regression check on adjacent screens. Items already cleared at Gate 1 are not re-tested in full.</td>
+        </tr>
+        <tr>
+          <td>Gate 3 — Release approval</td>
+          <td>Technical lead, with deployment owner</td>
+          <td>Gates 1 and 2 passed; release scope listed and complete; documentation and briefing done where they apply; timing confirmed in writing.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">06</span> Timing</h2>
+  <p>Two rules govern when a release happens. Both apply to every release, bug-only included.</p>
+  <ul>
+    <li><strong>Timing is confirmed in writing before the release is scheduled.</strong> The deployment owner confirms the slot; without that confirmation the release does not proceed.</li>
+    <li><strong>No production release on Friday, Saturday or Sunday.</strong> Releases happen inside the agreed weekday window, except under the exception path below.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="num">07</span> Exception path</h2>
+  <p>A production-critical fix may skip the release window, but never the gates. It still needs its QA pass on Preproduction, written approval from the technical lead, and a notice to the team the same day. It ships as a complete release of its own scope — that is not a partial release. The exception is recorded on the ticket with the reason, so exceptions stay visible and rare.</p>
+</section>
+
+<section>
+  <h2><span class="num">08</span> Status</h2>
+  <p>Agreed and in effect from the next release: the seven rules in section 03, the bug-only exceptions in section 04, the gate owners in section 05, and the timing rules in section 06.</p>
+  <p>This page is the single reference — the wording here is what applies. Raise anything that needs to change and it is updated here rather than agreed separately in a thread.</p>
+</section>
+
+<footer>
+  Checker Software Systems · Release Gates · in effect from the next release.
+</footer>
+
+</div>
+</body>
+</html>
