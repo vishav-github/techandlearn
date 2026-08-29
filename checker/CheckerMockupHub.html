@@ -19,7 +19,6 @@
     --sub:       #374151;
     --muted:     #6b7280;
     --faint:     #9ca3af;
-
     --c-billing:#d97706; --bg-billing:#fffbeb; --br-billing:#fde68a;
     --c-fraud:  #dc2626; --bg-fraud:  #fff5f5; --br-fraud:  #fecaca;
     --c-ops:    #2563eb; --bg-ops:    #eff6ff; --br-ops:    #bfdbfe;
@@ -32,16 +31,13 @@
     --c-localization:#0d9488; --bg-localization:#f0fdfa; --br-localization:#99f6e4;
     --c-admin:  #374151; --bg-admin:  #f3f4f6; --br-admin:  #d1d5db;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Plus Jakarta Sans', sans-serif;
     min-height: 100vh;
   }
-
   /* ── Top bar ── */
   .topbar {
     background: var(--surface);
@@ -68,7 +64,6 @@
     border: 1px solid #bfdbfe; border-radius: 20px;
     padding: 4px 12px; font-size: 12px; font-weight: 600;
   }
-
   /* ── Hero ── */
   .hero {
     background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
@@ -107,7 +102,6 @@
   }
   .hero-stat-num { font-size: 26px; font-weight: 800; line-height: 1; }
   .hero-stat-label { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; font-weight: 500; }
-
   /* ── Toolbar ── */
   .toolbar {
     background: var(--surface); border-bottom: 1px solid var(--border);
@@ -132,7 +126,6 @@
     box-shadow: 0 0 0 3px rgba(37,99,235,.1); background: #fff;
   }
   #searchInput::placeholder { color: var(--faint); }
-
   .divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
   .filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-btn {
@@ -146,7 +139,6 @@
   .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .count-badge { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
   .count-badge strong { color: var(--text); font-weight: 700; }
-
   /* ── Grid ── */
   .grid-wrap { padding: 28px 48px 64px; }
   .grid {
@@ -155,7 +147,6 @@
     gap: 16px;
     align-items: start;
   }
-
   /* ── Card ── */
   .card {
     background: var(--surface); border: 1px solid var(--border);
@@ -174,7 +165,6 @@
   .card:hover .card-arrow,
   .card:focus-within .card-arrow { opacity: 1; color: var(--accent); transform: translate(2px,-2px); }
   .card:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-
   @keyframes fadeUp {
     from { opacity:0; transform: translateY(12px); }
     to   { opacity:1; transform: translateY(0); }
@@ -200,7 +190,6 @@
   .card:nth-child(35) { animation-delay:.70s } .card:nth-child(36) { animation-delay:.72s }
   .card:nth-child(37) { animation-delay:.74s } .card:nth-child(38) { animation-delay:.76s }
   .card:nth-child(39) { animation-delay:.78s } .card:nth-child(40) { animation-delay:.80s }
-
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .card-icon {
     width: 42px; height: 42px; border-radius: 10px;
@@ -254,12 +243,24 @@
   .tag-gatekeeper { color:var(--c-gatekeeper); background:var(--bg-gatekeeper); border-color:var(--br-gatekeeper); }
   .tag-localization { color:var(--c-localization); background:var(--bg-localization); border-color:var(--br-localization); }
   .tag-admin   { color:var(--c-admin);   background:var(--bg-admin);   border-color:var(--br-admin); }
-
+  /* additional tag styles */
+  .tag-email     { color:#0369a1; background:#f0f9ff; border-color:#bae6fd; }
+  .tag-mockup    { color:#7c3aed; background:#f5f3ff; border-color:#ddd6fe; }
+  .tag-analytics { color:#0891b2; background:#ecfeff; border-color:#a5f3fc; }
+  .tag-reports   { color:#4338ca; background:#eef2ff; border-color:#c7d2fe; }
+  .tag-process   { color:#475569; background:#f1f5f9; border-color:#cbd5e1; }
+  .tag-qa        { color:#dc2626; background:#fff5f5; border-color:#fecaca; }
+  .tag-release   { color:#059669; background:#ecfdf5; border-color:#a7f3d0; }
+  .tag-dev       { color:#374151; background:#f3f4f6; border-color:#d1d5db; }
+  .tag-security  { color:#b91c1c; background:#fef2f2; border-color:#fecaca; }
+  .tag-tools     { color:#6b7280; background:#f9fafb; border-color:#e5e7eb; }
+  .tag-infra     { color:#1d4ed8; background:#eff6ff; border-color:#bfdbfe; }
+  .tag-db        { color:#6a1fa8; background:#f3eafd; border-color:#e0cffc; }
+  .tag-lang      { color:#1f8a6a; background:#eaf7f3; border-color:#b8e6d8; }
   .icon-billing{background:var(--bg-billing)} .icon-fraud{background:var(--bg-fraud)}
   .icon-ops{background:var(--bg-ops)}         .icon-api{background:var(--bg-api)}
   .icon-ai{background:var(--bg-ai)}           .icon-notify{background:var(--bg-notify)}
   .icon-ui{background:var(--bg-ui)}           .icon-shoppers{background:var(--bg-shoppers)}
-
   /* ── Section divider ── */
   .section-divider {
     grid-column: 1 / -1;
@@ -271,7 +272,6 @@
     text-transform: uppercase; color: var(--faint); white-space: nowrap;
   }
   .section-divider-line { flex: 1; height: 1px; background: var(--border); }
-
   /* ── Add card ── */
   .card-add {
     background: var(--surface); border: 2px dashed var(--border2);
@@ -293,13 +293,11 @@
     border-radius: 5px; padding: 1px 6px;
     font-size: 11px; color: var(--accent);
   }
-
   /* ── Empty state ── */
   .empty { display:none; grid-column:1/-1; text-align:center; padding:72px 0; color:var(--muted); }
   .empty-icon { font-size:40px; margin-bottom:14px; opacity:.4; }
   .empty h3 { font-size:18px; font-weight:700; margin-bottom:6px; color:var(--sub); }
   .empty p  { font-size:13px; }
-
   /* ── Toast ── */
   #toast {
     position: fixed; bottom: 20px; left: 50%;
@@ -308,7 +306,6 @@
     z-index: 9999; opacity: 0; pointer-events: none;
     transition: opacity .2s;
   }
-
   /* ── Footer ── */
   footer {
     background: var(--surface); border-top: 1px solid var(--border);
@@ -316,7 +313,6 @@
     font-size: 12px; color: var(--faint);
   }
   footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
-
   @media (max-width: 640px) {
     .topbar,.hero,.toolbar,.grid-wrap,footer { padding-left:16px; padding-right:16px; }
     .hero h1 { font-size:24px; }
@@ -327,7 +323,6 @@
 </style>
 </head>
 <body>
-
 <!-- Top bar -->
 <div class="topbar">
   <div class="logo">
@@ -335,10 +330,9 @@
     Checker
   </div>
   <div class="topbar-right">
-    <span class="topbar-pill">Mockup Hub &nbsp;·&nbsp; <span id="totalCount">40</span> pages</span>
+    <span class="topbar-pill">Mockup Hub &nbsp;·&nbsp; <span id="totalCount">52</span> pages</span>
   </div>
 </div>
-
 <!-- Hero -->
 <div class="hero">
   <div class="hero-top">
@@ -348,13 +342,12 @@
       <p>All Checker platform mockup pages in one place. Browse by category, search by name, and open any page in a new tab instantly.</p>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num" id="statTotal">40</div><div class="hero-stat-label">Total Mockups</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="statTotal">52</div><div class="hero-stat-label">Total Mockups</div></div>
       <div class="hero-stat"><div class="hero-stat-num" id="statCategories">7</div><div class="hero-stat-label">Categories</div></div>
-      <div class="hero-stat"><div class="hero-stat-num" id="statVisible">40</div><div class="hero-stat-label">Showing</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="statVisible">52</div><div class="hero-stat-label">Showing</div></div>
     </div>
   </div>
 </div>
-
 <!-- Toolbar -->
 <div class="toolbar">
   <div class="search-wrap">
@@ -373,16 +366,13 @@
     <button class="filter-btn" onclick="setFilter('notify',this)">🔔 Notifications</button>
     <button class="filter-btn" onclick="setFilter('ui',this)">🎨 UI / UX</button>
   </div>
-  <div class="count-badge">Showing <strong id="visibleCount">40</strong> mockups</div>
+  <div class="count-badge">Showing <strong id="visibleCount">52</strong> mockups</div>
 </div>
-
 <!-- Grid -->
 <div class="grid-wrap">
 <div class="grid" id="cardGrid">
-
   <!-- ───── AI ───── -->
   <div class="section-divider"><span class="section-divider-label">🤖 AI Features</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-dynamic-prompt.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="dynamic QA prompt generator AI JSON grammar spelling coherence">
     <div class="card-top"><div class="card-icon icon-ai">⚙️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -391,7 +381,6 @@
     <div><div class="card-title">Dynamic QA Prompt Generator</div><div class="card-desc">Select which QA checks to run (grammar, spelling, coherence, location anomaly) and preview the exact AI prompt and JSON payload that would be sent to the AI model in real time.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-poweredqa-adminpanel.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI QA admin panel confidence threshold auto-apply grammar spelling coherence">
     <div class="card-top"><div class="card-icon icon-ai">🎛️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -400,7 +389,6 @@
     <div><div class="card-title">AI QA Admin Panel</div><div class="card-desc">Admin settings for the AI-powered QA automation engine. Configure global confidence thresholds, choose which issue types (grammar, spelling, coherence, location) are auto-resolved, and set review-level auto-actions.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-editreview.html" target="_blank" rel="noopener" data-tags="ai fraud ops" data-name="AI QA edit review coherence grammar spelling location anomaly checker">
     <div class="card-top"><div class="card-icon icon-ai">✏️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -409,7 +397,6 @@
     <div><div class="card-title">AI QA — Edit Review</div><div class="card-desc">In-line review editing screen powered by AI QA. Shows each question with AI-detected issues (coherence, grammar, spelling, location), allows one-click fix application, draft saving, and per-question mark-reviewed actions.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-fraud">Fraud &amp; QA</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-powerqa-insight.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI QA insights reviews acceptance rate auto-resolved filter">
     <div class="card-top"><div class="card-icon icon-ai">📈</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -418,7 +405,6 @@
     <div><div class="card-title">AI QA Insights Dashboard</div><div class="card-desc">Filterable dashboard for reviewing AI QA results across all reviews. Filter by client, branch, project, issue type, AI acceptance rate range, auto-resolution status, and final QA outcome.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-supportagent.html" target="_blank" rel="noopener" data-tags="ai ops notify" data-name="AI support agent tickets instant chat deflection">
     <div class="card-top"><div class="card-icon icon-ai">💬</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -427,7 +413,6 @@
     <div><div class="card-title">AI-Assisted Support Tickets</div><div class="card-desc">Support ticket list enhanced with an AI instant support button. Clients can get immediate AI-powered answers before opening a human ticket, reducing support load through intelligent deflection.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv2" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI answer recoding v2 survey wizard confidence mapping">
     <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -436,7 +421,6 @@
     <div><div class="card-title">AI Answer Recoding V2</div><div class="card-desc">Wizard-style tool for AI-assisted recoding of open-ended survey answers. Supports data source mapping, confidence thresholds, processing dashboard, and human review queue.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ansrecodingv1.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI answer recoding v1 survey">
     <div class="card-top"><div class="card-icon icon-ai">🔄</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -445,7 +429,6 @@
     <div><div class="card-title">AI Answer Recoding V1</div><div class="card-desc">First iteration of the AI-powered answer recoding tool. Earlier concept for mapping and reclassifying open-text survey responses using AI categorisation.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/supportanalytics" target="_blank" rel="noopener" data-tags="ai ops" data-name="support analytics ROI AI deflection tickets channel">
     <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -454,7 +437,6 @@
     <div><div class="card-title">Support Channel ROI Report</div><div class="card-desc">Analytics comparing human ticket support vs AI agent. Tracks AI deflection rate, query volume, estimated cost savings, and audit correctness scores per channel.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq-agent-response-audit-apr2026.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="faq agent response audit kb coverage">
     <div class="card-top"><div class="card-icon icon-ai">🧪</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -463,7 +445,6 @@
     <div><div class="card-title">FAQ AI Agent Response Audit – Apr 2026</div><div class="card-desc">QA audit of Support Agent replies from Jan–Apr 2026. Flags answered vs unanswered FAQs, highlights KB gaps, and tracks coverage across English, Hebrew, and Spanish.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">QA</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/faq_manager.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="FAQ Manager Documentation Guide">
     <div class="card-top"><div class="card-icon icon-ai">📖</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -472,7 +453,6 @@
     <div><div class="card-title">FAQ Manager</div><div class="card-desc">Centralized tool for managing frequently asked questions. Provides structured documentation, easy updates, and clear guidance for support teams.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Documentation</span></div>
   </a>
-
    <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai-queue-monitor-mockup.html" target="_blank" rel="noopener" data-tags="ai ops" data-name="AI Queue Monitor">
     <div class="card-top"><div class="card-icon icon-ai">🤖</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -481,7 +461,6 @@
     <div><div class="card-title">AI Queue Monitor</div><div class="card-desc">Admin mockup for monitoring and controlling the AIQueue processing pipeline. Shows real-time pipeline health KPIs (active workers, pending queue, error rate, throughput), active worker table with stale detection, recent run logs with filtering, per-company queue depth, dispatcher pause/resume controls, and configurable settings for concurrency, timeouts, memory limits, and batch size.</div></div>
     <div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/ai_agent_chip_drilldown_mockup.html" target="_blank" rel="noopener" data-tags="ai ui" data-name="AI Agent Chip Drilldown">
     <div class="card-top"><div class="card-icon icon-ai">🧩</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -490,29 +469,24 @@
     <div><div class="card-title">AI Agent Chip Drilldown</div><div class="card-desc">Interactive three-level drill-down chip navigation mockup for the AI Support Agent chat widget. Enables users to explore topics, sub‑categories, and specific questions through an intuitive chip‑based interface. Includes a full navigation demo with pre‑defined topics like Surveys (3 questions), AI Features (2 questions), Reviews &amp; Access (2 questions), and Quick Guides (3 questions).</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI/UX</span><span class="tag tag-ai">AI</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/text_analysis_flowchart.html" target="_blank" rel="noopener" data-tags="ai ops db ui" data-name="checker ai text analysis pipeline flowchart queue processing architecture">
     <div class="card-top"><div class="card-icon icon-ai">📊</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
       </div></div>
     <div><div class="card-title">AI Text Analysis Pipeline Flowchart</div><div class="card-desc">Interactive mapping of the complete text processing engine. Trace configurations, background cron task queues, data sanitization loops, and direct Azure OpenAI / Gemini model execution.</div>
-    </div><div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span><span class="tag tag-db" style="background:#f3eafd; color:#6a1fa8;">Database</span></div>
+    </div><div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span><span class="tag tag-db">Database</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/report_text_analysis_split_language.html" target="_blank" rel="noopener" data-tags="ai ops db ui lang" data-name="checker ai text analysis split language report">
     <div class="card-top"><div class="card-icon icon-ai">🌐</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
         <div class="card-arrow" aria-hidden="true">↗</div>
       </div></div>
     <div><div class="card-title">AI Text Analysis Split Language Report</div><div class="card-desc">Detailed breakdown of multilingual text analysis. Inspect how comments are split by language, processed separately, and aggregated for insights across diverse client questionnaires.</div>
-    </div><div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span><span class="tag tag-db" style="background:#f3eafd; color:#6a1fa8;">Database</span><span class="tag tag-lang" style="background:#eaf7f3; color:#1f8a6a;">Language</span></div>
+    </div><div class="card-footer"><span class="tag tag-ai">AI</span><span class="tag tag-ops">Operations</span><span class="tag tag-db">Database</span><span class="tag tag-lang">Language</span></div>
 </a>
-
-
   <!-- ───── Billing ───── -->
   <div class="section-divider"><span class="section-divider-label">💳 Billing</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders.html" target="_blank" rel="noopener" data-tags="billing notify" data-name="billing reminder schedule invoice business days">
     <div class="card-top"><div class="card-icon icon-billing">🗓️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -521,7 +495,6 @@
     <div><div class="card-title">Billing Reminder Schedule</div><div class="card-desc">Visual timeline of the full invoice reminder cycle — Gentle → Follow-up → Final → Suspension — calculated in business days, skipping weekends and public holidays.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/selfbilling/reminders2.html" target="_blank" rel="noopener" data-tags="billing notify" data-name="billing reminders v2 invoice">
     <div class="card-top"><div class="card-icon icon-billing">📆</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -530,7 +503,6 @@
     <div><div class="card-title">Billing Reminder Schedule V2</div><div class="card-desc">Alternate version of the billing reminder timeline. Explores a different visual layout or extended scenario for the invoice notification flow.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/specialservice" target="_blank" rel="noopener" data-tags="billing notify" data-name="special service order notification agreement billing monthly postpaid">
     <div class="card-top"><div class="card-icon icon-billing">📜</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -539,7 +511,6 @@
     <div><div class="card-title">Special Service Notifications</div><div class="card-desc">Four-stage flow for custom service requests (CSS, training, dev): Agreement offer → Client acceptance → AM approval &amp; billing notice → Cancellation confirmation.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/apiplatformemail" target="_blank" rel="noopener" data-tags="api billing notify" data-name="api key management tiered pricing usage control gatekeeper middleware billing postpaid quota rate limit notifications self service top-up upgrade downgrade">
   <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -548,7 +519,6 @@
   <div><div class="card-title">API Key Management — Tiered Pricing System</div><div class="card-desc">Full tier-based API platform: Gatekeeper middleware enforcing feature gates, hard-stops, soft limits &amp; RPM · Starter / Growth / Professional / Enterprise tiers · Postpaid billing with proration, top-up &amp; plan lifecycle · 9 automated email notifications · Self-service upgrade &amp; cancellation flows.</div></div>
   <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span><span class="tag tag-gatekeeper">Gatekeeper</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/services-removal.html" target="_blank" rel="noopener" data-tags="billing notify" data-name="service removal confirmation billing invoice monthly postpaid">
     <div class="card-top"><div class="card-icon icon-billing">🗑️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -557,28 +527,24 @@
     <div><div class="card-title">Service Removal Confirmation</div><div class="card-desc">Email notification confirming a service has been removed from the client's account. Includes removal date, who actioned it, and billing note explaining pro-rated charge on the next monthly invoice.</div></div>
     <div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-notify">Notifications</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/sso_mails.html" target="_blank" rel="noopener" data-tags="billing email mockup" data-name="SSO Email Templates">
-   <div class="card-top"><div class="card-icon icon-ui">📧</div><div class="card-actions">
+   <div class="card-top"><div class="card-icon icon-billing">📧</div><div class="card-actions">
        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
        <div class="card-arrow" aria-hidden="true">↗</div>
        </div></div>
    <div><div class="card-title">SSO Email Templates Mockup</div><div class="card-desc">Review-only mockup of the three automated emails in the Special Service Order (SSO) billing workflow: the client confirmation sent when an order is authorized, the client completion email announcing delivery and invoice timing, and the internal completion alert telling the account manager the charge is approved and locked for the monthly postpaid invoice. Shows branded headers with Checker and client logos, order-detail tables, and the agreed messaging tone.</div>
    </div><div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-email">Email</span><span class="tag tag-mockup">Mockup</span></div>
 </a>
-
 <a class="card" tabindex="0" href="https://techandlearn.in/checker/email-sending-package-overage-modal.html" target="_blank" rel="noopener" data-tags="billing email mockup" data-name="Email Sending Pricing Modal">
-   <div class="card-top"><div class="card-icon icon-ui">💰</div><div class="card-actions">
+   <div class="card-top"><div class="card-icon icon-billing">💰</div><div class="card-actions">
        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
        <div class="card-arrow" aria-hidden="true">↗</div>
        </div></div>
    <div><div class="card-title">Email Sending Pricing Modal Mockup</div><div class="card-desc">UX mockup of the admin modal for configuring email sending pricing on a package + overage model. Shows the five-tier table with package fees and per-email overage rates, company-specific overrides (blue) versus system defaults, and the "largest matching block" logic — package fee for the applicable tier plus overage only above its included volume. Includes a live calculator that breaks a sample volume into package and overage charges, and a preview of how the charge appears on the invoice.</div>
    </div><div class="card-footer"><span class="tag tag-billing">Billing</span><span class="tag tag-email">Email</span><span class="tag tag-mockup">Mockup</span></div>
 </a>
-
   <!-- ───── Fraud & QA ───── -->
   <div class="section-divider"><span class="section-divider-label">🛡 Fraud &amp; QA</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/imagecomparisonviewer" target="_blank" rel="noopener" data-tags="fraud ops" data-name="image comparison viewer similarity shopper receipt">
     <div class="card-top"><div class="card-icon icon-fraud">🔍</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -587,7 +553,6 @@
     <div><div class="card-title">Image Comparison Viewer</div><div class="card-desc">Side-by-side viewer comparing a shopper's submitted image against historical matches. Shows similarity scores, risk flags, and lets reviewers accept or reject flagged matches.</div></div>
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/imageintegritydashboard" target="_blank" rel="noopener" data-tags="fraud ops" data-name="image integrity dashboard duplicate reuse suspicious">
     <div class="card-top"><div class="card-icon icon-fraud">🖼️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -596,7 +561,6 @@
     <div><div class="card-title">Image Integrity Dashboard</div><div class="card-desc">QA intelligence dashboard for monitoring image-level fraud across the platform. Flags duplicate, reused, or suspicious images submitted by shoppers across projects and branches.</div></div>
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/shopperfrauddashboard" target="_blank" rel="noopener" data-tags="fraud" data-name="shopper fraud intelligence dashboard analytics behaviour">
     <div class="card-top"><div class="card-icon icon-fraud">🛡️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -605,7 +569,6 @@
     <div><div class="card-title">Shopper Fraud Intelligence</div><div class="card-desc">Long-term shopper behaviour analytics. Filters by client, project, branch, date range, and risk level to surface fraudulent or suspicious shopper patterns over time.</div></div>
     <div class="card-footer"><span class="tag tag-fraud">Fraud</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/returnreview" target="_blank" rel="noopener" data-tags="fraud notify ops" data-name="return review QA shopper notification email correction">
     <div class="card-top"><div class="card-icon icon-notify">↩️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -614,10 +577,8 @@
     <div><div class="card-title">Return Review Notification</div><div class="card-desc">Email sent to a shopper when their review is auto-returned by QA. Highlights coherence issues and grammar errors, and explains required corrections before resubmission.</div></div>
     <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <!-- ───── Operations ───── -->
   <div class="section-divider"><span class="section-divider-label">⚙️ Operations</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/mobileauditlogs" target="_blank" rel="noopener" data-tags="ops" data-name="mobile audit logs submission CAPI media partial">
     <div class="card-top"><div class="card-icon icon-ops">📱</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -626,7 +587,6 @@
     <div><div class="card-title">Mobile Submission Audit Logs</div><div class="card-desc">Detailed log table of mobile survey submissions. Tracks partial media uploads, CAPI intercepts, quota blocks, and provides step-by-step resolution instructions per log entry.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/oops" target="_blank" rel="noopener" data-tags="ops" data-name="branch visit report scores mystery shopping">
     <div class="card-top"><div class="card-icon icon-ops">📋</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -635,7 +595,6 @@
     <div><div class="card-title">Branch Visit Report</div><div class="card-desc">Tabular report for a mystery shopping visit to a branch. Sortable by time and exportable, showing scores and comments per question across multiple venue visits.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/export-collateral.html" target="_blank" rel="noopener" data-tags="ops api" data-name="export collateral automated PDF SFTP profile schedule">
     <div class="card-top"><div class="card-icon icon-ops">📤</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -644,7 +603,6 @@
     <div><div class="card-title">Automated Collateral Export</div><div class="card-desc">Configure scheduled export profiles for QA transcripts and PDFs to a remote server via SFTP. Set active schedules, export types, review statuses, file naming, and test remote connections.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-api">API</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/checkerpartner" target="_blank" rel="noopener" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
     <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -653,7 +611,6 @@
     <div><div class="card-title">Checker Partner Network - Old Version</div><div class="card-desc">B2B partner collaboration workflow. Allows Checker companies to post research projects, browse partner replies, negotiate deals, and manage agreed partner projects across countries and regions.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/checker-partner.html" target="_blank" rel="noopener" data-tags="ops ui" data-name="checker partner network workflow deals projects posts B2B">
     <div class="card-top"><div class="card-icon icon-ops">🤝</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -662,7 +619,6 @@
     <div><div class="card-title">Checker Partner Network - New Version 2026</div><div class="card-desc">B2B partner collaboration workflow. Allows Checker companies to post research projects, browse partner replies, negotiate deals, and manage agreed partner projects across countries and regions.</div></div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/mainmenu.html" target="_blank" rel="noopener" data-tags="ui ops" data-name="main menu dashboard checker home overview assignments">
     <div class="card-top"><div class="card-icon icon-ui">🏠</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -671,7 +627,6 @@
     <div><div class="card-title">Main Menu / Dashboard</div><div class="card-desc">Primary Checker platform dashboard. Shows active shoppers, clients, assignment counts, urgent items, and quick-action buttons for orders, reports, and settings.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/translation-admin-mockup.html" target="_blank" rel="noopener" data-tags="ops ui" data-name="Translation Admin Dashboard localization">
     <div class="card-top"><div class="card-icon icon-ui">🌐</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -680,7 +635,6 @@
     <div><div class="card-title">Translation Admin Dashboard</div><div class="card-desc">Centralized translation management for the AI support agent and interface. Overview of 55 active languages and 8,142 translation keys, with support for inline editing, code scanner integration, key triage, import/export (XLS), audit logging, and machine translation provider configuration. Helps maintain localization coverage and streamline translation workflows.</div></div>
     <div class="card-footer"><span class="tag tag-localization">Localization</span><span class="tag tag-admin">Admin</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/translation-hub-flow-diagram.html" target="_blank" rel="noopener" data-tags="ops infra" data-name="Translation Module CPN HUB Flow Diagram">
     <div class="card-top"><div class="card-icon icon-ui">🔄</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -689,55 +643,48 @@
     <div><div class="card-title">Translation Module + CPN HUB — Flow Diagram</div><div class="card-desc">End-to-end flow diagram showing how translations move today (per-region isolated pipelines with duplicate PM effort, MT cost, and XLS uploads) versus the proposed CPN HUB architecture (v1.5). The HUB introduces a single canonical translation store shared across all regions, replacing N-times translator and MT spend with one global operation. Covers current pain points, infrastructure requirements, operational changes, at-a-glance comparison table, and management approval decisions needed to unlock the evolution.</div></div>
     <div class="card-footer"><span class="tag tag-infra">Infrastructure</span><span class="tag tag-localization">Localization</span><span class="tag tag-admin">Admin</span></div>
 </a>
-
 <a class="card" tabindex="0" href="https://techandlearn.in/checker/m_update-lang-files-instructions.html" target="_blank" rel="noopener" data-tags="ops localization dev" data-name="Translation Update Instructions">
     <div class="card-top"><div class="card-icon icon-ui">📝</div><div class="card-actions">
             <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
             <div class="card-arrow" aria-hidden="true">↗</div>
         </div></div>
-    <div><div class="card-title">Translation Update Instructions & Master Schema Mapping</div><div class="card-desc">Comprehensive checklist, operational guidelines, and column-mapping schema for merging translation updates. Explains file merge mechanics (keys are never deleted; empty cells leave existing entries intact), strict formatting constraints (.xls format only, formulas banned), and the rigid 56-column language layout (A to BB) used by the PHPExcel engine. Includes strict procedural rules for adding brand-new keys, managing language fallback behavior, handling malformed uploads, and coordinating with development to add a completely new language block.</div>  </div>
+    <div><div class="card-title">Translation Update Instructions &amp; Master Schema Mapping</div><div class="card-desc">Comprehensive checklist, operational guidelines, and column-mapping schema for merging translation updates. Explains file merge mechanics (keys are never deleted; empty cells leave existing entries intact), strict formatting constraints (.xls format only, formulas banned), and the rigid 56-column language layout (A to BB) used by the PHPExcel engine. Includes strict procedural rules for adding brand-new keys, managing language fallback behavior, handling malformed uploads, and coordinating with development to add a completely new language block.</div>  </div>
     <div class="card-footer"><span class="tag tag-ops">Operations</span><span class="tag tag-localization">Localization</span><span class="tag tag-dev">Development</span></div>
 </a>
-
-<a class="card" tabindex="0" href="https://techandlearn.in/checker/api_key.html" target="_blank" rel="noopener" data-tags="dev security tools" data-name="API Key Generator">
-   <div class="card-top"><div class="card-icon icon-ui">🔑</div><div class="card-actions">
+<a class="card" tabindex="0" href="https://techandlearn.in/checker/api_key.html" target="_blank" rel="noopener" data-tags="api dev security tools" data-name="API Key Generator">
+   <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
        <div class="card-arrow" aria-hidden="true">↗</div>
        </div></div>
    <div><div class="card-title">API Key Generator Tool</div><div class="card-desc">An internal utility to generate unique 32-character API keys instantly without special symbols. Ideal for prototyping and testing configurations. Note: For actual production environments, ensure that final key generation is implemented using cryptographically secure methods on the server-side.</div>
    </div><div class="card-footer"><span class="tag tag-dev">Development</span><span class="tag tag-security">Security</span><span class="tag tag-tools">Tools</span></div>
 </a>
-
-<a class="card" tabindex="0" href="https://techandlearn.in/checker/ifh-benchmark-setup-simple" target="_blank" rel="noopener" data-tags="admin analytics mockup" data-name="Benchmark Admin Prototype">
-   <div class="card-top"><div class="card-icon icon-ui">📊</div><div class="card-actions">
+<a class="card" tabindex="0" href="https://techandlearn.in/checker/ifh-benchmark-setup-simple" target="_blank" rel="noopener" data-tags="ops admin analytics mockup" data-name="Benchmark Admin Prototype">
+   <div class="card-top"><div class="card-icon icon-ops">📊</div><div class="card-actions">
        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
        <div class="card-arrow" aria-hidden="true">↗</div>
        </div></div>
    <div><div class="card-title">Benchmark Admin Prototype</div><div class="card-desc">Interactive mockup of the Benchmarking settings for company admins — create and manage benchmark groups (e.g. Hospitality — UAE, Retail — Fashion), track member participation, and choose comparison levels: final score, sections, or sub-section KPIs. Includes privacy and data-quality rules (minimum peers and evaluation thresholds for anonymized averages), Phase-2 segmentation with value mapping and statistics/rankings, plus a preview of how benchmarks appear in client reports.</div>
    </div><div class="card-footer"><span class="tag tag-admin">Admin</span><span class="tag tag-analytics">Analytics</span><span class="tag tag-mockup">Mockup</span></div>
 </a>
-
-  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ifh-benchmark-report-final-mockup" target="_blank" rel="noopener" data-tags="reports analytics mockup" data-name="Benchmark in Reports">
-   <div class="card-icon icon-ui">📈</div><div class="card-actions">
+  <a class="card" tabindex="0" href="https://techandlearn.in/checker/ifh-benchmark-report-final-mockup" target="_blank" rel="noopener" data-tags="ops reports analytics mockup" data-name="Benchmark in Reports">
+   <div class="card-top"><div class="card-icon icon-ops">📈</div><div class="card-actions">
        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
        <div class="card-arrow" aria-hidden="true">↗</div>
        </div></div>
    <div><div class="card-title">Benchmark in Reports Mockup</div><div class="card-desc">Final mockup of how benchmark comparisons appear inside existing Highcharts reports, worked through a reservation-scoring example across Section Analysis, Sub-section Comparison and Final Score Analysis. Covers the six calculation steps — normalising to a 0–100 index, the client's own score, the market average, variance against peers, rank within the pool, and trend over time — and the visual treatment: paired client-vs-market comparison columns and a gauge showing the client score against an anonymised peer benchmark.</div>
    </div><div class="card-footer"><span class="tag tag-reports">Reports</span><span class="tag tag-analytics">Analytics</span><span class="tag tag-mockup">Mockup</span></div>
 </a>
-  
-<a class="card" tabindex="0" href="https://techandlearn.in/checker/release-gates.html" target="_blank" rel="noopener" data-tags="process qa release" data-name="Release Gates">
-   <div class="card-top"><div class="card-icon icon-ui">🚦</div><div class="card-actions">
+<a class="card" tabindex="0" href="https://techandlearn.in/checker/release-gates.html" target="_blank" rel="noopener" data-tags="ops process qa release" data-name="Release Gates">
+   <div class="card-top"><div class="card-icon icon-ops">🚦</div><div class="card-actions">
        <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
        <div class="card-arrow" aria-hidden="true">↗</div>
        </div></div>
-   <div><div class="card-title">Release Gates Procedure</div><div class="card-desc">The release procedure for Checker: full QA on Testing (master2026), partial QA on Preproduction covering enhancements and fixes applied directly there, and the documentation and team briefing required before production. Covers the seven non-negotiable rules, what a bug-only release may skip, who signs off at each gate, weekend and timing rules, and the exception path for production-critical fixes.</div>
+   <div><div class="card-title">Release Gates Procedure</div><div class="card-desc">The release procedure for Checker: full QA on Testing (master2026), full QA again on Preproduction including anything applied directly there, and the documentation and team briefing required before production. Covers the seven non-negotiable rules, what a bug-only release may skip, who signs off at each gate, weekend and timing rules, and the exception path for production-critical fixes.</div>
    </div><div class="card-footer"><span class="tag tag-process">Process</span><span class="tag tag-qa">QA</span><span class="tag tag-release">Release</span></div>
 </a>
-  
   <!-- ───── Shoppers ───── -->
   <div class="section-divider"><span class="section-divider-label">👤 Shoppers</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-adminpanel.html" target="_blank" rel="noopener" data-tags="shoppers ops ui" data-name="interested shoppers admin panel management leads invite registration">
     <div class="card-top"><div class="card-icon icon-shoppers">👥</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -746,7 +693,6 @@
     <div><div class="card-title">Interested Shoppers — Admin Panel</div><div class="card-desc">Admin panel for managing pre-registered shopper leads. Filter by status (Interested, Invited, Registered, Expired, Declined), track invitation counts, record admin notes, and manage the conversion pipeline.</div></div>
     <div class="card-footer"><span class="tag tag-shoppers">Shoppers</span><span class="tag tag-ops">Operations</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/interested-shopper-form.html" target="_blank" rel="noopener" data-tags="shoppers ui" data-name="interested shopper form express interest become shopper public">
     <div class="card-top"><div class="card-icon icon-shoppers">🙋</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -755,7 +701,6 @@
     <div><div class="card-title">Interested Shopper — Public Form</div><div class="card-desc">Public-facing landing form for prospective mystery shoppers. Captures name, email, and phone number with a simple "Express My Interest" CTA and links to social profiles.</div></div>
     <div class="card-footer"><span class="tag tag-shoppers">Shoppers</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/registration%20form" target="_blank" rel="noopener" data-tags="shoppers ui ops" data-name="registration form shopper onboarding multi-step">
     <div class="card-top"><div class="card-icon icon-shoppers">📝</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -764,10 +709,8 @@
     <div><div class="card-title">Shopper Registration Form</div><div class="card-desc">Full multi-step registration form for onboarding new mystery shoppers. Covers basic info, address, contact details, experience level, and account settings with field validation.</div></div>
     <div class="card-footer"><span class="tag tag-shoppers">Shoppers</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <!-- ───── API & Settings ───── -->
   <div class="section-divider"><span class="section-divider-label">🔑 API &amp; Settings</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeymgmt" target="_blank" rel="noopener" data-tags="api" data-name="API key management generate revoke expiry secrets">
     <div class="card-top"><div class="card-icon icon-api">🔑</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -776,7 +719,6 @@
     <div><div class="card-title">API Key Management</div><div class="card-desc">Dashboard for managing all API access keys across clients. Generate new keys, set expiry dates, view masked secrets, and revoke or regenerate existing keys.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeyemails" target="_blank" rel="noopener" data-tags="api notify" data-name="API key email configuration sender reply-to">
     <div class="card-top"><div class="card-icon icon-api">📧</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -785,7 +727,6 @@
     <div><div class="card-title">API Key Email Config</div><div class="card-desc">Interface for configuring email-related settings tied to API keys. Manages sender addresses, reply-to settings, and notification email behaviour per API access token.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/whatsapptemplatemanager.html" target="_blank" rel="noopener" data-tags="api ops notify" data-name="WhatsApp template manager Meta approval marketing utility authentication">
     <div class="card-top"><div class="card-icon icon-api">💬</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -794,7 +735,6 @@
     <div><div class="card-title">WhatsApp Template Manager</div><div class="card-desc">Business API manager for WhatsApp message templates. Syncs with Meta, tracks approval status (approved/pending/rejected), and supports marketing, utility, and authentication categories.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span><span class="tag tag-notify">Notifications</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/apikeys-migration-script-logs" target="_blank" rel="noopener" data-tags="api" data-name="API keys migration script logs">
     <div class="card-top"><div class="card-icon icon-api">🛠️</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -803,10 +743,8 @@
     <div><div class="card-title">API Key Migration Log</div><div class="card-desc">To run API keys migration script and show migration logs.</div></div>
     <div class="card-footer"><span class="tag tag-api">API</span></div>
   </a>
-
   <!-- ───── UI / UX ───── -->
   <div class="section-divider"><span class="section-divider-label">🎨 UI / UX Components</span><div class="section-divider-line"></div></div>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/alert.html" target="_blank" rel="noopener" data-tags="notify ui" data-name="alert notification component banner dismiss">
     <div class="card-top"><div class="card-icon icon-notify">🔔</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -815,7 +753,6 @@
     <div><div class="card-title">Alert Notification</div><div class="card-desc">UI mockup for system alert and notification components. Demonstrates styling, dismissal behaviour, and message hierarchy for platform-wide alert banners.</div></div>
     <div class="card-footer"><span class="tag tag-notify">Notifications</span><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/toggledemo.html" target="_blank" rel="noopener" data-tags="ui" data-name="toggle demo accordion slide show hide component">
     <div class="card-top"><div class="card-icon icon-ui">🔀</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -824,7 +761,6 @@
     <div><div class="card-title">Toggle &amp; Accordion Demo</div><div class="card-desc">Component library demo showing various toggle and accordion patterns: basic accordion, slide toggle, show/hide content blocks, and multi-panel toggle layouts for reuse across the platform.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/sftp.html" target="_blank" rel="noopener" data-tags="ui" data-name="SFTP Key-Based Authentication">
     <div class="card-top"><div class="card-icon icon-ui">🔐</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -833,7 +769,6 @@
     <div><div class="card-title">SFTP Key-Based Authentication</div><div class="card-desc">Single reference mockup for development team: same page structure, same field naming style, and same legacy visual pattern. Show these three states using the same shared component logic. This helps developers understand exactly which fields stay fixed, which fields are conditional, and what disabled state should look like.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/question-settings-for-reports.html" target="_blank" rel="noopener" data-tags="ui" data-name="Question Settings for Reports">
     <div class="card-top"><div class="card-icon icon-ui">📊</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -842,7 +777,6 @@
     <div><div class="card-title">Question Settings for Reports</div><div class="card-desc">Redesign v2 mockup for configuring how questions appear and calculate in client reports. Shows question bank mode toggle, stats overview (47 total, 12 configured, 8 with calculations), filters, and unified question table with special calculations column.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span></div>
   </a>
-
   <a class="card" tabindex="0" href="https://techandlearn.in/checker/special_service_notifications.html" target="_blank" rel="noopener" data-tags="ui billing notify" data-name="Special Service Order Notifications">
     <div class="card-top"><div class="card-icon icon-ui">📧</div><div class="card-actions">
         <button class="card-copy" type="button" aria-label="Copy link to share with team" title="Copy link to share with team">⧉</button>
@@ -851,11 +785,10 @@
     <div><div class="card-title">Special Service Order Notifications</div><div class="card-desc">Universal HTML email templates for the full special service workflow. Works across all email providers (Gmail, Outlook, Yahoo, Apple Mail) and support ticket threads. Covers four scenarios: agreement request to client, client confirmation to Checker team, billing confirmation after approval, and cancellation notice.</div></div>
     <div class="card-footer"><span class="tag tag-ui">UI / UX</span><span class="tag tag-billing">Billing</span></div>
   </a>
-
-<a class="card" tabindex="0" 
-   href="https://techandlearn.in/checker/ct-support-tickets-phase1-thread-mockup.html" 
-   target="_blank" rel="noopener" 
-   data-tags="ui ux support tickets phase1" 
+<a class="card" tabindex="0"
+   href="https://techandlearn.in/checker/ct-support-tickets-phase1-thread-mockup.html"
+   target="_blank" rel="noopener"
+   data-tags="ui ux support tickets phase1"
    data-name="CT Support Tickets Phase 1 Thread Mockup">
   <div class="card-top">
     <div class="card-icon icon-ui">🧾</div>
@@ -872,37 +805,30 @@
     <span class="tag tag-ui">UI / UX</span>
   </div>
 </a>
-  
+
   <!-- ── Add new placeholder ── -->
   <div class="card-add">
     <div class="card-add-icon">＋</div>
     <p>To add a new mockup, copy any <code>&lt;a class="card"&gt;</code> block and update the link, title, description, and tags. Add a <code>.section-divider</code> for new categories.</p>
   </div>
-
   <!-- Empty state -->
   <div class="empty" id="emptyState">
     <div class="empty-icon">🔍</div>
     <h3>No mockups found</h3>
     <p>Try a different search term or clear the active filter.</p>
   </div>
-
 </div>
 </div>
-
 <!-- Toast -->
 <div id="toast" role="status" aria-live="polite"></div>
-
 <!-- Footer -->
 <footer>
-  Checker Mockup Hub &nbsp;·&nbsp; <a href="https://techandlearn.in" target="_blank" rel="noopener">techandlearn.in</a> &nbsp;·&nbsp; <span id="footerCount">40</span> mockups across <span id="footerCategories">7</span> categories
+  Checker Mockup Hub &nbsp;·&nbsp; <a href="https://techandlearn.in" target="_blank" rel="noopener">techandlearn.in</a> &nbsp;·&nbsp; <span id="footerCount">52</span> mockups across <span id="footerCategories">7</span> categories
 </footer>
-
 <script>
   let activeFilter = 'all';
-
   // --- Helpers ---
   function getCards(){ return Array.from(document.querySelectorAll('#cardGrid > .card')); }
-
   // --- Toast ---
   function showToast(msg){
     const t = document.getElementById('toast');
@@ -912,7 +838,6 @@
     clearTimeout(t._timer);
     t._timer = setTimeout(() => { t.style.opacity = 0; }, 2000);
   }
-
   // --- Filter button click ---
   function setFilter(tag, btn) {
     activeFilter = tag;
@@ -920,14 +845,12 @@
     btn.classList.add('active');
     filterCards();
   }
-
   // --- Search + filter ---
   function filterCards() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
     const cards = getCards();
     const dividers = document.querySelectorAll('.section-divider');
     let visible = 0;
-
     cards.forEach(card => {
       const name  = (card.dataset.name  || '').toLowerCase();
       const tags  = (card.dataset.tags  || '').toLowerCase();
@@ -938,7 +861,6 @@
       if (matchesFilter && matchesSearch) { card.style.display = ''; visible++; }
       else card.style.display = 'none';
     });
-
     // Hide section dividers if no visible cards follow them
     dividers.forEach(divider => {
       let next = divider.nextElementSibling;
@@ -951,18 +873,15 @@
       }
       divider.style.display = hasVisible ? '' : 'none';
     });
-
     document.getElementById('visibleCount').textContent = visible;
     document.getElementById('statVisible').textContent  = visible;
     document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
   }
-
   // --- Update totals based on actual DOM ---
   function updateTotalCounts(){
     const cards = getCards();
     const total = cards.length;
     const dividers = document.querySelectorAll('.section-divider').length;
-
     const totalEl   = document.getElementById('totalCount');
     const statTotal = document.getElementById('statTotal');
     const visEl     = document.getElementById('visibleCount');
@@ -970,7 +889,6 @@
     const catEl     = document.getElementById('statCategories');
     const fCount    = document.getElementById('footerCount');
     const fCats     = document.getElementById('footerCategories');
-
     if(totalEl)   totalEl.textContent   = total;
     if(statTotal) statTotal.textContent = total;
     if(visEl)     visEl.textContent     = total;
@@ -979,7 +897,6 @@
     if(fCount)    fCount.textContent    = total;
     if(fCats)     fCats.textContent     = dividers;
   }
-
   // --- Copy URL handler ---
   document.addEventListener('click', function(e){
     const btn = e.target.closest('.card-copy');
@@ -1004,7 +921,6 @@
       document.body.removeChild(ta);
     }
   });
-
   // --- Keyboard: Shift+C to copy focused card ---
   document.addEventListener('keydown', function(e){
     if(e.shiftKey && e.key.toLowerCase() === 'c'){
@@ -1015,7 +931,6 @@
       }
     }
   });
-
   // --- Initialize ---
   document.addEventListener('DOMContentLoaded', function(){
     updateTotalCounts();
@@ -1024,6 +939,5 @@
     if(grid) grid.setAttribute('role', 'list');
   });
 </script>
-
 </body>
 </html>
