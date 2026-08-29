@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checker · Benchmarking</title>
+<style>
+  :root{color-scheme:light;
+    --bg:#f1f4f8;--panel:#fff;--ink:#1e2732;--mut:#697484;--line:#e4e8ef;--line2:#eef1f5;
+    --brand:#2f6fb0;--brand-d:#255c95;--brand-soft:#eaf2fb;
+    --good:#1f9d6b;--good-soft:#e6f6ef;--warn:#c9821f;--warn-soft:#fbf3e3;--bad:#c2453b;
+    --shadow:0 1px 2px rgba(20,35,60,.05),0 6px 18px rgba(20,35,60,.06);}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 24px}
+  .topbar .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#4d8bc9,#2f6fb0);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px}
+  .topbar h1{font-size:15px;margin:0;font-weight:650}
+  .topbar .crumb{color:var(--mut);font-size:12.5px}
+  .topbar .actions{margin-left:auto;display:flex;gap:9px}
+  .wrap{max-width:840px;margin:0 auto;padding:22px 22px 70px}
+  .intro{color:var(--mut);font-size:13px;margin:2px 0 6px;max-width:640px}
+  .flag{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--good);background:var(--good-soft);border:1px solid #cdeadd;padding:4px 10px;border-radius:20px;font-weight:600;margin:8px 8px 4px 0}
+  .flag.info{color:var(--brand-d);background:var(--brand-soft);border-color:#cfe0f2}
+  .flag svg{width:14px;height:14px}
+  .pagehead{display:flex;align-items:flex-start;gap:14px;margin-top:4px}
+  .pagehead h2{font-size:20px;margin:0;font-weight:680}.pagehead p{margin:3px 0 0;color:var(--mut);font-size:13px}.pagehead .r{margin-left:auto}
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--brand-d);font-weight:600;cursor:pointer;background:none;border:0;padding:0;margin:2px 0 10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-top:16px;overflow:hidden}
+  .card-h{padding:14px 18px 4px}.card-h h2{font-size:14.5px;margin:0;font-weight:650}.card-h p{margin:3px 0 0;color:var(--mut);font-size:12.5px}
+  .card-b{padding:14px 18px 18px}
+  .step{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--brand-soft);color:var(--brand-d);align-items:center;justify-content:center;font-weight:800;font-size:12px;margin-right:8px;vertical-align:middle}
+  label.f{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:0 0 6px}
+  input[type=text],select{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .field{margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#98a3b2;font-weight:700;background:#fafbfd}
+  tbody tr:last-child td{border-bottom:0}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr.click{cursor:pointer}tr.click:hover{background:#f6f9fd}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:650;padding:2px 8px;border-radius:20px}
+  .pill.on{background:var(--good-soft);color:var(--good)}.pill.wait{background:var(--warn-soft);color:var(--warn)}.pill.off{background:#eef0f3;color:#8a94a1}
+  .hint{display:flex;gap:9px;background:#f7f9fc;border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:12.5px;color:#465468;margin:8px 0 0}
+  .hint.warn{background:var(--warn-soft);border-color:#f0e0bf;color:#7a5410}.hint svg{width:16px;height:16px;flex:none;margin-top:1px}
+  code{background:#eef1f5;padding:1px 6px;border-radius:5px;font-size:12px;color:#3b4655}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .fact{font-size:12px;color:#42506a;background:#f4f7fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px}.fact b{color:var(--ink)}
+  /* member picker */
+  .msearch{position:relative;max-width:340px;margin-bottom:10px}
+  .msearch svg{position:absolute;left:10px;top:9px;width:15px;height:15px;color:#98a3b2}
+  .msearch input{padding-left:31px}
+  .mlist{max-height:230px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px}
+  .opt{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px}
+  .opt:hover{background:#fafcff}.opt.dis{opacity:.55}
+  .opt input[type=checkbox]{width:17px;height:17px;accent-color:var(--brand);flex:none}
+  .opt .txt{flex:1}.opt .txt b{font-weight:600}.opt .txt .sub{font-size:12px;color:var(--mut)}
+  .mbar{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .mcount{font-size:12.5px;color:var(--mut);font-weight:600}
+  .btn{border:1px solid var(--brand);background:var(--brand);color:#fff;padding:9px 15px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--brand-d)}.btn.ghost{background:#fff;color:var(--brand-d)}.btn.sm{padding:6px 11px;font-size:12px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{border:0;background:#fff;padding:7px 13px;font-size:12px;font-weight:600;color:var(--mut);cursor:pointer}.seg button.active{background:var(--brand);color:#fff}
+  /* char rows */
+  .crow{border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden}
+  .chead{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fafbfd}
+  .chead .chk{display:flex;align-items:center;gap:9px;font-size:13.5px}.chead .chk input{width:16px;height:16px;accent-color:var(--brand)}
+  .chead .ct{margin-left:auto;font-size:11.5px;color:var(--mut)}
+  .lnk{border:0;background:none;color:var(--brand-d);font-weight:600;font-size:12px;cursor:pointer}
+  .vlist{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px 12px 34px}
+  .vchip{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;border:1px solid var(--line);border-radius:20px;padding:5px 11px;cursor:pointer;background:#fff;user-select:none}
+  .vchip input{width:15px;height:15px;accent-color:var(--brand)}.vchip.off{opacity:.5}
+  .vchip .pc{font-size:11px;color:var(--mut)}
+  /* preview */
+  .preview{background:#fbfcfe;border:1px dashed #cfd9e6;border-radius:11px;padding:14px;margin-top:4px}
+  .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .toolbar .grp{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mut)}.toolbar .grp b{color:var(--ink)}.toolbar select{width:auto;min-width:150px;padding:6px 9px}
+  .bmk{display:flex;align-items:center;gap:7px;font-weight:650;color:var(--brand-d);background:var(--brand-soft);border:1px solid #cfe0f2;padding:6px 11px;border-radius:8px;cursor:pointer}.bmk input{width:15px;height:15px;accent-color:var(--brand)}.rspace{margin-left:auto}
+  .ptable{background:#fff;border-radius:8px;overflow:hidden}
+  .delta.up{color:var(--good);font-weight:650}.delta.down{color:var(--bad);font-weight:650}
+  .cap{font-size:11.5px;color:var(--mut);margin-top:8px}
+  .barwrap{display:flex;flex-direction:column;gap:9px}
+  .bar-row{display:grid;grid-template-columns:150px 1fr 40px;align-items:center;gap:12px}
+  .track{position:relative;height:22px;background:#eef2f7;border-radius:6px}
+  .fill{height:100%;background:linear-gradient(90deg,var(--brand),#5fa0d8);border-radius:6px}
+  .mkt{position:absolute;top:-5px;bottom:-5px;width:0;border-left:2px dashed var(--warn)}
+  .mkt:after{content:"Mkt";position:absolute;top:-15px;left:-9px;font-size:9px;color:var(--warn);font-weight:700}
+  .bar-val{text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="mark">C</div><div><h1>Benchmarking</h1></div>
+    <div class="crumb" id="crumb">Settings › Benchmarking</div>
+    <div class="actions" id="topActions"></div>
+  </div>
+
+  <div class="wrap">
+    <!-- LIST -->
+    <div id="listView">
+      <div class="pagehead">
+        <div><h2>Benchmark groups</h2><p>Each group is a set of clients that compare against each other, anonymously. A client belongs to one group.</p></div>
+        <div class="r"><button class="btn sm" onclick="newGroup()">+ New group</button></div>
+      </div>
+      <span class="flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Benchmarking enabled for this company</span>
+      <span class="flag info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Who can see it is a paid setting per client — managed in billing</span>
+      <div class="card" style="margin-top:14px"><div class="card-b" style="padding:0">
+        <table><thead><tr><th>Group</th><th class="num">Clients</th><th>Benchmarks on</th><th>Refresh</th><th>Status</th><th></th></tr></thead>
+        <tbody id="groupRows"></tbody></table>
+      </div></div>
+    </div>
+
+    <!-- EDITOR -->
+    <div id="editorView" class="hidden">
+      <button class="back" onclick="showList()">‹ Back to groups</button>
+      <p class="intro">Select the clients that compare against each other and click Update — the characteristics they share load below (same pattern as the operations panel).</p>
+
+      <div class="card">
+        <div class="card-h"><h2><span class="step">1</span>Group &amp; clients</h2>
+          <p>Name the group, pick the clients (everyone in the group is an equal, anonymous peer), then click Update.</p></div>
+        <div class="card-b">
+          <div class="field" style="max-width:380px"><label class="f">Group name</label><input type="text" id="gname" oninput="renameGroup(this.value)"></div>
+          <label class="f">Clients</label>
+          <div class="msearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            <input type="text" id="csearch" placeholder="Search clients…" oninput="renderMembers()"></div>
+          <div class="mlist" id="mlist"></div>
+          <div class="mbar"><span class="mcount" id="mcount"></span><button class="btn sm" onclick="doUpdate()">Update</button></div>
+          <div class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Clients already in another group are shown but locked (one group per client). Change the selection and click Update to reload the shared characteristics.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2><span class="step">2</span>Characteristic breakdowns <span style="font-size:11px;font-weight:700;color:#7a5cd0;background:#efeafb;border:1px solid #ddd2f6;padding:2px 8px;border-radius:20px;vertical-align:middle">OPTIONAL</span></h2>
+          <p>Final, section and sub-section scores are always compared — that's the baseline. Adding characteristics is optional: it adds like-for-like breakdowns (5-star vs 5-star). Leave it empty and the group still benchmarks scores.</p></div>
+        <div class="card-b">
+          <div class="facts">
+            <span class="fact"><b>Score levels:</b> Final · Section · Sub-section (all included)</span>
+            <span class="fact"><b>Score basis:</b> normalised 0–100 index</span>
+          </div>
+          <div style="margin-top:14px" id="charsArea"></div>
+          <div class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Only characteristics <b>common to the selected clients</b> appear (from <code>ClientProps</code>). Values load on expand and pool only where labels match. Add a client that lacks a characteristic and it drops from the list.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2><span class="step">3</span>Refresh</h2><p>How often peer averages recalculate. The period follows each client's own reporting cycle.</p></div>
+        <div class="card-b">
+          <div class="seg" id="refresh">
+            <button data-r="monthly" onclick="setRefresh('monthly')">Monthly</button>
+            <button data-r="weekly" onclick="setRefresh('weekly')">Weekly</button>
+          </div>
+          <div class="facts" style="margin-top:12px">
+            <span class="fact"><b>Period:</b> follows the client's reporting cycle (<code>DateCycleExtent</code>)</span>
+            <span class="fact"><b>Privacy:</b> comparisons with too few peers are hidden automatically</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2><span class="step">4</span>Statistics &amp; readout</h2><p>What the benchmark shows beyond your own score, in the report and dashboard.</p></div>
+        <div class="card-b">
+          <label class="opt"><input type="checkbox" id="st-market" onchange="toggleStat('market',this.checked)"><div class="txt"><b>Market average</b><div class="sub">the anonymised peer average</div></div></label>
+          <label class="opt"><input type="checkbox" id="st-rank" onchange="toggleStat('rank',this.checked)"><div class="txt"><b>Rank</b><div class="sub">your position, e.g. 3 of 12</div></div></label>
+          <label class="opt"><input type="checkbox" id="st-top" onchange="toggleStat('top',this.checked)"><div class="txt"><b>Top performer</b><div class="sub">best anonymised score in the pool</div></div></label>
+          <label class="opt"><input type="checkbox" id="st-trend" onchange="toggleStat('trend',this.checked)"><div class="txt"><b>Gap-vs-market trend</b><div class="sub">whether you're closing or widening the gap over time</div></div></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2><span class="step">5</span>Preview — how the analyst sees it</h2><p>The client's analyst ticks one “Benchmark” box in a report, then compares value-vs-value.</p></div>
+        <div class="card-b"><div class="preview">
+          <div class="toolbar">
+            <div class="grp">Report: <b>Section Analysis</b></div>
+            <label class="bmk"><input type="checkbox" id="bmk" checked onchange="renderPreview()"> Benchmark</label>
+            <div class="grp">Compare by: <select id="rchar" onchange="renderPreview()"></select></div>
+            <div class="seg rspace"><button id="m-table" class="active" onclick="setMode('table')">Table</button><button id="m-chart" onclick="setMode('chart')">Chart</button></div>
+          </div>
+          <div id="rbody"></div>
+        </div></div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn ghost" onclick="showList()">Cancel</button><button class="btn" onclick="showList()">Save group</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const FLOOR=3;
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const CHARLABEL={rest:'Type of restaurant',star:'Star rating',region:'Region',country:'Country'};
+  const VORDER={rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star','3-star'],region:['Gulf','Levant'],country:['UAE','KSA']};
+  const SCORE={
+    'rest|All Day Dining':[82,78],'rest|Bar & Lounge':[74,76],'rest|Dining':[80,79],
+    'star|5-star':[85,80],'star|4-star':[77,78],'star|3-star':[70,72],
+    'region|Gulf':[81,77],'region|Levant':[76,75],'country|UAE':[83,79],'country|KSA':[78,77]};
+  const SECTIONS=[['Reservation',82,76],['Check-in',88,85],['Housekeeping',74,79],['F&B service',80,78],['Spa',69,73]];
+  const POOL=[
+    {id:'rotana',name:'Rotana Hotels',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'jumeirah',name:'Jumeirah Group',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star'],region:['Gulf'],country:['UAE']}},
+    {id:'address',name:'Address Hotels',chars:{rest:['All Day Dining','Bar & Lounge'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'emaar',name:'Emaar Hospitality',chars:{rest:['All Day Dining','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'millennium',name:'Millennium Hotels',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['4-star'],region:['Gulf','Levant'],country:['UAE','KSA']}},
+    {id:'time',name:'Time Hotels',chars:{rest:['All Day Dining','Bar & Lounge'],star:['4-star','3-star'],region:['Gulf'],country:['UAE']}},
+    {id:'rove',name:'Rove Hotels',chars:{rest:['All Day Dining'],star:['3-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'rixos',name:'Rixos Hotels',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star'],region:['Gulf','Levant'],country:['UAE','KSA']}},
+    {id:'hilton',name:'Hilton MEA',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE','KSA']}},
+    {id:'citycenter',name:'City Center Hotel',chars:{star:['3-star'],region:['Gulf'],country:['UAE']}}, // no restaurants → drops "Type of restaurant"
+  ];
+  const cById=id=>POOL.find(c=>c.id===id);
+  const state={ view:'list', currentId:null, mode:'table', _rchar:'__section',
+    groups:[
+      {id:'g1',name:'Hospitality — UAE',refresh:'monthly',members:['rotana','jumeirah','address','emaar'],updated:true,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:true,top:false}},
+      {id:'g2',name:'Hospitality — Midscale',refresh:'monthly',members:['time','rove'],updated:true,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:true,top:false}},
+    ]};
+  let editorUI={expanded:{}};
+  const cg=()=>state.groups.find(g=>g.id===state.currentId);
+  function otherGroupOf(cid,exceptId){ const g=state.groups.find(g=>g.id!==exceptId && g.members.includes(cid)); return g?g.name:null; }
+  function sharedChars(members){ if(!members.length) return [];
+    return Object.keys(CHARLABEL).filter(k=> members.every(id=> (cById(id).chars[k]||[]).length>0)); }
+  function charValues(ch,members){ const set={}; members.forEach(id=>(cById(id).chars[ch]||[]).forEach(v=>set[v]=1));
+    return (VORDER[ch]||[]).filter(v=>set[v]); }
+  function peersOf(ch,v,members){ return members.filter(id=>(cById(id).chars[ch]||[]).includes(v)).length; }
+  function benchNames(g){ return sharedChars(g.members).filter(ch=>!g.ex.chars[ch] && charValues(ch,g.members).some(v=>!g.ex.vals[ch+'|'+v])).map(ch=>CHARLABEL[ch]); }
+
+  function render(){
+    const list=document.getElementById('listView'),ed=document.getElementById('editorView');
+    if(state.view==='list'){ list.classList.remove('hidden');ed.classList.add('hidden');
+      document.getElementById('crumb').innerHTML='Settings › <b style="color:var(--ink)">Benchmarking</b>';
+      document.getElementById('topActions').innerHTML=''; renderList();
+    } else { list.classList.add('hidden');ed.classList.remove('hidden'); const g=cg();
+      document.getElementById('crumb').innerHTML='Settings › Benchmarking › <b style="color:var(--ink)">'+(esc(g.name)||'New group')+'</b>';
+      document.getElementById('topActions').innerHTML='<button class="btn ghost sm" onclick="showList()">Cancel</button><button class="btn sm" onclick="showList()">Save</button>';
+      document.getElementById('gname').value=g.name;
+      document.getElementById('csearch').value='';
+      document.querySelectorAll('#refresh button').forEach(b=>b.classList.toggle('active',b.dataset.r===g.refresh));
+      ['market','rank','top','trend'].forEach(k=>{const el=document.getElementById('st-'+k); if(el) el.checked=!!(g.stats&&g.stats[k]);});
+      renderMembers(); renderCharsArea(); syncReportChar(); renderPreview();
+    }
+  }
+  function openGroup(id){ state.currentId=id; state.view='editor'; editorUI={expanded:{}}; render(); window.scrollTo(0,0); }
+  function newGroup(){ const g={id:'g'+Date.now(),name:'',refresh:'monthly',members:[],updated:false,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:false,top:false},_new:true}; state.groups.push(g); openGroup(g.id); }
+  function showList(){ state.view='list'; render(); window.scrollTo(0,0); }
+
+  function renderList(){
+    document.getElementById('groupRows').innerHTML=state.groups.map(g=>{
+      const n=g.members.length, bn=benchNames(g);
+      const summary=bn.length?'Scores · '+bn.join(' · '):'Scores';
+      const status=n<FLOOR?'<span class="pill wait"><span></span>Below min ('+n+'/'+FLOOR+')</span>':(g._new?'<span class="pill off">Draft</span>':'<span class="pill on"><span></span>Active</span>');
+      return `<tr class="click" onclick="openGroup('${g.id}')"><td><b>${esc(g.name)||'<span style=\"color:#98a3b2\">Untitled group</span>'}</b></td>
+        <td class="num">${n}</td><td>${esc(summary)}</td>
+        <td>${g.refresh}</td><td>${status}</td><td style="text-align:right;color:var(--brand-d);font-weight:600">Open ›</td></tr>`;
+    }).join('');
+  }
+  function renameGroup(v){ cg().name=v; document.getElementById('crumb').innerHTML='Settings › Benchmarking › <b style="color:var(--ink)">'+(esc(v)||'New group')+'</b>'; }
+
+  function renderMembers(){
+    const g=cg(); const q=(document.getElementById('csearch').value||'').toLowerCase();
+    document.getElementById('mlist').innerHTML=POOL.filter(c=>c.name.toLowerCase().includes(q)).map(c=>{
+      const other=otherGroupOf(c.id,g.id); const checked=g.members.includes(c.id);
+      return `<label class="opt ${other?'dis':''}"><input type="checkbox" ${checked?'checked':''} ${other?'disabled':''} onchange="toggleMember('${c.id}',this.checked)">
+        <div class="txt"><b>${esc(c.name)}</b>${other?`<div class="sub">already in ${esc(other)}</div>`:''}</div>
+        ${checked?'<span class="pill on"><span></span>In group</span>':''}</label>`;
+    }).join('')||'<p class="cap" style="padding:8px">No clients match.</p>';
+    document.getElementById('mcount').textContent=g.members.length+' selected';
+  }
+  function toggleMember(id,on){ const g=cg(); if(on){ if(!g.members.includes(id)) g.members.push(id);} else g.members=g.members.filter(x=>x!==id);
+    g.updated=false; renderMembers(); renderCharsArea(); }
+  function doUpdate(){ cg().updated=true; renderCharsArea(); syncReportChar(); renderPreview(); }
+
+  function renderCharsArea(){
+    const wrap=document.getElementById('charsArea'); const g=cg();
+    if(!g.members.length){ wrap.innerHTML='<div class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Select clients above, then click Update.</div>'; return; }
+    if(!g.updated){ wrap.innerHTML='<div class="hint warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.2-8.5"/><path d="M21 4v5h-5"/></svg>Client selection changed — click <b>Update</b> to reload the shared characteristics.</div>'; return; }
+    const shared=sharedChars(g.members);
+    if(!shared.length){ wrap.innerHTML='<div class="hint warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>The selected clients share no common characteristic. Adjust the selection.</div>'; return; }
+    wrap.innerHTML=shared.map(ch=>{
+      const vals=charValues(ch,g.members); const incOn=!g.ex.chars[ch];
+      const onN=vals.filter(v=>!g.ex.vals[ch+'|'+v]).length; const exp=editorUI.expanded[ch];
+      return `<div class="crow"><div class="chead">
+        <label class="chk"><input type="checkbox" ${incOn?'checked':''} onchange="toggleInc('${ch}',this.checked)"> <b>${esc(CHARLABEL[ch])}</b></label>
+        <span class="ct">${incOn?onN+' of '+vals.length+' values':'excluded'}</span>
+        ${incOn?`<button class="lnk" onclick="toggleExpand('${ch}')">${exp?'Hide values ▴':'Choose values ▾'}</button>`:''}</div>
+        ${incOn&&exp?`<div class="vlist">${vals.map((v,i)=>{const off=!!g.ex.vals[ch+'|'+v];return `<label class="vchip ${off?'off':''}"><input type="checkbox" ${off?'':'checked'} onchange="toggleVal('${ch}',${i},this.checked)"> ${esc(v)} <span class="pc">${peersOf(ch,v,g.members)} peers</span></label>`;}).join('')}</div>`:''}
+      </div>`;
+    }).join('');
+  }
+  function toggleInc(ch,on){ cg().ex.chars[ch]=!on; renderCharsArea(); syncReportChar(); renderPreview(); }
+  function toggleExpand(ch){ editorUI.expanded[ch]=!editorUI.expanded[ch]; renderCharsArea(); }
+  function toggleVal(ch,i,on){ const g=cg(); const v=charValues(ch,g.members)[i]; g.ex.vals[ch+'|'+v]=!on; renderCharsArea(); syncReportChar(); renderPreview(); }
+  function setRefresh(r){ cg().refresh=r; document.querySelectorAll('#refresh button').forEach(b=>b.classList.toggle('active',b.dataset.r===r)); }
+  function toggleStat(k,on){ const g=cg(); if(!g.stats) g.stats={}; g.stats[k]=on; renderPreview(); }
+
+  function benchedChars(){ const g=cg(); if(!g.updated) return [];
+    return sharedChars(g.members).filter(ch=>!g.ex.chars[ch] && charValues(ch,g.members).some(v=>!g.ex.vals[ch+'|'+v])); }
+  function syncReportChar(){ const b=benchedChars(); const dd=document.getElementById('rchar');
+    const opts=[{v:'__section',l:'Section score (baseline)'}].concat(b.map(ch=>({v:ch,l:CHARLABEL[ch]})));
+    if(!opts.some(o=>o.v===state._rchar)) state._rchar='__section';
+    dd.innerHTML=opts.map(o=>`<option value="${o.v}" ${o.v===state._rchar?'selected':''}>${esc(o.l)}</option>`).join(''); }
+  function setMode(m){ state.mode=m; document.getElementById('m-table').classList.toggle('active',m==='table'); document.getElementById('m-chart').classList.toggle('active',m==='chart'); renderPreview(); }
+  function renderPreview(){
+    const on=document.getElementById('bmk').checked; const dd=document.getElementById('rchar'); if(dd.value) state._rchar=dd.value;
+    const host=document.getElementById('rbody'); const g=cg();
+    if(!g.members.length || !g.updated){ host.innerHTML='<p class="cap">Select clients and click Update to preview.</p>'; return; }
+    const sel=state._rchar; const isSection=(sel==='__section'); const colName=isSection?'Section':CHARLABEL[sel];
+    let rows;
+    if(isSection){ rows=SECTIONS.map(s=>({v:s[0],your:s[1],market:s[2],peers:g.members.length,shown:true})); }
+    else { rows=charValues(sel,g.members).filter(v=>!g.ex.vals[sel+'|'+v]).map(v=>{const s=SCORE[sel+'|'+v]||[0,0];const pe=peersOf(sel,v,g.members);return {v,your:s[0],market:s[1],peers:pe,shown:pe>=FLOOR};}); }
+    const st=g.stats||{};
+    if(state.mode==='table'){
+      const head=[`<th>${esc(colName)}</th>`,`<th class="num">Your score</th>`];
+      if(on){ if(st.market) head.push('<th class="num">Market avg</th>'); head.push('<th class="num">vs Market</th>');
+        if(st.rank) head.push('<th class="num">Rank</th>'); if(st.top) head.push('<th class="num">Top</th>'); if(st.trend) head.push('<th class="num">Trend</th>'); }
+      const benchCols=(st.market?1:0)+1+(st.rank?1:0)+(st.top?1:0)+(st.trend?1:0);
+      const body=rows.map(r=>{
+        if(!on) return `<tr><td>${esc(r.v)}</td><td class="num">${r.your}</td></tr>`;
+        if(!r.shown) return `<tr style="opacity:.5"><td>${esc(r.v)}</td><td class="num">${r.your}</td><td class="num" colspan="${benchCols}"><span class="pill wait"><span></span>too few peers</span></td></tr>`;
+        const d=r.your-r.market,cls=d>=0?'up':'down',sg=d>=0?'+':'−';
+        const N=12, R=Math.min(N,Math.max(1,Math.round((90-r.your)/25*(N-1))+1));
+        const top=Math.min(99,Math.max(r.your,r.market)+5);
+        let tv=((Math.round(r.your+r.market))%5)-2; if(tv===0) tv=1; const tcls=tv>0?'up':'down';
+        const cells=[`<td>${esc(r.v)}</td>`,`<td class="num">${r.your}</td>`];
+        if(st.market) cells.push(`<td class="num">${r.market}</td>`);
+        cells.push(`<td class="num"><span class="delta ${cls}">${sg}${Math.abs(d)}</span></td>`);
+        if(st.rank) cells.push(`<td class="num">${R} of ${N}</td>`);
+        if(st.top) cells.push(`<td class="num">${top}</td>`);
+        if(st.trend) cells.push(`<td class="num"><span class="delta ${tcls}">${tv>0?'▲':'▼'}${Math.abs(tv)}</span></td>`);
+        return `<tr>${cells.join('')}</tr>`;
+      }).join('');
+      host.innerHTML=`<div class="ptable"><table><thead><tr>${head.join('')}</tr></thead><tbody>${body}</tbody></table></div>
+        <p class="cap">${on?(isSection?'Baseline benchmark — your section scores vs the anonymised peer average.':'Value-vs-value breakdown. Values with fewer than '+FLOOR+' peers are hidden automatically.'):'Benchmark off — the report as it looks today.'}</p>`;
+    } else {
+      host.innerHTML=`<div class="barwrap">${rows.map(r=>{const showMkt=on&&r.shown;
+        return `<div class="bar-row"><div>${esc(r.v)}${on&&!r.shown?' <span class="cap">(hidden)</span>':''}</div>
+          <div class="track"><div class="fill" style="width:${r.your}%"></div>${showMkt?`<div class="mkt" style="left:${r.market}%"></div>`:''}</div>
+          <div class="bar-val">${r.your}</div></div>`;}).join('')}</div><p class="cap">${on?'Your bars with a dashed market marker.':'Benchmark off.'}</p>`;
+    }
+  }
+  render();
+</script>
+</body>
+</html>
