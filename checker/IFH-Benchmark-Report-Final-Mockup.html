@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checker · Benchmark in Reports (final mockup)</title>
+<style>
+  :root{color-scheme:light;
+    --bg:#f1f4f8;--panel:#fff;--ink:#1e2732;--mut:#697484;--faint:#98a3b2;--line:#e4e8ef;--line2:#eef1f5;
+    --you:#2f6fb0;--you-d:#255c95;--mkt:#9aa7b5;--brand-soft:#eaf2fb;
+    --good:#1f9d6b;--good-soft:#e6f6ef;--warn:#c9821f;--warn-soft:#fbf3e3;--bad:#c2453b;
+    --shadow:0 1px 2px rgba(20,35,60,.05),0 6px 18px rgba(20,35,60,.06);}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 24px}
+  .topbar .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#4d8bc9,#2f6fb0);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px}
+  .topbar h1{font-size:15px;margin:0;font-weight:650}
+  .topbar .crumb{color:var(--mut);font-size:12.5px}
+  .wrap{max-width:900px;margin:0 auto;padding:20px 22px 70px}
+
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+  .tabs button{border:0;background:transparent;padding:10px 13px;font-size:13px;font-weight:600;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent}
+  .tabs button.active{color:var(--you-d);border-bottom-color:var(--you)}
+  .tabs button .f{display:block;font-size:10.5px;color:var(--faint);font-weight:500}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+  .card-b{padding:16px 18px}
+  .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 13px;background:#fafbfd;border:1px solid var(--line);border-radius:9px;margin-bottom:14px}
+  .toolbar .grp{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mut)}.toolbar .grp b{color:var(--ink)}
+  .toolbar select{padding:6px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+  .bmk{display:flex;align-items:center;gap:7px;font-weight:650;color:var(--you-d);background:var(--brand-soft);border:1px solid #cfe0f2;padding:6px 11px;border-radius:8px;cursor:pointer}
+  .bmk input{width:15px;height:15px;accent-color:var(--you)}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto}
+  .stats label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
+  .stats input{width:14px;height:14px;accent-color:var(--you)}
+
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--mut);margin:2px 0 8px 6px}
+  .legend .k{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:12px;height:12px;border-radius:3px}
+  .sw.you{background:var(--you)} .sw.mkt{background:var(--mkt)}
+  .charttitle{font-size:13px;font-weight:650;margin:0 0 2px 6px}
+  .filehint{font-size:11px;color:var(--faint);margin:0 0 10px 6px}
+  svg{display:block;max-width:100%}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line2)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:700;background:#fafbfd}
+  tbody tr:last-child td{border-bottom:0}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .delta.up{color:var(--good);font-weight:650}.delta.down{color:var(--bad);font-weight:650}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:650;padding:2px 8px;border-radius:20px;background:var(--warn-soft);color:var(--warn)}
+  .cap{font-size:11.5px;color:var(--mut);margin-top:10px}
+
+  details.calc{margin-top:16px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe}
+  details.calc summary{cursor:pointer;font-weight:650;font-size:13px;padding:12px 14px;list-style:none}
+  details.calc summary::-webkit-details-marker{display:none}
+  details.calc summary:before{content:"▸ ";color:var(--mut)}
+  details.calc[open] summary:before{content:"▾ "}
+  .calc-b{padding:0 16px 16px}
+  .calc-b h4{margin:14px 0 4px;font-size:12.5px}
+  .calc-b p{margin:2px 0;font-size:12.5px;color:#374252}
+  .frm{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#eef1f5;padding:2px 7px;border-radius:5px;color:#2b3a4a}
+  .ex{color:var(--you-d)}
+  code{background:#eef1f5;padding:1px 6px;border-radius:5px;font-size:12px;color:#3b4655}
+</style>
+</head>
+<body>
+  <div class="topbar"><div class="mark">C</div><div><h1>Benchmark in Reports</h1></div>
+    <div class="crumb">final mockup · how the calculations appear in the existing Highcharts reports</div></div>
+
+  <div class="wrap">
+    <div class="tabs" id="tabs">
+      <button data-r="section" class="active">Section Analysis<span class="f">report-network-status.php</span></button>
+      <button data-r="subsection">Sub-section comparison<span class="f">report-subchapter-comparison.php</span></button>
+      <button data-r="final">Final Score Analysis<span class="f">report-property.php</span></button>
+    </div>
+
+    <div class="card"><div class="card-b">
+      <div class="toolbar">
+        <div class="grp">Period: <b>Aug 2026</b></div>
+        <div class="grp" id="cmpWrap">Compare by: <select id="cmp" onchange="setCompare(this.value)"></select></div>
+        <label class="bmk"><input type="checkbox" id="bmk" checked onchange="render()"> Benchmark</label>
+        <div class="stats">
+          <label><input type="checkbox" id="s-market" checked onchange="render()"> Market avg</label>
+          <label><input type="checkbox" id="s-rank" checked onchange="render()"> Rank</label>
+          <label><input type="checkbox" id="s-top" onchange="render()"> Top</label>
+          <label><input type="checkbox" id="s-trend" checked onchange="render()"> Trend</label>
+        </div>
+      </div>
+
+      <div class="charttitle" id="ctitle"></div>
+      <div class="filehint" id="cfile"></div>
+      <div class="legend" id="clegend"></div>
+      <div id="chart"></div>
+      <div id="table"></div>
+      <p class="cap" id="cnote"></p>
+
+      <details class="calc"><summary>How each number is calculated (worked example: Reservation)</summary>
+        <div class="calc-b">
+          <p>Benchmarking reuses the score the report already computes (<code>FetchAverageGradeForCrits</code> / <code>AverageGrade</code>, weighted by <code>DChapterWeight</code>, on the client's <code>MinScore</code>/<code>MaxScore</code> scale). It only adds the anonymised pool aggregate.</p>
+          <h4>0 · Normalise to a 0–100 index</h4>
+          <p><span class="frm">normalised = (score − MinScore) / (MaxScore − MinScore) × 100</span> — so clients on different scales compare like-for-like.</p>
+          <h4>1 · Your score</h4>
+          <p>The value already on the report, normalised. <span class="ex">Your Reservation = 82.</span></p>
+          <h4>2 · Market avg</h4>
+          <p>Mean of the same unit across all <em>other</em> contributing branches in the group (you are excluded), read from the pre-computed snapshot. <span class="ex">Peers 74, 79, 71, 80, 78 → (74+79+71+80+78)/5 = 76.4 → 76.</span></p>
+          <h4>3 · vs Market</h4>
+          <p><span class="frm">Your − Market avg</span>. <span class="ex">82 − 76 = +6.</span></p>
+          <h4>4 · Rank</h4>
+          <p><span class="frm">1 + (peers with a strictly higher score)</span>, shown "rank of N". <span class="ex">82, 80, 79, 78, 74, 71 → rank 1 of 6.</span></p>
+          <h4>5 · Top performer</h4>
+          <p>Highest score in the pool for that unit, anonymised. <span class="ex">82.</span></p>
+          <h4>6 · Trend <span style="color:var(--warn)">(Phase 1.5)</span></h4>
+          <p><span class="frm">(Your − Market)_now − (Your − Market)_prev</span>. <span class="ex">last +4, now +6 → ▲ +2.</span> Needs two historical snapshots.</p>
+          <h4>Highcharts appearance</h4>
+          <p>Section &amp; sub-section: a grouped <b>Market</b> column beside each <b>You</b> column (the reports already support a multi-series column chart). Final Score: a <b>gauge</b> with the needle at You and a <b>market marker/band</b> at the peer average. No new chart library — one extra series or plot-band plus tooltip fields.</p>
+        </div>
+      </details>
+    </div></div>
+  </div>
+
+<script>
+  const DATA = {
+    section: { title:'Section scores', file:'report-network-status.php · Highcharts column chart', chart:'columns',
+      compare:{
+        baseline:{ label:'Section score', unit:'Section', rows:[
+          {u:'Reservation',you:82,mkt:76,peers:6,rank:'1 of 6',top:82,trend:2},
+          {u:'Check-in',you:88,mkt:85,peers:6,rank:'2 of 6',top:90,trend:1},
+          {u:'Housekeeping',you:74,mkt:79,peers:5,rank:'5 of 6',top:86,trend:-1},
+          {u:'F&B service',you:80,mkt:78,peers:6,rank:'3 of 6',top:88,trend:1},
+          {u:'Spa',you:69,mkt:73,peers:4,rank:'6 of 6',top:81,trend:-2},
+        ]},
+        star:{ label:'Star rating (characteristic)', unit:'Star rating', rows:[
+          {u:'5-star',you:85,mkt:80,peers:6,rank:'2 of 6',top:89,trend:1},
+          {u:'4-star',you:77,mkt:78,peers:5,rank:'4 of 5',top:84,trend:0},
+          {u:'3-star',you:70,mkt:72,peers:2,rank:'—',top:null,trend:null,thin:true},
+        ]},
+      }},
+    subsection: { title:'Sub-section scores (within Reservation)', file:'report-subchapter-comparison.php · Highcharts column chart', chart:'columns',
+      compare:{ baseline:{ label:'Sub-section', unit:'Sub-section', rows:[
+        {u:'Greeting within 3 rings',you:91,mkt:84,peers:6,rank:'1 of 6',top:91,trend:2},
+        {u:'Offered loyalty enrolment',you:70,mkt:66,peers:5,rank:'2 of 5',top:79,trend:1},
+        {u:'Confirmed booking by email',you:95,mkt:90,peers:6,rank:'1 of 6',top:95,trend:1},
+        {u:'Hold / wait time',you:78,mkt:80,peers:5,rank:'4 of 5',top:88,trend:-1},
+      ]}}},
+    final: { title:'Final score', file:'report-property.php · Highcharts gauge', chart:'gauge',
+      compare:{ baseline:{ label:'Overall', unit:'Property', rows:[
+        {u:'Overall score',you:80,mkt:77,peers:12,rank:'3 of 12',top:89,trend:1},
+      ]}}},
+  };
+  const state = { report:'section', compare:'baseline', };
+
+  document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    state.report=b.dataset.r; state.compare='baseline';
+    document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x.dataset.r===state.report));
+    syncCompare(); render();});
+  function syncCompare(){
+    const rep=DATA[state.report]; const keys=Object.keys(rep.compare); const dd=document.getElementById('cmp');
+    document.getElementById('cmpWrap').style.display = keys.length>1 ? '' : 'none';
+    dd.innerHTML=keys.map(k=>`<option value="${k}" ${k===state.compare?'selected':''}>${rep.compare[k].label}</option>`).join('');
+  }
+  function setCompare(v){ state.compare=v; render(); }
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function render(){
+    const rep=DATA[state.report]; const cmp=rep.compare[state.compare]; const rows=cmp.rows;
+    const on=document.getElementById('bmk').checked;
+    const st={market:document.getElementById('s-market').checked,rank:document.getElementById('s-rank').checked,
+      top:document.getElementById('s-top').checked,trend:document.getElementById('s-trend').checked};
+    document.getElementById('ctitle').textContent=rep.title;
+    document.getElementById('cfile').textContent=rep.file;
+    document.getElementById('clegend').innerHTML = rep.chart==='gauge'
+      ? '' : `<span class="k"><span class="sw you"></span>You</span>${on?'<span class="k"><span class="sw mkt"></span>Market</span>':''}`;
+    document.getElementById('chart').innerHTML = rep.chart==='gauge' ? gauge(rows[0],on) : columns(rows,on);
+    document.getElementById('table').innerHTML = tableHTML(rows,on,st,cmp.unit);
+    document.getElementById('cnote').innerHTML = on
+      ? 'Market avg is the anonymised pool average (you excluded). Segments below the group’s minimum-peers value are hidden as “too few peers”.'
+      : 'Benchmark off — the report as it looks today.';
+  }
+
+  /* grouped column chart (Highcharts-style) */
+  function columns(rows,on){
+    const W=640,H=300,padL=34,padR=12,padT=24,padB=54, plotH=H-padT-padB, plotW=W-padL-padR;
+    const n=rows.length, slot=plotW/n, groupW=Math.min(64, slot*0.6), barW=on?groupW/2-3:groupW*0.6;
+    const y=v=>padT+plotH-(v/100*plotH);
+    let g='';
+    // gridlines + y labels
+    for(let v=0;v<=100;v+=25){ g+=`<line x1="${padL}" y1="${y(v)}" x2="${W-padR}" y2="${y(v)}" stroke="#eef1f5"/>`;
+      g+=`<text x="${padL-6}" y="${y(v)+3}" text-anchor="end" font-size="10" fill="#98a3b2">${v}</text>`; }
+    rows.forEach((r,i)=>{
+      const cx=padL+slot*i+slot/2;
+      const drawBar=(val,color,off,dim)=>{ if(val==null){return '';} const bx=cx+off-barW/2, by=y(val), bh=padT+plotH-by;
+        return `<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" fill="${color}" ${dim?'opacity="0.5"':''} rx="1"><title>${esc(r.u)}: ${val}</title></rect>`+
+               `<text x="${bx+barW/2}" y="${by-4}" text-anchor="middle" font-size="10.5" font-weight="700" fill="#334">${val}</text>`; };
+      if(on){ g+=drawBar(r.you,'#2f6fb0',-barW/2-2, r.thin); g+=drawBar(r.mkt,'#9aa7b5',barW/2+2, r.thin); }
+      else { g+=drawBar(r.you,'#2f6fb0',0,false); }
+      // x label
+      const lbl=esc(r.u);
+      g+=`<text x="${cx}" y="${H-padB+16}" text-anchor="middle" font-size="10.5" fill="#5a6675">${lbl.length>12?lbl.slice(0,11)+'…':lbl}</text>`;
+      if(on&&r.thin){ g+=`<text x="${cx}" y="${H-padB+30}" text-anchor="middle" font-size="9" fill="#c9821f">too few peers</text>`; }
+    });
+    // axis
+    g+=`<line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" stroke="#cfd6df"/>`;
+    return `<svg viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`;
+  }
+
+  /* gauge (Highcharts-style) for final score */
+  function gauge(r,on){
+    const W=420,H=250,cx=W/2,cy=200,rad=150;
+    const pt=(v,rr)=>{const a=(180-v*1.8)*Math.PI/180;return [cx+rr*Math.cos(a),cy-rr*Math.sin(a)];};
+    const arc=(v1,v2,color,sw)=>{const[x1,y1]=pt(v1,rad);const[x2,y2]=pt(v2,rad);
+      return `<path d="M ${x1} ${y1} A ${rad} ${rad} 0 0 1 ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="butt"/>`;};
+    let g='';
+    g+=arc(0,60,'#e7b4ad',16)+arc(60,80,'#f0d59a',16)+arc(80,100,'#a9dcc4',16);
+    // needle to You
+    const[nx,ny]=pt(r.you,rad-26);
+    g+=`<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#2f6fb0" stroke-width="4" stroke-linecap="round"/>`;
+    g+=`<circle cx="${cx}" cy="${cy}" r="6" fill="#2f6fb0"/>`;
+    // market marker
+    if(on){ const[m1x,m1y]=pt(r.mkt,rad+2);const[m2x,m2y]=pt(r.mkt,rad-20);
+      g+=`<line x1="${m1x}" y1="${m1y}" x2="${m2x}" y2="${m2y}" stroke="#c9821f" stroke-width="3"/>`;
+      g+=`<text x="${m1x}" y="${m1y-4}" text-anchor="middle" font-size="10" font-weight="700" fill="#c9821f">Mkt ${r.mkt}</text>`; }
+    // scale ends
+    g+=`<text x="${cx-rad}" y="${cy+16}" text-anchor="middle" font-size="10" fill="#98a3b2">0</text>`;
+    g+=`<text x="${cx+rad}" y="${cy+16}" text-anchor="middle" font-size="10" fill="#98a3b2">100</text>`;
+    // center readout
+    g+=`<text x="${cx}" y="${cy-40}" text-anchor="middle" font-size="34" font-weight="800" fill="#1e2732">${r.you}</text>`;
+    g+=`<text x="${cx}" y="${cy-20}" text-anchor="middle" font-size="11" fill="#697484">Your final score${on?` · market ${r.mkt}`:''}</text>`;
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" style="margin:0 auto">${g}</svg>`;
+  }
+
+  function tableHTML(rows,on,st,unit){
+    const head=[`<th>${esc(unit)}</th>`,`<th class="num">Your</th>`];
+    if(on){ if(st.market) head.push('<th class="num">Market avg</th>'); head.push('<th class="num">vs Market</th>');
+      if(st.rank) head.push('<th class="num">Rank</th>'); if(st.top) head.push('<th class="num">Top</th>'); if(st.trend) head.push('<th class="num">Trend</th>'); }
+    const benchCols=(st.market?1:0)+1+(st.rank?1:0)+(st.top?1:0)+(st.trend?1:0);
+    const body=rows.map(r=>{
+      if(!on) return `<tr><td>${esc(r.u)}</td><td class="num">${r.you}</td></tr>`;
+      if(r.thin) return `<tr style="opacity:.55"><td>${esc(r.u)}</td><td class="num">${r.you}</td><td class="num" colspan="${benchCols}"><span class="pill">too few peers</span></td></tr>`;
+      const d=r.you-r.mkt,cls=d>=0?'up':'down',sg=d>=0?'+':'−';
+      const cells=[`<td>${esc(r.u)}</td>`,`<td class="num">${r.you}</td>`];
+      if(st.market) cells.push(`<td class="num">${r.mkt}</td>`);
+      cells.push(`<td class="num"><span class="delta ${cls}">${sg}${Math.abs(d)}</span></td>`);
+      if(st.rank) cells.push(`<td class="num">${r.rank}</td>`);
+      if(st.top) cells.push(`<td class="num">${r.top??'—'}</td>`);
+      if(st.trend){ const t=r.trend; const tc=t>0?'up':(t<0?'down':''); const tv=t==null?'—':`${t>0?'▲':(t<0?'▼':'–')}${Math.abs(t)}`;
+        cells.push(`<td class="num"><span class="delta ${tc}">${tv}</span></td>`); }
+      return `<tr>${cells.join('')}</tr>`;
+    }).join('');
+    return `<table><thead><tr>${head.join('')}</tr></thead><tbody>${body}</tbody></table>`;
+  }
+
+  syncCompare(); render();
+</script>
+</body>
+</html>
