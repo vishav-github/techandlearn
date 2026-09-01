@@ -10,7 +10,7 @@
     --line:#e4e8ef; --line2:#eef1f5; --brand:#2f6fb0; --brand-d:#255c95; --brand-soft:#eaf2fb;
     --good:#1f9d6b; --good-soft:#e6f6ef; --warn:#c9821f; --warn-soft:#fbf3e3;
     --bad:#c2453b; --bad-soft:#fbeceb; --purple:#7a5cd0; --purple-soft:#efeafb;
-    --api:#0d6efd; --llm:#7a5cd0; --topup:#198754;
+    --api:#0d6efd; --llm:#7a5cd0; --topup:#198754; --topup-data:#0d9488;
     --shadow:0 1px 2px rgba(20,35,60,.05),0 6px 18px rgba(20,35,60,.06);
   }
   *{box-sizing:border-box}
@@ -47,12 +47,20 @@
   .srow.special{background:linear-gradient(90deg,#faf8ff 0%,#fff 40%)}
   .srow.api{background:linear-gradient(90deg,#f5f9ff 0%,#fff 40%)}
   .srow.topup{background:linear-gradient(90deg,#f4faf7 0%,#fff 40%)}
+  .srow.topupdata{background:linear-gradient(90deg,#f0fafa 0%,#fff 40%)}
   .sname{font-weight:650;font-size:13.5px}
   .model{display:inline-block;margin-top:5px;font-size:10.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;padding:2px 7px;border-radius:999px}
   .model.bracket{background:#f3f5f7;color:var(--mut)}
   .model.llm{background:var(--purple-soft);color:var(--llm)}
   .model.api{background:#e8f1ff;color:var(--api)}
   .model.topup{background:var(--good-soft);color:var(--topup)}
+  .model.topupdata{background:#e6f7f5;color:var(--topup-data)}
+  .pill.rate{border-color:#d4e4ef}
+  .pill.rate.default{background:#f0f7ff;color:#2f6fb0;border-color:#cfe0f2}
+  .pill.rate.custom{background:var(--warn-soft);color:#8a5a12;border-color:#efd9a8}
+  .secbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#f8fafc;border-bottom:1px solid var(--line2);font-size:12.5px}
+  .secbar .resetsec{border:1px solid #e6bcb7;background:#fff;color:var(--bad);border-radius:8px;padding:5px 10px;font-size:11.5px;font-weight:600;cursor:pointer}
+  .secbar .resetsec:hover{background:var(--bad-soft)}
 
   .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--line);background:#fff;color:#4a5766;cursor:pointer}
@@ -79,7 +87,7 @@
   .none{font-size:12.5px;color:var(--faint)}
   .reset{background:none;border:none;color:var(--bad);font-size:11px;text-decoration:underline;cursor:pointer;padding:0;margin-left:4px}
 
-  .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 18px}
+  .legend{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 18px}
   .leg{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px}
   .leg h4{margin:0 0 4px;font-size:12px}
   .leg p{margin:0;color:var(--mut);font-size:11.5px;line-height:1.45}
@@ -137,20 +145,21 @@
 
   <div class="wrap">
     <div class="note">
-      This mockup preserves <b>all four pricing models</b> on this page. Bracket services stay Min–Max. The three special monthly products open dedicated editors (same fields &amp; rules as <code>m_company-pricing.php</code>). Click the coloured buttons to open each modal.
+      This mockup preserves <b>all five pricing editor models</b> on this page (plus Special-services Default/Custom hourly rates). Bracket services stay Min–Max inline. The four special monthly products open dedicated editors — <b>call top-up</b> and <b>data top-up</b> are separate. Click the coloured buttons to open each modal.
     </div>
 
     <div class="warnbox">
       <b>Functional split (do not merge these into one editor)</b>
       Standard credits/modules/storage use quantity brackets + TableEditor + overlapping-range validation.
-      AI Chatbot / API Subscription / API Top-Up use named tiers from config, company overrides in <code>ProductCostPerClient</code>, and dedicated Save/Clear/Reset + (API) live subscription sync. Activation Fee remains a separate FeatureActivationFee row for AI Chatbot and API Subscription — not for API Top-Up.
+      AI Chatbot / API Subscription / API Call Top-Up / API Data Top-Up use named tiers from config, company overrides in <code>ProductCostPerClient</code>, and dedicated Save/Reset paths + (API Subscription) live subscription sync. Activation Fee remains a separate FeatureActivationFee row for AI Chatbot and API Subscription — <b>not</b> for either top-up product. Special services add Default/Custom hourly-rate pills + section Reset (Master2026).
     </div>
 
     <div class="legend">
-      <div class="leg"><h4>① Bracket / quantity</h4><p>MinAmount–MaxAmount · PricePerUnit · Add/Edit via TableEditor · <code>MoreValidation</code> overlap + volume-discount direction.</p></div>
+      <div class="leg"><h4>① Bracket / quantity</h4><p>MinAmount–MaxAmount · PricePerUnit · Add/Edit via inline TableEditor · <code>MoreValidation</code> overlap + volume-discount direction.</p></div>
       <div class="leg llm"><h4>② AI Chatbot Connector</h4><p>Named tiers Starter/Pro/Enterprise/Unlimited · calls + monthly price · AJAX Save/Clear · Activation Fee separate.</p></div>
       <div class="leg api"><h4>③ API Access Subscription</h4><p>STARTER→ENTERPRISE · PlanData (calls/GB/RPM) · tier price order · Enterprise &gt; Pro · sync live sub · Reset.</p></div>
-      <div class="leg topup"><h4>④ API Top-Up Package</h4><p>TOPUP_STARTER/GROWTH/PROFESSIONAL · package size fixed · price override · no Activation Fee · Reset.</p></div>
+      <div class="leg topup"><h4>④ API Call Top-Up</h4><p><code>ApiTopUp</code> · TOPUP_* · extra calls · price override · no Activation Fee · Reset.</p></div>
+      <div class="leg" style="border-color:#b8e6df"><h4>⑤ API Data Top-Up</h4><p><code>ApiTopUpVolume</code> · +GB bundles · Cost/GB tables · price override · no Activation Fee · Reset.</p></div>
     </div>
 
     <div class="bar">
@@ -162,7 +171,7 @@
     </div>
 
     <div class="card" id="list"></div>
-    <div class="foot">Mockup only · CompanyID 68 sample · mirrors Deployment <code>m_company-pricing.php</code> behaviour</div>
+    <div class="foot">Mockup only · CompanyID 68 sample · mirrors **Master2026 / Testing** <code>m_company-pricing.php</code> behaviour (five models + Special default pricing)</div>
   </div>
 
   <!-- LLM MODAL -->
@@ -303,8 +312,8 @@
     <div class="modal mid">
       <div class="mhead">
         <div>
-          <h3>Configure Top-Up Pricing — Company #68 <span class="badge" style="background:var(--good-soft);color:var(--topup)">ApiTopUp</span></h3>
-          <p>Packages TOPUP_STARTER / GROWTH / PROFESSIONAL · no Enterprise top-up · no Activation Fee.</p>
+          <h3>Configure Call Top-Up Pricing — Company #68 <span class="badge" style="background:var(--good-soft);color:var(--topup)">ApiTopUp</span></h3>
+          <p>Packages TOPUP_STARTER / GROWTH / PROFESSIONAL · extra calls · no Enterprise top-up · no Activation Fee.</p>
         </div>
       </div>
       <div class="mbody">
@@ -349,12 +358,63 @@
     </div>
   </div>
 
+  <!-- API DATA TOP-UP MODAL -->
+  <div class="overlay" id="ov-topup-data">
+    <div class="modal mid">
+      <div class="mhead">
+        <div>
+          <h3>Configure Data Top-Up Pricing — Company #68 <span class="badge" style="background:#e6f7f5;color:var(--topup-data)">ApiTopUpVolume</span></h3>
+          <p>Volume GB bundles Starter / Growth / Professional · price override only · no Activation Fee · separate from call top-up.</p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Type=<code>ApiTopUpVolume</code> — <b>not</b> <code>ApiTopUp</code>. Package sizes (+GB) read-only from <code>config/api_tiers.php</code>.</li>
+            <li>No FeatureActivationFee on the list row (same as call top-up).</li>
+            <li>Blank New Price → config volume top-up default. Reset All deletes company overrides for ApiTopUpVolume.</li>
+            <li>Cost/GB comparison tables stay — mirrors call top-up psychology pattern.</li>
+            <li>JS tri-state: <code>isVolumeTopUp</code> / <code>isCallTopUp</code> — do not collapse.</li>
+          </ul>
+        </div>
+
+        <div class="sec">Data top-up package details (comparison)</div>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Data Pkg</th><th>Default Price</th><th>Active Price</th><th>Cost/GB</th><th>Plan Cost</th><th>Plan Data</th><th>Plan Cost/GB</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td>+1.00 GB</td><td class="mut">USD 5.00</td><td class="cur">USD 5.00</td><td>USD 5.00</td><td>USD 29.00</td><td>1 GB</td><td>USD 29.00</td></tr>
+            <tr><td><b>Growth</b></td><td>+5.00 GB</td><td class="mut">USD 20.00</td><td class="cur">USD 20.00</td><td>USD 4.00</td><td>USD 199.00</td><td>5 GB</td><td>USD 39.80</td></tr>
+            <tr><td><b>Professional</b></td><td>+10.00 GB</td><td class="mut">USD 35.00</td><td class="cur">USD 35.00</td><td>USD 3.50</td><td>USD 399.00</td><td>15 GB</td><td>USD 26.60</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec">Set data top-up pricing for company #68</div>
+        <p class="hint">Blank <b>New Price</b> uses <code>config/api_tiers.php</code> volume top-up defaults.</p>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Package</th><th>Default (config)</th><th>Current Company Price</th><th>New Price (USD)</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td>+1.00 GB</td><td class="mut">USD 5.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="5.00"></td></tr>
+            <tr><td><b>Growth</b></td><td>+5.00 GB</td><td class="mut">USD 20.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="20.00"></td></tr>
+            <tr><td><b>Professional</b></td><td>+10.00 GB</td><td class="mut">USD 35.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="35.00"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="toast('Reset All → ApiTopUpVolume overrides deleted')">Reset All to Default</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="toast('Save → save_api_company_pricing api_product_type=ApiTopUpVolume')">Save Pricing</button>
+      </div>
+    </div>
+  </div>
+
   <!-- BRACKET EDIT (simple) -->
   <div class="overlay" id="ov-bracket">
     <div class="modal sm">
       <div class="mhead"><div><h3 id="br-title">Edit pricing tier</h3><p>TableEditor fields · Min / Max / PricePerUnit · MoreValidation overlap rules.</p></div></div>
       <div class="mbody">
-        <div class="hint rules"><b>Not used for</b> LlmChatbot / ApiSubscription / ApiTopUp (those open their own modals).</div>
+        <div class="hint rules"><b>Not used for</b> LlmChatbot / ApiSubscription / ApiTopUp / ApiTopUpVolume (those open their own modals).</div>
         <label style="font-size:12px;font-weight:600;color:var(--mut)">Minimum amount</label>
         <input id="br-min" type="number" min="1" style="width:100%;margin:4px 0 10px;padding:8px;border:1px solid var(--line);border-radius:8px">
         <label style="font-size:12px;font-weight:600;color:var(--mut)">Maximum amount</label>
@@ -409,10 +469,17 @@
         {code:'TOPUP_GROWTH',pkg:'+1,000',price:39,override:null},
         {code:'TOPUP_PROFESSIONAL',pkg:'+2,000',price:49,override:null},
       ]},
+      {name:'API Data Top-Up Package',model:'topupdata',topups:[
+        {code:'VOLUME_STARTER',pkg:'+1.00 GB',price:5,override:null},
+        {code:'VOLUME_GROWTH',pkg:'+5.00 GB',price:20,override:null},
+        {code:'VOLUME_PRO',pkg:'+10.00 GB',price:35,override:null},
+      ]},
     ]},
-    {key:'special',title:'Special services',rows:[
-      {name:'CSS implementation',model:'bracket',minCharge:0,tiers:[[1,250]],ceiling:null},
-      {name:'Development',model:'bracket',minCharge:0,tiers:[],ceiling:null},
+    {key:'special',title:'Special services',resetLabel:'↻ Reset Special Services to defaults (US$55.00/h)',rows:[
+      {name:'CSS implementation',model:'bracket',minCharge:0,hourly:45,rateStatus:'custom',tiers:[[1,250]],ceiling:null},
+      {name:'Development',model:'bracket',minCharge:0,hourly:55,rateStatus:'default',tiers:[],ceiling:null},
+      {name:'Training',model:'bracket',minCharge:0,hourly:55,rateStatus:'default',tiers:[[1,55]],ceiling:null},
+      {name:'Support',model:'bracket',minCharge:0,hourly:55,rateStatus:'default',tiers:[[1,55]],ceiling:null},
     ]},
   ];
 
@@ -432,24 +499,27 @@
     const q=(document.getElementById('q').value||'').toLowerCase();
     const sec=SECTIONS.find(s=>s.key===active);
     const rows=sec.rows.map((r,idx)=>({r,idx})).filter(o=>o.r.name.toLowerCase().includes(q));
-    document.getElementById('list').innerHTML = rows.length? rows.map(o=>rowHTML(sec.key,o.r,o.idx)).join('')
-      : '<div class="srow"><div class="none" style="grid-column:1/3">No services match.</div></div>';
+    document.getElementById('list').innerHTML = rows.length? (
+      (sec.key==='special' && sec.resetLabel? `<div class="secbar"><span><b>${sec.title}</b> · hourly Default/Custom pills</span><button class="resetsec" onclick="toast('POST reset_sso_default_pricing=1 + sso_pricing_csrf — confirm custom rates lost')">${sec.resetLabel}</button></div>`:'') +
+      rows.map(o=>rowHTML(sec.key,o.r,o.idx)).join('')
+    ) : '<div class="srow"><div class="none" style="grid-column:1/3">No services match.</div></div>';
   }
   function setTab(k){ active=k; render(); }
 
   function modelLabel(m){
     if(m==='llm') return '<span class="model llm">Named tiers · LLM</span>';
     if(m==='api') return '<span class="model api">Named tiers · API plan</span>';
-    if(m==='topup') return '<span class="model topup">Named packages · Top-up</span>';
+    if(m==='topup') return '<span class="model topup">Named packages · Call top-up</span>';
+    if(m==='topupdata') return '<span class="model topupdata">Named packages · Data top-up</span>';
     return '<span class="model bracket">Quantity brackets</span>';
   }
 
   function rowHTML(sk,r,idx){
-    const cls = r.model==='llm'?'special': r.model==='api'?'api': r.model==='topup'?'topup':'';
+    const cls = r.model==='llm'?'special': r.model==='api'?'api': r.model==='topup'?'topup': r.model==='topupdata'?'topupdata':'';
     let pills='';
     if(r.activation!=null){
       pills+=`<span class="pill" onclick="toast('Edit Activation Fee → FeatureActivationFee')"><span class="lbl">Activation</span> ${money(r.activation)}</span>`;
-    } else if(sk==='monthly' && r.model!=='topup' && r.model!=='bracket'){
+    } else if(sk==='monthly' && r.model!=='topup' && r.model!=='topupdata' && r.model!=='bracket'){
       pills+=`<span class="pill off" onclick="toast('Add Activation Fee')">+ Activation fee</span>`;
     } else if(sk==='monthly' && r.model==='bracket' && r.name.includes('Storage')){
       /* handled below */
@@ -460,6 +530,10 @@
       pills+=`<span class="pill" onclick="toast('Edit Free Storage')"><span class="lbl">Free</span> ${r.free===true?'set':r.free+' GB'}</span>`;
     } else if(r.name==='Regular Storage'||r.name==='Archive Storage'){
       pills+=`<span class="pill off">+ Free storage</span>`;
+    }
+    if(r.hourly!=null){
+      const rs=r.rateStatus==='custom'?'custom':'default';
+      pills+=`<span class="pill rate ${rs}"><span class="lbl">Rate</span> ${money(r.hourly)}/h ${rs==='custom'?'Custom':'Default'}</span>`;
     }
     if(r.minCharge!=null){
       pills+=`<span class="pill" onclick="toast('Edit Minimum Chargeable Credits')"><span class="lbl">Min credits</span> ${r.minCharge}</span>`;
@@ -488,7 +562,14 @@
           const pr=t.override!=null?money(t.override):money(t.price);
           return `<button class="tier named topup" onclick="openTopup()"><span class="code">${t.code.replace('TOPUP_','')}</span><span class="rng">${t.pkg}</span><span class="prc">${pr}</span></button>`;
         }).join('')+
-        `<button class="openmodal topup" onclick="openTopup()">Configure top-ups…</button></div>`;
+        `<button class="openmodal topup" onclick="openTopup()">Configure call top-ups…</button></div>`;
+    } else if(r.model==='topupdata'){
+      right = `<div class="tiers">`+
+        r.topups.map(t=>{
+          const pr=t.override!=null?money(t.override):money(t.price);
+          return `<button class="tier named topup" style="border-color:#b8e6df" onclick="openTopupData()"><span class="code">${t.code.replace('VOLUME_','')}</span><span class="rng">${t.pkg}</span><span class="prc">${pr}</span></button>`;
+        }).join('')+
+        `<button class="openmodal topup" style="color:var(--topup-data);border-color:#b8e6df" onclick="openTopupData()">Configure data top-ups…</button></div>`;
     } else {
       if(!r.tiers || !r.tiers.length){
         right=`<span class="none">No pricing · </span><button class="addtier" onclick="openBracket('${r.name}',null)">+ Add tier</button>`;
@@ -512,6 +593,7 @@
   function openLlm(){ closeModals(); document.getElementById('ov-llm').classList.add('on'); }
   function openApi(){ closeModals(); document.getElementById('ov-api').classList.add('on'); }
   function openTopup(){ closeModals(); document.getElementById('ov-topup').classList.add('on'); }
+  function openTopupData(){ closeModals(); document.getElementById('ov-topup-data').classList.add('on'); }
   function openBracket(name,i){
     closeModals();
     document.getElementById('br-title').textContent = i==null?('Add pricing — '+name):('Edit pricing — '+name);
