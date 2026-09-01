@@ -129,8 +129,24 @@
   table.g input[type=number]{width:96px;padding:5px 7px;border:1px solid var(--line);border-radius:6px}
   .badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;background:#e8f1ff;color:var(--api)}
   .badge.llm{background:var(--purple-soft);color:var(--llm)}
-  .toast{position:fixed;bottom:20px;right:20px;background:#1e2732;color:#fff;padding:10px 14px;border-radius:8px;font-size:12.5px;display:none;z-index:80}
+  .toast{position:fixed;bottom:20px;right:20px;background:#1e2732;color:#fff;padding:10px 14px;border-radius:8px;font-size:12.5px;display:none;z-index:80;max-width:360px}
   .toast.on{display:block}
+  .toast.err{background:#8b2e28}
+  .toast.ok{background:#1a6b4a}
+  .valbox{display:none;margin:10px 0 0;padding:8px 10px;border-radius:8px;font-size:12px;line-height:1.45}
+  .valbox.on{display:block}
+  .valbox.err{background:var(--bad-soft);border:1px solid #e6bcb7;color:#7a2c26}
+  .valbox.ok{background:var(--good-soft);border:1px solid #b7dfcb;color:#1a5c40}
+  .valbox.warn{background:var(--warn-soft);border:1px solid #efd9a8;color:#6a4a10}
+  .field{margin:0 0 10px}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px}
+  .field input,.field select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px}
+  .field .desc{font-size:11px;color:var(--faint);margin-top:4px}
+  .field.bad input,.field.bad select{border-color:#c2453b;background:#fff8f7}
+  .demo-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .btn.sm{padding:5px 9px;font-size:11.5px}
+  .btn.ghost.sm{border-color:var(--line);color:var(--mut)}
+  .inline-note{font-size:11.5px;color:var(--mut);background:#f8f9fb;border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin:0 0 10px}
 </style>
 </head>
 <body>
@@ -145,13 +161,13 @@
 
   <div class="wrap">
     <div class="note">
-      This mockup preserves <b>all five pricing editor models</b> on this page (plus Special-services Default/Custom hourly rates). Bracket services stay Min–Max inline. The four special monthly products open dedicated editors — <b>call top-up</b> and <b>data top-up</b> are separate. Click the coloured buttons to open each modal.
+      This mockup preserves <b>all five pricing editor models</b> plus side actions (<b>Activation Fee</b>, <b>Free Storage</b>, <b>Minimum Chargeable Credits</b>, <b>Per Credit In Minutes</b>) and demo buttons for existing validation rules. Click pills and Configure buttons to open editors. Bracket edit is shown as a dialog for clickability — production keeps <b>restyled inline</b> TableEditor.
     </div>
 
     <div class="warnbox">
       <b>Functional split (do not merge these into one editor)</b>
-      Standard credits/modules/storage use quantity brackets + TableEditor + overlapping-range validation.
-      AI Chatbot / API Subscription / API Call Top-Up / API Data Top-Up use named tiers from config, company overrides in <code>ProductCostPerClient</code>, and dedicated Save/Reset paths + (API Subscription) live subscription sync. Activation Fee remains a separate FeatureActivationFee row for AI Chatbot and API Subscription — <b>not</b> for either top-up product. Special services add Default/Custom hourly-rate pills + section Reset (Master2026).
+      Standard credits/modules/storage use quantity brackets + TableEditor + <code>MoreValidation</code> (overlap + volume-discount direction).
+      AI Chatbot / API Subscription / API Call Top-Up / API Data Top-Up use named tiers + dedicated Save/Reset (+ subscription sync). Activation Fee = <code>FeatureActivationFee</code> (not on either top-up). Free Storage = Regular/Archive only. Special services: Default/Custom hourly pills + Reset + Min Chargeable Credits / Per Credit In Minutes.
     </div>
 
     <div class="legend">
@@ -194,21 +210,23 @@
             <li>Unlimited: calls = −1 (not a quantity bracket).</li>
           </ul>
         </div>
-        <table class="g">
+        <div id="llm-val" class="valbox"></div>
+        <table class="g" id="llm-table">
           <thead><tr><th>Tier</th><th>Calls</th><th>Default</th><th>Current</th><th>New Price (USD)</th></tr></thead>
           <tbody>
-            <tr><td><b>Starter</b></td><td class="num">1,000</td><td class="mut num">49.00</td><td class="cur num">49.00</td><td><input type="number" min="0" step="0.01" value="49.00"></td></tr>
-            <tr><td><b>Professional</b></td><td class="num">5,000</td><td class="mut num">149.00</td><td class="mut">default</td><td><input type="number" min="0" step="0.01" placeholder="149.00"></td></tr>
-            <tr><td><b>Enterprise</b></td><td class="num">20,000</td><td class="mut num">399.00</td><td class="mut">default</td><td><input type="number" min="0" step="0.01" placeholder="399.00"></td></tr>
-            <tr><td><b>Unlimited</b></td><td>Unlimited</td><td class="mut num">799.00</td><td class="cur num">799.00</td><td><input type="number" min="0" step="0.01" value="799.00"></td></tr>
+            <tr><td><b>Starter</b></td><td class="num">1,000</td><td class="mut num">49.00</td><td class="cur num">49.00</td><td><input id="llm-p0" type="number" min="0" step="0.01" value="49.00"></td></tr>
+            <tr><td><b>Professional</b></td><td class="num">5,000</td><td class="mut num">149.00</td><td class="mut">default</td><td><input id="llm-p1" type="number" min="0" step="0.01" placeholder="149.00"></td></tr>
+            <tr><td><b>Enterprise</b></td><td class="num">20,000</td><td class="mut num">399.00</td><td class="mut">default</td><td><input id="llm-p2" type="number" min="0" step="0.01" placeholder="399.00"></td></tr>
+            <tr><td><b>Unlimited</b></td><td>Unlimited</td><td class="mut num">799.00</td><td class="cur num">799.00</td><td><input id="llm-p3" type="number" min="0" step="0.01" value="799.00"></td></tr>
           </tbody>
         </table>
       </div>
       <div class="mfoot">
-        <button class="btn danger" onclick="toast('Clear → would POST ajax_llm_action=clear_llm_prices')">Clear</button>
+        <button class="btn danger" onclick="demoLlm('clear')">Clear</button>
         <div class="spacer"></div>
+        <button class="btn ghost sm" onclick="demoLlm('neg')">Try negative</button>
         <button class="btn ghost" onclick="closeModals()">Cancel</button>
-        <button class="btn" onclick="toast('Save → would POST ajax_llm_action=save_llm_prices + CSRF')">Save</button>
+        <button class="btn" onclick="demoLlm('save')">Save</button>
       </div>
     </div>
   </div>
@@ -272,37 +290,40 @@
         <div class="sec">4 · Set subscription pricing for company #68</div>
         <p class="hint">Starter, Growth &amp; Professional: if <b>New Price</b> is left blank, saved pricing uses <code>config/api_tiers.php</code> defaults.</p>
         <p class="hint warn">Prices must follow ascending order: Starter ≤ Growth ≤ Professional ≤ Enterprise. Enterprise Calls / GB / RPM / Price must each exceed Professional when any Enterprise field is filled.</p>
+        <div id="api-val" class="valbox"></div>
         <table class="g">
           <thead><tr><th>Tier</th><th>Calls/Mo</th><th>Data/Mo</th><th>RPM</th><th>Default (config)</th><th>Current Company Price</th><th>New Price (USD)</th></tr></thead>
           <tbody>
             <tr>
               <td><b>Starter</b></td><td class="num">500</td><td>1 GB</td><td>10</td><td class="mut">USD 29.00</td><td class="mut">— using default</td>
-              <td><input type="number" min="0.01" step="0.01" value="29.00"></td>
+              <td><input id="api-p0" type="number" min="0.01" step="0.01" value="29.00"></td>
             </tr>
             <tr>
               <td><b>Growth</b></td><td class="num">5,000</td><td>5 GB</td><td>50</td><td class="mut">USD 199.00</td><td class="mut">— using default</td>
-              <td><input type="number" min="0.01" step="0.01" value="199.00"></td>
+              <td><input id="api-p1" type="number" min="0.01" step="0.01" value="199.00"></td>
             </tr>
             <tr>
               <td><b>Professional</b></td><td class="num">15,000</td><td>25 GB</td><td>100</td><td class="mut">USD 399.00</td><td class="mut">— using default</td>
-              <td><input type="number" min="0.01" step="0.01" value="399.00"></td>
+              <td><input id="api-p2" type="number" min="0.01" step="0.01" value="399.00"></td>
             </tr>
             <tr>
               <td><b>Enterprise</b></td>
-              <td><input type="number" min="15001" step="1" placeholder="Calls" title="> Professional calls"></td>
-              <td><input type="number" min="25.01" step="0.01" placeholder="GB" title="> Professional GB"></td>
-              <td><input type="number" min="101" step="1" placeholder="RPM" title="> Professional RPM"></td>
+              <td><input id="api-ec" type="number" min="15001" step="1" placeholder="Calls" title="> Professional calls"></td>
+              <td><input id="api-eg" type="number" min="25.01" step="0.01" placeholder="GB" title="> Professional GB"></td>
+              <td><input id="api-er" type="number" min="101" step="1" placeholder="RPM" title="> Professional RPM"></td>
               <td class="mut">Custom</td><td class="mut">— using default</td>
-              <td><input type="number" min="399.01" step="0.01" placeholder="Custom" title="> Professional price"></td>
+              <td><input id="api-ep" type="number" min="399.01" step="0.01" placeholder="Custom" title="> Professional price"></td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="mfoot">
-        <button class="btn danger" onclick="toast('Reset All → POST reset_api_company_pricing + reset_all=1 + ApiSubscription')">Reset All to Default</button>
+        <button class="btn danger" onclick="demoApi('reset')">Reset All to Default</button>
         <div class="spacer"></div>
+        <button class="btn ghost sm" onclick="demoApi('order')">Try bad order</button>
+        <button class="btn ghost sm" onclick="demoApi('ent')">Try partial Enterprise</button>
         <button class="btn ghost" onclick="closeModals()">Cancel</button>
-        <button class="btn" onclick="toast('Save → POST save_api_company_pricing (transaction + live sync)')">Save Pricing</button>
+        <button class="btn" onclick="demoApi('save')">Save Pricing</button>
       </div>
     </div>
   </div>
@@ -339,21 +360,23 @@
         </table>
 
         <div class="sec">Set top-up pricing for company #68</div>
-        <p class="hint">Blank <b>New Price</b> uses <code>config/api_tiers.php</code> top-up defaults.</p>
+        <p class="hint">Blank <b>New Price</b> uses <code>config/api_tiers.php</code> top-up defaults. Non-numeric / negative → rejected.</p>
+        <div id="topup-val" class="valbox"></div>
         <table class="g">
           <thead><tr><th>Tier</th><th>Package</th><th>Default (config)</th><th>Current Company Price</th><th>New Price (USD)</th></tr></thead>
           <tbody>
-            <tr><td><b>Starter</b></td><td>+500 Extra Calls</td><td class="mut">USD 19.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="19.00"></td></tr>
-            <tr><td><b>Growth</b></td><td>+1,000 Extra Calls</td><td class="mut">USD 39.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="39.00"></td></tr>
-            <tr><td><b>Professional</b></td><td>+2,000 Extra Calls</td><td class="mut">USD 49.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="49.00"></td></tr>
+            <tr><td><b>Starter</b></td><td>+500 Extra Calls</td><td class="mut">USD 19.00</td><td class="mut">— using default</td><td><input id="tu-p0" type="number" min="0" step="0.01" value="19.00"></td></tr>
+            <tr><td><b>Growth</b></td><td>+1,000 Extra Calls</td><td class="mut">USD 39.00</td><td class="mut">— using default</td><td><input id="tu-p1" type="number" min="0" step="0.01" value="39.00"></td></tr>
+            <tr><td><b>Professional</b></td><td>+2,000 Extra Calls</td><td class="mut">USD 49.00</td><td class="mut">— using default</td><td><input id="tu-p2" type="number" min="0" step="0.01" value="49.00"></td></tr>
           </tbody>
         </table>
       </div>
       <div class="mfoot">
-        <button class="btn danger" onclick="toast('Reset All → ApiTopUp overrides deleted')">Reset All to Default</button>
+        <button class="btn danger" onclick="demoTopup('reset')">Reset All to Default</button>
         <div class="spacer"></div>
+        <button class="btn ghost sm" onclick="demoTopup('neg')">Try negative</button>
         <button class="btn ghost" onclick="closeModals()">Cancel</button>
-        <button class="btn" onclick="toast('Save → save_api_company_pricing api_product_type=ApiTopUp')">Save Pricing</button>
+        <button class="btn" onclick="demoTopup('save')">Save Pricing</button>
       </div>
     </div>
   </div>
@@ -390,43 +413,194 @@
         </table>
 
         <div class="sec">Set data top-up pricing for company #68</div>
-        <p class="hint">Blank <b>New Price</b> uses <code>config/api_tiers.php</code> volume top-up defaults.</p>
+        <p class="hint">Blank <b>New Price</b> uses volume top-up defaults. Non-numeric / negative → rejected (same as call top-up).</p>
+        <div id="topupd-val" class="valbox"></div>
         <table class="g">
           <thead><tr><th>Tier</th><th>Package</th><th>Default (config)</th><th>Current Company Price</th><th>New Price (USD)</th></tr></thead>
           <tbody>
-            <tr><td><b>Starter</b></td><td>+1.00 GB</td><td class="mut">USD 5.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="5.00"></td></tr>
-            <tr><td><b>Growth</b></td><td>+5.00 GB</td><td class="mut">USD 20.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="20.00"></td></tr>
-            <tr><td><b>Professional</b></td><td>+10.00 GB</td><td class="mut">USD 35.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="35.00"></td></tr>
+            <tr><td><b>Starter</b></td><td>+1.00 GB</td><td class="mut">USD 5.00</td><td class="mut">— using default</td><td><input id="tud-p0" type="number" min="0" step="0.01" value="5.00"></td></tr>
+            <tr><td><b>Growth</b></td><td>+5.00 GB</td><td class="mut">USD 20.00</td><td class="mut">— using default</td><td><input id="tud-p1" type="number" min="0" step="0.01" value="20.00"></td></tr>
+            <tr><td><b>Professional</b></td><td>+10.00 GB</td><td class="mut">USD 35.00</td><td class="mut">— using default</td><td><input id="tud-p2" type="number" min="0" step="0.01" value="35.00"></td></tr>
           </tbody>
         </table>
       </div>
       <div class="mfoot">
-        <button class="btn danger" onclick="toast('Reset All → ApiTopUpVolume overrides deleted')">Reset All to Default</button>
+        <button class="btn danger" onclick="demoTopupData('reset')">Reset All to Default</button>
         <div class="spacer"></div>
+        <button class="btn ghost sm" onclick="demoTopupData('neg')">Try negative</button>
         <button class="btn ghost" onclick="closeModals()">Cancel</button>
-        <button class="btn" onclick="toast('Save → save_api_company_pricing api_product_type=ApiTopUpVolume')">Save Pricing</button>
+        <button class="btn" onclick="demoTopupData('save')">Save Pricing</button>
       </div>
     </div>
   </div>
 
-  <!-- BRACKET EDIT (simple) -->
+  <!-- BRACKET EDIT (mock dialog = production restyled INLINE TableEditor) -->
   <div class="overlay" id="ov-bracket">
     <div class="modal sm">
-      <div class="mhead"><div><h3 id="br-title">Edit pricing tier</h3><p>TableEditor fields · Min / Max / PricePerUnit · MoreValidation overlap rules.</p></div></div>
+      <div class="mhead">
+        <div>
+          <h3 id="br-title">Edit pricing tier</h3>
+          <p>TableEditor fields · <code>MoreValidation</code> · production = <b>restyled inline</b> on same page (dialog here for clickability).</p>
+        </div>
+      </div>
       <div class="mbody">
-        <div class="hint rules"><b>Not used for</b> LlmChatbot / ApiSubscription / ApiTopUp / ApiTopUpVolume (those open their own modals).</div>
-        <label style="font-size:12px;font-weight:600;color:var(--mut)">Minimum amount</label>
-        <input id="br-min" type="number" min="1" style="width:100%;margin:4px 0 10px;padding:8px;border:1px solid var(--line);border-radius:8px">
-        <label style="font-size:12px;font-weight:600;color:var(--mut)">Maximum amount</label>
-        <input id="br-max" type="number" min="1" style="width:100%;margin:4px 0 10px;padding:8px;border:1px solid var(--line);border-radius:8px">
-        <label style="font-size:12px;font-weight:600;color:var(--mut)">Price per unit (USD)</label>
-        <input id="br-price" type="number" step="0.01" style="width:100%;margin:4px 0 0;padding:8px;border:1px solid var(--line);border-radius:8px">
+        <div class="hint rules"><b>Not used for</b> LlmChatbot / ApiSubscription / ApiTopUp / ApiTopUpVolume. Delete allowed only for MediaQuota / ArchiveQuota pricing rows.</div>
+        <div class="inline-note" id="br-ctx">Editing Mystery shopping · existing tiers: 1–100 · $5.00 · 101–1000 · $4.50 · …</div>
+        <div class="field" id="br-f-min"><label>Minimum amount <span style="color:var(--bad)">*</span></label><input id="br-min" type="number" min="1" value="1"><div class="desc">field_MinAmount</div></div>
+        <div class="field" id="br-f-max"><label>Maximum amount <span style="color:var(--bad)">*</span></label><input id="br-max" type="number" min="1" value="100"><div class="desc">field_MaxAmount</div></div>
+        <div class="field" id="br-f-price"><label>Price per unit (USD) <span style="color:var(--bad)">*</span></label><input id="br-price" type="number" step="0.01" value="5.00"><div class="desc">field_PricePerUnit · storage also shows Units note</div></div>
+        <div id="br-val" class="valbox"></div>
+        <div class="demo-actions">
+          <button class="btn ghost sm" onclick="demoBracket('overlap')">Demo: overlap reject</button>
+          <button class="btn ghost sm" onclick="demoBracket('mingtmax')">Demo: Min &gt; Max</button>
+          <button class="btn ghost sm" onclick="demoBracket('vol')">Demo: volume-discount reject</button>
+          <button class="btn ghost sm" onclick="demoBracket('ok')">Demo: valid save</button>
+        </div>
       </div>
       <div class="mfoot">
-        <button class="btn danger" onclick="toast('Delete allowed only for MediaQuota/ArchiveQuota tiers in live code')">Delete</button>
+        <button class="btn danger" id="br-del" onclick="demoBracket('delete')">Delete</button>
         <div class="spacer"></div>
         <button class="btn ghost" onclick="closeModals()">Cancel</button>
-        <button class="btn" onclick="toast('Would POST TableEdit save for ProductCostPerClient')">Save</button>
+        <button class="btn" onclick="demoBracket('save')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVATION FEE (FeatureActivationFee) -->
+  <div class="overlay" id="ov-activation">
+    <div class="modal sm">
+      <div class="mhead">
+        <div>
+          <h3 id="act-title">Edit Activation Fee</h3>
+          <p>TableEditor mode · table <code>FeatureActivationFee</code> · query <code>?FeatureActivationFee=1</code></p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Applies to Monthly services that have it today (incl. LLM + API Subscription + Email + Storage).</li>
+            <li><b>Not</b> shown for <code>ApiTopUp</code> or <code>ApiTopUpVolume</code>.</li>
+            <li>Fields: Type (keyed), Price (mandatory number, currency caption), hidden CompanyLink + Category.</li>
+            <li>Mandatory Price — blank / non-number rejected by TableEditor.</li>
+          </ul>
+        </div>
+        <div class="field"><label>Type</label><input id="act-type" type="text" readonly value="MediaQuota"><div class="desc">Pre-filled from row · field_Type</div></div>
+        <div class="field" id="act-f-price"><label>Monthly fee for feature activation (USD) <span style="color:var(--bad)">*</span></label><input id="act-price" type="number" min="0" step="0.01" value="40.00"><div class="desc">field_Price · mandatory</div></div>
+        <div id="act-val" class="valbox"></div>
+        <div class="demo-actions">
+          <button class="btn ghost sm" onclick="demoActivation('blank')">Demo: blank reject</button>
+          <button class="btn ghost sm" onclick="demoActivation('ok')">Demo: valid save</button>
+        </div>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="demoActivation('delete')">Delete</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="demoActivation('save')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FREE STORAGE (FreeStorageActivation) -->
+  <div class="overlay" id="ov-free">
+    <div class="modal sm">
+      <div class="mhead">
+        <div>
+          <h3 id="free-title">Edit Free Storage</h3>
+          <p>TableEditor mode · table <code>FreeStorageActivation</code> · query <code>?FreeStorageActivation=1</code></p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Only Regular Storage (<code>MediaQuota</code>) and Archive Storage (<code>ArchiveQuota</code>).</li>
+            <li>Fields: Type (MediaQuota / ArchiveQuota), Amount (mandatory number, min 1 = Free Storage Quota).</li>
+            <li>Hidden CompanyLink + Category. Amount blank / &lt; 1 rejected.</li>
+          </ul>
+        </div>
+        <div class="field"><label>Type</label><select id="free-type" disabled><option value="MediaQuota">Regular Storage</option><option value="ArchiveQuota">Archive Storage</option></select><div class="desc">Pre-filled from row · field_Type</div></div>
+        <div class="field" id="free-f-amt"><label>Free Storage Quota <span style="color:var(--bad)">*</span></label><input id="free-amt" type="number" min="1" step="1" value="10"><div class="desc">field_Amount · min 1 · GB (display)</div></div>
+        <div id="free-val" class="valbox"></div>
+        <div class="demo-actions">
+          <button class="btn ghost sm" onclick="demoFree('blank')">Demo: blank / &lt;1 reject</button>
+          <button class="btn ghost sm" onclick="demoFree('ok')">Demo: valid save</button>
+        </div>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="demoFree('delete')">Delete</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="demoFree('save')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINIMUM CHARGEABLE CREDITS -->
+  <div class="overlay" id="ov-mincred">
+    <div class="modal sm">
+      <div class="mhead">
+        <div>
+          <h3 id="mc-title">Edit Minimum Chargeable Credits</h3>
+          <p>TableEditor mode · table <code>MinimumCreditsForServices</code> · query <code>?MinimumCredits=1</code></p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Special services (most types) — not SpecialServiceCreditBank / PerCreditInMins rows.</li>
+            <li>Fields: Type, MinimumCredits (mandatory number), hidden CompanyLink + Category.</li>
+            <li>Coexists with hourly Default/Custom pills + bracket PricePerUnit edit.</li>
+          </ul>
+        </div>
+        <div class="field"><label>Type / Service</label><input id="mc-type" type="text" readonly value="CSS implementation"><div class="desc">Pre-filled from row</div></div>
+        <div class="field" id="mc-f-val"><label>Minimum Chargeable Credits <span style="color:var(--bad)">*</span></label><input id="mc-val" type="number" min="0" step="1" value="0"><div class="desc">field_MinimumCredits · mandatory</div></div>
+        <div id="mc-msg" class="valbox"></div>
+        <div class="demo-actions">
+          <button class="btn ghost sm" onclick="demoMinCred('blank')">Demo: blank reject</button>
+          <button class="btn ghost sm" onclick="demoMinCred('ok')">Demo: valid save</button>
+        </div>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="demoMinCred('delete')">Delete</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="demoMinCred('save')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PER CREDIT IN MINUTES -->
+  <div class="overlay" id="ov-pcm">
+    <div class="modal sm">
+      <div class="mhead">
+        <div>
+          <h3 id="pcm-title">Edit Per Credit In Minutes</h3>
+          <p>TableEditor mode · table <code>PerCreditInMinutes</code> · query <code>?PerCreditInMinutes=1</code></p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Only SpecialServiceCreditBank-style item in Special services.</li>
+            <li>Field: CreditInMinutes (mandatory number) + CompanyLink.</li>
+          </ul>
+        </div>
+        <div class="field" id="pcm-f-val"><label>Per Credit In Minutes <span style="color:var(--bad)">*</span></label><input id="pcm-val" type="number" min="1" step="1" value="60"><div class="desc">field_CreditInMinutes · mandatory</div></div>
+        <div id="pcm-msg" class="valbox"></div>
+        <div class="demo-actions">
+          <button class="btn ghost sm" onclick="demoPcm('blank')">Demo: blank reject</button>
+          <button class="btn ghost sm" onclick="demoPcm('ok')">Demo: valid save</button>
+        </div>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="demoPcm('delete')">Delete</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="demoPcm('save')">Save</button>
       </div>
     </div>
   </div>
@@ -449,41 +623,60 @@
       {name:'CATI Basic',model:'bracket',tiers:[[1,175]],ceiling:3},
     ]},
     {key:'monthly',title:'Monthly services',rows:[
-      {name:'Regular Storage',model:'bracket',activation:40,free:10,tiers:[[1,6]],ceiling:1000},
-      {name:'Archive Storage',model:'bracket',activation:10,free:true,tiers:[[1,1]],ceiling:100},
-      {name:'Email Sending Service',model:'bracket',activation:10,tiers:[[20000,40]],ceiling:20000},
-      {name:'AI Chatbot Connector',model:'llm',activation:30,llmTiers:[
+      {name:'Regular Storage',model:'bracket',typeCode:'MediaQuota',activation:40,free:10,tiers:[[1,6]],ceiling:1000},
+      {name:'Archive Storage',model:'bracket',typeCode:'ArchiveQuota',activation:10,free:true,tiers:[[1,1]],ceiling:100},
+      {name:'Email Sending Service',model:'bracket',typeCode:'EmailSending',activation:10,tiers:[[20000,40]],ceiling:20000},
+      {name:'AI Chatbot Connector',model:'llm',typeCode:'LlmChatbot',activation:30,llmTiers:[
         {code:'Starter',calls:1000,price:49,override:49},
         {code:'Professional',calls:5000,price:149,override:null},
         {code:'Enterprise',calls:20000,price:399,override:null},
         {code:'Unlimited',calls:-1,price:799,override:799},
       ]},
-      {name:'API Access Subscription',model:'api',activation:null,apiTiers:[
+      {name:'API Access Subscription',model:'api',typeCode:'ApiSubscription',activation:null,apiTiers:[
         {code:'STARTER',price:29,override:null},
         {code:'GROWTH',price:199,override:null},
         {code:'PROFESSIONAL',price:399,override:null},
         {code:'ENTERPRISE',price:null,override:null},
       ]},
-      {name:'API Top-Up Package',model:'topup',topups:[
+      {name:'API Top-Up Package',model:'topup',typeCode:'ApiTopUp',topups:[
         {code:'TOPUP_STARTER',pkg:'+500',price:19,override:null},
         {code:'TOPUP_GROWTH',pkg:'+1,000',price:39,override:null},
         {code:'TOPUP_PROFESSIONAL',pkg:'+2,000',price:49,override:null},
       ]},
-      {name:'API Data Top-Up Package',model:'topupdata',topups:[
+      {name:'API Data Top-Up Package',model:'topupdata',typeCode:'ApiTopUpVolume',topups:[
         {code:'VOLUME_STARTER',pkg:'+1.00 GB',price:5,override:null},
         {code:'VOLUME_GROWTH',pkg:'+5.00 GB',price:20,override:null},
         {code:'VOLUME_PRO',pkg:'+10.00 GB',price:35,override:null},
       ]},
     ]},
     {key:'special',title:'Special services',resetLabel:'↻ Reset Special Services to defaults (US$55.00/h)',rows:[
-      {name:'CSS implementation',model:'bracket',minCharge:0,hourly:45,rateStatus:'custom',tiers:[[1,250]],ceiling:null},
-      {name:'Development',model:'bracket',minCharge:0,hourly:55,rateStatus:'default',tiers:[],ceiling:null},
-      {name:'Training',model:'bracket',minCharge:0,hourly:55,rateStatus:'default',tiers:[[1,55]],ceiling:null},
-      {name:'Support',model:'bracket',minCharge:0,hourly:55,rateStatus:'default',tiers:[[1,55]],ceiling:null},
+      {name:'CSS implementation',model:'bracket',typeCode:'CSS',minCharge:0,hourly:45,rateStatus:'custom',tiers:[[1,250]],ceiling:null},
+      {name:'Development',model:'bracket',typeCode:'Development',minCharge:0,hourly:55,rateStatus:'default',tiers:[],ceiling:null},
+      {name:'Training',model:'bracket',typeCode:'Training',minCharge:2,hourly:55,rateStatus:'default',tiers:[[1,55]],ceiling:null},
+      {name:'Support',model:'bracket',typeCode:'Support',minCharge:null,hourly:55,rateStatus:'default',tiers:[[1,55]],ceiling:null},
+      {name:'Special Service Credit Bank',model:'bracket',typeCode:'SpecialServiceCreditBank',perCreditMins:60,tiers:[[1,1]],ceiling:null},
     ]},
   ];
 
   let active='monthly';
+  let brCtx={name:'Mystery shopping',idx:0,storage:false};
+
+  function showVal(id, kind, html){
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.className='valbox on '+(kind||'');
+    el.innerHTML=html;
+  }
+  function clearVal(id){
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.className='valbox';
+    el.innerHTML='';
+  }
+  function setFieldBad(id, bad){
+    const el=document.getElementById(id);
+    if(el) el.classList.toggle('bad', !!bad);
+  }
 
   function tierRange(row,i){
     const t=row.tiers, from=t[i][0];
@@ -500,7 +693,7 @@
     const sec=SECTIONS.find(s=>s.key===active);
     const rows=sec.rows.map((r,idx)=>({r,idx})).filter(o=>o.r.name.toLowerCase().includes(q));
     document.getElementById('list').innerHTML = rows.length? (
-      (sec.key==='special' && sec.resetLabel? `<div class="secbar"><span><b>${sec.title}</b> · hourly Default/Custom pills</span><button class="resetsec" onclick="toast('POST reset_sso_default_pricing=1 + sso_pricing_csrf — confirm custom rates lost')">${sec.resetLabel}</button></div>`:'') +
+      (sec.key==='special' && sec.resetLabel? `<div class="secbar"><span><b>${sec.title}</b> · hourly Default/Custom · Min credits / Per-credit minutes</span><button class="resetsec" onclick="if(confirm('Reset all Special Services hourly rates to US$55.00/h default? Custom rates will be lost.')) toast('POST reset_sso_default_pricing=1 + sso_pricing_csrf','ok')">${sec.resetLabel}</button></div>`:'') +
       rows.map(o=>rowHTML(sec.key,o.r,o.idx)).join('')
     ) : '<div class="srow"><div class="none" style="grid-column:1/3">No services match.</div></div>';
   }
@@ -516,27 +709,45 @@
 
   function rowHTML(sk,r,idx){
     const cls = r.model==='llm'?'special': r.model==='api'?'api': r.model==='topup'?'topup': r.model==='topupdata'?'topupdata':'';
+    const esc=r.name.replace(/'/g,"\\'");
     let pills='';
-    if(r.activation!=null){
-      pills+=`<span class="pill" onclick="toast('Edit Activation Fee → FeatureActivationFee')"><span class="lbl">Activation</span> ${money(r.activation)}</span>`;
-    } else if(sk==='monthly' && r.model!=='topup' && r.model!=='topupdata' && r.model!=='bracket'){
-      pills+=`<span class="pill off" onclick="toast('Add Activation Fee')">+ Activation fee</span>`;
-    } else if(sk==='monthly' && r.model==='bracket' && r.name.includes('Storage')){
-      /* handled below */
-    } else if(sk==='monthly' && r.model==='bracket'){
-      pills+= r.activation===undefined ? `<span class="pill off" onclick="toast('Add Activation Fee')">+ Activation fee</span>` : '';
+
+    // Activation Fee — monthly except call/data top-up
+    if(sk==='monthly' && r.model!=='topup' && r.model!=='topupdata'){
+      if(r.activation!=null){
+        pills+=`<span class="pill" onclick="openActivation('${esc}',${r.activation},'${r.typeCode||''}')"><span class="lbl">Activation</span> ${money(r.activation)}</span>`;
+      } else {
+        pills+=`<span class="pill off" onclick="openActivation('${esc}',null,'${r.typeCode||''}')">+ Activation fee</span>`;
+      }
     }
-    if(r.free!=null){
-      pills+=`<span class="pill" onclick="toast('Edit Free Storage')"><span class="lbl">Free</span> ${r.free===true?'set':r.free+' GB'}</span>`;
-    } else if(r.name==='Regular Storage'||r.name==='Archive Storage'){
-      pills+=`<span class="pill off">+ Free storage</span>`;
+
+    // Free Storage — Regular / Archive only
+    if(r.name==='Regular Storage'||r.name==='Archive Storage'){
+      if(r.free!=null && r.free!==false){
+        const amt=r.free===true?1:r.free;
+        pills+=`<span class="pill" onclick="openFree('${esc}',${amt},'${r.typeCode}')"><span class="lbl">Free</span> ${r.free===true?'set':r.free+' GB'}</span>`;
+      } else {
+        pills+=`<span class="pill off" onclick="openFree('${esc}',null,'${r.typeCode}')">+ Free storage</span>`;
+      }
     }
+
     if(r.hourly!=null){
       const rs=r.rateStatus==='custom'?'custom':'default';
       pills+=`<span class="pill rate ${rs}"><span class="lbl">Rate</span> ${money(r.hourly)}/h ${rs==='custom'?'Custom':'Default'}</span>`;
     }
-    if(r.minCharge!=null){
-      pills+=`<span class="pill" onclick="toast('Edit Minimum Chargeable Credits')"><span class="lbl">Min credits</span> ${r.minCharge}</span>`;
+
+    // Min chargeable credits — special (except credit bank / per-credit-mins only row)
+    if(sk==='special' && r.perCreditMins==null){
+      if(r.minCharge!=null){
+        pills+=`<span class="pill" onclick="openMinCred('${esc}',${r.minCharge},'${r.typeCode||''}')"><span class="lbl">Min credits</span> ${r.minCharge}</span>`;
+      } else {
+        pills+=`<span class="pill off" onclick="openMinCred('${esc}',null,'${r.typeCode||''}')">+ Min chargeable credits</span>`;
+      }
+    }
+
+    // Per credit in minutes — credit bank only
+    if(r.perCreditMins!=null){
+      pills+=`<span class="pill" onclick="openPcm(${r.perCreditMins})"><span class="lbl">Per credit</span> ${r.perCreditMins} min</span>`;
     }
 
     let right='';
@@ -553,7 +764,7 @@
         r.apiTiers.map(t=>{
           const pr=t.override!=null?money(t.override):(t.price==null?'Custom / negotiated':money(t.price));
           return `<button class="tier named" onclick="openApi()"><span class="code">${t.code}</span><span class="prc">${pr}</span></button>`+
-            (t.override!=null?`<button class="reset" onclick="event.stopPropagation();toast('Reset tier ${t.code}')">↺ Reset</button>`:'');
+            (t.override!=null?`<button class="reset" onclick="event.stopPropagation();toast('Reset tier ${t.code} → reset_api_company_pricing')">↺ Reset</button>`:'');
         }).join('')+
         `<button class="openmodal api" onclick="openApi()">Configure API plans…</button></div>`;
     } else if(r.model==='topup'){
@@ -572,11 +783,11 @@
         `<button class="openmodal topup" style="color:var(--topup-data);border-color:#b8e6df" onclick="openTopupData()">Configure data top-ups…</button></div>`;
     } else {
       if(!r.tiers || !r.tiers.length){
-        right=`<span class="none">No pricing · </span><button class="addtier" onclick="openBracket('${r.name}',null)">+ Add tier</button>`;
+        right=`<span class="none">No pricing · </span><button class="addtier" onclick="openBracket('${esc}',null)">+ Add tier</button>`;
       } else {
         right=`<div class="tiers">`+
-          r.tiers.map((t,i)=>`<button class="tier" onclick="openBracket('${r.name}',${i})"><span class="rng">${tierRange(r,i)}</span><span class="prc">${money(t[1])}</span></button>`).join('')+
-          `<button class="addtier" onclick="openBracket('${r.name}',null)">+ Add tier</button></div>`;
+          r.tiers.map((t,i)=>`<button class="tier" onclick="openBracket('${esc}',${i})"><span class="rng">${tierRange(r,i)}</span><span class="prc">${money(t[1])}</span></button>`).join('')+
+          `<button class="addtier" onclick="openBracket('${esc}',null)">+ Add tier</button></div>`;
       }
     }
 
@@ -590,23 +801,211 @@
     </div>`;
   }
 
-  function openLlm(){ closeModals(); document.getElementById('ov-llm').classList.add('on'); }
-  function openApi(){ closeModals(); document.getElementById('ov-api').classList.add('on'); }
-  function openTopup(){ closeModals(); document.getElementById('ov-topup').classList.add('on'); }
-  function openTopupData(){ closeModals(); document.getElementById('ov-topup-data').classList.add('on'); }
+  function openLlm(){ closeModals(); clearVal('llm-val'); document.getElementById('ov-llm').classList.add('on'); }
+  function openApi(){ closeModals(); clearVal('api-val'); document.getElementById('ov-api').classList.add('on'); }
+  function openTopup(){ closeModals(); clearVal('topup-val'); document.getElementById('ov-topup').classList.add('on'); }
+  function openTopupData(){ closeModals(); clearVal('topupd-val'); document.getElementById('ov-topup-data').classList.add('on'); }
+
   function openBracket(name,i){
     closeModals();
+    clearVal('br-val');
+    ['br-f-min','br-f-max','br-f-price'].forEach(id=>setFieldBad(id,false));
+    const sec=SECTIONS.find(s=>s.rows.some(r=>r.name===name));
+    const row=sec.rows.find(r=>r.name===name);
+    brCtx={name, idx:i, storage: !!(row && (row.typeCode==='MediaQuota'||row.typeCode==='ArchiveQuota')), row};
     document.getElementById('br-title').textContent = i==null?('Add pricing — '+name):('Edit pricing — '+name);
+    const existing=(row.tiers||[]).map((t,ti)=>tierRange(row,ti)+' · '+money(t[1])).join(' · ') || 'none';
+    document.getElementById('br-ctx').textContent='Service: '+name+' · existing tiers: '+existing+' · MoreValidation on save';
+    if(i!=null && row.tiers[i]){
+      const from=row.tiers[i][0];
+      const end=(i<row.tiers.length-1)? row.tiers[i+1][0]-1 : (row.ceiling!=null?row.ceiling:from);
+      document.getElementById('br-min').value=from;
+      document.getElementById('br-max').value=end;
+      document.getElementById('br-price').value=row.tiers[i][1];
+    } else {
+      document.getElementById('br-min').value='';
+      document.getElementById('br-max').value='';
+      document.getElementById('br-price').value='';
+    }
+    document.getElementById('br-del').style.display = brCtx.storage ? '' : 'none';
     document.getElementById('ov-bracket').classList.add('on');
   }
+
+  function openActivation(name, price, typeCode){
+    closeModals(); clearVal('act-val'); setFieldBad('act-f-price',false);
+    document.getElementById('act-title').textContent = (price==null?'Add':'Edit')+' Activation Fee — '+name;
+    document.getElementById('act-type').value = typeCode||name;
+    document.getElementById('act-price').value = price==null?'':price;
+    document.getElementById('ov-activation').classList.add('on');
+  }
+  function openFree(name, amt, typeCode){
+    closeModals(); clearVal('free-val'); setFieldBad('free-f-amt',false);
+    document.getElementById('free-title').textContent = (amt==null?'Add':'Edit')+' Free Storage — '+name;
+    document.getElementById('free-type').value = typeCode||'MediaQuota';
+    document.getElementById('free-amt').value = amt==null?'':amt;
+    document.getElementById('ov-free').classList.add('on');
+  }
+  function openMinCred(name, val, typeCode){
+    closeModals(); clearVal('mc-msg'); setFieldBad('mc-f-val',false);
+    document.getElementById('mc-title').textContent = (val==null?'Add':'Edit')+' Minimum Chargeable Credits — '+name;
+    document.getElementById('mc-type').value = name+' ('+(typeCode||'')+')';
+    document.getElementById('mc-val').value = val==null?'':val;
+    document.getElementById('ov-mincred').classList.add('on');
+  }
+  function openPcm(val){
+    closeModals(); clearVal('pcm-msg'); setFieldBad('pcm-f-val',false);
+    document.getElementById('pcm-title').textContent = (val==null?'Add':'Edit')+' Per Credit In Minutes';
+    document.getElementById('pcm-val').value = val==null?'':val;
+    document.getElementById('ov-pcm').classList.add('on');
+  }
+
+  /* —— validation demos (mirror live rules) —— */
+  function moreValidation(min,max,price,existing,ignoreIdx){
+    if(min>=max) return 'Minimum amount larger than Maximum amount';
+    for(let i=0;i<existing.length;i++){
+      if(ignoreIdx!=null && i===ignoreIdx) continue;
+      const eMin=existing[i][0];
+      const eMax=(i<existing.length-1)? existing[i+1][0]-1 : 1e12;
+      const ePrice=existing[i][1];
+      if(eMin<=min && eMax>=min) return 'Minimum amount is within range of another pricing level';
+      if(eMin<=max && eMax>=max) return 'Maximum amount is within range of another pricing level';
+      if(eMin<=min && ePrice<=price) return 'Pricing level is higher than lower level';
+      if(eMin>=min && ePrice>=price) return 'Pricing level is lower than higher level';
+    }
+    return '';
+  }
+
+  function demoBracket(mode){
+    const row=brCtx.row||{tiers:[]};
+    const existing=row.tiers||[];
+    if(mode==='overlap'){
+      document.getElementById('br-min').value=50; document.getElementById('br-max').value=150; document.getElementById('br-price').value=4.8;
+      setFieldBad('br-f-min',true); setFieldBad('br-f-max',true); setFieldBad('br-f-price',false);
+      showVal('br-val','err','<b>MoreValidation rejected</b><br>Minimum amount is within range of another pricing level');
+      toast('Save blocked — same message as live MoreValidation()','err'); return;
+    }
+    if(mode==='mingtmax'){
+      document.getElementById('br-min').value=200; document.getElementById('br-max').value=100; document.getElementById('br-price').value=3;
+      setFieldBad('br-f-min',true); setFieldBad('br-f-max',true);
+      showVal('br-val','err','<b>MoreValidation rejected</b><br>Minimum amount larger than Maximum amount');
+      toast('Save blocked','err'); return;
+    }
+    if(mode==='vol'){
+      // try higher price at higher min vs lower tier — volume discount direction
+      document.getElementById('br-min').value=2000; document.getElementById('br-max').value=5000; document.getElementById('br-price').value=10;
+      setFieldBad('br-f-price',true);
+      showVal('br-val','err','<b>MoreValidation rejected</b><br>Pricing level is higher than lower level');
+      toast('Volume-discount direction blocked','err'); return;
+    }
+    if(mode==='ok'||mode==='save'){
+      if(mode==='ok'){ document.getElementById('br-min').value=200000; document.getElementById('br-max').value=300000; document.getElementById('br-price').value=0.2; }
+      const min=+document.getElementById('br-min').value, max=+document.getElementById('br-max').value, price=+document.getElementById('br-price').value;
+      const err=moreValidation(min,max,price,existing,brCtx.idx);
+      if(err){ setFieldBad('br-f-min',true); setFieldBad('br-f-max',true); showVal('br-val','err','<b>MoreValidation rejected</b><br>'+err); toast(err,'err'); return; }
+      ['br-f-min','br-f-max','br-f-price'].forEach(id=>setFieldBad(id,false));
+      showVal('br-val','ok','<b>SavedSuccessfully</b> — POST TableEdit save for ProductCostPerClient (field_MinAmount / MaxAmount / PricePerUnit)');
+      toast('Bracket saved (mock)','ok'); return;
+    }
+    if(mode==='delete'){
+      if(!brCtx.storage){ showVal('br-val','err','Delete blocked for non-storage service pricing (live rule)'); toast('Delete not allowed','err'); return; }
+      showVal('br-val','warn','Would delete MediaQuota/ArchiveQuota pricing row only');
+      toast('Delete storage tier (mock)','ok');
+    }
+  }
+
+  function demoActivation(mode){
+    if(mode==='blank'){ document.getElementById('act-price').value=''; setFieldBad('act-f-price',true); showVal('act-val','err','<b>Mandatory</b> — Monthly fee for feature activation is required'); toast('TableEditor mandatory reject','err'); return; }
+    if(mode==='delete'){ showVal('act-val','warn','Would DELETE FeatureActivationFee row · DeletedSuccessfully'); toast('Activation fee deleted (mock)','ok'); return; }
+    const p=document.getElementById('act-price').value;
+    if(p===''||isNaN(+p)||+p<0){ setFieldBad('act-f-price',true); showVal('act-val','err','Price must be a number ≥ 0'); toast('Invalid price','err'); return; }
+    setFieldBad('act-f-price',false);
+    showVal('act-val','ok','<b>SavedSuccessfully</b> — FeatureActivationFee · ?FeatureActivationFee=1&CompanyID=68&def=…');
+    toast('Activation fee saved (mock)','ok');
+  }
+
+  function demoFree(mode){
+    if(mode==='blank'){ document.getElementById('free-amt').value=''; setFieldBad('free-f-amt',true); showVal('free-val','err','<b>Mandatory</b> — Free Storage Quota required (min 1)'); toast('TableEditor mandatory reject','err'); return; }
+    if(mode==='delete'){ showVal('free-val','warn','Would DELETE FreeStorageActivation row'); toast('Free storage deleted (mock)','ok'); return; }
+    const a=document.getElementById('free-amt').value;
+    if(a===''||isNaN(+a)||+a<1){ setFieldBad('free-f-amt',true); showVal('free-val','err','Amount must be a number ≥ 1'); toast('Invalid amount','err'); return; }
+    setFieldBad('free-f-amt',false);
+    showVal('free-val','ok','<b>SavedSuccessfully</b> — FreeStorageActivation · ?FreeStorageActivation=1');
+    toast('Free storage saved (mock)','ok');
+  }
+
+  function demoMinCred(mode){
+    if(mode==='blank'){ document.getElementById('mc-val').value=''; setFieldBad('mc-f-val',true); showVal('mc-msg','err','<b>Mandatory</b> — Minimum Chargeable Credits required'); toast('TableEditor mandatory reject','err'); return; }
+    if(mode==='delete'){ showVal('mc-msg','warn','Would DELETE MinimumCreditsForServices row'); toast('Min credits deleted (mock)','ok'); return; }
+    const v=document.getElementById('mc-val').value;
+    if(v===''||isNaN(+v)){ setFieldBad('mc-f-val',true); showVal('mc-msg','err','MinimumCredits must be a number'); toast('Invalid value','err'); return; }
+    setFieldBad('mc-f-val',false);
+    showVal('mc-msg','ok','<b>SavedSuccessfully</b> — MinimumCreditsForServices · ?MinimumCredits=1&type=…');
+    toast('Min chargeable credits saved (mock)','ok');
+  }
+
+  function demoPcm(mode){
+    if(mode==='blank'){ document.getElementById('pcm-val').value=''; setFieldBad('pcm-f-val',true); showVal('pcm-msg','err','<b>Mandatory</b> — Per Credit In Minutes required'); toast('TableEditor mandatory reject','err'); return; }
+    if(mode==='delete'){ showVal('pcm-msg','warn','Would DELETE PerCreditInMinutes row'); toast('Per credit minutes deleted (mock)','ok'); return; }
+    const v=document.getElementById('pcm-val').value;
+    if(v===''||isNaN(+v)||+v<1){ setFieldBad('pcm-f-val',true); showVal('pcm-msg','err','CreditInMinutes must be a number ≥ 1'); toast('Invalid value','err'); return; }
+    setFieldBad('pcm-f-val',false);
+    showVal('pcm-msg','ok','<b>SavedSuccessfully</b> — PerCreditInMinutes · ?PerCreditInMinutes=1');
+    toast('Per credit minutes saved (mock)','ok');
+  }
+
+  function demoLlm(mode){
+    if(mode==='clear'){ if(confirm('Clear all company LLM price overrides? Falls back to $LlmTiers defaults.')){ showVal('llm-val','ok','<b>clear_llm_prices</b> — company overrides deleted · CSRF required'); toast('LLM cleared (mock)','ok'); } return; }
+    if(mode==='neg'){ document.getElementById('llm-p0').value=-5; showVal('llm-val','err','Invalid / negative price rejected (numeric ≥ 0 before any write)'); toast('LLM validation failed','err'); return; }
+    const vals=[0,1,2,3].map(i=>document.getElementById('llm-p'+i).value);
+    for(const v of vals){ if(v!=='' && (isNaN(+v)||+v<0)){ showVal('llm-val','err','Price must be numeric ≥ 0 (blank → catalogue default)'); toast('LLM validation failed','err'); return; } }
+    showVal('llm-val','ok','<b>save_llm_prices</b> + CSRF · blank fields → $LlmTiers default · notice llm_saved');
+    toast('LLM prices saved (mock)','ok');
+  }
+
+  function demoApi(mode){
+    if(mode==='reset'){ if(confirm('Reset All API Subscription overrides to config defaults? (syncs active subscription)')){ showVal('api-val','ok','reset_api_company_pricing + reset_all=1 + ApiSubscription · sync path'); toast('API Subscription reset (mock)','ok'); } return; }
+    if(mode==='order'){
+      document.getElementById('api-p0').value=500; document.getElementById('api-p1').value=199; document.getElementById('api-p2').value=399;
+      showVal('api-val','err','<b>tier_order_invalid</b> — Starter price must be ≤ Growth ≤ Professional ≤ Enterprise');
+      toast('API tier order blocked','err'); return;
+    }
+    if(mode==='ent'){
+      document.getElementById('api-ec').value=20000; document.getElementById('api-eg').value=''; document.getElementById('api-er').value=''; document.getElementById('api-ep').value='';
+      showVal('api-val','err','<b>Enterprise incomplete</b> — if any of Calls / GB / RPM / Price filled, all four required and each &gt; Professional');
+      toast('Enterprise all-or-nothing','err'); return;
+    }
+    const s=+document.getElementById('api-p0').value, g=+document.getElementById('api-p1').value, p=+document.getElementById('api-p2').value;
+    if(!(s<=g && g<=p)){ showVal('api-val','err','<b>tier_order_invalid</b> — Starter ≤ Growth ≤ Professional'); toast('API tier order blocked','err'); return; }
+    const ec=document.getElementById('api-ec').value, eg=document.getElementById('api-eg').value, er=document.getElementById('api-er').value, ep=document.getElementById('api-ep').value;
+    const any=[ec,eg,er,ep].some(x=>x!=='');
+    if(any && [ec,eg,er,ep].some(x=>x==='')){ showVal('api-val','err','Enterprise: all four fields required when any is filled'); toast('Enterprise incomplete','err'); return; }
+    showVal('api-val','ok','<b>saved</b> — save_api_company_pricing transaction + apiSubscriptionSyncActivePlanPricing (sync_failed would ROLLBACK)');
+    toast('API Subscription saved (mock)','ok');
+  }
+
+  function demoTopup(mode){
+    if(mode==='reset'){ if(confirm('Reset All ApiTopUp overrides?')){ showVal('topup-val','ok','ApiTopUp overrides deleted · no live-sub sync loop'); toast('Call top-up reset','ok'); } return; }
+    if(mode==='neg'){ document.getElementById('tu-p0').value=-1; showVal('topup-val','err','Non-numeric / negative price rejected'); toast('Call top-up validation failed','err'); return; }
+    for(let i=0;i<3;i++){ const v=document.getElementById('tu-p'+i).value; if(v!=='' && (isNaN(+v)||+v<0)){ showVal('topup-val','err','Invalid price'); toast('Validation failed','err'); return; } }
+    showVal('topup-val','ok','save_api_company_pricing api_product_type=ApiTopUp · blank → topUpPrice default');
+    toast('Call top-up saved (mock)','ok');
+  }
+  function demoTopupData(mode){
+    if(mode==='reset'){ if(confirm('Reset All ApiTopUpVolume overrides?')){ showVal('topupd-val','ok','ApiTopUpVolume overrides deleted'); toast('Data top-up reset','ok'); } return; }
+    if(mode==='neg'){ document.getElementById('tud-p0').value=-1; showVal('topupd-val','err','Non-numeric / negative price rejected'); toast('Data top-up validation failed','err'); return; }
+    for(let i=0;i<3;i++){ const v=document.getElementById('tud-p'+i).value; if(v!=='' && (isNaN(+v)||+v<0)){ showVal('topupd-val','err','Invalid price'); toast('Validation failed','err'); return; } }
+    showVal('topupd-val','ok','save_api_company_pricing api_product_type=ApiTopUpVolume · blank → volume default');
+    toast('Data top-up saved (mock)','ok');
+  }
+
   function closeModals(){ document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on')); }
   document.querySelectorAll('.overlay').forEach(ov=>{
     ov.addEventListener('click',e=>{ if(e.target===ov) closeModals(); });
   });
-  function toast(msg){
+  function toast(msg, kind){
     const t=document.getElementById('toast');
-    t.textContent=msg; t.classList.add('on');
-    clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('on'),2800);
+    t.textContent=msg; t.className='toast on'+(kind==='err'?' err':kind==='ok'?' ok':'');
+    clearTimeout(window._tt); window._tt=setTimeout(()=>{ t.className='toast'; },3200);
   }
 
   render();
