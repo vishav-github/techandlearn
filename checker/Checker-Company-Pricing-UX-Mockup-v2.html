@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Pricing · UX mockup v2 (deep model-aware)</title>
+<style>
+  :root {
+    --bg:#eef1f6; --panel:#fff; --ink:#1e2732; --mut:#697484; --faint:#98a3b2;
+    --line:#e4e8ef; --line2:#eef1f5; --brand:#2f6fb0; --brand-d:#255c95; --brand-soft:#eaf2fb;
+    --good:#1f9d6b; --good-soft:#e6f6ef; --warn:#c9821f; --warn-soft:#fbf3e3;
+    --bad:#c2453b; --bad-soft:#fbeceb; --purple:#7a5cd0; --purple-soft:#efeafb;
+    --api:#0d6efd; --llm:#7a5cd0; --topup:#198754;
+    --shadow:0 1px 2px rgba(20,35,60,.05),0 6px 18px rgba(20,35,60,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .num{font-variant-numeric:tabular-nums}
+  button,input{font:inherit}
+
+  .topbar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);padding:12px 22px}
+  .topbar .r1{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#4d8bc9,#2f6fb0);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px}
+  .topbar h1{font-size:15px;margin:0;font-weight:650}
+  .mocktag{font-size:11px;color:var(--mut);border:1px dashed var(--line);padding:2px 8px;border-radius:20px}
+  .co{margin-left:auto;font-size:12.5px;color:var(--mut)}
+  .co b{color:var(--ink)}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:16px 22px 80px}
+  .note{display:flex;gap:9px;background:var(--brand-soft);border:1px solid #cfe0f2;border-radius:9px;padding:10px 12px;font-size:12.5px;color:#2b4a66;margin-bottom:12px}
+  .warnbox{background:var(--warn-soft);border:1px solid #efd9a8;border-radius:9px;padding:10px 12px;font-size:12.5px;color:#6a4a10;margin-bottom:14px}
+  .warnbox b{display:block;margin-bottom:4px}
+
+  .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .tabs{display:inline-flex;background:#e7ecf3;border-radius:10px;padding:3px}
+  .tabs button{border:0;background:transparent;padding:7px 14px;font-size:13px;font-weight:600;color:var(--mut);cursor:pointer;border-radius:8px}
+  .tabs button.active{background:#fff;color:var(--brand-d);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .tabs button .c{font-size:11px;color:var(--faint);margin-left:5px}
+  .search{margin-left:auto;position:relative}
+  .search input{padding:8px 10px 8px 30px;border:1px solid var(--line);border-radius:9px;background:#fff;width:230px}
+  .search svg{position:absolute;left:9px;top:9px;width:15px;height:15px;color:var(--faint)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .srow{display:grid;grid-template-columns:240px 1fr;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line2);align-items:start}
+  .srow:last-child{border-bottom:0}
+  .srow:hover{background:#fafcff}
+  .srow.special{background:linear-gradient(90deg,#faf8ff 0%,#fff 40%)}
+  .srow.api{background:linear-gradient(90deg,#f5f9ff 0%,#fff 40%)}
+  .srow.topup{background:linear-gradient(90deg,#f4faf7 0%,#fff 40%)}
+  .sname{font-weight:650;font-size:13.5px}
+  .model{display:inline-block;margin-top:5px;font-size:10.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;padding:2px 7px;border-radius:999px}
+  .model.bracket{background:#f3f5f7;color:var(--mut)}
+  .model.llm{background:var(--purple-soft);color:var(--llm)}
+  .model.api{background:#e8f1ff;color:var(--api)}
+  .model.topup{background:var(--good-soft);color:var(--topup)}
+
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--line);background:#fff;color:#4a5766;cursor:pointer}
+  .pill:hover{border-color:var(--brand);color:var(--brand-d)}
+  .pill .lbl{color:var(--faint)}
+  .pill.off{color:var(--faint);background:#f7f8fa}
+  .pill.llm{border-color:#d9cef5;color:var(--llm)}
+  .pill.api{border-color:#c5d9fb;color:var(--api)}
+  .pill.topup{border-color:#c5e6d4;color:var(--topup)}
+
+  .tiers{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .tier{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:6px 11px;background:#fbfcfe;cursor:pointer;font:inherit}
+  .tier:hover{border-color:var(--brand);background:var(--brand-soft)}
+  .tier .rng{font-size:12px;color:var(--mut)}
+  .tier .prc{font-size:13px;font-weight:700}
+  .tier.named .code{font-size:11px;font-weight:700;color:var(--api);text-transform:uppercase}
+  .tier.named.llm .code{color:var(--llm)}
+  .tier.named.topup .code{color:var(--topup)}
+  .addtier,.openmodal{border:1px dashed #c2cddb;background:#fff;color:var(--brand-d);border-radius:9px;padding:6px 11px;font-weight:600;font-size:12.5px;cursor:pointer}
+  .addtier:hover,.openmodal:hover{background:var(--brand-soft);border-color:var(--brand)}
+  .openmodal.llm{color:var(--llm);border-color:#d9cef5}
+  .openmodal.api{color:var(--api);border-color:#c5d9fb}
+  .openmodal.topup{color:var(--topup);border-color:#c5e6d4}
+  .none{font-size:12.5px;color:var(--faint)}
+  .reset{background:none;border:none;color:var(--bad);font-size:11px;text-decoration:underline;cursor:pointer;padding:0;margin-left:4px}
+
+  .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 18px}
+  .leg{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px}
+  .leg h4{margin:0 0 4px;font-size:12px}
+  .leg p{margin:0;color:var(--mut);font-size:11.5px;line-height:1.45}
+  .leg.llm{border-color:#d9cef5}
+  .leg.api{border-color:#c5d9fb}
+  .leg.topup{border-color:#c5e6d4}
+
+  .foot{font-size:11.5px;color:var(--faint);text-align:center;margin-top:22px}
+
+  /* overlays */
+  .overlay{position:fixed;inset:0;background:rgba(20,30,45,.4);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .overlay.on{display:flex}
+  .modal{background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(20,35,60,.28);width:920px;max-width:96vw;max-height:90vh;display:flex;flex-direction:column}
+  .modal.sm{width:560px}
+  .modal.mid{width:760px}
+  .mhead{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px}
+  .mhead h3{margin:0;font-size:15px}
+  .mhead p{margin:3px 0 0;color:var(--mut);font-size:12px}
+  .mbody{padding:14px 18px;overflow:auto;flex:1}
+  .mfoot{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center}
+  .spacer{flex:1}
+  .btn{border:1px solid var(--brand);background:var(--brand);color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--brand-d)}
+  .btn.ghost{background:#fff;color:var(--brand-d)}
+  .btn.danger{background:#fff;color:var(--bad);border-color:#e6bcb7}
+  .btn.danger:hover{background:var(--bad-soft)}
+
+  .sec{font-size:11.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 6px}
+  .sec:first-child{margin-top:0}
+  .hint{font-size:11.5px;color:var(--mut);margin:0 0 8px}
+  .hint.warn{color:#856404;background:var(--warn-soft);border:1px solid #efd9a8;border-radius:6px;padding:7px 9px}
+  .hint.rules{background:#f8f9fb;border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+  .hint.rules ul{margin:4px 0 0 16px;padding:0}
+  table.g{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
+  table.g th,table.g td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:middle}
+  table.g th{background:#f5f7fa;font-weight:650;color:#445}
+  table.g td.mut{color:var(--mut)}
+  table.g td.cur{font-weight:650}
+  table.g input[type=number]{width:96px;padding:5px 7px;border:1px solid var(--line);border-radius:6px}
+  .badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;background:#e8f1ff;color:var(--api)}
+  .badge.llm{background:var(--purple-soft);color:var(--llm)}
+  .toast{position:fixed;bottom:20px;right:20px;background:#1e2732;color:#fff;padding:10px 14px;border-radius:8px;font-size:12.5px;display:none;z-index:80}
+  .toast.on{display:block}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="r1">
+      <div class="mark">C</div>
+      <h1>Company Pricing</h1>
+      <span class="mocktag">Mockup v2 · model-aware · no saves</span>
+      <div class="co">Company: <b>preproduction</b> · ID <b>68</b> · Currency <b>USD</b></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="note">
+      This mockup preserves <b>all four pricing models</b> on this page. Bracket services stay Min–Max. The three special monthly products open dedicated editors (same fields &amp; rules as <code>m_company-pricing.php</code>). Click the coloured buttons to open each modal.
+    </div>
+
+    <div class="warnbox">
+      <b>Functional split (do not merge these into one editor)</b>
+      Standard credits/modules/storage use quantity brackets + TableEditor + overlapping-range validation.
+      AI Chatbot / API Subscription / API Top-Up use named tiers from config, company overrides in <code>ProductCostPerClient</code>, and dedicated Save/Clear/Reset + (API) live subscription sync. Activation Fee remains a separate FeatureActivationFee row for AI Chatbot and API Subscription — not for API Top-Up.
+    </div>
+
+    <div class="legend">
+      <div class="leg"><h4>① Bracket / quantity</h4><p>MinAmount–MaxAmount · PricePerUnit · Add/Edit via TableEditor · <code>MoreValidation</code> overlap + volume-discount direction.</p></div>
+      <div class="leg llm"><h4>② AI Chatbot Connector</h4><p>Named tiers Starter/Pro/Enterprise/Unlimited · calls + monthly price · AJAX Save/Clear · Activation Fee separate.</p></div>
+      <div class="leg api"><h4>③ API Access Subscription</h4><p>STARTER→ENTERPRISE · PlanData (calls/GB/RPM) · tier price order · Enterprise &gt; Pro · sync live sub · Reset.</p></div>
+      <div class="leg topup"><h4>④ API Top-Up Package</h4><p>TOPUP_STARTER/GROWTH/PROFESSIONAL · package size fixed · price override · no Activation Fee · Reset.</p></div>
+    </div>
+
+    <div class="bar">
+      <div class="tabs" id="tabs"></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="text" id="q" placeholder="Search services…" oninput="render()">
+      </div>
+    </div>
+
+    <div class="card" id="list"></div>
+    <div class="foot">Mockup only · CompanyID 68 sample · mirrors Deployment <code>m_company-pricing.php</code> behaviour</div>
+  </div>
+
+  <!-- LLM MODAL -->
+  <div class="overlay" id="ov-llm">
+    <div class="modal sm">
+      <div class="mhead">
+        <div>
+          <h3>AI Chatbot Connector — Tier Pricing <span class="badge llm">LlmChatbot</span></h3>
+          <p>Set monthly prices for Starter, Professional, Enterprise, Unlimited. Leave blank → system defaults from <code>$LlmTiers</code>.</p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Storage: <code>ProductCostPerClient</code> Type=<code>LlmChatbot</code>, TierCode=tier name, MinAmount=MaxAmount=calls (tier identity).</li>
+            <li>Save validates numeric ≥ 0 before any write; empty field → catalogue default price.</li>
+            <li>Clear deletes company rows (falls back to <code>$LlmTiers</code>).</li>
+            <li>CSRF token required (AJAX). Activation Fee is edited separately on the row (FeatureActivationFee).</li>
+            <li>Unlimited: calls = −1 (not a quantity bracket).</li>
+          </ul>
+        </div>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Calls</th><th>Default</th><th>Current</th><th>New Price (USD)</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td class="num">1,000</td><td class="mut num">49.00</td><td class="cur num">49.00</td><td><input type="number" min="0" step="0.01" value="49.00"></td></tr>
+            <tr><td><b>Professional</b></td><td class="num">5,000</td><td class="mut num">149.00</td><td class="mut">default</td><td><input type="number" min="0" step="0.01" placeholder="149.00"></td></tr>
+            <tr><td><b>Enterprise</b></td><td class="num">20,000</td><td class="mut num">399.00</td><td class="mut">default</td><td><input type="number" min="0" step="0.01" placeholder="399.00"></td></tr>
+            <tr><td><b>Unlimited</b></td><td>Unlimited</td><td class="mut num">799.00</td><td class="cur num">799.00</td><td><input type="number" min="0" step="0.01" value="799.00"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="toast('Clear → would POST ajax_llm_action=clear_llm_prices')">Clear</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="toast('Save → would POST ajax_llm_action=save_llm_prices + CSRF')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API SUBSCRIPTION MODAL -->
+  <div class="overlay" id="ov-api">
+    <div class="modal">
+      <div class="mhead">
+        <div>
+          <h3>Configure API Subscription Pricing — Company #68 <span class="badge">ApiSubscription</span></h3>
+          <p>Named tiers from <code>config/api_tiers.php</code> · company override in ProductCostPerClient · live subscription sync on save.</p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved (must not be simplified away)</b>
+          <ul>
+            <li>Lookup: company PricePerUnit → global CompanyLink=0 → <code>$API_TIERS</code> monthlyPrice.</li>
+            <li>PlanData JSON stores callLimit, volumeBytes, rpmLimit, monthlyPrice (Enterprise custom).</li>
+            <li>Price order: Starter ≤ Growth ≤ Professional ≤ Enterprise (when Enterprise price set).</li>
+            <li>Enterprise: if any of Calls / GB / RPM / Price filled, <b>all four required</b> and each must be &gt; Professional effective values; RPM floor max(1000, value) on save.</li>
+            <li>Blank New Price on S/G/P → save uses config default. Reset one tier / Reset All deletes overrides then syncs active sub.</li>
+            <li>Save runs in one DB transaction with <code>apiSubscriptionSyncActivePlanPricing</code>; sync failure → ROLLBACK.</li>
+            <li>Activation Fee remains on the list row (FeatureActivationFee) — not in this modal.</li>
+            <li>Reference tables (definitions / RPM / top-up psychology) are read-only aids — keep them.</li>
+          </ul>
+        </div>
+
+        <div class="sec">1 · Tier definitions (config — read-only)</div>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Calls/Mo</th><th>Data/Mo</th><th>RPM</th><th>Default Price</th><th>Active Price</th><th>Cost/1K</th><th>Top-Up</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td class="num">500</td><td>1 GB</td><td>10</td><td class="mut">USD 29.00</td><td class="cur">USD 29.00</td><td>USD 58.00</td><td>+500 (USD 19)</td></tr>
+            <tr><td><b>Growth</b></td><td class="num">5,000</td><td>5 GB</td><td>50</td><td class="mut">USD 199.00</td><td class="cur">USD 199.00</td><td>USD 39.80</td><td>+1,000 (USD 39)</td></tr>
+            <tr><td><b>Professional</b></td><td class="num">15,000</td><td>25 GB</td><td>100</td><td class="mut">USD 399.00</td><td class="cur">USD 399.00</td><td>USD 26.60</td><td>+2,000 (USD 49)</td></tr>
+            <tr><td><b>Enterprise</b></td><td>Negotiated</td><td>Negotiated</td><td>Negotiated</td><td class="mut">Custom</td><td class="cur">Custom</td><td>Custom</td><td>Negotiated</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec">2 · Per-tier RPM + delay reference</div>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>RPM Limit</th><th>Soft Throttle At</th><th>Delay Added</th><th>Hard Block At</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td>10 rpm</td><td>7 req/min</td><td>400ms</td><td>10 req/min</td></tr>
+            <tr><td><b>Growth</b></td><td>50 rpm</td><td>35 req/min</td><td>250ms</td><td>50 req/min</td></tr>
+            <tr><td><b>Professional</b></td><td>100 rpm</td><td>70 req/min</td><td>150ms</td><td>100 req/min</td></tr>
+            <tr><td><b>Enterprise</b></td><td>Negotiated</td><td>700 req/min</td><td>50ms</td><td>Negotiated</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec">3 · Top-up pricing psychology (read-only)</div>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Plan Cost</th><th>Calls Incl.</th><th>Cost/1K</th><th>Top-Up Pkg</th><th>Top-Up Cost</th><th>Top-Up Cost/1K</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td>USD 29.00</td><td>500</td><td>USD 58.00</td><td>+500</td><td>USD 19</td><td>USD 38.00</td></tr>
+            <tr><td><b>Growth</b></td><td>USD 199.00</td><td>5,000</td><td>USD 39.80</td><td>+1,000</td><td>USD 39</td><td>USD 39.00</td></tr>
+            <tr><td><b>Professional</b></td><td>USD 399.00</td><td>15,000</td><td>USD 26.60</td><td>+2,000</td><td>USD 49</td><td>USD 24.50</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec">4 · Set subscription pricing for company #68</div>
+        <p class="hint">Starter, Growth &amp; Professional: if <b>New Price</b> is left blank, saved pricing uses <code>config/api_tiers.php</code> defaults.</p>
+        <p class="hint warn">Prices must follow ascending order: Starter ≤ Growth ≤ Professional ≤ Enterprise. Enterprise Calls / GB / RPM / Price must each exceed Professional when any Enterprise field is filled.</p>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Calls/Mo</th><th>Data/Mo</th><th>RPM</th><th>Default (config)</th><th>Current Company Price</th><th>New Price (USD)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>Starter</b></td><td class="num">500</td><td>1 GB</td><td>10</td><td class="mut">USD 29.00</td><td class="mut">— using default</td>
+              <td><input type="number" min="0.01" step="0.01" value="29.00"></td>
+            </tr>
+            <tr>
+              <td><b>Growth</b></td><td class="num">5,000</td><td>5 GB</td><td>50</td><td class="mut">USD 199.00</td><td class="mut">— using default</td>
+              <td><input type="number" min="0.01" step="0.01" value="199.00"></td>
+            </tr>
+            <tr>
+              <td><b>Professional</b></td><td class="num">15,000</td><td>25 GB</td><td>100</td><td class="mut">USD 399.00</td><td class="mut">— using default</td>
+              <td><input type="number" min="0.01" step="0.01" value="399.00"></td>
+            </tr>
+            <tr>
+              <td><b>Enterprise</b></td>
+              <td><input type="number" min="15001" step="1" placeholder="Calls" title="> Professional calls"></td>
+              <td><input type="number" min="25.01" step="0.01" placeholder="GB" title="> Professional GB"></td>
+              <td><input type="number" min="101" step="1" placeholder="RPM" title="> Professional RPM"></td>
+              <td class="mut">Custom</td><td class="mut">— using default</td>
+              <td><input type="number" min="399.01" step="0.01" placeholder="Custom" title="> Professional price"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="toast('Reset All → POST reset_api_company_pricing + reset_all=1 + ApiSubscription')">Reset All to Default</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="toast('Save → POST save_api_company_pricing (transaction + live sync)')">Save Pricing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API TOP-UP MODAL -->
+  <div class="overlay" id="ov-topup">
+    <div class="modal mid">
+      <div class="mhead">
+        <div>
+          <h3>Configure Top-Up Pricing — Company #68 <span class="badge" style="background:var(--good-soft);color:var(--topup)">ApiTopUp</span></h3>
+          <p>Packages TOPUP_STARTER / GROWTH / PROFESSIONAL · no Enterprise top-up · no Activation Fee.</p>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="hint rules">
+          <b>Rules preserved</b>
+          <ul>
+            <li>Type=<code>ApiTopUp</code>, TierCode=<code>TOPUP_*</code>, IsTopUp=1. Package size from <code>topUpCalls</code> (not editable here).</li>
+            <li>No FeatureActivationFee link on the list row (unlike ApiSubscription / LlmChatbot).</li>
+            <li>Blank New Price → config <code>topUpPrice</code>. Non-numeric / negative rejected. Empty/0 can clear override.</li>
+            <li>Reset All / per-tier Reset delete ProductCostPerClient rows for ApiTopUp (no live-subscription sync loop like plans).</li>
+            <li>Comparison table stays — helps AM see top-up vs plan Cost/1K.</li>
+          </ul>
+        </div>
+
+        <div class="sec">Top-up package details (comparison)</div>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Top-Up Pkg</th><th>Default Price</th><th>Active Price</th><th>Cost/1K</th><th>Plan Cost</th><th>Plan Calls</th><th>Plan Cost/1K</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td>+500 calls</td><td class="mut">USD 19.00</td><td class="cur">USD 19.00</td><td>USD 38.00</td><td>USD 29.00</td><td>500</td><td>USD 58.00</td></tr>
+            <tr><td><b>Growth</b></td><td>+1,000 calls</td><td class="mut">USD 39.00</td><td class="cur">USD 39.00</td><td>USD 39.00</td><td>USD 199.00</td><td>5,000</td><td>USD 39.80</td></tr>
+            <tr><td><b>Professional</b></td><td>+2,000 calls</td><td class="mut">USD 49.00</td><td class="cur">USD 49.00</td><td>USD 24.50</td><td>USD 399.00</td><td>15,000</td><td>USD 26.60</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec">Set top-up pricing for company #68</div>
+        <p class="hint">Blank <b>New Price</b> uses <code>config/api_tiers.php</code> top-up defaults.</p>
+        <table class="g">
+          <thead><tr><th>Tier</th><th>Package</th><th>Default (config)</th><th>Current Company Price</th><th>New Price (USD)</th></tr></thead>
+          <tbody>
+            <tr><td><b>Starter</b></td><td>+500 Extra Calls</td><td class="mut">USD 19.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="19.00"></td></tr>
+            <tr><td><b>Growth</b></td><td>+1,000 Extra Calls</td><td class="mut">USD 39.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="39.00"></td></tr>
+            <tr><td><b>Professional</b></td><td>+2,000 Extra Calls</td><td class="mut">USD 49.00</td><td class="mut">— using default</td><td><input type="number" min="0" step="0.01" value="49.00"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="toast('Reset All → ApiTopUp overrides deleted')">Reset All to Default</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="toast('Save → save_api_company_pricing api_product_type=ApiTopUp')">Save Pricing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRACKET EDIT (simple) -->
+  <div class="overlay" id="ov-bracket">
+    <div class="modal sm">
+      <div class="mhead"><div><h3 id="br-title">Edit pricing tier</h3><p>TableEditor fields · Min / Max / PricePerUnit · MoreValidation overlap rules.</p></div></div>
+      <div class="mbody">
+        <div class="hint rules"><b>Not used for</b> LlmChatbot / ApiSubscription / ApiTopUp (those open their own modals).</div>
+        <label style="font-size:12px;font-weight:600;color:var(--mut)">Minimum amount</label>
+        <input id="br-min" type="number" min="1" style="width:100%;margin:4px 0 10px;padding:8px;border:1px solid var(--line);border-radius:8px">
+        <label style="font-size:12px;font-weight:600;color:var(--mut)">Maximum amount</label>
+        <input id="br-max" type="number" min="1" style="width:100%;margin:4px 0 10px;padding:8px;border:1px solid var(--line);border-radius:8px">
+        <label style="font-size:12px;font-weight:600;color:var(--mut)">Price per unit (USD)</label>
+        <input id="br-price" type="number" step="0.01" style="width:100%;margin:4px 0 0;padding:8px;border:1px solid var(--line);border-radius:8px">
+      </div>
+      <div class="mfoot">
+        <button class="btn danger" onclick="toast('Delete allowed only for MediaQuota/ArchiveQuota tiers in live code')">Delete</button>
+        <div class="spacer"></div>
+        <button class="btn ghost" onclick="closeModals()">Cancel</button>
+        <button class="btn" onclick="toast('Would POST TableEdit save for ProductCostPerClient')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const fmt=n=>Number(n).toLocaleString('en-US');
+  const money=n=>'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  // Sample data shaped like live page models
+  const SECTIONS=[
+    {key:'credits',title:'Credits',rows:[
+      {name:'Mystery shopping',model:'bracket',tiers:[[1,5],[101,4.5],[1001,3],[50001,0.3]],ceiling:100000},
+      {name:'Email Survey',model:'bracket',tiers:[[1000,0.5],[2500,0.4],[5000,0.35]],ceiling:10000},
+      {name:'AI Analysis Credits',model:'bracket',tiers:[[100,500]],ceiling:5000},
+    ]},
+    {key:'modules',title:'New Modules',rows:[
+      {name:'Field Surveys (CAPI)',model:'bracket',tiers:[[1,20]],ceiling:5},
+      {name:'CATI Basic',model:'bracket',tiers:[[1,175]],ceiling:3},
+    ]},
+    {key:'monthly',title:'Monthly services',rows:[
+      {name:'Regular Storage',model:'bracket',activation:40,free:10,tiers:[[1,6]],ceiling:1000},
+      {name:'Archive Storage',model:'bracket',activation:10,free:true,tiers:[[1,1]],ceiling:100},
+      {name:'Email Sending Service',model:'bracket',activation:10,tiers:[[20000,40]],ceiling:20000},
+      {name:'AI Chatbot Connector',model:'llm',activation:30,llmTiers:[
+        {code:'Starter',calls:1000,price:49,override:49},
+        {code:'Professional',calls:5000,price:149,override:null},
+        {code:'Enterprise',calls:20000,price:399,override:null},
+        {code:'Unlimited',calls:-1,price:799,override:799},
+      ]},
+      {name:'API Access Subscription',model:'api',activation:null,apiTiers:[
+        {code:'STARTER',price:29,override:null},
+        {code:'GROWTH',price:199,override:null},
+        {code:'PROFESSIONAL',price:399,override:null},
+        {code:'ENTERPRISE',price:null,override:null},
+      ]},
+      {name:'API Top-Up Package',model:'topup',topups:[
+        {code:'TOPUP_STARTER',pkg:'+500',price:19,override:null},
+        {code:'TOPUP_GROWTH',pkg:'+1,000',price:39,override:null},
+        {code:'TOPUP_PROFESSIONAL',pkg:'+2,000',price:49,override:null},
+      ]},
+    ]},
+    {key:'special',title:'Special services',rows:[
+      {name:'CSS implementation',model:'bracket',minCharge:0,tiers:[[1,250]],ceiling:null},
+      {name:'Development',model:'bracket',minCharge:0,tiers:[],ceiling:null},
+    ]},
+  ];
+
+  let active='monthly';
+
+  function tierRange(row,i){
+    const t=row.tiers, from=t[i][0];
+    const end=(i<t.length-1)? t[i+1][0]-1 : (row.ceiling!=null? row.ceiling : null);
+    if(end==null) return fmt(from)+'+';
+    if(end<from) return fmt(from);
+    return fmt(from)+' – '+fmt(end);
+  }
+
+  function render(){
+    document.getElementById('tabs').innerHTML=SECTIONS.map(s=>
+      `<button class="${s.key===active?'active':''}" onclick="setTab('${s.key}')">${s.title}<span class="c">${s.rows.length}</span></button>`).join('');
+    const q=(document.getElementById('q').value||'').toLowerCase();
+    const sec=SECTIONS.find(s=>s.key===active);
+    const rows=sec.rows.map((r,idx)=>({r,idx})).filter(o=>o.r.name.toLowerCase().includes(q));
+    document.getElementById('list').innerHTML = rows.length? rows.map(o=>rowHTML(sec.key,o.r,o.idx)).join('')
+      : '<div class="srow"><div class="none" style="grid-column:1/3">No services match.</div></div>';
+  }
+  function setTab(k){ active=k; render(); }
+
+  function modelLabel(m){
+    if(m==='llm') return '<span class="model llm">Named tiers · LLM</span>';
+    if(m==='api') return '<span class="model api">Named tiers · API plan</span>';
+    if(m==='topup') return '<span class="model topup">Named packages · Top-up</span>';
+    return '<span class="model bracket">Quantity brackets</span>';
+  }
+
+  function rowHTML(sk,r,idx){
+    const cls = r.model==='llm'?'special': r.model==='api'?'api': r.model==='topup'?'topup':'';
+    let pills='';
+    if(r.activation!=null){
+      pills+=`<span class="pill" onclick="toast('Edit Activation Fee → FeatureActivationFee')"><span class="lbl">Activation</span> ${money(r.activation)}</span>`;
+    } else if(sk==='monthly' && r.model!=='topup' && r.model!=='bracket'){
+      pills+=`<span class="pill off" onclick="toast('Add Activation Fee')">+ Activation fee</span>`;
+    } else if(sk==='monthly' && r.model==='bracket' && r.name.includes('Storage')){
+      /* handled below */
+    } else if(sk==='monthly' && r.model==='bracket'){
+      pills+= r.activation===undefined ? `<span class="pill off" onclick="toast('Add Activation Fee')">+ Activation fee</span>` : '';
+    }
+    if(r.free!=null){
+      pills+=`<span class="pill" onclick="toast('Edit Free Storage')"><span class="lbl">Free</span> ${r.free===true?'set':r.free+' GB'}</span>`;
+    } else if(r.name==='Regular Storage'||r.name==='Archive Storage'){
+      pills+=`<span class="pill off">+ Free storage</span>`;
+    }
+    if(r.minCharge!=null){
+      pills+=`<span class="pill" onclick="toast('Edit Minimum Chargeable Credits')"><span class="lbl">Min credits</span> ${r.minCharge}</span>`;
+    }
+
+    let right='';
+    if(r.model==='llm'){
+      right = `<div class="tiers">`+
+        r.llmTiers.map(t=>{
+          const calls=t.calls===-1?'Unlimited':fmt(t.calls)+' calls';
+          const pr=t.override!=null?money(t.override):'<span style="color:var(--faint)">default '+money(t.price)+'</span>';
+          return `<button class="tier named llm" onclick="openLlm()"><span class="code">${t.code}</span><span class="rng">${calls}</span><span class="prc">${pr}</span></button>`;
+        }).join('')+
+        `<button class="openmodal llm" onclick="openLlm()">Configure LLM tiers…</button></div>`;
+    } else if(r.model==='api'){
+      right = `<div class="tiers">`+
+        r.apiTiers.map(t=>{
+          const pr=t.override!=null?money(t.override):(t.price==null?'Custom / negotiated':money(t.price));
+          return `<button class="tier named" onclick="openApi()"><span class="code">${t.code}</span><span class="prc">${pr}</span></button>`+
+            (t.override!=null?`<button class="reset" onclick="event.stopPropagation();toast('Reset tier ${t.code}')">↺ Reset</button>`:'');
+        }).join('')+
+        `<button class="openmodal api" onclick="openApi()">Configure API plans…</button></div>`;
+    } else if(r.model==='topup'){
+      right = `<div class="tiers">`+
+        r.topups.map(t=>{
+          const pr=t.override!=null?money(t.override):money(t.price);
+          return `<button class="tier named topup" onclick="openTopup()"><span class="code">${t.code.replace('TOPUP_','')}</span><span class="rng">${t.pkg}</span><span class="prc">${pr}</span></button>`;
+        }).join('')+
+        `<button class="openmodal topup" onclick="openTopup()">Configure top-ups…</button></div>`;
+    } else {
+      if(!r.tiers || !r.tiers.length){
+        right=`<span class="none">No pricing · </span><button class="addtier" onclick="openBracket('${r.name}',null)">+ Add tier</button>`;
+      } else {
+        right=`<div class="tiers">`+
+          r.tiers.map((t,i)=>`<button class="tier" onclick="openBracket('${r.name}',${i})"><span class="rng">${tierRange(r,i)}</span><span class="prc">${money(t[1])}</span></button>`).join('')+
+          `<button class="addtier" onclick="openBracket('${r.name}',null)">+ Add tier</button></div>`;
+      }
+    }
+
+    return `<div class="srow ${cls}">
+      <div>
+        <div class="sname">${r.name}</div>
+        ${modelLabel(r.model)}
+        <div class="meta">${pills}</div>
+      </div>
+      <div>${right}</div>
+    </div>`;
+  }
+
+  function openLlm(){ closeModals(); document.getElementById('ov-llm').classList.add('on'); }
+  function openApi(){ closeModals(); document.getElementById('ov-api').classList.add('on'); }
+  function openTopup(){ closeModals(); document.getElementById('ov-topup').classList.add('on'); }
+  function openBracket(name,i){
+    closeModals();
+    document.getElementById('br-title').textContent = i==null?('Add pricing — '+name):('Edit pricing — '+name);
+    document.getElementById('ov-bracket').classList.add('on');
+  }
+  function closeModals(){ document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on')); }
+  document.querySelectorAll('.overlay').forEach(ov=>{
+    ov.addEventListener('click',e=>{ if(e.target===ov) closeModals(); });
+  });
+  function toast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('on');
+    clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('on'),2800);
+  }
+
+  render();
+</script>
+</body>
+</html>
