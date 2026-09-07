@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UX Mockup — CT Checker updates</title>
+<style>
+:root{
+  --bg:#eef2ef; --panel:#fff; --ink:#1a2420; --mut:#5c6b64; --faint:#8b9891;
+  --line:#d5ddd7; --brand:#2f8f4e; --brand-d:#246f3c; --brand-soft:#e6f4eb;
+  --nav:#2c3631; --warn:#9a6b12; --bad:#b33b32; --shadow:0 1px 2px rgba(20,40,30,.06),0 8px 24px rgba(20,40,30,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:13.5px/1.45 "Segoe UI",system-ui,sans-serif}
+.topnote{background:#fff8e6;border-bottom:1px solid #ecd9a8;padding:8px 18px;font-size:12px;color:#6a4e10}
+.shell{max-width:1120px;margin:0 auto;padding:16px 18px 48px}
+.ctnav{display:flex;gap:2px;background:var(--nav);border-radius:10px;padding:4px;margin-bottom:14px;flex-wrap:wrap}
+.ctnav span{color:#c5d0c8;padding:7px 11px;border-radius:7px;font-size:12px}
+.ctnav span.on{background:var(--brand);color:#fff;font-weight:650}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.head h1{margin:0;font-size:18px;font-weight:680}
+.head p{margin:4px 0 0;color:var(--mut);font-size:12.5px}
+.tabs{display:flex;gap:6px;padding:0 18px;border-bottom:1px solid var(--line);background:#f7faf7}
+.tabs button{border:0;background:transparent;padding:11px 12px;font:inherit;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--brand-d);font-weight:650;border-bottom-color:var(--brand)}
+.body{padding:16px 18px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.search{flex:1;min-width:200px;position:relative}
+.search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line);border-radius:9px;font:inherit}
+.search::before{content:"⌕";position:absolute;left:11px;top:8px;color:var(--faint)}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 13px;border-radius:9px;font:inherit;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand-d);color:#fff}
+.btn.ghost:hover{border-color:var(--brand);color:var(--brand-d)}
+.btn.danger{color:var(--bad);border-color:#e7c0bc}
+.seg{display:inline-flex;background:#e7ece8;border-radius:9px;padding:3px}
+.seg button{border:0;background:transparent;padding:6px 11px;border-radius:7px;font:inherit;color:var(--mut);cursor:pointer}
+.seg button.on{background:#fff;color:var(--brand-d);font-weight:650;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid #eef2ef;vertical-align:middle}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:700;background:#fafcfb}
+tr:hover td{background:#f7fbf8}
+td a{color:var(--brand-d);font-weight:600;text-decoration:none;cursor:pointer}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.pill.on{background:var(--brand-soft);color:var(--brand-d)}
+.pill.off{background:#f1f1f1;color:#777}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.form{display:none;max-width:760px}
+.form.on{display:block}
+.f{margin-bottom:13px}
+.f label{display:block;font-size:12px;font-weight:650;color:var(--mut);margin-bottom:5px}
+.f label .req{color:var(--bad)}
+.f input,.f select,.f textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit}
+.f textarea{min-height:90px}
+.rte{border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.rte .bar{background:#f5f7f5;padding:6px 8px;border-bottom:1px solid var(--line);color:var(--faint);font-size:11px}
+.rte .ed{min-height:100px;padding:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.row2{grid-template-columns:1fr}}
+.hint{font-size:12px;color:var(--mut);margin-top:4px}
+.flash{display:none;padding:10px 12px;border-radius:9px;margin-bottom:12px;background:var(--brand-soft);border:1px solid #b7dfc4;color:#1d5c30}
+.flash.on{display:block}
+.empty{padding:28px;text-align:center;color:var(--mut)}
+.media-box{border:1px dashed #b7c4bb;border-radius:10px;padding:12px;background:#f7faf7}
+.media-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.media-item{width:110px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative}
+.media-item .thumb{height:72px;background:linear-gradient(135deg,#cfe9d8,#7fbf96)}
+.media-item .meta{padding:6px 8px;font-size:11px;color:var(--mut);display:flex;justify-content:space-between;gap:4px}
+.media-item button{border:0;background:transparent;color:var(--bad);cursor:pointer;font:inherit;font-size:11px;font-weight:700;padding:0}
+.drop{border:1px dashed #9eb5a6;border-radius:9px;padding:14px;text-align:center;color:var(--mut);font-size:12.5px;cursor:pointer;background:#fff}
+.drop:hover{border-color:var(--brand);color:var(--brand-d)}
+</style>
+</head>
+<body>
+<div class="topnote"><b>UX mockup — ct_updates.php</b> · Product release notes + optional <b>Images</b> (multi) + optional <b>Video</b> (file or URL) for Edge gallery. Demo only.</div>
+<div class="shell">
+  <div class="ctnav"><span>Main</span><span class="on">Checker updates</span><span>Checker Newsletters</span><span>Log out</span></div>
+  <div class="card">
+    <div class="head">
+      <div>
+        <h1>Checker updates</h1>
+        <p>Publish what’s new for client users. Active updates appear in the client gallery and main-menu “what’s new”.</p>
+      </div>
+      <button class="btn primary" id="btnNew">+ New update</button>
+    </div>
+    <div class="tabs">
+      <button class="on" data-tab="list">All updates</button>
+      <button data-tab="form">Editor</button>
+    </div>
+    <div class="body">
+      <div class="flash" id="flash"></div>
+      <div id="listView">
+        <div class="toolbar">
+          <div class="search"><input id="q" placeholder="Search by title…"></div>
+          <div class="seg" id="statusSeg">
+            <button class="on" data-s="all">All</button>
+            <button data-s="active">Active</button>
+            <button data-s="inactive">Inactive</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Date</th><th>Status</th><th>Title</th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="foot"><span id="count"></span><span>Sorted newest first · 50 / page (same as today)</span></div>
+      </div>
+      <div class="form" id="formView">
+        <div class="row2">
+          <div class="f"><label>Creation date <span class="req">*</span></label><input id="f_date" type="text"></div>
+          <div class="f"><label>Status</label><select id="f_active"><option value="1">Active — visible to clients</option><option value="0">Inactive — hidden</option></select></div>
+        </div>
+        <div class="f"><label>Title <span class="req">*</span></label><input id="f_title" placeholder="Short, scannable headline"></div>
+        <div class="f"><label>Link (optional)</label><input id="f_link" placeholder="https://…"><div class="hint">Same as today’s PageLink — shown on edit, not in the list.</div></div>
+        <div class="f"><label>Short description</label><div class="rte"><div class="bar">Rich text · Bold · Lists · Link · Image · Source</div><div class="ed" id="f_short" contenteditable="true"></div></div><div class="hint">Used on main-menu “what’s new” and gallery cards.</div></div>
+        <div class="f"><label>Full description</label><div class="rte"><div class="bar">Rich text</div><div class="ed" id="f_full" contenteditable="true" style="min-height:140px"></div></div></div>
+        <div class="f">
+          <label>Gallery images (optional)</label>
+          <div class="media-box">
+            <div class="drop" id="drop" onclick="$('f_files').click()">Drop images here or click to upload · JPG / PNG / WEBP / GIF</div>
+            <input id="f_files" type="file" accept="image/*" multiple style="display:none">
+            <div class="media-grid" id="mediaGrid"></div>
+            <div class="hint">First image = client gallery card thumbnail. All images appear as slides in the update popup. Leave empty for placeholder art.</div>
+            <div class="actions" style="margin-top:8px">
+              <button type="button" class="btn" id="btnUp">Move up</button>
+              <button type="button" class="btn" id="btnDown">Move down</button>
+            </div>
+          </div>
+        </div>
+        <div class="f">
+          <label>Video (optional — one per update)</label>
+          <div class="media-box">
+            <div class="row2">
+              <div><div class="drop" id="dropVid" onclick="$('f_vid').click()">Upload MP4 / WebM</div><input id="f_vid" type="file" accept="video/mp4,video/webm" style="display:none"></div>
+              <div class="f" style="margin:0"><label>Or embed / watch URL</label><input id="f_vidurl" placeholder="https://youtube.com/… or https://vimeo.com/…"></div>
+            </div>
+            <div class="hint" id="vidHint">No video set.</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="btnSave">Save</button>
+          <button class="btn" id="btnCancel">Cancel</button>
+          <button class="btn danger" id="btnDel" style="margin-left:auto;display:none">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const rows=[
+  {id:156,date:'25.07.2025 08:05',active:1,title:'Visit Report Templates Just Leveled Up',link:'',short:'Templates just leveled up for visit reports.',full:'Full release note HTML…',media:['shot-1.png','shot-2.png']},
+  {id:155,date:'24.07.2025 12:15',active:1,title:'New Layout for Question Groups in PDF Reports',link:'',short:'Clearer PDF question groups.',full:'',media:['pdf-groups.png']},
+  {id:152,date:'02.07.2025 10:15',active:1,title:'Dashboards in multiple languages',link:'',short:'Dashboards follow user language.',full:'',media:[]},
+  {id:140,date:'15.03.2025 09:00',active:0,title:'Older inactive note',link:'',short:'Hidden from clients.',full:'',media:[]}
+];
+let mode='list', editId=null, filter='all', q='', media=[], selectedMedia=-1, videoFile='', videoUrl='';
+const $=id=>document.getElementById(id);
+function flash(m){const f=$('flash');f.textContent=m;f.classList.add('on');setTimeout(()=>f.classList.remove('on'),2200)}
+function syncVidHint(){
+  $('vidHint').textContent=videoFile?('File: '+videoFile):(videoUrl?('URL: '+videoUrl):'No video set.');
+}
+function show(tab){
+  mode=tab;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  $('listView').style.display=tab==='list'?'block':'none';
+  $('formView').classList.toggle('on',tab==='form');
+}
+function renderMedia(){
+  const g=$('mediaGrid');
+  if(!media.length){g.innerHTML='<div class="hint" style="margin:0">No images yet — client will show placeholder art.</div>';return}
+  g.innerHTML=media.map((name,i)=>`<div class="media-item ${i===selectedMedia?'':' '}" data-i="${i}" style="${i===selectedMedia?'outline:2px solid var(--brand)':''}">
+    <div class="thumb"></div>
+    <div class="meta"><span>${i===0?'Thumb · ':''}${name}</span><button type="button" data-rm="${i}">Remove</button></div>
+  </div>`).join('');
+  g.querySelectorAll('.media-item').forEach(el=>el.onclick=e=>{if(e.target.dataset.rm!=null)return; selectedMedia=+el.dataset.i; renderMedia()});
+  g.querySelectorAll('[data-rm]').forEach(b=>b.onclick=e=>{e.stopPropagation(); media.splice(+b.dataset.rm,1); selectedMedia=-1; renderMedia()});
+}
+function render(){
+  const tbody=$('tbody');
+  const list=rows.filter(r=>{
+    if(filter==='active'&&!r.active)return false;
+    if(filter==='inactive'&&r.active)return false;
+    if(q&&!r.title.toLowerCase().includes(q.toLowerCase()))return false;
+    return true;
+  });
+  if(!list.length){tbody.innerHTML='<tr><td colspan="4" class="empty">No updates match.</td></tr>'}
+  else tbody.innerHTML=list.map(r=>`<tr>
+    <td>${r.date}</td>
+    <td><span class="pill ${r.active?'on':'off'}">${r.active?'Active':'Inactive'}</span></td>
+    <td><a data-edit="${r.id}">${r.title}</a>${(r.media&&r.media.length)?' <span class="hint">· '+r.media.length+' img</span>':''}</td>
+    <td class="actions"><button class="btn ghost" data-edit="${r.id}">Edit</button></td>
+  </tr>`).join('');
+  $('count').textContent=list.length+' shown';
+  tbody.querySelectorAll('[data-edit]').forEach(el=>el.onclick=()=>openEdit(+el.dataset.edit));
+}
+function openNew(){
+  editId=null; $('btnDel').style.display='none';
+  $('f_date').value=new Date().toLocaleString('en-GB');
+  $('f_active').value='1'; $('f_title').value=''; $('f_link').value='';
+  $('f_short').innerHTML=''; $('f_full').innerHTML='';
+  media=[]; selectedMedia=-1; videoFile=''; videoUrl=''; $('f_vidurl').value=''; renderMedia(); syncVidHint();
+  show('form');
+}
+function openEdit(id){
+  const r=rows.find(x=>x.id===id); if(!r)return;
+  editId=id; $('btnDel').style.display='inline-flex';
+  $('f_date').value=r.date; $('f_active').value=String(r.active);
+  $('f_title').value=r.title; $('f_link').value=r.link||'';
+  $('f_short').innerHTML=r.short||''; $('f_full').innerHTML=r.full||'';
+  media=(r.media||[]).slice(); selectedMedia=-1; videoFile=r.videoFile||''; videoUrl=r.videoUrl||'';
+  $('f_vidurl').value=videoUrl; renderMedia(); syncVidHint();
+  show('form');
+}
+function save(){
+  const title=$('f_title').value.trim(); if(!title){flash('Title is required');return}
+  videoUrl=$('f_vidurl').value.trim();
+  const payload={date:$('f_date').value,active:+$('f_active').value,title,link:$('f_link').value,short:$('f_short').innerHTML,full:$('f_full').innerHTML,media:media.slice(),videoFile,videoUrl};
+  if(editId){Object.assign(rows.find(r=>r.id===editId),payload);flash('Update saved · '+media.length+' image(s)'+(videoFile||videoUrl?' + video':''))}
+  else{rows.unshift({id:Date.now(),...payload});flash('Update added')}
+  show('list'); render();
+}
+$('f_files').onchange=e=>{
+  Array.from(e.target.files||[]).forEach(f=>{if(f.type.startsWith('image/')) media.push(f.name)});
+  e.target.value=''; renderMedia(); flash('Images added (demo — not uploaded)');
+};
+$('f_vid').onchange=e=>{const f=(e.target.files||[])[0]; if(f){videoFile=f.name; videoUrl=''; $('f_vidurl').value=''; syncVidHint(); flash('Video file set (demo)')} e.target.value=''};
+$('f_vidurl').oninput=e=>{videoUrl=e.target.value.trim(); if(videoUrl) videoFile=''; syncVidHint()};
+$('btnUp').onclick=()=>{if(selectedMedia>0){[media[selectedMedia-1],media[selectedMedia]]=[media[selectedMedia],media[selectedMedia-1]];selectedMedia--;renderMedia()}};
+$('btnDown').onclick=()=>{if(selectedMedia>=0&&selectedMedia<media.length-1){[media[selectedMedia+1],media[selectedMedia]]=[media[selectedMedia],media[selectedMedia+1]];selectedMedia++;renderMedia()}};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='list')show('list'); else if(editId||mode==='form')show('form'); else openNew()});
+$('btnNew').onclick=openNew; $('btnSave').onclick=save;
+$('btnCancel').onclick=()=>{show('list')};
+$('btnDel').onclick=()=>{if(editId&&confirm('Delete this update?')){const i=rows.findIndex(r=>r.id===editId);rows.splice(i,1);flash('Deleted');show('list');render()}};
+$('q').oninput=e=>{q=e.target.value;render()};
+document.querySelectorAll('#statusSeg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#statusSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');filter=b.dataset.s;render()});
+render();
+</script>
+</body>
+</html>

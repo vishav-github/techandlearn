@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UX Mockup — CT Checker Newsletters</title>
+<style>
+:root{
+  --bg:#eef2ef; --panel:#fff; --ink:#1a2420; --mut:#5c6b64; --faint:#8b9891;
+  --line:#d5ddd7; --brand:#2f8f4e; --brand-d:#246f3c; --brand-soft:#e6f4eb;
+  --nav:#2c3631; --blue:#1f6f8f; --blue-soft:#e5f3f8; --bad:#b33b32;
+  --shadow:0 1px 2px rgba(20,40,30,.06),0 8px 24px rgba(20,40,30,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:13.5px/1.45 "Segoe UI",system-ui,sans-serif}
+.topnote{background:#fff8e6;border-bottom:1px solid #ecd9a8;padding:8px 18px;font-size:12px;color:#6a4e10}
+.shell{max-width:1180px;margin:0 auto;padding:16px 18px 48px}
+.ctnav{display:flex;gap:2px;background:var(--nav);border-radius:10px;padding:4px;margin-bottom:14px;flex-wrap:wrap}
+.ctnav span{color:#c5d0c8;padding:7px 11px;border-radius:7px;font-size:12px}
+.ctnav span.on{background:var(--brand);color:#fff;font-weight:650}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.head h1{margin:0;font-size:18px}.head p{margin:4px 0 0;color:var(--mut);font-size:12.5px}
+.tabs{display:flex;gap:4px;padding:0 18px;border-bottom:1px solid var(--line);background:#f7faf7;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;padding:11px 12px;font:inherit;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--brand-d);font-weight:650;border-bottom-color:var(--brand)}
+.body{padding:16px 18px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.search{flex:1;min-width:180px}
+.search input,.toolbar select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit;width:100%}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 13px;border-radius:9px;font:inherit;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand-d);color:#fff}
+.btn.blue{background:var(--blue);border-color:#185a74;color:#fff}
+.btn.ghost:hover{border-color:var(--brand)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 9px;border-bottom:1px solid #eef2ef;vertical-align:middle;font-size:13px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);background:#fafcfb}
+tr:hover td{background:#f7fbf8}
+.pill{display:inline-flex;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.pill.email{background:#eee;color:#444}.pill.inapp{background:var(--blue-soft);color:var(--blue)}
+.pill.on{background:var(--brand-soft);color:var(--brand-d)}
+.muted{color:var(--mut);font-size:12px}
+.actions a,.actions button{margin-right:6px;color:var(--brand-d);font-weight:600;background:none;border:0;cursor:pointer;font:inherit;text-decoration:underline;padding:0}
+.panel{display:none}.panel.on{display:block}
+.f{margin-bottom:12px}.f label{display:block;font-size:12px;font-weight:650;color:var(--mut);margin-bottom:5px}
+.f input,.f select,.f textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:720px){.row2{grid-template-columns:1fr}}
+.rte{border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.rte .bar{background:#f5f7f5;padding:6px 8px;border-bottom:1px solid var(--line);color:var(--faint);font-size:11px}
+.rte .ed{min-height:90px;padding:10px}
+.callout{padding:10px 12px;border-radius:9px;margin-bottom:12px;font-size:12.5px}
+.callout.email{background:#f4f4f4;border:1px solid #ddd;color:#444}
+.callout.inapp{background:var(--blue-soft);border:1px solid #b3d7e6;color:#0d4a63}
+.callout.warn{background:#fff8e6;border:1px solid #ecd9a8;color:#6a4e10}
+.ch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ch label{border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;display:block}
+.ch input{margin-right:6px}
+.ch label.on{border-color:var(--brand);background:var(--brand-soft)}
+.ch label.in.on{border-color:var(--blue);background:var(--blue-soft)}
+.preview{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fafcff;max-width:680px;margin:10px auto}
+.dual{display:grid;grid-template-columns:1fr 56px 1fr;gap:8px;align-items:center;max-width:820px}
+.dual select{width:100%;height:200px;border-radius:9px;border:1px solid var(--line)}
+.flash{display:none;padding:10px 12px;border-radius:9px;margin-bottom:12px;background:var(--brand-soft);border:1px solid #b7dfc4}
+.flash.on{display:block}
+.hidden{display:none !important}
+.checkline{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.client{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#e8ece8;min-height:380px}
+.client .cnav{background:var(--brand);color:#fff;padding:9px 12px;font-size:12.5px;display:flex;gap:12px;flex-wrap:wrap}
+.client .cnav .on{text-decoration:underline;font-weight:700}
+.client .cbody{padding:14px;min-height:300px;position:relative}
+.client .blur{filter:blur(2px);opacity:.55}
+.modal-box{position:absolute;left:50%;top:36px;transform:translateX(-50%);width:min(420px,92%);background:#fff;border-radius:14px;box-shadow:var(--shadow);border-top:3px solid var(--brand);padding:16px;z-index:2}
+.modal-box .ey{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.05em}
+.modal-box h3{margin:6px 0;font-size:20px}
+.modal-box .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.banner-box{display:flex;gap:12px;align-items:center;background:var(--brand-soft);border:1px solid #b7dfc4;border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.banner-box .x{margin-left:auto;color:var(--faint);cursor:pointer;font-size:18px}
+.formbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+</style>
+</head>
+<body>
+<div class="topnote"><b>UX mockup — ct_newsletters.php</b> · Includes subtopics: Send preview, select Updates, client login modal &amp; page banner previews. Demo only.</div>
+<div class="shell">
+  <div class="ctnav"><span>Main</span><span>Checker updates</span><span class="on">Checker Newsletters</span><span>Log out</span></div>
+  <div class="card">
+    <div class="head">
+      <div>
+        <h1>Checker Newsletters</h1>
+        <p>Email digests for clients, and in-app marketing placements (login modal / page banners) — without mixing into Product Updates.</p>
+      </div>
+      <button class="btn primary" onclick="openNew()">+ New</button>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="on" data-p="list">All records</button>
+      <button data-p="edit">Editor</button>
+      <button data-p="send">Send preview</button>
+      <button data-p="select">Select updates</button>
+      <button data-p="modal">Client · Login modal</button>
+      <button data-p="banner">Client · Page banner</button>
+    </div>
+    <div class="body">
+      <div class="flash" id="flash"></div>
+
+      <div class="panel on" id="p-list">
+        <div class="toolbar">
+          <div class="search"><input id="q" placeholder="Search title…"></div>
+          <select id="chFilter" style="width:auto;min-width:140px">
+            <option value="all">All channels</option>
+            <option value="Email">Email only</option>
+            <option value="In-app">In-app only</option>
+          </select>
+        </div>
+        <table>
+          <thead><tr><th>Created</th><th>Title</th><th>Channel</th><th>Header</th><th>Sent at</th><th>Actions</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <p class="muted" style="margin-top:10px">Live Testing columns kept: Creation date, Title, HeaderType, Sent at, Send, select. Channel is new. Delete stays disabled.</p>
+      </div>
+
+      <div class="panel" id="p-edit">
+        <div class="ch" id="chPick">
+          <label class="on" data-ch="Email"><input type="radio" name="ch" value="Email" checked> <b>Email</b><br><span class="muted">Digest to clients · Send · link Updates</span></label>
+          <label class="in" data-ch="In-app"><input type="radio" name="ch" value="In-app"> <b>In-app</b><br><span class="muted">Login modal / page banner · never emails</span></label>
+        </div>
+        <div class="callout email" id="hintEmail">Email mode: same fields as today (HeaderType, body, Sent at). Use <b>Send</b> and <b>select Updates</b> from the list or buttons below.</div>
+        <div class="callout inapp hidden" id="hintInapp">In-app mode: placement fields appear. Send and select Updates stay unavailable.</div>
+        <div class="row2">
+          <div class="f"><label>Creation date</label><input id="f_date"></div>
+          <div class="f email-only"><label>HeaderType</label><select id="f_hdr"><option>clouds</option><option>none</option></select></div>
+        </div>
+        <div class="f"><label>Title</label><input id="f_title"></div>
+        <div class="f"><label>Full description</label><div class="rte"><div class="bar">Rich text editor (existing)</div><div class="ed" id="f_body" contenteditable="true"></div></div></div>
+        <div class="f email-only"><label>Sent at</label><input id="f_sent" disabled><div class="muted">Not saved on Add/Save (existing behaviour)</div></div>
+        <div class="inapp-only hidden">
+          <div class="row2">
+            <div class="f"><label>Placement</label><select id="f_place"><option>Login modal</option><option>Page banner</option></select></div>
+            <div class="f"><label>Dismiss mode</label><select id="f_dis"><option>Don’t show again</option><option>Once per session</option><option selected>Both (user chooses)</option></select></div>
+          </div>
+          <div class="f"><label>Target page(s)</label><input id="f_pages" placeholder="sets.php;client-report-settings.php"><div class="muted">Script names, separated by <b>;</b> — no allow-list. Login modal can use <code>main-menu.php</code>.</div></div>
+          <div class="f"><label>Schedule</label><div class="checkline"><label><input type="checkbox" id="f_act" checked> Active</label> Start <input type="date" id="f_start"> End <input type="date" id="f_end"></div></div>
+          <div class="row2">
+            <div class="f"><label>CTA label</label><input id="f_cta"></div>
+            <div class="f"><label>CTA URL</label><input id="f_url"></div>
+          </div>
+          <div class="f"><label>Placement image(s) (optional)</label>
+            <input id="f_imgs" type="file" accept="image/*" multiple>
+            <div class="muted" id="imgHint" style="margin-top:4px">No images — modal/banner will be text + CTA only. For webinar video, put the link in CTA URL (In-app video upload not in this release).</div>
+          </div>
+          <div class="row2">
+            <div class="f"><label>Audience</label>
+              <select id="f_aud"><option value="all">All companies</option><option value="select">Selected companies…</option></select>
+              <div class="muted" style="margin-top:4px">Roles optional below. Default: All.</div>
+            </div>
+            <div class="f" id="coBox"><label>Companies (multi-select)</label>
+              <select id="f_cos" multiple size="4" style="height:auto;min-height:88px">
+                <option>Demo Co</option><option>Acme Retail</option><option>Hotel Group</option><option>QSFR Bank</option>
+              </select>
+              <div class="checkline" style="margin-top:6px"><button type="button" class="btn" onclick="selectAllCos()">Select all</button><button type="button" class="btn" onclick="clearCos()">Clear</button></div>
+            </div>
+          </div>
+          <div class="f"><label>Roles (optional)</label><input id="f_aud2" placeholder="Manager, Analyst — leave blank for all roles"></div>
+        </div>
+        <div class="toolbar">
+          <button class="btn primary" onclick="save()">Save</button>
+          <button class="btn" onclick="show('list')">Cancel</button>
+          <button class="btn blue email-only" id="btnSendFromEdit" onclick="openSend()">Send to clients…</button>
+          <button class="btn email-only" onclick="openSelect()">select Updates…</button>
+          <button class="btn inapp-only hidden" onclick="openClientPreview()">Preview on client…</button>
+        </div>
+      </div>
+
+      <div class="panel" id="p-send">
+        <div class="callout warn" id="sendWarn" style="display:none">This record is In-app — Send is blocked.</div>
+        <div id="sendBox">
+          <div class="callout email">Existing flow: preview → <b>All good. SEND!</b> → updates Sent at · optional test mail.</div>
+          <div class="flash on" style="display:block">Newsletter preview. Title: <span id="sendTitle"></span></div>
+          <div class="preview" id="sendPreview"></div>
+          <div class="flash on" style="display:block">Preview end</div>
+          <div class="toolbar" style="justify-content:center">
+            <button class="btn primary" onclick="doSend()">All good. SEND!</button>
+            <button class="btn" onclick="openSelect()">select Updates first…</button>
+          </div>
+          <div class="f" style="max-width:360px;margin:16px auto;text-align:center">
+            <label>send test mail</label>
+            <input id="testTo" value="mor@checker-soft.com">
+            <button class="btn" style="margin-top:8px" onclick="flash('Test mail mock → '+document.getElementById('testTo').value)">send test mail</button>
+          </div>
+          <p style="text-align:center"><a href="#" onclick="show('list');return false">Back to Newsletters</a></p>
+        </div>
+      </div>
+
+      <div class="panel" id="p-select">
+        <div class="callout email">Subtopic · select Updates (existing dual-list / Newsletter2Updates). Email channel only.</div>
+        <p class="muted">Newsletter: <b id="selTitle"></b></p>
+        <div class="dual">
+          <div><div class="muted">Unselected</div><select id="unsel" multiple></select></div>
+          <div><button class="btn" onclick="mv('unsel','sel')">&gt;</button><br><br><button class="btn" onclick="mv('sel','unsel')">&lt;</button></div>
+          <div><div class="muted">Selected</div><select id="sel" multiple></select></div>
+        </div>
+        <div class="toolbar" style="margin-top:12px">
+          <button class="btn primary" onclick="saveSel()">Save</button>
+          <button class="btn" onclick="show('list')">Back to Newsletters</button>
+        </div>
+      </div>
+
+      <div class="panel" id="p-modal">
+        <div class="callout inapp">Subtopic · client <b>login / main-menu modal</b> for In-app placements. Not part of Product Updates gallery.</div>
+        <p class="muted">Previewing: <b id="modalTitle">AI webinar — Sep 10</b> · use list <b>Preview</b> or Editor → Preview on client</p>
+        <div class="client">
+          <div class="cnav"><b>CHECKER</b><span class="on">Main menu</span><span>Management</span><span>Operation</span><span>Reports</span></div>
+          <div class="cbody">
+            <div class="blur">
+              <div class="callout email" style="margin:0 0 10px">Product what’s new stays separate (see show-updates mockup).</div>
+              <div class="formbox"><b>Main menu tiles</b><p class="muted" style="margin:6px 0 0">Operation · Reports · Settings…</p></div>
+            </div>
+            <div class="modal-box" id="modalBox">
+              <div class="ey">NEW WEBINAR</div>
+              <h3 id="mH">AI features you’re missing out on</h3>
+              <div id="mBody" class="muted">See how teams use Checker AI to cut review time.</div>
+              <div class="acts">
+                <button class="btn primary" id="mCta">Register now</button>
+                <button class="btn" onclick="flash('Remind me later · session dismiss')">Remind me later</button>
+              </div>
+              <label class="muted" style="display:flex;gap:8px;align-items:center;margin-top:12px"><input type="checkbox"> Don’t show again</label>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:12px"><button class="btn" onclick="show('list')">Back to list</button></div>
+      </div>
+
+      <div class="panel" id="p-banner">
+        <div class="callout inapp">Subtopic · client <b>contextual page banner</b> on a targeted workflow page.</div>
+        <p class="muted">Previewing: <b id="bannerTitle">Try map assignation</b> · pages: <span id="bannerPageLabel">shoppers-assignation.php;sets.php</span></p>
+        <div class="client">
+          <div class="cnav"><b>CHECKER</b><span>Main menu</span><span class="on">Operation</span><span>Reports</span></div>
+          <div class="cbody">
+            <div class="muted" style="margin-bottom:8px">Target scripts: <code id="bannerPage">shoppers-assignation.php;sets.php</code></div>
+            <div class="banner-box" id="bannerBox">
+              <div style="width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brand-d)">M</div>
+              <div style="flex:1"><strong id="bH">New: assign shoppers by map</strong><div class="muted" id="bBody">See where shoppers are and assign the closest one.</div></div>
+              <button class="btn primary" id="bCta">Try map view</button>
+              <span class="x" onclick="flash('Banner dismissed')">×</span>
+            </div>
+            <div class="formbox"><b>Search a shopper</b><p class="muted" style="margin:8px 0 0">Country · Region · Name… (page content unchanged)</p></div>
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:12px"><button class="btn" onclick="show('list')">Back to list</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const updates=[
+  {id:156,title:'Visit Report Templates Just Leveled Up',d:'2025-07-25'},
+  {id:155,title:'New Layout for Question Groups in PDF Reports',d:'2025-07-24'},
+  {id:152,title:'Dashboards in multiple languages',d:'2025-07-02'}
+];
+let items=[
+  {id:2,date:'04.05.2012 04:00',title:'Your system just got better!',channel:'Email',header:'clouds',body:'<p>Dear valued checker user,</p><p>You now have more capabilities…</p>',sent:'03.05.2012 18:13',linked:[156,155]},
+  {id:1,date:'24.11.2011 13:00',title:'Test',channel:'Email',header:'clouds',body:'<p>Test</p>',sent:'03.05.2012 17:55',linked:[]},
+  {id:91,date:'04.09.2026 16:20',title:'AI webinar — Sep 10',channel:'In-app',header:'clouds',body:'<p>See AI features you are missing.</p>',sent:'',linked:[],place:{type:'Login modal',pages:'main-menu.php',active:true,start:'2026-09-05',end:'2026-09-20',cta:'Register now',url:'https://…',dis:'Both (user chooses)',aud:'all',cos:[],aud2:''}},
+  {id:92,date:'05.09.2026 09:05',title:'Try map assignation',channel:'In-app',header:'none',body:'<p>Assign by map.</p>',sent:'',linked:[],place:{type:'Page banner',pages:'shoppers-assignation.php;sets.php',active:true,start:'',end:'',cta:'Try map view',url:'#',dis:'Both (user chooses)',aud:'select',cos:['Demo Co'],aud2:'Manager'}}
+];
+let editId=null, q='', chF='all';
+const $=id=>document.getElementById(id);
+function flash(m){const f=$('flash');f.textContent=m;f.classList.add('on');setTimeout(()=>f.classList.remove('on'),2400)}
+function show(p){
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  $('p-'+p).classList.add('on');
+}
+function channel(){return document.querySelector('input[name=ch]:checked').value}
+function applyAudienceUI(){
+  const all=$('f_aud').value==='all';
+  $('coBox').style.opacity=all?.45:1;
+  $('f_cos').disabled=all;
+}
+function selectAllCos(){Array.from($('f_cos').options).forEach(o=>o.selected=true);$('f_aud').value='select';applyAudienceUI()}
+function clearCos(){Array.from($('f_cos').options).forEach(o=>o.selected=false)}
+function selectedCos(){return Array.from($('f_cos').selectedOptions).map(o=>o.value)}
+function setCos(list){
+  const set=new Set(list||[]);
+  Array.from($('f_cos').options).forEach(o=>o.selected=set.has(o.value));
+}
+function applyChannelUI(){
+  const ch=channel();
+  document.querySelectorAll('#chPick label').forEach(l=>l.classList.toggle('on',l.dataset.ch===ch));
+  document.querySelectorAll('.email-only').forEach(el=>el.classList.toggle('hidden',ch!=='Email'));
+  document.querySelectorAll('.inapp-only').forEach(el=>el.classList.toggle('hidden',ch!=='In-app'));
+  $('hintEmail').classList.toggle('hidden',ch!=='Email');
+  $('hintInapp').classList.toggle('hidden',ch!=='In-app');
+  if(ch==='In-app') applyAudienceUI();
+}
+function renderList(){
+  const list=items.filter(n=>{
+    if(chF!=='all'&&n.channel!==chF)return false;
+    if(q&&!n.title.toLowerCase().includes(q.toLowerCase()))return false;
+    return true;
+  });
+  $('tbody').innerHTML=list.map(n=>{
+    const email=n.channel==='Email';
+    return `<tr>
+      <td><a href="#" onclick="openEdit(${n.id});return false">${n.date}</a></td>
+      <td>${n.title}</td>
+      <td><span class="pill ${email?'email':'inapp'}">${n.channel}</span></td>
+      <td>${n.header}</td>
+      <td>${n.sent||'—'}</td>
+      <td class="actions">
+        ${email?`<a onclick="openSend(${n.id})">Send</a><a onclick="openSelect(${n.id})">select</a>`:`<span class="muted">—</span>`}
+        <a onclick="openEdit(${n.id})">Edit</a>
+        ${!email?`<a onclick="openClientPreview(${n.id})">Preview</a>`:''}
+      </td>
+    </tr>`}).join('');
+}
+function fillClientPreview(n){
+  const place=n.place||{};
+  const isBanner=(place.type||'').toLowerCase().includes('banner');
+  const bodyTxt=(n.body||'').replace(/<[^>]+>/g,' ').trim()||n.title;
+  if(isBanner){
+    $('bannerTitle').textContent=n.title;
+    const pages=place.pages||'sets.php';
+    if($('bannerPageLabel')) $('bannerPageLabel').textContent=pages;
+    if($('bannerPage')) $('bannerPage').textContent=pages;
+    $('bH').textContent=n.title;
+    $('bBody').textContent=bodyTxt;
+    $('bCta').textContent=place.cta||'Learn more';
+    show('banner');
+  }else{
+    $('modalTitle').textContent=n.title;
+    $('mH').textContent=n.title;
+    $('mBody').textContent=bodyTxt;
+    $('mCta').textContent=place.cta||'Learn more';
+    show('modal');
+  }
+}
+function openClientPreview(id){
+  let n=null;
+  if(id) n=items.find(x=>x.id===id);
+  if(!n&&editId) n=items.find(x=>x.id===editId);
+  if(!n&&channel()==='In-app'){
+    n={title:$('f_title').value||'Untitled placement',body:$('f_body').innerHTML,place:{type:$('f_place').value,pages:$('f_pages').value,cta:$('f_cta').value}};
+  }
+  if(!n) n=items.find(x=>x.channel==='In-app');
+  if(!n){flash('No In-app record to preview');return}
+  editId=n.id||editId;
+  fillClientPreview(n);
+}
+function openNew(){
+  editId=null;
+  document.querySelector('input[name=ch][value=Email]').checked=true;
+  $('f_date').value=new Date().toLocaleString('en-GB');
+  $('f_title').value=''; $('f_body').innerHTML=''; $('f_sent').value='';
+  $('f_place').value='Login modal'; $('f_pages').value='main-menu.php'; $('f_act').checked=true;
+  $('f_cta').value=''; $('f_url').value='';
+  $('f_dis').value='Both (user chooses)';
+  $('f_aud').value='all'; clearCos(); $('f_aud2').value='';
+  applyChannelUI(); show('edit');
+}
+function openEdit(id){
+  const n=items.find(x=>x.id===id); if(!n)return;
+  editId=id;
+  document.querySelector(`input[name=ch][value="${n.channel}"]`).checked=true;
+  $('f_date').value=n.date; $('f_title').value=n.title; $('f_hdr').value=n.header;
+  $('f_body').innerHTML=n.body||''; $('f_sent').value=n.sent||'';
+  if(n.place){
+    $('f_place').value=n.place.type; $('f_pages').value=n.place.pages||'';
+    $('f_act').checked=!!n.place.active; $('f_start').value=n.place.start||''; $('f_end').value=n.place.end||'';
+    $('f_cta').value=n.place.cta||''; $('f_url').value=n.place.url||'';
+    $('f_dis').value=n.place.dis||'Both (user chooses)';
+    $('f_aud').value=(n.place.aud==='select'||(n.place.cos&&n.place.cos.length))?'select':'all';
+    setCos(n.place.cos||[]);
+    $('f_aud2').value=n.place.aud2||'';
+  }
+  applyChannelUI(); show('edit');
+}
+function save(){
+  const title=$('f_title').value.trim(); if(!title){flash('Title required');return}
+  const ch=channel();
+  const row={date:$('f_date').value,title,channel:ch,header:$('f_hdr').value,body:$('f_body').innerHTML,sent:editId?(items.find(i=>i.id===editId).sent||''):'',linked:editId?(items.find(i=>i.id===editId).linked||[]):[]};
+  if(ch==='In-app'){
+    const aud=$('f_aud').value;
+    row.place={type:$('f_place').value,pages:$('f_pages').value.trim(),active:$('f_act').checked,start:$('f_start').value,end:$('f_end').value,cta:$('f_cta').value,url:$('f_url').value,dis:$('f_dis').value,aud,cos:aud==='all'?[]:selectedCos(),aud2:$('f_aud2').value};
+  }
+  if(editId) Object.assign(items.find(i=>i.id===editId),row);
+  else items.unshift({id:Date.now(),...row});
+  flash('Saved · '+ch); show('list'); renderList();
+}
+function openSend(id){
+  if(id) editId=id;
+  const n=items.find(x=>x.id===editId)||items.find(x=>x.channel==='Email');
+  editId=n.id;
+  if(n.channel!=='Email'){
+    $('sendWarn').style.display='block'; $('sendBox').style.display='none'; show('send'); return;
+  }
+  $('sendWarn').style.display='none'; $('sendBox').style.display='block';
+  $('sendTitle').textContent=n.title;
+  const linked=n.linked.map(id=>updates.find(u=>u.id===id)).filter(Boolean);
+  $('sendPreview').innerHTML=`<h3 style="margin-top:0">${n.title}</h3>${n.body}`+
+    (linked.length?`<p><b>Contents:</b></p><ul>${linked.map(u=>`<li>${u.title}</li>`).join('')}</ul>`:'');
+  show('send');
+}
+function doSend(){
+  const n=items.find(x=>x.id===editId); n.sent=new Date().toLocaleString('en-GB');
+  flash('Newsletter sent! Sent at updated'); show('list'); renderList();
+}
+function openSelect(id){
+  if(id) editId=id;
+  const n=items.find(x=>x.id===editId)||items.find(x=>x.channel==='Email');
+  if(n.channel!=='Email'){flash('select Updates is Email-only');return}
+  editId=n.id; $('selTitle').textContent=n.title;
+  const sel=n.linked.slice();
+  $('unsel').innerHTML=updates.filter(u=>!sel.includes(u.id)).map(u=>`<option value="${u.id}">(${u.d}) ${u.title}</option>`).join('');
+  $('sel').innerHTML=sel.map(id=>{const u=updates.find(x=>x.id===id);return u?`<option value="${u.id}">(${u.d}) ${u.title}</option>`:''}).join('');
+  show('select');
+}
+function mv(a,b){Array.from($(a).selectedOptions).forEach(o=>$(b).appendChild(o))}
+function saveSel(){const n=items.find(x=>x.id===editId); n.linked=Array.from($('sel').options).map(o=>+o.value); flash(n.linked.length+' update(s) linked'); show('list'); renderList()}
+
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  if(b.dataset.p==='edit'&&editId==null) openNew();
+  else if(b.dataset.p==='send') openSend();
+  else if(b.dataset.p==='select') openSelect();
+  else if(b.dataset.p==='modal'){
+    const n=items.find(x=>x.channel==='In-app'&&!(x.place?.type||'').toLowerCase().includes('banner'))||items.find(x=>x.channel==='In-app');
+    if(n) fillClientPreview(Object.assign({},n,{place:Object.assign({},n.place,{type:'Login modal'})}));
+    else show('modal');
+  }
+  else if(b.dataset.p==='banner'){
+    const n=items.find(x=>x.channel==='In-app'&&(x.place?.type||'').toLowerCase().includes('banner'))||items.find(x=>x.channel==='In-app');
+    if(n) fillClientPreview(Object.assign({},n,{place:Object.assign({},n.place,{type:'Page banner'})}));
+    else show('banner');
+  }
+  else show(b.dataset.p);
+});
+document.querySelectorAll('input[name=ch]').forEach(r=>r.onchange=applyChannelUI);
+document.querySelectorAll('#chPick label').forEach(l=>l.onclick=()=>{l.querySelector('input').checked=true;applyChannelUI()});
+$('f_aud').onchange=applyAudienceUI;
+$('q').oninput=e=>{q=e.target.value;renderList()};
+$('chFilter').onchange=e=>{chF=e.target.value;renderList()};
+applyChannelUI(); renderList();
+</script>
+</body>
+</html>

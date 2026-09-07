@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UX Mockup — show-updates.php (Edge-style gallery + popup)</title>
+<style>
+:root{
+  --bg:#f3f5f4; --panel:#fff; --ink:#1a1f1c; --mut:#5c6760; --faint:#8a948d;
+  --line:#e2e7e3; --brand:#2f8f4e; --brand-d:#246f3c; --brand-soft:#e6f4eb;
+  --nav:#2f8f4e; --shadow:0 2px 8px rgba(20,40,30,.06),0 12px 32px rgba(20,40,30,.08);
+  --arrow:#fff; --arrow-ink:#222;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+.topnote{background:#fff8e6;border-bottom:1px solid #ecd9a8;padding:8px 18px;font-size:12px;color:#6a4e10}
+.topnav{background:var(--nav);color:#fff;padding:10px 18px;display:flex;gap:14px;flex-wrap:wrap;font-size:13px;align-items:center}
+.topnav b{margin-right:6px}
+.topnav span{cursor:pointer;opacity:.9}
+.topnav span.on{text-decoration:underline;font-weight:700;opacity:1}
+.topnav .wn{margin-left:auto;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.topnav .wn.has{background:#fff;color:var(--brand-d)}
+.shell{max-width:1120px;margin:0 auto;padding:28px 18px 72px}
+.view{display:none}.view.on{display:block}
+.hero{text-align:center;max-width:640px;margin:0 auto 28px}
+.hero h1{margin:0 0 8px;font-size:34px;font-weight:700;letter-spacing:-.03em}
+.hero p{margin:0;color:var(--mut);font-size:16px}
+.sec-title{text-align:center;font-size:22px;font-weight:700;margin:0 0 18px}
+.btn{border:1px solid #c9d0cb;background:#fff;padding:8px 16px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.btn.primary{background:var(--brand);border-color:var(--brand-d);color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent}
+.badge{display:inline-flex;min-width:18px;height:18px;align-items:center;justify-content:center;padding:0 5px;border-radius:999px;background:var(--brand);color:#fff;font-size:11px;font-weight:700}
+.callout{padding:10px 12px;border-radius:9px;margin-bottom:16px;font-size:12.5px;background:#fff8e6;border:1px solid #ecd9a8;color:#6a4e10;text-align:left}
+.toast{position:fixed;right:14px;bottom:14px;background:#1e3a28;color:#fff;padding:10px 14px;border-radius:8px;display:none;z-index:60}
+.toast.on{display:block}
+
+/* Main menu strip (subtopic) */
+.menu-shell{display:grid;grid-template-columns:1fr 320px;gap:16px}
+@media(max-width:860px){.menu-shell{grid-template-columns:1fr}}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;min-height:88px;box-shadow:var(--shadow)}
+.tile b{display:block;margin-bottom:4px}
+.tile span{color:var(--mut);font-size:12px}
+.wn-panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.wn-panel .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wn-panel .hd h2{margin:0;font-size:15px}
+.wn-item{padding:12px 14px;border-bottom:1px solid #eef2ef;cursor:pointer}
+.wn-item:hover{background:#f7fbf8}
+.wn-item .d{font-size:11px;color:var(--mut);font-weight:600}
+.wn-item h3{margin:3px 0 4px;font-size:13.5px}
+.wn-item p{margin:0;font-size:12px;color:var(--mut)}
+.wn-item.unread{border-left:3px solid var(--brand)}
+.wn-foot{padding:10px 14px;background:#f7faf7;border-top:1px solid var(--line)}
+
+/* Edge-style carousel */
+.carousel-wrap{position:relative;margin:0 auto 36px;padding:0 52px}
+.carousel{display:flex;gap:18px;overflow:hidden;scroll-behavior:smooth}
+.carousel-card{
+  flex:0 0 calc(33.333% - 12px);min-width:240px;background:var(--panel);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;
+  transition:transform .18s ease,box-shadow .18s ease;border:1px solid transparent;
+}
+.carousel-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(20,40,30,.14)}
+.carousel-card .media{height:168px;background-size:cover;background-position:center}
+.carousel-card .pad{padding:14px 16px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;flex:1}
+.tag{display:inline-flex;align-items:center;gap:6px;background:#ecefec;color:#3a433e;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+.carousel-card h3{margin:0 0 6px;font-size:18px;font-weight:700}
+.carousel-card p{margin:0 0 14px;color:var(--mut);font-size:13.5px;flex:1}
+.arrow{
+  position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
+  border:0;background:var(--arrow);color:var(--arrow-ink);box-shadow:0 2px 10px rgba(0,0,0,.12);
+  cursor:pointer;font-size:20px;line-height:1;z-index:2;display:flex;align-items:center;justify-content:center;
+}
+.arrow:hover{box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.arrow:disabled{opacity:.35;cursor:default;box-shadow:none}
+.arrow.prev{left:0}.arrow.next{right:0}
+@media(max-width:900px){
+  .carousel-card{flex:0 0 calc(50% - 9px)}
+}
+@media(max-width:600px){
+  .carousel-wrap{padding:0 40px}
+  .carousel-card{flex:0 0 100%}
+}
+
+/* Filters (Edge pill bar) */
+.filters{display:flex;justify-content:center;margin:8px 0 22px}
+.filters .bar{
+  display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;padding:6px;border-radius:999px;
+  box-shadow:0 2px 12px rgba(20,40,30,.08);border:1px solid var(--line);
+}
+.filters button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font:inherit;color:var(--mut);cursor:pointer;font-weight:600;font-size:13px}
+.filters button.on{background:#e8ece9;color:var(--ink)}
+
+/* Grid of all updates */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.gcard{
+  background:var(--panel);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;cursor:pointer;
+  min-height:210px;display:flex;flex-direction:column;border:1px solid transparent;transition:transform .15s ease;
+}
+.gcard:hover{transform:translateY(-2px)}
+.gcard .media{height:110px;background-size:cover;background-position:center;position:relative}
+.gcard .expand{position:absolute;right:10px;bottom:10px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;font-size:12px;color:#333;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.gcard .pad{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
+.gcard h3{margin:6px 0 4px;font-size:15px}
+.gcard .meta{font-size:11px;color:var(--mut);font-weight:600}
+.gcard .pill{margin-top:auto;align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+.gcard .pill.new{background:var(--brand-soft);color:var(--brand-d)}
+.gcard .pill.read{background:#eef1f4;color:#667}
+.empty{grid-column:1/-1;text-align:center;padding:40px;color:var(--mut)}
+.bulk{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 16px}
+
+/* Detail popup (Edge flyout) */
+.overlay{position:fixed;inset:0;background:rgba(18,28,22,.45);z-index:40;display:none;align-items:center;justify-content:center;padding:18px}
+.overlay.on{display:flex}
+.popup{
+  width:min(920px,100%);max-height:min(88vh,820px);background:#fff;border-radius:22px;box-shadow:0 24px 64px rgba(0,0,0,.28);
+  overflow:hidden;display:grid;grid-template-columns:1.1fr 1fr;position:relative;animation:pop .2s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:760px){.popup{grid-template-columns:1fr;max-height:92vh}}
+.popup .close{
+  position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:0;
+  background:#3a433e;color:#fff;font-size:18px;cursor:pointer;z-index:3;line-height:1;
+}
+.popup .media-col{background:#e8ece8;position:relative;min-height:280px;display:flex;flex-direction:column}
+.popup .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background-size:cover;background-position:center;min-height:260px}
+.popup .stage-inner{
+  width:min(100%,360px);aspect-ratio:16/10;border-radius:14px;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.12);
+  display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:13px;padding:16px;text-align:center;
+}
+.media-nav{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 12px 16px}
+.media-nav .dot{width:8px;height:8px;border-radius:50%;background:#c5cdc7;border:0;padding:0;cursor:pointer}
+.media-nav .dot.on{background:var(--brand);width:18px;border-radius:999px}
+.media-nav .m-arrow{
+  width:36px;height:36px;border-radius:50%;border:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.12);
+  cursor:pointer;font-size:16px;
+}
+.popup .copy{padding:28px 28px 24px;overflow:auto;display:flex;flex-direction:column}
+.popup .copy .tag{align-self:flex-start}
+.popup .copy h2{margin:10px 0 6px;font-size:26px;letter-spacing:-.02em;line-height:1.2}
+.popup .copy .date{color:var(--mut);font-size:13px;margin-bottom:14px}
+.popup .copy .body{color:#2c3530;font-size:14.5px;flex:1}
+.popup .copy .body ul{margin:8px 0;padding-left:18px}
+.popup .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;align-items:center}
+.popup .acts a.learn{color:var(--brand-d);font-weight:700;text-decoration:none}
+.popup .acts a.learn:hover{text-decoration:underline}
+.popup-item-nav{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="topnote"><b>UX mockup — show-updates.php</b> · Edge-style gallery. <b>Learn more</b> → full update (`show-updates.php?UpdateID=…`). Media = CT-uploaded images when present, else placeholder. Demo only.</div>
+<div class="topnav">
+  <b>CHECKER</b>
+  <span id="navMenu">Main menu</span>
+  <span id="navGallery" class="on">Checker updates</span>
+  <span>Settings</span>
+  <span>Log off</span>
+  <span class="wn has" id="navWn" title="Product what’s new">What’s new <span class="badge" id="wnCount">2</span></span>
+</div>
+
+<div class="shell">
+  <!-- Main menu subtopic -->
+  <div class="view" id="v-menu">
+    <div class="callout">Subtopic · main-menu <b>What’s new</b> (product updates). Opens the same gallery popup — not marketing.</div>
+    <div class="hero" style="text-align:left;max-width:none;margin-bottom:18px">
+      <h1 style="font-size:28px">Main menu</h1>
+      <p>Unread product notes sit beside menu tiles.</p>
+    </div>
+    <div class="menu-shell">
+      <div class="tiles">
+        <div class="tile"><b>Operation</b><span>Shoppers · Visits · Tasks</span></div>
+        <div class="tile"><b>Reports</b><span>Dashboards · Exports</span></div>
+        <div class="tile"><b>Management</b><span>Branches · Users</span></div>
+        <div class="tile"><b>Settings</b><span>Company · Alerts</span></div>
+      </div>
+      <aside class="wn-panel">
+        <div class="hd">
+          <h2>What’s new</h2>
+          <button class="btn" id="openGalleryFromMenu">Open gallery</button>
+        </div>
+        <div id="wnList"></div>
+        <div class="wn-foot"><button class="btn primary" id="seeAll">See all updates →</button></div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Edge-style gallery -->
+  <div class="view on" id="v-gallery">
+    <div class="hero">
+      <h1>What’s new in Checker</h1>
+      <p>Discover new product features and helpful tips to get the best experience out of Checker.</p>
+    </div>
+
+    <h2 class="sec-title">Latest updates</h2>
+    <div class="carousel-wrap">
+      <button class="arrow prev" id="carPrev" aria-label="Previous" type="button">‹</button>
+      <div class="carousel" id="carousel"></div>
+      <button class="arrow next" id="carNext" aria-label="Next" type="button">›</button>
+    </div>
+
+    <div class="filters">
+      <div class="bar" id="seg">
+        <button class="on" data-f="all">All updates</button>
+        <button data-f="unread">Unread</button>
+        <button data-f="read">Already read</button>
+      </div>
+    </div>
+
+    <div class="bulk">
+      <button class="btn" id="selAll">Select all visible</button>
+      <button class="btn" id="markRead" disabled>Mark as Read</button>
+      <button class="btn" id="markUnread" disabled>Mark as Unread</button>
+      <button class="btn ghost" id="backMenu">← Main menu</button>
+    </div>
+
+    <div class="grid" id="gallery"></div>
+  </div>
+</div>
+
+<!-- Edge-style detail popup -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+  <div class="popup" id="popup">
+    <button class="close" id="pClose" aria-label="Close" type="button">×</button>
+    <div class="media-col">
+      <div class="stage" id="pStage">
+        <div class="stage-inner" id="pStageInner">Placeholder art</div>
+      </div>
+      <div class="media-nav">
+        <button class="m-arrow" id="mPrev" type="button" aria-label="Previous media">‹</button>
+        <div id="mDots"></div>
+        <button class="m-arrow" id="mNext" type="button" aria-label="Next media">›</button>
+      </div>
+      <p style="margin:0 0 14px;padding:0 16px;font-size:11px;color:#6a7470;text-align:center">Uses CT-uploaded images when present; otherwise placeholder art</p>
+    </div>
+    <div class="copy">
+      <span class="tag" id="pTag">Product</span>
+      <h2 id="pTitle"></h2>
+      <div class="date" id="pDate"></div>
+      <div class="body" id="pBody"></div>
+      <div class="acts">
+        <a class="learn" id="pLearn" href="#">Open full update →</a>
+        <button class="btn primary" id="pToggle">Mark as read</button>
+        <button class="btn" id="pClose2">Close</button>
+      </div>
+      <div class="popup-item-nav">
+        <button class="btn" id="pPrevItem" type="button">‹ Previous update</button>
+        <button class="btn" id="pNextItem" type="button">Next update ›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const items=[
+  {id:156,date:'25 Jul 2025',title:'Visit Report Templates Just Leveled Up',short:'Faster setup and clearer templates for visit reports.',full:'<p>You can now build visit report templates with less friction.</p><ul><li>Improved layout blocks</li><li>Cleaner PDF output</li><li>Reusable sections across projects</li></ul>',read:false,cat:'Reports'},
+  {id:155,date:'24 Jul 2025',title:'New Layout for Question Groups in PDF Reports',short:'Question groups render more clearly in PDF exports.',full:'<p>PDF reports group questions with better hierarchy so reviewers scan faster.</p>',read:true,cat:'Reports'},
+  {id:152,date:'2 Jul 2025',title:'Dashboards in multiple languages',short:'Dashboards follow the user’s language preference.',full:'<p>Multi-language dashboard labels are now supported across standard widgets.</p>',read:true,cat:'Dashboards'},
+  {id:148,date:'27 May 2025',title:'Track the specific surveyor’s performance',short:'Focus quality reviews on individual surveyors.',full:'<p>New filters help you isolate surveyor performance without exporting raw data.</p>',read:false,cat:'Quality'},
+  {id:140,date:'12 Apr 2025',title:'Map assignation for shoppers',short:'Assign the closest shopper from the map view.',full:'<p>See shopper locations and assign visits with fewer clicks.</p>',read:true,cat:'Operation'}
+];
+const tones=[
+  'linear-gradient(135deg,#cfe9d8 0%,#7fbf96 100%)',
+  'linear-gradient(135deg,#d7e0ea 0%,#9eb4c9 100%)',
+  'linear-gradient(135deg,#efe6d6 0%,#d2b48c 100%)',
+  'linear-gradient(135deg,#e4d9ef 0%,#a992c2 100%)'
+];
+/** Placeholder slides only — no CT media field until scoped */
+function placeholderMedia(i){
+  return [
+    {label:'Placeholder art · Update #'+i.id,tone:i.id%tones.length},
+    {label:'Placeholder art · slide 2',tone:(i.id+1)%tones.length}
+  ];
+}
+function updateDeepLink(id){return 'show-updates.php?UpdateID='+id}
+
+let filter='all', selected=new Set(), openId=null, mediaIdx=0, view='gallery';
+const $=id=>document.getElementById(id);
+
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),2000)}
+function unreadCount(){return items.filter(i=>!i.read).length}
+function filtered(){return items.filter(i=>filter==='all'||(filter==='unread'?!i.read:i.read))}
+function syncWnBadge(){
+  const n=unreadCount();
+  $('wnCount').textContent=String(n);
+  $('navWn').classList.toggle('has',n>0);
+  $('wnCount').style.display=n?'inline-flex':'none';
+}
+function setView(v){
+  view=v;
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  $('v-'+v).classList.add('on');
+  $('navMenu').classList.toggle('on',v==='menu');
+  $('navGallery').classList.toggle('on',v==='gallery');
+  if(v==='gallery'){renderCarousel();renderGrid()}
+  else renderWn();
+  syncWnBadge();
+}
+
+function renderCarousel(){
+  const latest=items.slice(0,5);
+  const c=$('carousel');
+  c.innerHTML=latest.map(i=>`
+    <article class="carousel-card" data-id="${i.id}">
+      <div class="media" style="background:${tones[i.id%tones.length]}"></div>
+      <div class="pad">
+        <span class="tag">${i.cat}</span>
+        <h3>${i.title}</h3>
+        <p>${i.short}</p>
+        <button class="btn" type="button">Learn more</button>
+      </div>
+    </article>`).join('');
+  c.querySelectorAll('.carousel-card').forEach(el=>{
+    el.onclick=()=>openPopup(+el.dataset.id);
+  });
+  updateCarArrows();
+}
+function updateCarArrows(){
+  const c=$('carousel');
+  $('carPrev').disabled=c.scrollLeft<=4;
+  $('carNext').disabled=c.scrollLeft+c.clientWidth>=c.scrollWidth-4;
+}
+function scrollCar(dir){
+  const c=$('carousel');
+  const card=c.querySelector('.carousel-card');
+  const step=(card?card.offsetWidth:280)+18;
+  c.scrollBy({left:dir*step,behavior:'smooth'});
+  setTimeout(updateCarArrows,320);
+}
+
+function renderGrid(){
+  const list=filtered();
+  const g=$('gallery');
+  if(!list.length){g.innerHTML='<div class="empty">No updates in this filter.</div>';syncBulk();return}
+  g.innerHTML=list.map(i=>`
+    <article class="gcard" data-id="${i.id}">
+      <div class="media" style="background:${tones[i.id%tones.length]}">
+        <span class="expand" title="Open">⤢</span>
+      </div>
+      <div class="pad">
+        <label class="meta" onclick="event.stopPropagation()"><input type="checkbox" data-check="${i.id}" ${selected.has(i.id)?'checked':''}> Select</label>
+        <span class="tag" style="margin-top:8px">${i.cat}</span>
+        <h3>${i.title}</h3>
+        <div class="meta">${i.date}</div>
+        <span class="pill ${i.read?'read':'new'}">${i.read?'Already read':'New'}</span>
+      </div>
+    </article>`).join('');
+  g.querySelectorAll('.gcard').forEach(c=>c.onclick=()=>openPopup(+c.dataset.id));
+  g.querySelectorAll('[data-check]').forEach(c=>c.onchange=e=>{
+    const id=+c.dataset.check;
+    if(e.target.checked) selected.add(id); else selected.delete(id);
+    syncBulk();
+  });
+  syncBulk(); syncWnBadge();
+}
+function syncBulk(){
+  const on=selected.size>0;
+  $('markRead').disabled=!on; $('markUnread').disabled=!on;
+}
+
+function renderWn(){
+  const unread=items.filter(i=>!i.read);
+  const list=unread.length?unread:items.slice(0,3);
+  $('wnList').innerHTML=list.map(i=>`
+    <div class="wn-item ${i.read?'':'unread'}" data-id="${i.id}">
+      <div class="d">${i.date}${i.read?'':' · New'}</div>
+      <h3>${i.title}</h3>
+      <p>${i.short}</p>
+    </div>`).join('')||'<div class="wn-item"><p>You’re up to date.</p></div>';
+  $('wnList').querySelectorAll('.wn-item[data-id]').forEach(el=>el.onclick=()=>{
+    setView('gallery'); openPopup(+el.dataset.id);
+  });
+}
+
+function openPopup(id){
+  const i=items.find(x=>x.id===id); if(!i)return;
+  openId=id; mediaIdx=0;
+  // Deep-link parity with existing show-updates.php?UpdateID=
+  try{history.replaceState(null,'',updateDeepLink(id))}catch(e){}
+  $('overlay').classList.add('on');
+  document.body.style.overflow='hidden';
+  fillPopup();
+}
+function closePopup(){
+  $('overlay').classList.remove('on');
+  document.body.style.overflow='';
+  openId=null;
+  try{history.replaceState(null,'','show-updates.php')}catch(e){}
+}
+function fillPopup(){
+  const i=items.find(x=>x.id===openId); if(!i)return;
+  $('pTag').textContent=i.cat;
+  $('pTitle').textContent=i.title;
+  $('pDate').textContent=i.date+(i.read?' · Already read':' · Unread')+' · '+updateDeepLink(i.id);
+  // Full content = Short + Full description (existing Updates fields)
+  $('pBody').innerHTML='<p><b>'+i.short+'</b></p>'+i.full;
+  $('pToggle').textContent=i.read?'Mark as unread':'Mark as read';
+  const learn=$('pLearn');
+  learn.href=updateDeepLink(i.id);
+  learn.textContent='Open full update (UpdateID='+i.id+') →';
+  learn.onclick=e=>{e.preventDefault(); openPopup(i.id); toast('Deep link: '+updateDeepLink(i.id))};
+  renderMedia(i);
+  const list=filtered().length?filtered():items;
+  const idx=list.findIndex(x=>x.id===openId);
+  $('pPrevItem').disabled=idx<=0;
+  $('pNextItem').disabled=idx<0||idx>=list.length-1;
+}
+function renderMedia(i){
+  const media=placeholderMedia(i);
+  if(mediaIdx>=media.length) mediaIdx=0;
+  const m=media[mediaIdx];
+  $('pStage').style.background=tones[(m.tone??mediaIdx)%tones.length];
+  $('pStageInner').textContent=m.label;
+  $('mDots').innerHTML=media.map((_,n)=>`<button class="dot ${n===mediaIdx?'on':''}" data-n="${n}" type="button" aria-label="Media ${n+1}"></button>`).join('');
+  $('mDots').querySelectorAll('.dot').forEach(d=>d.onclick=()=>{mediaIdx=+d.dataset.n;renderMedia(i)});
+  $('mPrev').disabled=media.length<2;
+  $('mNext').disabled=media.length<2;
+}
+function stepMedia(dir){
+  const i=items.find(x=>x.id===openId); if(!i)return;
+  const media=placeholderMedia(i);
+  if(media.length<2)return;
+  mediaIdx=(mediaIdx+dir+media.length)%media.length;
+  renderMedia(i);
+}
+function stepItem(dir){
+  const list=filtered().length?filtered():items;
+  const idx=list.findIndex(x=>x.id===openId);
+  const next=list[idx+dir];
+  if(next) openPopup(next.id);
+}
+function setRead(ids, read){
+  items.forEach(i=>{if(ids.includes(i.id)) i.read=read});
+  selected.clear(); toast(read?'Marked as read':'Marked as unread');
+  renderCarousel(); renderGrid(); renderWn();
+  if(openId) fillPopup();
+}
+
+document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#seg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); filter=b.dataset.f; renderGrid();
+});
+$('carPrev').onclick=()=>scrollCar(-1);
+$('carNext').onclick=()=>scrollCar(1);
+$('carousel').onscroll=updateCarArrows;
+$('selAll').onclick=()=>{filtered().forEach(i=>selected.add(i.id));renderGrid()};
+$('markRead').onclick=()=>setRead([...selected],true);
+$('markUnread').onclick=()=>setRead([...selected],false);
+$('pClose').onclick=closePopup;
+$('pClose2').onclick=closePopup;
+$('overlay').onclick=e=>{if(e.target===$('overlay')) closePopup()};
+document.addEventListener('keydown',e=>{
+  if(!$('overlay').classList.contains('on')) return;
+  if(e.key==='Escape') closePopup();
+  if(e.key==='ArrowLeft') stepMedia(-1);
+  if(e.key==='ArrowRight') stepMedia(1);
+});
+$('mPrev').onclick=()=>stepMedia(-1);
+$('mNext').onclick=()=>stepMedia(1);
+$('pPrevItem').onclick=()=>stepItem(-1);
+$('pNextItem').onclick=()=>stepItem(1);
+$('pToggle').onclick=()=>{
+  const i=items.find(x=>x.id===openId); if(!i)return;
+  i.read=!i.read; toast(i.read?'Marked as read':'Marked as unread');
+  fillPopup(); renderCarousel(); renderGrid(); renderWn(); syncWnBadge();
+};
+$('navMenu').onclick=()=>setView('menu');
+$('navGallery').onclick=()=>setView('gallery');
+$('navWn').onclick=()=>setView('menu');
+$('openGalleryFromMenu').onclick=()=>setView('gallery');
+$('seeAll').onclick=()=>setView('gallery');
+$('backMenu').onclick=()=>setView('menu');
+
+setView('gallery');
+// Honor existing deep link: show-updates.php?UpdateID=1
+(function(){
+  const m=(location.search||'').match(/UpdateID=(\d+)/i);
+  if(m) openPopup(+m[1]);
+})();
+</script>
+</body>
+</html>
