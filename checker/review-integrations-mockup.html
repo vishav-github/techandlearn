@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Review Integrations — Mockup</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: #f6f7f9; color: #1a1d23;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+  }
+  .app { max-width: 1080px; margin: 0 auto; }
+  .app-header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 18px; }
+  .app-header h1 { font-size: 20px; margin: 0 0 2px; }
+  .app-header p { margin: 0; color: #6b7280; font-size: 13px; }
+  .badge-live { background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; letter-spacing:.02em; }
+
+  .mode-switch { display:flex; gap:6px; margin-bottom:18px; background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:4px; width:fit-content; }
+  .mode-btn { appearance:none; border:none; background:none; cursor:pointer; padding:8px 16px; font-size:12.5px; font-weight:700; color:#6b7280; border-radius:7px; }
+  .mode-btn.active { background:#4338ca; color:#fff; }
+  .mode-panel { display:none; }
+  .mode-panel.active { display:block; }
+
+  .tabs { display:flex; gap:4px; border-bottom:1px solid #e5e7eb; margin-bottom:20px; }
+  .tab-btn {
+    appearance:none; border:none; background:none; cursor:pointer;
+    padding:10px 16px; font-size:13.5px; font-weight:600; color:#6b7280;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active { color:#4338ca; border-bottom-color:#4338ca; }
+  .tab-btn .step-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border-radius:50%; background:#e5e7eb; color:#4b5563;
+    font-size:10.5px; margin-right:6px;
+  }
+  .tab-btn.active .step-num { background:#4338ca; color:#fff; }
+  .tab-btn.done .step-num { background:#16a34a; color:#fff; }
+
+  .panel { display:none; }
+  .panel.active { display:block; animation: fadein .15s ease; }
+  @keyframes fadein { from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:20px; margin-bottom:16px; }
+  .card h2 { font-size:15px; margin:0 0 4px; }
+  .card .sub { color:#6b7280; font-size:12.5px; margin:0 0 16px; }
+
+  .connect-grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  .connect-card { border:1px solid #e5e7eb; border-radius:10px; padding:18px; }
+  .connect-card-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .platform-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; color:#fff; flex-shrink:0; }
+  .icon-google { background:linear-gradient(135deg,#4285F4,#34A853); }
+  .icon-facebook { background:#1877F2; }
+  .connect-card h3 { margin:0; font-size:14px; }
+  .connect-card .platform-sub { font-size:11.5px; color:#9ca3af; }
+
+  select {
+    width:100%; padding:7px 8px; border:1px solid #d1d5db; border-radius:6px; font-size:12.5px; background:#fff;
+  }
+  .field-label { font-size:11.5px; color:#6b7280; font-weight:600; margin-bottom:5px; display:block; }
+
+  .btn {
+    appearance:none; border:none; border-radius:7px; padding:9px 16px; font-size:13px; font-weight:600;
+    cursor:pointer; transition: background .12s;
+  }
+  .btn-primary { background:#4338ca; color:#fff; }
+  .btn-primary:hover { background:#3730a3; }
+  .btn-secondary { background:#fff; color:#374151; border:1px solid #d1d5db; }
+  .btn-secondary:hover { background:#f9fafb; }
+  .btn-sm { padding:5px 10px; font-size:12px; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .btn-link { background:none; border:none; color:#4338ca; font-size:12px; font-weight:600; cursor:pointer; padding:0; }
+
+  .spinner { display:inline-block; width:13px; height:13px; border:2px solid #c7d2fe; border-top-color:#4338ca; border-radius:50%; animation:spin .6s linear infinite; vertical-align:-2px; margin-right:6px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; color:#6b7280; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; padding:8px 10px; border-bottom:1px solid #e5e7eb; }
+  td { padding:10px 10px; border-bottom:1px solid #f1f2f4; vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  .ext-name { font-weight:600; }
+  .ext-addr { color:#9ca3af; font-size:12px; }
+
+  .match-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
+  .match-high { background:#ecfdf5; color:#059669; }
+  .match-none { background:#fef2f2; color:#dc2626; }
+
+  .toggle { position:relative; display:inline-block; width:38px; height:21px; }
+  .toggle input { opacity:0; width:0; height:0; }
+  .slider { position:absolute; inset:0; background:#d1d5db; border-radius:999px; cursor:pointer; transition:.15s; }
+  .slider:before { content:""; position:absolute; height:15px; width:15px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.15s; box-shadow:0 1px 2px rgba(0,0,0,.2); }
+  .toggle input:checked + .slider { background:#4338ca; }
+  .toggle input:checked + .slider:before { transform:translateX(17px); }
+
+  .pill { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:600; }
+  .pill-ok { background:#ecfdf5; color:#059669; }
+  .pill-warn { background:#fffbeb; color:#b45309; }
+  .pill-err { background:#fef2f2; color:#dc2626; }
+  .dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+  .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; }
+  .search-input { flex:1; max-width:280px; padding:8px 10px; border:1px solid #d1d5db; border-radius:7px; font-size:13px; }
+
+  .credit-box { display:flex; align-items:center; justify-content:space-between; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:12px 16px; margin-bottom:16px; }
+  .credit-box .num { font-size:18px; font-weight:700; }
+  .credit-box .label { color:#6b7280; font-size:12px; }
+  .credit-bar { width:180px; height:6px; background:#e5e7eb; border-radius:99px; overflow:hidden; margin-top:6px; }
+  .credit-bar .fill { height:100%; background:#4338ca; width:62%; }
+
+  .settings-row { display:flex; justify-content:space-between; align-items:flex-start; padding:14px 0; border-bottom:1px solid #f1f2f4; gap:24px; }
+  .settings-row:last-child { border-bottom:none; }
+  .settings-row .label { font-weight:600; font-size:13.5px; }
+  .settings-row .help { color:#6b7280; font-size:12px; margin-top:3px; max-width:420px; }
+  .settings-row select, .settings-row input[type=text] { min-width:200px; }
+
+  .preview-review { display:flex; gap:12px; border:1px solid #e5e7eb; border-radius:10px; padding:14px; align-items:flex-start; }
+  .avatar { width:34px; height:34px; border-radius:50%; background:#e0e7ff; color:#4338ca; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+  .stars { color:#f59e0b; letter-spacing:1px; font-size:13px; }
+
+  .banner { display:flex; gap:10px; align-items:flex-start; background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; padding:10px 14px; border-radius:8px; font-size:12.5px; margin-bottom:16px; }
+  .footer-nav { display:flex; justify-content:space-between; margin-top:6px; }
+  .muted { color:#6b7280; }
+  code.small { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:11.5px; }
+
+  .account-details { display:none; border:1px solid #e5e7eb; border-radius:10px; padding:14px 16px; margin-top:14px; background:#fafafa; }
+  .account-details.show { display:block; }
+  .account-details .row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:12.5px; }
+  .account-details .row .k { color:#6b7280; }
+  .account-details .row .v { font-weight:600; }
+  .link-danger { color:#dc2626; font-size:12px; text-decoration:none; }
+
+  .source-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; }
+  .source-badge.google { background:#e8f0fe; color:#1a56db; }
+  .alert-note { display:flex; gap:8px; align-items:flex-start; background:#f9fafb; border:1px dashed #d1d5db; color:#4b5563; padding:10px 12px; border-radius:8px; font-size:12px; }
+
+  /* Admin accounts screen (settings-review-accounts.php style, modeled on settings-whatsappaccounts.php) */
+  .admin-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .admin-account-row { border:1px solid #e5e7eb; border-radius:10px; padding:16px; margin-bottom:12px; }
+  .admin-account-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .admin-account-title { display:flex; align-items:center; gap:10px; }
+  .admin-account-title .name { font-weight:700; font-size:14px; }
+  .admin-account-title .sub { font-size:11.5px; color:#6b7280; }
+  .admin-account-body { display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-top:14px; padding-top:14px; border-top:1px solid #f1f2f4; }
+  .admin-field .k { font-size:11px; color:#9ca3af; text-transform:uppercase; letter-spacing:.03em; margin-bottom:3px; }
+  .admin-field .v { font-size:12.5px; font-weight:600; }
+  .admin-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .help-box { background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px; font-size:12px; color:#4b5563; margin-bottom:16px; }
+  .help-box h4 { margin:0 0 6px; font-size:12.5px; }
+  .help-box ol { margin:0; padding-left:18px; }
+  .help-box li { margin-bottom:4px; }
+  .type-tag { font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:5px; }
+  .type-tag.google { background:#e8f0fe; color:#1a56db; }
+  .type-tag.facebook { background:#e7f0ff; color:#1877F2; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="app-header">
+    <div>
+      <h1>Review Integrations <span class="muted" style="font-weight:400;">— mockup</span></h1>
+      <p>Google &amp; Facebook review import — client-facing flow and the admin account list, modeled on <code class="small">settings-whatsappaccounts.php</code></p>
+    </div>
+    <span class="badge-live">MOCKUP · v1 scope</span>
+  </div>
+
+  <div class="mode-switch">
+    <button class="mode-btn active" onclick="showMode('client', this)">Client screen (per client)</button>
+    <button class="mode-btn" onclick="showMode('admin', this)">Admin: Connected Accounts (company-wide)</button>
+  </div>
+
+  <!-- ================= CLIENT MODE ================= -->
+  <div class="mode-panel active" id="mode-client">
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="connect" onclick="showTab('connect', this)"><span class="step-num">1</span>Connect</button>
+    <button class="tab-btn" data-tab="map" onclick="showTab('map', this)"><span class="step-num">2</span>Discover &amp; Map</button>
+    <button class="tab-btn" data-tab="manage" onclick="showTab('manage', this)"><span class="step-num">3</span>Manage Locations</button>
+    <button class="tab-btn" data-tab="settings" onclick="showTab('settings', this)"><span class="step-num">4</span>Settings</button>
+    <button class="tab-btn" data-tab="preview" onclick="showTab('preview', this)"><span class="step-num">5</span>Where it shows up</button>
+  </div>
+
+  <!-- TAB 1: CONNECT -->
+  <div class="panel active" id="panel-connect">
+    <div class="card">
+      <h2>Connect an account</h2>
+      <p class="sub">A Demo Fashion Retailer — Manager picks which already-connected account to use. Accounts themselves are connected once, company-wide, by an operator on the Admin screen.</p>
+      <div class="connect-grid">
+
+        <div class="connect-card">
+          <div class="connect-card-head">
+            <div class="platform-icon icon-google">G</div>
+            <div><h3>Google Business Profile</h3><div class="platform-sub">Choose from connected accounts</div></div>
+          </div>
+          <label class="field-label">Connected account</label>
+          <select id="google-select" onchange="onAccountPick('google')">
+            <option value="">— Select an account —</option>
+            <option value="1">reviews@ademofashion.com (26 locations)</option>
+            <option value="2">reviews@northgatehotels.com (8 locations)</option>
+            <option value="3">contact@urbanbistrogroup.com (14 locations)</option>
+          </select>
+          <div style="margin-top:10px;">
+            <button class="btn-link" onclick="showMode('admin', document.querySelectorAll('.mode-btn')[1])">Don't see the right account? Connect a new one on the Admin screen →</button>
+          </div>
+          <div class="account-details" id="google-details">
+            <div class="row"><span class="k">Connected account</span><span class="v">reviews@ademofashion.com</span></div>
+            <div class="row"><span class="k">Business Profile</span><span class="v">A Demo Fashion Retailer (Organization)</span></div>
+            <div class="row"><span class="k">Locations available</span><span class="v">26</span></div>
+            <div class="row"><span class="k">Scope</span><span class="v">Read reviews only</span></div>
+            <div class="row" style="border-top:1px solid #e5e7eb; margin-top:4px; padding-top:10px; justify-content:flex-end;">
+              <button class="btn btn-primary btn-sm" onclick="useAccount('google')">Use this account →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-card-head">
+            <div class="platform-icon icon-facebook">f</div>
+            <div><h3>Facebook Pages</h3><div class="platform-sub">Choose from connected accounts</div></div>
+          </div>
+          <label class="field-label">Connected account</label>
+          <select id="fb-select" onchange="onAccountPick('fb')">
+            <option value="">— Select an account —</option>
+            <option value="1">A Demo Fashion Retailer Ltd (Business Manager) · 4 Pages</option>
+            <option value="2">Northgate Hotels Group (Business Manager) · 6 Pages</option>
+          </select>
+          <div style="margin-top:10px;">
+            <button class="btn-link" onclick="showMode('admin', document.querySelectorAll('.mode-btn')[1])">Don't see the right account? Connect a new one on the Admin screen →</button>
+          </div>
+          <div class="account-details" id="fb-details">
+            <div class="row"><span class="k">Connected account</span><span class="v">A Demo Fashion Retailer Ltd</span></div>
+            <div class="row"><span class="k">Business Manager</span><span class="v">A Demo Fashion Retailer Ltd</span></div>
+            <div class="row"><span class="k">Pages available</span><span class="v">4</span></div>
+            <div class="row"><span class="k">Scope</span><span class="v">pages_read_user_content</span></div>
+            <div class="row" style="border-top:1px solid #e5e7eb; margin-top:4px; padding-top:10px; justify-content:flex-end;">
+              <button class="btn btn-primary btn-sm" onclick="useAccount('fb')">Use this account →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="banner">
+      ℹ️ A Manager-level user selects which company-connected Google/Facebook account belongs to this client, then confirms. Accounts are connected once (OAuth) on the company-wide Admin screen and can be reused or re-picked for any client whose locations live under that account.
+    </div>
+  </div>
+
+  <!-- TAB 2: DISCOVER & MAP -->
+  <div class="panel" id="panel-map">
+    <div class="card">
+      <h2>Discovered locations</h2>
+      <p class="sub">26 Google locations found under reviews@ademofashion.com. Confirm the suggested match, pick a different branch, create a new one, or ignore.</p>
+      <table>
+        <thead><tr>
+          <th style="width:32%">External location (Google)</th>
+          <th style="width:32%">Match to branch</th>
+          <th style="width:16%">Confidence</th>
+          <th style="width:20%">Action</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="ext-name">A Demo Fashion Retailer — Downtown</div><div class="ext-addr">142 Main St, Muktsar</div></td>
+            <td><select><option>Downtown Store (Branch #237069)</option><option>API Branch1</option><option>— none —</option></select></td>
+            <td><span class="match-badge match-high">● 96% match</span></td>
+            <td><select><option>Confirm match</option><option>Create new branch</option><option>Ignore</option></select></td>
+          </tr>
+          <tr>
+            <td><div class="ext-name">A Demo Fashion Retailer — Mall Outlet</div><div class="ext-addr">Westfield Mall, Unit 12</div></td>
+            <td><select><option>Mall Outlet (Branch #237102)</option><option>Downtown Store</option><option>— none —</option></select></td>
+            <td><span class="match-badge match-high">● 91% match</span></td>
+            <td><select><option>Confirm match</option><option>Create new branch</option><option>Ignore</option></select></td>
+          </tr>
+          <tr>
+            <td><div class="ext-name">Fashion Retailer — Riverside (New)</div><div class="ext-addr">88 Riverside Ave</div></td>
+            <td><select><option>— none —</option><option>Downtown Store</option><option>Mall Outlet</option></select></td>
+            <td><span class="match-badge match-none">✕ No match found</span></td>
+            <td><select onchange="this.style.background=(this.value==='Create new branch')?'#ecfdf5':'#fff'"><option>Create new branch</option><option>Choose existing branch</option><option selected>Ignore</option></select></td>
+          </tr>
+          <tr>
+            <td><div class="ext-name">Fashion Retailer — Airport Kiosk</div><div class="ext-addr">Terminal 2, Airside</div></td>
+            <td><select><option>— none —</option><option>Downtown Store</option></select></td>
+            <td><span class="match-badge match-none">✕ No match found</span></td>
+            <td><select><option>Create new branch</option><option>Choose existing branch</option><option selected>Ignore</option></select></td>
+          </tr>
+          <tr><td colspan="4" class="muted" style="text-align:center; padding:14px;">+ 22 more discovered locations…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer-nav">
+      <button class="btn btn-secondary" onclick="showTab('connect', document.querySelector('[data-tab=connect]'))">← Back</button>
+      <button class="btn btn-primary" onclick="showTab('manage', document.querySelector('[data-tab=manage]'))">Confirm selections →</button>
+    </div>
+  </div>
+
+  <!-- TAB 3: MANAGE -->
+  <div class="panel" id="panel-manage">
+    <div class="credit-box">
+      <div>
+        <div class="num">1,240 <span class="muted" style="font-size:12px; font-weight:400;">review-import credits remaining</span></div>
+        <div class="credit-bar"><div class="fill"></div></div>
+      </div>
+      <button class="btn btn-secondary btn-sm">Buy more credits</button>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <input class="search-input" type="text" placeholder="Search branches…">
+        <div>
+          <button class="btn btn-secondary btn-sm">Bulk enable</button>
+          <button class="btn btn-secondary btn-sm">Bulk disable</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Branch</th><th>Platform</th><th>Connected account</th><th>Status</th><th>Last synced</th><th>Enabled</th><th></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Downtown Store</td>
+            <td><span class="platform-icon icon-google" style="width:22px;height:22px;font-size:11px;display:inline-flex;">G</span></td>
+            <td class="muted" style="font-size:11.5px;">reviews@ademofashion.com</td>
+            <td><span class="pill pill-ok"><span class="dot"></span>Connected</span></td>
+            <td>4 min ago</td>
+            <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+            <td><a href="#" class="muted" style="font-size:12px;">Remove</a></td>
+          </tr>
+          <tr>
+            <td>Mall Outlet</td>
+            <td><span class="platform-icon icon-google" style="width:22px;height:22px;font-size:11px;display:inline-flex;">G</span></td>
+            <td class="muted" style="font-size:11.5px;">reviews@ademofashion.com</td>
+            <td><span class="pill pill-ok"><span class="dot"></span>Connected</span></td>
+            <td>4 min ago</td>
+            <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+            <td><a href="#" class="muted" style="font-size:12px;">Remove</a></td>
+          </tr>
+          <tr>
+            <td>Downtown Store</td>
+            <td><span class="platform-icon icon-facebook" style="width:22px;height:22px;font-size:11px;display:inline-flex;">f</span></td>
+            <td class="muted" style="font-size:11.5px;">A Demo Fashion Retailer Ltd</td>
+            <td><span class="pill pill-warn"><span class="dot"></span>Needs reauthorization</span></td>
+            <td>3 days ago</td>
+            <td><label class="toggle"><input type="checkbox"><span class="slider"></span></label></td>
+            <td><a href="#" style="font-size:12px;">Reconnect</a></td>
+          </tr>
+          <tr>
+            <td>Mall Outlet</td>
+            <td><span class="platform-icon icon-facebook" style="width:22px;height:22px;font-size:11px;display:inline-flex;">f</span></td>
+            <td class="muted" style="font-size:11.5px;">A Demo Fashion Retailer Ltd</td>
+            <td><span class="pill pill-err"><span class="dot"></span>Sync error — see details</span></td>
+            <td>Failed 1 hr ago</td>
+            <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+            <td><a href="#" style="font-size:12px;">View error</a></td>
+          </tr>
+          <tr>
+            <td>Riverside <span class="muted" style="font-size:11px;">(newly created)</span></td>
+            <td><span class="platform-icon icon-google" style="width:22px;height:22px;font-size:11px;display:inline-flex;">G</span></td>
+            <td class="muted" style="font-size:11.5px;">reviews@ademofashion.com</td>
+            <td><span class="pill pill-ok"><span class="dot"></span>Connected</span></td>
+            <td>Never synced yet</td>
+            <td><label class="toggle"><input type="checkbox"><span class="slider"></span></label></td>
+            <td><a href="#" class="muted" style="font-size:12px;">Remove</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:12px;">Sync error and "needs reauthorization" states are surfaced here explicitly — never a silent failure the client has to guess about.</p>
+  </div>
+
+  <!-- TAB 4: SETTINGS -->
+  <div class="panel" id="panel-settings">
+    <div class="card">
+      <h2>Client-wide defaults</h2>
+      <p class="sub">Applies to every branch under this client unless changed later.</p>
+
+      <div class="settings-row">
+        <div>
+          <div class="label">Fetch period</div>
+          <div class="help">Only import reviews posted within this window. Reviews outside it are fetched but skipped — never imported or charged against your credit balance.</div>
+        </div>
+        <select>
+          <option>Last 30 days</option>
+          <option selected>Last 90 days</option>
+          <option>Last 6 months</option>
+          <option>Last 12 months</option>
+          <option>All available</option>
+        </select>
+      </div>
+
+      <div class="settings-row">
+        <div>
+          <div class="label">Auto-approve imported reviews</div>
+          <div class="help">On: reviews count in reports immediately. Off: reviews land in the existing pending-approval queue for manual review first.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+
+      <div class="alert-note" style="margin-top:8px;">
+        ⓘ No separate alert setting here — imported reviews are a normal Criticism, so alert rules are configured where all other alerts live (existing <strong>Alerts</strong> page), with "Google Imported" selectable as a condition just like any other source.
+      </div>
+
+      <div style="text-align:right; margin-top:16px;">
+        <button class="btn btn-primary">Save settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: PREVIEW -->
+  <div class="panel" id="panel-preview">
+    <div class="card">
+      <h2>Where an imported review actually shows up</h2>
+      <p class="sub">No new report screens — it lands as a normal evaluation record, so existing dashboards, KPI reports, and the approval queue already understand it.</p>
+
+      <div class="preview-review">
+        <div class="avatar">JS</div>
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong>Jamie S.</strong>
+            <span class="source-badge google">🇬 Google Imported</span>
+          </div>
+          <div class="stars">★★★★☆</div>
+          <p style="margin:6px 0 4px;">"Great service at the Downtown location, staff were super helpful finding my size. Only downside was the wait at checkout."</p>
+          <div class="muted" style="font-size:11.5px;">Branch: Downtown Store · Imported 2 hours ago · Status: <span style="color:#059669;font-weight:600;">Approved</span></div>
+        </div>
+      </div>
+
+      <p class="muted" style="font-size:12.5px; margin-top:14px;">This same record is what powers: the branch's KPI/property score, the chapter/subchapter breakdown ("Google Reviews" chapter, auto-created once per client), the existing review-approval queue if auto-approve is off, and any Alert rule (on the existing Alerts page) scoped to this review's score or source. The "Google Imported" badge is a distinct, always-visible source flag — not just an internal field — so reviewers can tell imported vs. checker-collected reviews apart at a glance everywhere reviews are listed.</p>
+    </div>
+  </div>
+
+  </div><!-- /mode-client -->
+
+  <!-- ================= ADMIN MODE ================= -->
+  <div class="mode-panel" id="mode-admin">
+    <div class="card">
+      <h2>Connected Review Accounts <span class="muted" style="font-weight:400; font-size:12.5px;">— company-wide, reused across any client</span></h2>
+      <p class="sub">Modeled directly on the existing <code class="small">settings-whatsappaccounts.php</code> screen: one company-wide list of connected external accounts, each independently OAuth-connected, tested, and reused. A client is never tied to an account by a field — the Discovery &amp; Mapping step (per client) resolves that by matching each account's locations to branches.</p>
+
+      <div class="help-box">
+        <h4>How to connect a new account</h4>
+        <ol>
+          <li><strong>Google Business Profile:</strong> click "Connect new Google account" → Google's own OAuth consent screen → the signed-in Google user grants access to their Business Profile (or Organization) → Checker discovers every location under that grant in one step.</li>
+          <li><strong>Facebook Pages:</strong> click "Connect new Facebook account" → Facebook's OAuth/Business Manager consent screen, requesting <code class="small">pages_read_user_content</code> → grants access to every Page in that Business Manager.</li>
+        </ol>
+      </div>
+
+      <div class="admin-toolbar">
+        <input class="search-input" type="text" placeholder="Search connected accounts…">
+        <div>
+          <button class="btn btn-primary btn-sm" onclick="simulateAdminConnect('google')">+ Connect new Google account</button>
+          <button class="btn btn-primary btn-sm" onclick="simulateAdminConnect('facebook')">+ Connect new Facebook account</button>
+        </div>
+      </div>
+
+      <div class="admin-account-row">
+        <div class="admin-account-head">
+          <div class="admin-account-title">
+            <div class="platform-icon icon-google" style="width:30px;height:30px;font-size:13px;">G</div>
+            <div>
+              <div class="name">reviews@ademofashion.com <span class="type-tag google">Google Business Profile</span></div>
+              <div class="sub">A Demo Fashion Retailer (Organization)</div>
+            </div>
+          </div>
+          <span class="pill pill-ok"><span class="dot"></span>Connected</span>
+        </div>
+        <div class="admin-account-body">
+          <div class="admin-field"><div class="k">Locations</div><div class="v">26</div></div>
+          <div class="admin-field"><div class="k">Used by clients</div><div class="v">A Demo Fashion Retailer</div></div>
+          <div class="admin-field"><div class="k">Scope</div><div class="v">Read reviews only</div></div>
+          <div class="admin-field"><div class="k">Connected</div><div class="v">12 Aug 2026</div></div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-secondary btn-sm">Test Connectivity</button>
+          <button class="btn btn-secondary btn-sm">Re-run Discovery</button>
+          <button class="btn btn-secondary btn-sm">Reconnect</button>
+          <button class="btn btn-secondary btn-sm" style="color:#dc2626;">Disconnect</button>
+        </div>
+      </div>
+
+      <div class="admin-account-row">
+        <div class="admin-account-head">
+          <div class="admin-account-title">
+            <div class="platform-icon icon-google" style="width:30px;height:30px;font-size:13px;">G</div>
+            <div>
+              <div class="name">reviews@northgatehotels.com <span class="type-tag google">Google Business Profile</span></div>
+              <div class="sub">Northgate Hotels Group (Organization)</div>
+            </div>
+          </div>
+          <span class="pill pill-ok"><span class="dot"></span>Connected</span>
+        </div>
+        <div class="admin-account-body">
+          <div class="admin-field"><div class="k">Locations</div><div class="v">8</div></div>
+          <div class="admin-field"><div class="k">Used by clients</div><div class="v">Northgate Hotels</div></div>
+          <div class="admin-field"><div class="k">Scope</div><div class="v">Read reviews only</div></div>
+          <div class="admin-field"><div class="k">Connected</div><div class="v">03 Jul 2026</div></div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-secondary btn-sm">Test Connectivity</button>
+          <button class="btn btn-secondary btn-sm">Re-run Discovery</button>
+          <button class="btn btn-secondary btn-sm">Reconnect</button>
+          <button class="btn btn-secondary btn-sm" style="color:#dc2626;">Disconnect</button>
+        </div>
+      </div>
+
+      <div class="admin-account-row">
+        <div class="admin-account-head">
+          <div class="admin-account-title">
+            <div class="platform-icon icon-facebook" style="width:30px;height:30px;font-size:13px;">f</div>
+            <div>
+              <div class="name">A Demo Fashion Retailer Ltd <span class="type-tag facebook">Facebook Pages</span></div>
+              <div class="sub">Business Manager · pages_read_user_content</div>
+            </div>
+          </div>
+          <span class="pill pill-warn"><span class="dot"></span>Token expiring in 6 days</span>
+        </div>
+        <div class="admin-account-body">
+          <div class="admin-field"><div class="k">Pages</div><div class="v">4</div></div>
+          <div class="admin-field"><div class="k">Used by clients</div><div class="v">A Demo Fashion Retailer</div></div>
+          <div class="admin-field"><div class="k">Scope</div><div class="v">pages_read_user_content</div></div>
+          <div class="admin-field"><div class="k">Connected</div><div class="v">12 Aug 2026</div></div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-secondary btn-sm">Test Connectivity</button>
+          <button class="btn btn-secondary btn-sm">Re-run Discovery</button>
+          <button class="btn btn-primary btn-sm">Reconnect now</button>
+          <button class="btn btn-secondary btn-sm" style="color:#dc2626;">Disconnect</button>
+        </div>
+      </div>
+
+      <div class="admin-account-row" id="new-account-row" style="display:none;">
+        <div class="admin-account-head">
+          <div class="admin-account-title">
+            <div class="platform-icon" id="new-account-icon" style="width:30px;height:30px;font-size:13px;">?</div>
+            <div>
+              <div class="name" id="new-account-name">Connecting…</div>
+              <div class="sub" id="new-account-sub">Waiting for OAuth consent…</div>
+            </div>
+          </div>
+          <span class="pill pill-warn" id="new-account-status"><span class="spinner"></span>Connecting</span>
+        </div>
+      </div>
+
+      <p class="muted" style="font-size:12px; margin-top:4px;">Same idea as WhatsApp accounts: any number of accounts, each tested independently, each reusable by whichever client's branches match its discovered locations — nothing here is hard-linked to a single client record.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showMode(name, btn) {
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('mode-' + name).classList.add('active');
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function showTab(name, btn) {
+  document.querySelectorAll('#mode-client .panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('#mode-client .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function onAccountPick(which) {
+  const sel = document.getElementById(which + '-select');
+  const details = document.getElementById(which + '-details');
+  if (sel.value) {
+    details.classList.add('show');
+  } else {
+    details.classList.remove('show');
+  }
+}
+
+function useAccount(which) {
+  document.querySelector('[data-tab=connect]').classList.add('done');
+  showTab('map', document.querySelector('[data-tab=map]'));
+}
+
+function simulateAdminConnect(platform) {
+  const row = document.getElementById('new-account-row');
+  const icon = document.getElementById('new-account-icon');
+  const name = document.getElementById('new-account-name');
+  const sub = document.getElementById('new-account-sub');
+  const status = document.getElementById('new-account-status');
+
+  row.style.display = 'block';
+  icon.className = 'platform-icon ' + (platform === 'google' ? 'icon-google' : 'icon-facebook');
+  icon.textContent = platform === 'google' ? 'G' : 'f';
+  name.textContent = 'Connecting…';
+  sub.textContent = 'Waiting for OAuth consent…';
+  status.innerHTML = '<span class="spinner"></span>Connecting';
+  row.scrollIntoView({behavior:'smooth', block:'center'});
+
+  setTimeout(() => {
+    if (platform === 'google') {
+      name.textContent = 'contact@urbanbistrogroup.com';
+      sub.textContent = 'Urban Bistro Group (Organization) · 14 locations found';
+    } else {
+      name.textContent = 'Urban Bistro Group Ltd';
+      sub.textContent = 'Business Manager · pages_read_user_content · 5 Pages found';
+    }
+    status.innerHTML = '<span class="dot"></span>Connected';
+    status.className = 'pill pill-ok';
+  }, 1200);
+}
+</script>
+</body>
+</html>
