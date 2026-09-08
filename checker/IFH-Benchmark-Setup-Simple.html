@@ -87,6 +87,51 @@
   .mkt:after{content:"Mkt";position:absolute;top:-15px;left:-9px;font-size:9px;color:var(--warn);font-weight:700}
   .bar-val{text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
   .hidden{display:none}
+  /* ---- prepaid credit wallet / business model ---- */
+  .wallet{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+    border-radius:12px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:6px}
+  .wallet .bal{display:flex;flex-direction:column;line-height:1.25}
+  .wallet .bal .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);font-weight:700}
+  .wallet .bal .v{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+  .wallet .sep{width:1px;align-self:stretch;background:var(--line2)}
+  .wallet .meta{font-size:12px;color:var(--mut)}
+  .wallet .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .simchk{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mut)}
+  .simchk input{accent-color:var(--warn)}
+  .lowbal .v{color:var(--bad)}
+  .freeze{display:flex;gap:9px;background:var(--warn-soft);border:1px solid #f0e0bf;border-radius:9px;
+    padding:10px 12px;font-size:12.5px;color:#7a5410;margin:10px 0}
+  .freeze svg{width:16px;height:16px;flex:none;margin-top:1px}
+  .usage{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:12px}
+  .usage th,.usage td{padding:8px 11px;border-bottom:1px solid var(--line2);text-align:left}
+  .usage th{background:#fafbfd;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--faint);font-weight:700}
+  .usage tr:last-child td{border-bottom:0}
+  .usage td.num,.usage th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .mult{font-size:10.5px;font-weight:800;color:var(--warn);background:var(--warn-soft);border:1px solid #f0e0bf;
+    padding:1px 6px;border-radius:20px;margin-left:5px}
+  .slab{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    margin-bottom:8px;cursor:pointer;background:#fff}
+  .slab:hover{border-color:var(--brand);background:var(--brand-soft)}
+  .slab .c{font-weight:700}.slab .p{margin-left:auto;font-weight:700}
+  .slab .u{font-size:11.5px;color:var(--mut)}
+  /* ---- promotion (company has never used the module) ---- */
+  .promo{background:linear-gradient(135deg,#eaf2fb 0%,#f4f0fd 100%);border:1px solid #cfe0f2;border-radius:14px;
+    padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .promo .tag{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;letter-spacing:.05em;
+    color:var(--purple);background:#fff;border:1px solid #ddd2f6;padding:3px 10px;border-radius:20px}
+  .promo h3{margin:10px 0 4px;font-size:19px;font-weight:750}
+  .promo p.lead{margin:0 0 14px;color:#42506a;font-size:13px;max-width:640px}
+  .promo .bens{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+  @media(max-width:760px){.promo .bens{grid-template-columns:1fr}}
+  .ben{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .ben b{display:block;font-size:12.5px;margin-bottom:3px}
+  .ben span{font-size:12px;color:var(--mut)}
+  .promo .cta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .promo .fine{font-size:11.5px;color:var(--mut);margin-top:10px}
+  .demo{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+  .demo button{border:0;background:#fff;padding:5px 10px;font-size:11px;font-weight:700;color:var(--mut);cursor:pointer}
+  .demo button.active{background:var(--warn);color:#fff}
+  .demolbl{font-size:10.5px;color:var(--faint);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:2px}
 </style>
 </head>
 <body>
@@ -97,16 +142,22 @@
   </div>
 
   <div class="wrap">
+    <!-- COMPANY CREDIT WALLET (business model) -->
+    <div class="wallet" id="wallet"></div>
+
+    <!-- PROMOTION — shown to any user when the company has never used the module -->
+    <div id="promo"></div>
+
     <!-- LIST -->
     <div id="listView">
       <div class="pagehead">
         <div><h2>Benchmark groups</h2><p>Each group is a set of clients that compare against each other, anonymously. A client belongs to one group.</p></div>
         <div class="r"><button class="btn sm" onclick="newGroup()">+ New group</button></div>
       </div>
-      <span class="flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Benchmarking enabled for this company</span>
-      <span class="flag info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Who can see it is a paid setting per client — managed in billing</span>
+      <span id="listFlags"><span class="flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Always available to managers</span>
+      <span class="flag info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Runs on prepaid credits — you only pay when it calculates</span></span>
       <div class="card" style="margin-top:14px"><div class="card-b" style="padding:0">
-        <table><thead><tr><th>Group</th><th class="num">Clients</th><th>Benchmarks on</th><th>Refresh</th><th>Status</th><th></th></tr></thead>
+        <table><thead><tr><th>Group</th><th class="num">Clients</th><th>Benchmarks on</th><th>Period &amp; frequency</th><th class="num">Est. credits/mo</th><th>Status</th><th></th></tr></thead>
         <tbody id="groupRows"></tbody></table>
       </div></div>
     </div>
@@ -146,15 +197,27 @@
       </div>
 
       <div class="card">
-        <div class="card-h"><h2><span class="step">3</span>Refresh</h2><p>How often peer averages recalculate. The period follows each client's own reporting cycle.</p></div>
+        <div class="card-h"><h2><span class="step">3</span>Period, frequency &amp; billing</h2><p>Two separate controls: <b>which reviews</b> the comparison is built from, and <b>how often</b> that period is recomputed. Each run consumes credits — one per distinct review it reads.</p></div>
         <div class="card-b">
-          <div class="seg" id="refresh">
-            <button data-r="monthly" onclick="setRefresh('monthly')">Monthly</button>
-            <button data-r="weekly" onclick="setRefresh('weekly')">Weekly</button>
+          <label class="f">Benchmark period — which reviews the comparison is built from</label>
+          <div class="seg" id="periodSeg">
+            <button data-p="current" onclick="setPeriod('current')">Current month</button>
+            <button data-p="prevmonth" onclick="setPeriod('prevmonth')">Previous month</button>
+            <button data-p="quarter" onclick="setPeriod('quarter')">Quarter</button>
           </div>
+          <p class="cap" id="periodCap"></p>
+
+          <label class="f" style="margin-top:14px">Recalculation frequency — how often that period is recomputed</label>
+          <div class="seg" id="freqSeg">
+            <button data-r="close" onclick="setFreq('close')">At period close</button>
+            <button data-r="monthly" onclick="setFreq('monthly')">Monthly</button>
+            <button data-r="weekly" onclick="setFreq('weekly')">Weekly</button>
+          </div>
+          <p class="cap" id="freqCap"></p>
+          <div id="usageBox"></div>
           <div class="facts" style="margin-top:12px">
-            <span class="fact"><b>Period:</b> follows the client's reporting cycle (<code>DateCycleExtent</code>)</span>
             <span class="fact"><b>Privacy:</b> comparisons with too few peers are hidden automatically</span>
+            <span class="fact"><b>Billing:</b> prepaid credits, drawn from the company balance</span>
           </div>
         </div>
       </div>
@@ -175,6 +238,13 @@
           <div class="toolbar">
             <div class="grp">Report: <b>Section Analysis</b></div>
             <label class="bmk"><input type="checkbox" id="bmk" checked onchange="renderPreview()"> Benchmark</label>
+            <div class="grp">Period: <select id="rperiod" onchange="renderPreview()">
+              <option value="aug">Aug 2026</option>
+              <option value="sep">Sep 2026</option>
+              <option value="q3">Q3 2026</option>
+              <option value="may">May 2026</option>
+              <option value="custom">12–26 Aug 2026 (custom)</option>
+            </select></div>
             <div class="grp">Compare by: <select id="rchar" onchange="renderPreview()"></select></div>
             <div class="seg rspace"><button id="m-table" class="active" onclick="setMode('table')">Table</button><button id="m-chart" onclick="setMode('chart')">Chart</button></div>
           </div>
@@ -198,24 +268,73 @@
     'star|5-star':[85,80],'star|4-star':[77,78],'star|3-star':[70,72],
     'region|Gulf':[81,77],'region|Levant':[76,75],'country|UAE':[83,79],'country|KSA':[78,77]};
   const SECTIONS=[['Reservation',82,76],['Check-in',88,85],['Housekeeping',74,79],['F&B service',80,78],['Spa',69,73]];
+  // rev = the client's own reviews in a full month; the pool count is the sum across members × period factor.
   const POOL=[
-    {id:'rotana',name:'Rotana Hotels',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
-    {id:'jumeirah',name:'Jumeirah Group',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star'],region:['Gulf'],country:['UAE']}},
-    {id:'address',name:'Address Hotels',chars:{rest:['All Day Dining','Bar & Lounge'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
-    {id:'emaar',name:'Emaar Hospitality',chars:{rest:['All Day Dining','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
-    {id:'millennium',name:'Millennium Hotels',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['4-star'],region:['Gulf','Levant'],country:['UAE','KSA']}},
-    {id:'time',name:'Time Hotels',chars:{rest:['All Day Dining','Bar & Lounge'],star:['4-star','3-star'],region:['Gulf'],country:['UAE']}},
-    {id:'rove',name:'Rove Hotels',chars:{rest:['All Day Dining'],star:['3-star','4-star'],region:['Gulf'],country:['UAE']}},
-    {id:'rixos',name:'Rixos Hotels',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star'],region:['Gulf','Levant'],country:['UAE','KSA']}},
-    {id:'hilton',name:'Hilton MEA',chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE','KSA']}},
-    {id:'citycenter',name:'City Center Hotel',chars:{star:['3-star'],region:['Gulf'],country:['UAE']}}, // no restaurants → drops "Type of restaurant"
+    {id:'rotana',name:'Rotana Hotels',rev:800,chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'jumeirah',name:'Jumeirah Group',rev:620,chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star'],region:['Gulf'],country:['UAE']}},
+    {id:'address',name:'Address Hotels',rev:380,chars:{rest:['All Day Dining','Bar & Lounge'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'emaar',name:'Emaar Hospitality',rev:200,chars:{rest:['All Day Dining','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'millennium',name:'Millennium Hotels',rev:260,chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['4-star'],region:['Gulf','Levant'],country:['UAE','KSA']}},
+    {id:'time',name:'Time Hotels',rev:180,chars:{rest:['All Day Dining','Bar & Lounge'],star:['4-star','3-star'],region:['Gulf'],country:['UAE']}},
+    {id:'rove',name:'Rove Hotels',rev:120,chars:{rest:['All Day Dining'],star:['3-star','4-star'],region:['Gulf'],country:['UAE']}},
+    {id:'rixos',name:'Rixos Hotels',rev:300,chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star'],region:['Gulf','Levant'],country:['UAE','KSA']}},
+    {id:'hilton',name:'Hilton MEA',rev:340,chars:{rest:['All Day Dining','Bar & Lounge','Dining'],star:['5-star','4-star'],region:['Gulf'],country:['UAE','KSA']}},
+    {id:'citycenter',name:'City Center Hotel',rev:90,chars:{star:['3-star'],region:['Gulf'],country:['UAE']}}, // no restaurants → drops "Type of restaurant"
   ];
+  /* TWO SEPARATE CONTROLS.
+     PERIOD  = which reviews the comparison is built from. Both sides (you and the market) always
+               cover the same window, so this is what the report has to match on.
+     FREQ    = how often that window is recomputed. Only meaningful while the window is still OPEN;
+               a closed window (Previous month) can never change, so frequency is disabled for it.
+     win     = reviews inside one full window, relative to one month of pool volume.
+     months  = length of the window in months. */
+  const PERIOD={
+    current:  {label:'Current month',  win:1.0, months:1, open:true,
+               note:'the month in progress — provisional until the month closes'},
+    prevmonth:{label:'Previous month', win:1.0, months:1, open:false,
+               note:'the last completed month — computed once, then never changes'},
+    quarter:  {label:'Quarter',        win:3.1, months:3, open:true,
+               note:'the last ~3 months — a bigger sample, best when peer groups are thin'}
+  };
+  const FREQ={
+    close:  {label:'At period close', note:'one run when the window ends — cheapest and settled'},
+    monthly:{label:'Monthly',         note:'refreshes an open window once a month'},
+    weekly: {label:'Weekly',          note:'keeps an open window live, recomputed every week'}
+  };
+  const perOf=g=>PERIOD[g.period]||PERIOD.prevmonth;
+  // Runs across ONE full window, for the chosen frequency.
+  function runsPerWindow(g){
+    const p=perOf(g); if(!p.open||g.freq==='close') return 1;
+    return g.freq==='weekly' ? Math.round(p.months*4.33) : p.months;
+  }
+  // Average fill of the window at each run. One run at close reads the whole window; n runs spread
+  // across an open window read 1/n, 2/n … n/n of it, i.e. (n+1)/2n on average.
+  const fillFactor=n=>n===1?1:(n+1)/(2*n);
+  const fmtRuns=r=>'×'+(Math.round(r*100)/100);
   const cById=id=>POOL.find(c=>c.id===id);
-  const state={ view:'list', currentId:null, mode:'table', _rchar:'__section',
+  // Prepaid credit wallet — ONE balance per company, shared across all groups. No expiry.
+  const SLABS=[{c:10000,p:99},{c:50000,p:449},{c:250000,p:1999}];
+  const state={ view:'list', currentId:null, mode:'table', _rchar:'__section', uiState:'active',
+    /* Purely prepaid — no activation fee. The first slab purchase is the only entry cost. */
+    wallet:{ balance:42500, everBought:true, frozen:false },
     groups:[
-      {id:'g1',name:'Hospitality — UAE',refresh:'monthly',members:['rotana','jumeirah','address','emaar'],updated:true,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:true,top:false}},
-      {id:'g2',name:'Hospitality — Midscale',refresh:'monthly',members:['time','rove'],updated:true,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:true,top:false}},
+      {id:'g1',name:'Hospitality — UAE',period:'prevmonth',freq:'close',members:['rotana','jumeirah','address','emaar'],updated:true,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:true,top:false},lastRun:'2026-09-01'},
+      {id:'g2',name:'Hospitality — Midscale',period:'current',freq:'weekly',members:['time','rove'],updated:true,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:true,top:false},lastRun:'2026-09-07'},
     ]};
+  const fmtNum=n=>Number(n||0).toLocaleString('en-US');
+  const fmtUSD=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const freqOf=g=>FREQ[g.freq]||FREQ.close;
+  const calcsPerMonth=g=>runsPerWindow(g)/perOf(g).months;
+  // Per-client review counts inside ONE FULL window (what the final run of the window reads).
+  const poolByClient=g=>g.members.map(id=>{const c=cById(id);return {name:c?c.name:id, rev:Math.round((c?c.rev:0)*perOf(g).win)};});
+  const poolReviews=g=>poolByClient(g).reduce((s,r)=>s+r.rev,0);           // reviews in a full window
+  // Credits for one window = Σ reviews read at each run = window pool × runs × average fill.
+  const creditsPerWindow=g=>{const n=runsPerWindow(g);return Math.round(poolReviews(g)*n*fillFactor(n));};
+  const avgReviewsPerRun=g=>{const n=runsPerWindow(g);return Math.round(poolReviews(g)*fillFactor(n));};
+  const estCredits=g=>Math.round(creditsPerWindow(g)/perOf(g).months);      // credits per month
+  const isCostly=g=>estCredits(g)>Math.round(poolReviews(g)/perOf(g).months);
+  const isQuarterWeekly=g=>g.period==='quarter'&&g.freq==='weekly';
+  const totalEstCredits=()=>state.groups.reduce((s,g)=>s+estCredits(g),0);
   let editorUI={expanded:{}};
   const cg=()=>state.groups.find(g=>g.id===state.currentId);
   function otherGroupOf(cid,exceptId){ const g=state.groups.find(g=>g.id!==exceptId && g.members.includes(cid)); return g?g.name:null; }
@@ -227,6 +346,8 @@
   function benchNames(g){ return sharedChars(g.members).filter(ch=>!g.ex.chars[ch] && charValues(ch,g.members).some(v=>!g.ex.vals[ch+'|'+v])).map(ch=>CHARLABEL[ch]); }
 
   function render(){
+    renderWallet(); renderPromo();
+    const lf=document.getElementById('listFlags'); if(lf) lf.style.display=isPromo()?'none':'';
     const list=document.getElementById('listView'),ed=document.getElementById('editorView');
     if(state.view==='list'){ list.classList.remove('hidden');ed.classList.add('hidden');
       document.getElementById('crumb').innerHTML='Settings › <b style="color:var(--ink)">Benchmarking</b>';
@@ -236,23 +357,127 @@
       document.getElementById('topActions').innerHTML='<button class="btn ghost sm" onclick="showList()">Cancel</button><button class="btn sm" onclick="showList()">Save</button>';
       document.getElementById('gname').value=g.name;
       document.getElementById('csearch').value='';
-      document.querySelectorAll('#refresh button').forEach(b=>b.classList.toggle('active',b.dataset.r===g.refresh));
+      renderSchedule();
       ['market','rank','top','trend'].forEach(k=>{const el=document.getElementById('st-'+k); if(el) el.checked=!!(g.stats&&g.stats[k]);});
-      renderMembers(); renderCharsArea(); syncReportChar(); renderPreview();
+      renderMembers(); renderCharsArea(); renderUsage(); syncReportChar(); renderPreview();
     }
   }
   function openGroup(id){ state.currentId=id; state.view='editor'; editorUI={expanded:{}}; render(); window.scrollTo(0,0); }
-  function newGroup(){ const g={id:'g'+Date.now(),name:'',refresh:'monthly',members:[],updated:false,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:false,top:false},_new:true}; state.groups.push(g); openGroup(g.id); }
+  /* Defaults are the cheapest settled combination: a closed window, computed once. */
+  function newGroup(){ const g={id:'g'+Date.now(),name:'',period:'prevmonth',freq:'close',members:[],updated:false,ex:{chars:{},vals:{}},stats:{market:true,rank:true,trend:false,top:false},lastRun:'',_new:true}; state.groups.push(g); openGroup(g.id); }
+
+  /* ---- prepaid credit wallet ---- */
+  /* The module is ALWAYS visible to managers. Credits gate whether it FUNCTIONS, never whether it appears.
+     Three states: active (has credits) · nocredits (visible, frozen) · promo (never used → promotion). */
+  function isPromo(){ return state.uiState==='promo'; }
+  function isFrozen(){ return state.uiState!=='active'; }
+  function setUiState(s){
+    state.uiState=s; const w=state.wallet;
+    if(s==='active'){ w.balance=42500; w.everBought=true; }
+    else if(s==='nocredits'){ w.balance=0; w.everBought=true; }
+    else { w.balance=0; w.everBought=false; }
+    w.frozen=isFrozen(); render();
+  }
+  function demoSwitch(){
+    const opts=[['active','Active'],['nocredits','No credits'],['promo','Never used']];
+    return `<span class="demolbl">Demo state</span><span class="demo">`+
+      opts.map(o=>`<button class="${state.uiState===o[0]?'active':''}" onclick="setUiState('${o[0]}')">${o[1]}</button>`).join('')+`</span>`;
+  }
+  function renderWallet(){
+    const w=state.wallet;
+    const left = isPromo()
+      ? `<div class="bal"><span class="k">Benchmark credits</span><span class="v" style="font-size:15px;color:var(--mut)">None yet</span></div>
+         <div class="sep"></div>
+         <div class="meta">The module is <b>always available</b> to managers — buy a credit slab to start calculating.<br>
+           <b>No activation fee</b> · prepaid credits with <b>no expiry</b>.</div>`
+      : `<div class="bal ${w.balance<=0?'lowbal':''}"><span class="k">Benchmark credits</span><span class="v">${fmtNum(w.balance)}</span></div>
+         <div class="sep"></div>
+         <div class="meta">Company-wide balance · shared by all groups · <b>no expiry</b><br>
+           Estimated use: <b>${fmtNum(totalEstCredits())}</b>/month across ${state.groups.length} group${state.groups.length===1?'':'s'}</div>`;
+    document.getElementById('wallet').innerHTML = left + `
+      <div class="right">${demoSwitch()}
+        <button class="btn sm" onclick="openTopUp()">${isPromo()?'Buy credits':'Top up'}</button>
+      </div>`;
+  }
+
+  /* Promotion — shown to ANY user visiting the page when the company has never tried the module. */
+  function renderPromo(){
+    const host=document.getElementById('promo');
+    if(!isPromo()){ host.innerHTML=''; return; }
+    host.innerHTML=`<div class="promo">
+      <span class="tag">✦ NEW — NOT USED YET</span>
+      <h3>See how your clients compare — anonymously.</h3>
+      <p class="lead">Benchmarking puts an anonymised peer average next to your own scores, inside the reports you already use. No competitor is ever named, and you only pay for what you actually calculate.</p>
+      <div class="bens">
+        <div class="ben"><b>Your score vs the market</b><span>Final score, section and sub-section — one checkbox in the report.</span></div>
+        <div class="ben"><b>Like-for-like</b><span>Compare 5-star with 5-star, or restaurant type with the same type.</span></div>
+        <div class="ben"><b>Private by design</b><span>Only aggregates. Thin peer groups are hidden automatically.</span></div>
+      </div>
+      <div class="cta">
+        <button class="btn" onclick="openTopUp()">Buy credits</button>
+        <button class="btn ghost" onclick="setUiState('active')">See how it works</button>
+      </div>
+      <p class="fine"><b>No activation fee</b> — prepaid credits only, with no expiry. A calculation costs one credit per review in the pool, so a small group is a few dollars a month.</p>
+    </div>`;
+  }
+  function openTopUp(){
+    edit={kind:'topup'};
+    modal.innerHTML=`<h3>${isPromo()?'Buy benchmark credits':'Top up benchmark credits'}</h3><p>Prepaid slabs — bought through self-billing, no activation fee and no expiry. Larger slabs cost less per credit. <span style="color:var(--faint)">Prices are placeholders; Accounts sets the real figures in the <b>Credits</b> block on the company pricing screen.</span></p>
+      ${SLABS.map((s,i)=>`<div class="slab" onclick="buySlab(${i})"><div><div class="c">${fmtNum(s.c)} credits</div><div class="u">${fmtUSD(s.p/s.c)} per credit</div></div><div class="p">${fmtUSD(s.p)}</div></div>`).join('')}
+      <div class="mrow"><div class="spacer"></div><button class="btn ghost" onclick="close()">Cancel</button></div>`;
+    overlay.classList.add('on');
+  }
+  function buySlab(i){ state.wallet.balance+=SLABS[i].c; state.wallet.everBought=true; state.uiState='active'; state.wallet.frozen=false; close(); render(); }
+
+  /* ---- per-group usage panel ---- */
+  function renderUsage(){
+    const host=document.getElementById('usageBox'); if(!host) return;
+    const g=cg(), p=perOf(g), fq=freqOf(g), n=runsPerWindow(g), calcs=calcsPerMonth(g),
+          rows=poolByClient(g), pool=poolReviews(g), perRun=avgReviewsPerRun(g),
+          win=creditsPerWindow(g), est=estCredits(g), frozen=isFrozen();
+    host.innerHTML=`${frozen?`<div class="freeze"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <span><b>${isPromo()?'Not activated yet — nothing is calculating.':'Credits exhausted — recalculation is paused.'}</b> ${isPromo()?'You can set the group up now; it starts calculating once credits are bought. The screen stays available either way.':`The benchmark keeps showing the figure calculated on <b>${g.lastRun||'—'}</b>; nothing already paid for is hidden. Top up to resume.`}</span></div>`:''}
+      <table class="usage">
+        <thead><tr><th>Billing basis</th><th class="num">Value</th></tr></thead>
+        <tbody>
+          <tr><td>Benchmark period</td><td class="num">${p.label} <span style="color:var(--faint)">(${p.open?'open — provisional until it closes':'closed — frozen once computed'})</span></td></tr>
+          <tr><td>Recalculation frequency</td><td class="num">${fq.label} <span style="color:var(--faint)">(${fq.note})</span></td></tr>
+          <tr><td><b>Runs</b> per ${p.months===1?'month':'quarter'}</td><td class="num"><b>${n}</b> <span style="color:var(--faint)">${fmtRuns(calcs)} per month</span></td></tr>
+          <tr><td><b>Distinct reviews in a full period</b><br><span style="font-size:11.5px;color:var(--mut)">counted <b>at the start of each run</b>, before aggregation — the input set, not the output</span></td><td class="num"><b>${fmtNum(pool)}</b></td></tr>
+          <tr><td>Average reviews read per run</td><td class="num">${fmtNum(perRun)}${n>1?' <span style="color:var(--faint)">(the period fills up as it goes)</span>':''}</td></tr>
+          <tr><td>Credits per ${p.months===1?'month':'quarter'}</td><td class="num">${fmtNum(win)}</td></tr>
+          <tr><td><b>Estimated credits / month</b></td><td class="num"><b>${fmtNum(est)}</b> <span style="color:var(--faint)">≈ ${fmtUSD(est*SLABS[0].p/SLABS[0].c)}</span></td></tr>
+          <tr><td>Last calculation</td><td class="num">${g.lastRun||'—'}</td></tr>
+        </tbody>
+      </table>
+      <details style="margin-top:10px">
+        <summary style="cursor:pointer;font-size:12.5px;font-weight:600;color:var(--brand-d)">Review count per client in the pool (${rows.length})</summary>
+        <table class="usage" style="margin-top:8px">
+          <thead><tr><th>Client</th><th class="num">Reviews in a full ${p.label.toLowerCase()}</th><th class="num">Share</th></tr></thead>
+          <tbody>${rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="num">${fmtNum(r.rev)}</td><td class="num">${pool?Math.round(r.rev/pool*100):0}%</td></tr>`).join('')}
+            <tr><td><b>Pool total</b></td><td class="num"><b>${fmtNum(pool)}</b></td><td class="num">100%</td></tr></tbody>
+        </table>
+        <p class="cap"><b>Admin-side only.</b> This breakdown explains the bill to the company that pays it. It must never appear in the client-facing report, where only anonymised aggregates are shown.</p>
+      </details>
+      <p class="cap">Credits are charged per <b>distinct review read at the start of a run</b>, so the cost of a period is the sum across its runs — not the pool size × the number of runs. An open period fills up as it goes: on <b>Weekly</b>, the first run of a month reads roughly a quarter of the month, the last one reads all of it. For a ${fmtNum(pool)}-review month that is ${fmtNum(est)} credits, not ${fmtNum(pool*4)}. <b>At period close</b> is one run on the finished window and is always the cheapest. Every run is written to the calculation log used for billing.
+      ${isQuarterWeekly(g)?'<br><b style="color:#b45309">⚠ Quarter + Weekly</b> recomputes a three-month window every week — the most expensive combination available.':''}</p>`;
+  }
   function showList(){ state.view='list'; render(); window.scrollTo(0,0); }
 
   function renderList(){
+    if(isPromo()){
+      document.getElementById('groupRows').innerHTML=
+        '<tr><td colspan="7" style="padding:18px"><span class="none">No benchmark groups yet — activate above to create your first one. The screen stays available either way.</span></td></tr>';
+      return;
+    }
     document.getElementById('groupRows').innerHTML=state.groups.map(g=>{
       const n=g.members.length, bn=benchNames(g);
       const summary=bn.length?'Scores · '+bn.join(' · '):'Scores';
       const status=n<FLOOR?'<span class="pill wait"><span></span>Below min ('+n+'/'+FLOOR+')</span>':(g._new?'<span class="pill off">Draft</span>':'<span class="pill on"><span></span>Active</span>');
       return `<tr class="click" onclick="openGroup('${g.id}')"><td><b>${esc(g.name)||'<span style=\"color:#98a3b2\">Untitled group</span>'}</b></td>
         <td class="num">${n}</td><td>${esc(summary)}</td>
-        <td>${g.refresh}</td><td>${status}</td><td style="text-align:right;color:var(--brand-d);font-weight:600">Open ›</td></tr>`;
+        <td>${perOf(g).label} · ${freqOf(g).label}<span class="mult">${runsPerWindow(g)} run${runsPerWindow(g)===1?'':'s'}</span></td>
+        <td class="num">${fmtNum(estCredits(g))}</td><td>${status}</td><td style="text-align:right;color:var(--brand-d);font-weight:600">Open ›</td></tr>`;
     }).join('');
   }
   function renameGroup(v){ cg().name=v; document.getElementById('crumb').innerHTML='Settings › Benchmarking › <b style="color:var(--ink)">'+(esc(v)||'New group')+'</b>'; }
@@ -291,7 +516,35 @@
   function toggleInc(ch,on){ cg().ex.chars[ch]=!on; renderCharsArea(); syncReportChar(); renderPreview(); }
   function toggleExpand(ch){ editorUI.expanded[ch]=!editorUI.expanded[ch]; renderCharsArea(); }
   function toggleVal(ch,i,on){ const g=cg(); const v=charValues(ch,g.members)[i]; g.ex.vals[ch+'|'+v]=!on; renderCharsArea(); syncReportChar(); renderPreview(); }
-  function setRefresh(r){ cg().refresh=r; document.querySelectorAll('#refresh button').forEach(b=>b.classList.toggle('active',b.dataset.r===r)); }
+  /* ---- period + frequency ----
+     Cost disclosure: any move to a costlier combination has to be confirmed BEFORE it is applied,
+     with the new monthly estimate shown. Quarter + Weekly is warned about, not blocked. */
+  function applyChange(field,val){
+    const g=cg(), before=estCredits(g), prev={period:g.period,freq:g.freq};
+    g[field]=val;
+    if(field==='period'&&!perOf(g).open) g.freq='close';   // a closed window can only run once
+    const after=estCredits(g);
+    let msg='';
+    if(isQuarterWeekly(g)) msg=`⚠ Quarter + Weekly recalculates a three-month window every week — the most expensive combination.\n\nEstimated ${fmtNum(after)} credits/month (was ${fmtNum(before)}).\n\nApply anyway?`;
+    else if(after>before) msg=`This raises the estimated cost from ${fmtNum(before)} to ${fmtNum(after)} credits/month (${fmtUSD((after-before)*SLABS[0].p/SLABS[0].c)} more at the entry slab).\n\nApply?`;
+    if(msg&&!confirm(msg)){ g.period=prev.period; g.freq=prev.freq; }
+    renderSchedule(); renderUsage(); renderWallet();
+  }
+  function setPeriod(p){ applyChange('period',p); }
+  function setFreq(f){ if(!perOf(cg()).open) return; applyChange('freq',f); }
+  function renderSchedule(){
+    const g=cg(), p=perOf(g), open=p.open;
+    document.querySelectorAll('#periodSeg button').forEach(b=>b.classList.toggle('active',b.dataset.p===g.period));
+    document.querySelectorAll('#freqSeg button').forEach(b=>{
+      b.classList.toggle('active',b.dataset.r===g.freq);
+      b.disabled=!open&&b.dataset.r!=='close';
+      b.style.opacity=(b.disabled?.45:1); b.style.cursor=b.disabled?'not-allowed':'pointer';
+    });
+    document.getElementById('periodCap').innerHTML=`<b>${p.label}</b> — ${p.note}. Your score and the market average are always measured over this same window.`;
+    document.getElementById('freqCap').innerHTML=open
+      ? `<b>${freqOf(g).label}</b> — ${freqOf(g).note}. Each run reads the period so far and overwrites the same snapshot; the last run of the period is the one that settles it.`
+      : `Fixed at <b>At period close</b>. A completed month cannot change, so re-running it would produce the same answer at the same cost.`;
+  }
   function toggleStat(k,on){ const g=cg(); if(!g.stats) g.stats={}; g.stats[k]=on; renderPreview(); }
 
   function benchedChars(){ const g=cg(); if(!g.updated) return [];
@@ -300,11 +553,41 @@
     const opts=[{v:'__section',l:'Section score (baseline)'}].concat(b.map(ch=>({v:ch,l:CHARLABEL[ch]})));
     if(!opts.some(o=>o.v===state._rchar)) state._rchar='__section';
     dd.innerHTML=opts.map(o=>`<option value="${o.v}" ${o.v===state._rchar?'selected':''}>${esc(o.l)}</option>`).join(''); }
+  /* Snapshot lookup for the period the ANALYST picked in the report. Mirrors the rules documented on
+     the Notion page "Period, recalculation frequency & report behaviour". */
+  const RPER={ aug:{l:'Aug 2026',kind:'month',closed:true}, sep:{l:'Sep 2026',kind:'month',closed:false},
+               q3:{l:'Q3 2026',kind:'quarter',closed:false}, may:{l:'May 2026',kind:'month',pre:true},
+               custom:{l:'12–26 Aug 2026',kind:'custom'} };
+  function snapshotFor(g,key){
+    const r=RPER[key]||RPER.aug, p=perOf(g);
+    if(g.members.length<FLOOR) return {ok:false,msg:'Not enough peers to show a benchmark.',why:'group is below the minimum peer count'};
+    // Hint the periods that DO have a snapshot — a dead end becomes a next step. Not hinted for the
+    // too-few-peers cases above, where no period would help.
+    const have=p.months===3?'Q2 2026, Q3 2026':'Jul 2026, Aug 2026';
+    const hint=` Available: ${have}.`;
+    if(r.kind==='custom') return {ok:false,msg:'Benchmark is available for whole periods only — select a month or a quarter.'+hint,why:'custom date range, snapshots exist per whole period'};
+    if(r.pre) return {ok:false,msg:'No benchmark available for periods before benchmarking went live (Jul 2026).'+hint,why:'period predates go-live'};
+    if(p.months===3&&r.kind==='month') return {ok:false,msg:'This group is benchmarked by quarter — select a quarter.'+hint,why:'granularity mismatch'};
+    if(p.months===1&&r.kind==='quarter') return {ok:false,msg:'This group is benchmarked by month — select a month.'+hint,why:'granularity mismatch'};
+    if(!r.closed&&!p.open) return {ok:false,msg:`No benchmark yet for ${r.l} — this group only calculates a completed period.`+hint,why:'open period, group configured on a closed window'};
+    if(!r.closed&&p.open&&g.freq==='close') return {ok:false,msg:`No benchmark yet for ${r.l} — first calculation at period close.`+hint,why:'open period, one run scheduled at close'};
+    return {ok:true,label:r.l,provisional:!r.closed};
+  }
   function setMode(m){ state.mode=m; document.getElementById('m-table').classList.toggle('active',m==='table'); document.getElementById('m-chart').classList.toggle('active',m==='chart'); renderPreview(); }
   function renderPreview(){
     const on=document.getElementById('bmk').checked; const dd=document.getElementById('rchar'); if(dd.value) state._rchar=dd.value;
     const host=document.getElementById('rbody'); const g=cg();
     if(!g.members.length || !g.updated){ host.innerHTML='<p class="cap">Select clients and click Update to preview.</p>'; return; }
+    /* The report ALWAYS looks the benchmark up for the period the ANALYST selected — never for the
+       group's configured period. If no snapshot exists for that selection, say so; never substitute
+       another period's number, and never trigger a calculation from a report view. */
+    const snap=snapshotFor(g,document.getElementById('rperiod').value);
+    if(on&&!snap.ok){
+      host.innerHTML=`<div class="hint warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span><b>${esc(snap.msg)}</b><br>Your own scores still display in full — only the benchmark columns are unavailable. Nothing is substituted from another period, and opening a report never spends credits.</span></div>
+        <p class="cap">Case: ${esc(snap.why)}</p>`;
+      return;
+    }
     const sel=state._rchar; const isSection=(sel==='__section'); const colName=isSection?'Section':CHARLABEL[sel];
     let rows;
     if(isSection){ rows=SECTIONS.map(s=>({v:s[0],your:s[1],market:s[2],peers:g.members.length,shown:true})); }
@@ -312,7 +595,7 @@
     const st=g.stats||{};
     if(state.mode==='table'){
       const head=[`<th>${esc(colName)}</th>`,`<th class="num">Your score</th>`];
-      if(on){ if(st.market) head.push('<th class="num">Market avg</th>'); head.push('<th class="num">vs Market</th>');
+      if(on){ if(st.market) head.push(`<th class="num">Market avg · ${esc(snap.label)}${snap.provisional?' <span style="font-weight:500;color:var(--warn)">(provisional)</span>':''}</th>`); head.push('<th class="num">vs Market</th>');
         if(st.rank) head.push('<th class="num">Rank</th>'); if(st.top) head.push('<th class="num">Top</th>'); if(st.trend) head.push('<th class="num">Trend</th>'); }
       const benchCols=(st.market?1:0)+1+(st.rank?1:0)+(st.top?1:0)+(st.trend?1:0);
       const body=rows.map(r=>{
@@ -331,7 +614,7 @@
         return `<tr>${cells.join('')}</tr>`;
       }).join('');
       host.innerHTML=`<div class="ptable"><table><thead><tr>${head.join('')}</tr></thead><tbody>${body}</tbody></table></div>
-        <p class="cap">${on?(isSection?'Baseline benchmark — your section scores vs the anonymised peer average.':'Value-vs-value breakdown. Values with fewer than '+FLOOR+' peers are hidden automatically.'):'Benchmark off — the report as it looks today.'}</p>`;
+        <p class="cap">${isFrozen()&&on?`<b style="color:var(--warn)">${isPromo()?'Illustrative only — not activated, so nothing has been calculated yet.':`Frozen — figures as calculated on ${g.lastRun||'—'}; recalculation paused until the company tops up.`}</b><br>`:''}${on?(isSection?'Baseline benchmark — your section scores vs the anonymised peer average.':'Value-vs-value breakdown. Values with fewer than '+FLOOR+' peers are hidden automatically.')+` Both sides are measured over <b>${esc(snap.label)}</b>${snap.provisional?' — an open period, so the figure is provisional until it closes':''}.`:'Benchmark off — the report as it looks today.'}</p>`;
     } else {
       host.innerHTML=`<div class="barwrap">${rows.map(r=>{const showMkt=on&&r.shown;
         return `<div class="bar-row"><div>${esc(r.v)}${on&&!r.shown?' <span class="cap">(hidden)</span>':''}</div>
