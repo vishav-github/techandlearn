@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Support Console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #F5F4F8;
+    --surface: #FFFFFF;
+    --surface-sunk: #EEECF4;
+    --line: #DCD9E6;
+    --line-strong: #C3BED4;
+    --ink: #1D1A2B;
+    --ink-soft: #55506B;
+    --ink-faint: #837D9B;
+    --accent: #5B3FD6;
+    --accent-soft: #EDE9FC;
+    --accent-ink: #3F28A8;
+    --flag: #B36A00;
+    --flag-soft: #FDF0DB;
+    --ok: #157A5B;
+    --ok-soft: #DDF2EA;
+    --alert: #B33A2E;
+    --alert-soft: #FBE6E3;
+    --shadow: 0 1px 2px rgba(29,26,43,.06), 0 8px 24px -12px rgba(29,26,43,.18);
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #15131D;
+      --surface: #1E1B29;
+      --surface-sunk: #26223400;
+      --surface-sunk: #262234;
+      --line: #322D44;
+      --line-strong: #453E5D;
+      --ink: #EFEDF6;
+      --ink-soft: #B3ADC9;
+      --ink-faint: #837D9B;
+      --accent: #A996FF;
+      --accent-soft: #2B2450;
+      --accent-ink: #C9BDFF;
+      --flag: #E8AE5C;
+      --flag-soft: #3A2C16;
+      --ok: #6ED3AE;
+      --ok-soft: #14352B;
+      --alert: #F09285;
+      --alert-soft: #3C1F1B;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #15131D;
+    --surface: #1E1B29;
+    --surface-sunk: #262234;
+    --line: #322D44;
+    --line-strong: #453E5D;
+    --ink: #EFEDF6;
+    --ink-soft: #B3ADC9;
+    --ink-faint: #837D9B;
+    --accent: #A996FF;
+    --accent-soft: #2B2450;
+    --accent-ink: #C9BDFF;
+    --flag: #E8AE5C;
+    --flag-soft: #3A2C16;
+    --ok: #6ED3AE;
+    --ok-soft: #14352B;
+    --alert: #F09285;
+    --alert-soft: #3C1F1B;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 40px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+  }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  h1 {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 38px);
+    letter-spacing: -.015em;
+  }
+  h2 {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-weight: 600;
+    font-size: 21px;
+    letter-spacing: -.01em;
+  }
+  h3 { font-size: 14px; font-weight: 600; }
+  p { margin: 0; }
+  .lede { color: var(--ink-soft); max-width: 66ch; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  header .top { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; justify-content: space-between; }
+  .chip-draft {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--flag);
+    background: var(--flag-soft);
+    border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent);
+    border-radius: 999px;
+    padding: 4px 11px;
+    white-space: nowrap;
+  }
+
+  .notice {
+    border-left: 3px solid var(--flag);
+    background: var(--surface);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .notice ul { margin: 0; padding-left: 20px; color: var(--ink-soft); }
+  .notice li { margin-bottom: 3px; }
+
+  .switcher { display: flex; flex-direction: column; gap: 10px; }
+  .segmented { display: flex; flex-wrap: wrap; gap: 6px; }
+  .segmented button {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 15px;
+    cursor: pointer;
+    transition: background .14s, color .14s, border-color .14s;
+  }
+  .segmented button:hover { border-color: var(--line-strong); color: var(--ink); }
+  .segmented button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  :root[data-theme="dark"] .segmented button[aria-pressed="true"],
+  .segmented button[aria-pressed="true"] { color: var(--surface); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  .console {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .console-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-sunk);
+  }
+  .tabs { display: flex; gap: 2px; }
+  .tabs span {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 7px;
+    color: var(--ink-faint);
+  }
+  .tabs span.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .bar-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .counts {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .counts b { color: var(--ink); font-weight: 500; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: 1px; }
+  .dot-ok { background: var(--ok); }
+  .dot-alert { background: var(--alert); }
+  .ghost-btn {
+    font: inherit; font-size: 12px; font-weight: 500;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 5px 11px;
+    cursor: pointer;
+  }
+
+  .stale {
+    display: none;
+    gap: 10px;
+    align-items: baseline;
+    padding: 10px 18px;
+    background: var(--alert-soft);
+    color: var(--alert);
+    font-size: 13px;
+    border-bottom: 1px solid color-mix(in srgb, var(--alert) 25%, transparent);
+  }
+  .console[data-state="stale"] .stale { display: flex; }
+
+  .panes { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); min-height: 430px; }
+  .list { border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+  .list-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 11px 16px; border-bottom: 1px solid var(--line);
+  }
+  .session {
+    display: flex; flex-direction: column; gap: 5px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
+  .session.flagged { border-left-color: var(--flag); background: color-mix(in srgb, var(--flag-soft) 55%, transparent); }
+  .session.selected { border-left-color: var(--accent); background: var(--accent-soft); }
+  .session-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .company { font-weight: 600; font-size: 14px; }
+  .waiting {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .who { font-size: 12.5px; color: var(--ink-faint); font-family: "IBM Plex Mono", monospace; }
+  .reason {
+    font-size: 12px; font-weight: 500;
+    color: var(--flag);
+    background: var(--flag-soft);
+    border-radius: 5px;
+    padding: 2px 8px;
+    align-self: flex-start;
+  }
+  .reason.neutral { color: var(--ink-soft); background: var(--surface-sunk); }
+  .held {
+    font-size: 12px; color: var(--ok);
+    background: var(--ok-soft); border-radius: 5px; padding: 2px 8px; align-self: flex-start;
+  }
+  .empty-list {
+    padding: 44px 24px; text-align: center; color: var(--ink-faint); font-size: 13.5px;
+  }
+
+  .detail { display: flex; flex-direction: column; min-width: 0; }
+  .meta-strip {
+    display: flex; flex-wrap: wrap; gap: 4px 22px;
+    padding: 12px 20px; border-bottom: 1px solid var(--line);
+    background: var(--surface-sunk);
+    font-size: 12.5px; color: var(--ink-soft);
+  }
+  .meta-strip b { color: var(--ink); font-weight: 500; font-family: "IBM Plex Mono", monospace; }
+  .transcript {
+    flex: 1; padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 13px;
+    overflow-y: auto; max-height: 300px;
+  }
+  .msg { max-width: 82%; display: flex; flex-direction: column; gap: 3px; }
+  .msg .role {
+    font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+    letter-spacing: .09em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .bubble {
+    padding: 10px 13px; border-radius: 9px; font-size: 14px;
+    border: 1px solid var(--line); background: var(--surface-sunk);
+  }
+  .msg.user { align-self: flex-end; align-items: flex-end; }
+  .msg.user .bubble { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .msg.human .bubble { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 32%, transparent); }
+  .msg.system { align-self: center; max-width: 100%; }
+  .msg.system .bubble {
+    background: transparent; border: none; color: var(--ink-faint);
+    font-size: 12.5px; text-align: center; padding: 2px 0;
+  }
+
+  .composer { border-top: 1px solid var(--line); padding: 14px 20px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .draft-label { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .editor {
+    width: 100%; min-height: 78px; resize: vertical;
+    font: inherit; font-size: 14px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: 8px; padding: 10px 12px;
+  }
+  .editor:disabled { background: var(--surface-sunk); color: var(--ink-faint); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .btn {
+    font: inherit; font-size: 13.5px; font-weight: 500;
+    border-radius: 8px; padding: 8px 16px; cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: var(--surface); }
+  .btn-quiet { background: var(--surface); color: var(--ink-soft); border-color: var(--line-strong); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .locked {
+    display: flex; gap: 9px; align-items: center;
+    font-size: 13.5px; color: var(--ink-soft);
+    background: var(--surface-sunk); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .locked b { color: var(--ink); font-weight: 600; }
+  .empty-detail {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    color: var(--ink-faint); font-size: 13.5px; padding: 40px 24px; text-align: center;
+  }
+
+  .widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 18px; }
+  .widget {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .widget-head {
+    background: var(--accent); color: var(--surface);
+    padding: 11px 15px; font-size: 13.5px; font-weight: 600;
+  }
+  .widget-body { padding: 15px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+  .widget-body .bubble { max-width: 100%; }
+  .offer {
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    background: var(--accent-soft); border-radius: 9px;
+    padding: 12px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .offer p { font-size: 13.5px; }
+  .offer-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .offer-actions .btn { font-size: 12.5px; padding: 6px 12px; }
+  .widget-foot {
+    border-top: 1px solid var(--line); padding: 9px 15px;
+    font-size: 11.5px; color: var(--ink-faint);
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .widget-foot .status { display: flex; align-items: center; gap: 0; }
+
+  .spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 9px;
+  }
+  .card ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: 13.5px; }
+  .card li { margin-bottom: 5px; }
+  .card li b { color: var(--ink); font-weight: 600; }
+  code {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+    background: var(--surface-sunk); padding: 1px 5px; border-radius: 4px;
+  }
+  footer { color: var(--ink-faint); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 18px; }
+
+  @media (max-width: 760px) {
+    .panes { grid-template-columns: 1fr; }
+    .list { border-right: none; border-bottom: 1px solid var(--line); }
+    .transcript { max-height: 240px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div>
+        <p class="eyebrow">Checker Software · LSA-4 – LSA-15</p>
+        <h1>Live Support Console</h1>
+      </div>
+      <span class="chip-draft">Mockup · not production</span>
+    </div>
+    <p class="lede" style="margin-top:10px">Checker Team staff watch AI Support Agent conversations as they happen, take over the ones going badly, and answer in the same thread the user is already reading. Use the state switcher to see every state the screen has to handle.</p>
+  </header>
+
+  <section class="notice">
+    <h3>Not to be built</h3>
+    <p class="lede" style="font-size:13.5px">These exist only to demonstrate the screen. Everything else on this page is real and specified in the roadmap.</p>
+    <ul>
+      <li>The <b>state switcher</b> above the console — the real screen derives its state from the session row.</li>
+      <li>All <b>seeded data</b> — company names, usernames, transcripts and timers are invented.</li>
+      <li><b>Waiting timers do not tick</b>; in the build they count up from the flag time.</li>
+      <li>Nothing here calls a server. The transcript does not poll, and no button sends anything.</li>
+    </ul>
+    <p style="font-size:13.5px; color:var(--ink-soft)">Where this mockup and the roadmap disagree, <b>the roadmap is authoritative</b> and this page is stale.</p>
+  </section>
+
+  <section class="switcher">
+    <p class="eyebrow">Console state</p>
+    <div class="segmented" role="group" aria-label="Console state">
+      <button id="st-flagged" type="button" data-state="flagged" aria-pressed="true">Flagged, unclaimed</button>
+      <button id="st-mine" type="button" data-state="mine" aria-pressed="false">Claimed by me</button>
+      <button id="st-other" type="button" data-state="other" aria-pressed="false">Claimed by someone else</button>
+      <button id="st-stale" type="button" data-state="stale" aria-pressed="false">Feed stale</button>
+      <button id="st-empty" type="button" data-state="empty" aria-pressed="false">Nothing live</button>
+    </div>
+  </section>
+
+  <section class="console" id="console" data-state="flagged">
+    <div class="console-bar">
+      <div class="tabs">
+        <span class="on">Live</span>
+        <span>History</span>
+      </div>
+      <div class="bar-right">
+        <span class="counts" id="counts"><b>3</b> live · <b>1</b> flagged</span>
+        <span class="counts" id="conn"><span class="dot dot-ok"></span>Updating every 5s</span>
+        <button class="ghost-btn" type="button" id="pause">Pause refresh</button>
+      </div>
+    </div>
+
+    <div class="stale">
+      <span>Live updates paused — showing data from 14:22. Retrying.</span>
+    </div>
+
+    <div class="panes">
+      <div class="list" id="list">
+        <div class="list-head">
+          <span class="eyebrow">Sessions</span>
+          <span class="eyebrow">Waiting</span>
+        </div>
+
+        <div class="session flagged selected" id="row-1">
+          <div class="session-top">
+            <span class="company">Nordvik Retail</span>
+            <span class="waiting">4m 12s</span>
+          </div>
+          <span class="who">e.kowalski · Manager</span>
+          <span class="reason">The assistant could not answer</span>
+          <span class="held" id="row-1-held" hidden>Held by Oksana P.</span>
+        </div>
+
+        <div class="session">
+          <div class="session-top">
+            <span class="company">Harbour Foods Group</span>
+            <span class="waiting">1m 05s</span>
+          </div>
+          <span class="who">m.tan · Analyst</span>
+          <span class="reason neutral">No flag — active</span>
+        </div>
+
+        <div class="session">
+          <div class="session-top">
+            <span class="company">Casa Verde Hoteles</span>
+            <span class="waiting">0m 38s</span>
+          </div>
+          <span class="who">r.delgado · Company admin</span>
+          <span class="reason neutral">No flag — active</span>
+        </div>
+
+        <div class="empty-list" id="empty-list" hidden>No conversations are live right now.</div>
+      </div>
+
+      <div class="detail" id="detail">
+        <div class="meta-strip" id="meta">
+          <span>Company <b>Nordvik Retail</b></span>
+          <span>User <b>e.kowalski</b></span>
+          <span>Started <b>14:18</b></span>
+          <span>Messages <b>6</b></span>
+          <span>Language <b>pl</b></span>
+        </div>
+
+        <div class="transcript" id="transcript">
+          <div class="msg user">
+            <span class="role">User · translated from Polish</span>
+            <div class="bubble">Where do I set how many visits one shopper can take on a project?</div>
+          </div>
+          <div class="msg">
+            <span class="role">AI assistant</span>
+            <div class="bubble">I am sorry, but I could not find the answer in the provided information.</div>
+          </div>
+          <div class="msg user">
+            <span class="role">User · translated from Polish</span>
+            <div class="bubble">But there must be a limit somewhere, we set it last year</div>
+          </div>
+          <div class="msg system" id="join-note" hidden>
+            <div class="bubble">Oksana P. from Checker support joined the conversation · 14:23</div>
+          </div>
+          <div class="msg human" id="human-msg" hidden>
+            <span class="role">Oksana P. · sent in Polish</span>
+            <div class="bubble">Hi — that limit is per project, under Project settings → Shopper rules. I will walk you through it.</div>
+          </div>
+        </div>
+
+        <div class="composer" id="composer">
+          <div class="draft-label">
+            <span class="eyebrow">Suggested reply — edit before sending</span>
+            <span class="eyebrow" id="draft-state">Draft ready</span>
+          </div>
+          <textarea class="editor" id="editor" rows="3" aria-label="Reply to the user">The visit limit is set per project, not per shopper account. Open the project, go to Shopper rules, and set Maximum applications per shopper.</textarea>
+          <div class="actions" id="actions">
+            <button class="btn btn-primary" type="button" id="send">Send reply</button>
+            <button class="btn btn-quiet" type="button" id="handback">Hand back to AI</button>
+            <button class="btn btn-quiet" type="button" id="close">Close conversation</button>
+          </div>
+        </div>
+
+        <div class="composer" id="claim-box">
+          <div class="actions">
+            <button class="btn btn-primary" type="button" id="claim">Take this conversation</button>
+          </div>
+        </div>
+
+        <div class="composer" id="locked-box" hidden>
+          <div class="locked"><b>Oksana P.</b> is handling this conversation.</div>
+        </div>
+
+        <div class="empty-detail" id="empty-detail" hidden>Select a conversation to read it.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow" style="margin-bottom:8px">Client widget — the three states that change</p>
+    <div class="widgets">
+      <div class="widget">
+        <div class="widget-head">Support Agent</div>
+        <div class="widget-body">
+          <div class="bubble" style="font-size:13.5px">I am sorry, but I could not find the answer in the provided information.</div>
+          <div class="offer">
+            <p>That may not have answered your question. Would you like someone from our team to join this conversation?</p>
+            <div class="offer-actions">
+              <button class="btn btn-primary" type="button">Yes, ask someone to join</button>
+              <button class="btn btn-quiet" type="button">No thanks</button>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <span class="status"><span class="dot dot-ok"></span>Our team is online now.</span>
+          <span>Checker support may join this conversation to help.</span>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="widget-head">Support Agent</div>
+        <div class="widget-body">
+          <div class="msg system" style="max-width:100%"><div class="bubble">Our team has been notified. Someone will join shortly.</div></div>
+          <div class="msg system" style="max-width:100%"><div class="bubble">Oksana P. from Checker support has joined the conversation.</div></div>
+          <div class="bubble" style="font-size:13.5px; background:var(--ok-soft); border-color:color-mix(in srgb, var(--ok) 32%, transparent)">Hi — that limit is per project, under Project settings → Shopper rules. I will walk you through it.</div>
+        </div>
+        <div class="widget-foot">
+          <span class="status"><span class="dot dot-ok"></span>Our team is online now.</span>
+          <span>Checker support may join this conversation to help.</span>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="widget-head">Support Agent</div>
+        <div class="widget-body">
+          <div class="bubble" style="font-size:13.5px">I am sorry, but I could not find the answer in the provided information.</div>
+          <div class="offer" style="background:var(--surface-sunk); border-color:var(--line-strong)">
+            <p>Our team is offline right now. You can raise a support ticket and we will reply within one business day.</p>
+            <div class="offer-actions">
+              <button class="btn btn-quiet" type="button">Open a support ticket</button>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <span class="status"><span class="dot dot-alert"></span>Our team is offline. Messages raised now are answered within one business day.</span>
+          <span>Checker support may join this conversation to help.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="spec">
+    <div class="card">
+      <h3>What each control does</h3>
+      <ul>
+        <li><b>Take this conversation</b> — writes an exclusive claim on the session row. Succeeds only if unclaimed; the loser of a race sees the holder's name instead.</li>
+        <li><b>Send reply</b> — writes a human turn into the conversation through the existing compare-and-swap writer, translating into the user's language first. Disabled while the editor is empty.</li>
+        <li><b>Hand back to AI</b> — confirmation, then the AI resumes and the user is told.</li>
+        <li><b>Close conversation</b> — confirmation, then the session ends, records <code>resolved by human</code>, and offers knowledge base capture.</li>
+        <li><b>Pause refresh</b> — stops polling without leaving the page. Client-side only.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>States shown here</h3>
+      <ul>
+        <li><b>Flagged, unclaimed</b> — amber rail, reason in words, claim control only.</li>
+        <li><b>Claimed by me</b> — editor carries the AI draft; send, hand back and close appear.</li>
+        <li><b>Claimed by someone else</b> — holder named, no controls at all.</li>
+        <li><b>Feed stale</b> — last good data kept, banner names the time of the last successful refresh.</li>
+        <li><b>Nothing live</b> — empty state in both panes, never a blank panel.</li>
+        <li><b>Draft unavailable</b> — editor empties and the label reads so; it never blocks typing.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Keyboard and narrow widths</h3>
+      <ul>
+        <li>Tab order runs list → transcript → editor → actions. Every control has a visible focus ring.</li>
+        <li>A human joining is announced to assistive technology as a status change, not as a new message.</li>
+        <li>Below 760px the two panes stack; the console is a desk tool and is not required to work on a phone.</li>
+        <li>Long company names, long flag reasons and long single messages wrap rather than clip.</li>
+        <li>Both light and dark themes are specified; the console follows the viewer's setting.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Mockup for the Live Support Agent roadmap · <code>docs/audits/live-support-agent-roadmap-2026-09-14.md</code> · Deployment branch, Preproduction. Seeded data is invented; no client records appear on this page.
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var console_ = document.getElementById('console');
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('.segmented button'));
+    var row1 = document.getElementById('row-1');
+    var held = document.getElementById('row-1-held');
+    var list = document.getElementById('list');
+    var emptyList = document.getElementById('empty-list');
+    var detailBits = {
+      meta: document.getElementById('meta'),
+      transcript: document.getElementById('transcript'),
+      composer: document.getElementById('composer'),
+      claim: document.getElementById('claim-box'),
+      locked: document.getElementById('locked-box'),
+      empty: document.getElementById('empty-detail')
+    };
+    var joinNote = document.getElementById('join-note');
+    var humanMsg = document.getElementById('human-msg');
+    var counts = document.getElementById('counts');
+    var conn = document.getElementById('conn');
+    var sessions = Array.prototype.slice.call(list.querySelectorAll('.session'));
+
+    function show(el, on) { if (el) el.hidden = !on; }
+
+    function apply(state) {
+      console_.setAttribute('data-state', state);
+
+      var isEmpty = state === 'empty';
+      sessions.forEach(function (s) { s.hidden = isEmpty; });
+      show(emptyList, isEmpty);
+      show(detailBits.meta, !isEmpty);
+      show(detailBits.transcript, !isEmpty);
+      show(detailBits.empty, isEmpty);
+
+      show(detailBits.composer, state === 'mine');
+      show(detailBits.claim, state === 'flagged' || state === 'stale');
+      show(detailBits.locked, state === 'other');
+
+      show(joinNote, state === 'mine');
+      show(humanMsg, state === 'mine');
+      show(held, state === 'other');
+
+      if (state === 'other') {
+        row1.classList.remove('selected');
+      } else if (!isEmpty) {
+        row1.classList.add('selected');
+      }
+
+      counts.innerHTML = isEmpty
+        ? '<b>0</b> live · <b>0</b> flagged'
+        : '<b>3</b> live · <b>1</b> flagged';
+
+      conn.innerHTML = state === 'stale'
+        ? '<span class="dot dot-alert"></span>Last update 14:22'
+        : '<span class="dot dot-ok"></span>Updating every 5s';
+
+      buttons.forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-state') === state));
+      });
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.getAttribute('data-state')); });
+    });
+
+    apply('flagged');
+  })();
+</script>
+</body>
+</html>
