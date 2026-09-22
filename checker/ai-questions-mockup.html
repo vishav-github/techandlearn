@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Questions — UI Mockup</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    background: #f0f0ed;
+    color: #1a1a18;
+    line-height: 1.5;
+  }
+
+  /* ── Sticky nav ── */
+  .page-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #1a1f2e;
+    display: flex; align-items: center; gap: 0;
+    padding: 0 24px;
+    border-bottom: 1px solid #2e3547;
+  }
+  .page-nav a {
+    display: block; padding: 14px 18px;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
+    color: #8fa0b8; text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s;
+  }
+  .page-nav a:hover { color: #fff; }
+  .page-nav a.active { color: #fff; border-bottom-color: #4db8ff; }
+  .page-nav .nav-logo {
+    font-size: 15px; font-weight: 700; color: #fff;
+    margin-right: 24px; letter-spacing: -0.3px; padding: 14px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .page-nav .nav-logo span { color: #4db8ff; }
+
+  /* ── Sections ── */
+  .section {
+    max-width: 1100px; margin: 0 auto; padding: 40px 24px 60px;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #888; margin-bottom: 6px;
+  }
+  .section-title {
+    font-size: 20px; font-weight: 600; color: #1a1a18;
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font-size: 13px; color: #666; margin-bottom: 28px; max-width: 640px;
+  }
+  .divider {
+    border: none; border-top: 1px solid #ddd; margin: 56px 0;
+  }
+
+  /* ── Card wrapper ── */
+  .card {
+    background: #fff;
+    border: 1px solid #e0deda;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* ── Table header ── */
+  .tbl-head {
+    display: grid;
+    padding: 9px 18px;
+    background: #f7f6f3;
+    border-bottom: 1px solid #e0deda;
+    font-size: 11px; font-weight: 600; color: #888;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .tbl-head.sets-grid { grid-template-columns: 2fr 90px 1.2fr 70px auto; }
+
+  .tbl-row {
+    display: grid;
+    padding: 13px 18px;
+    border-bottom: 1px solid #f0efec;
+    align-items: center;
+  }
+  .tbl-row:last-child { border-bottom: none; }
+  .tbl-row.sets-grid { grid-template-columns: 2fr 90px 1.2fr 70px auto; }
+
+  .set-name { font-size: 14px; font-weight: 600; color: #1a1a18; }
+  .set-code { font-size: 12px; color: #666; font-family: monospace; }
+  .set-client { font-size: 13px; color: #555; }
+  .set-active { font-size: 13px; }
+  .dot-active { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+  .dot-inactive { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
+
+  /* ── Action icons ── */
+  .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .action-icon {
+    display: flex; align-items: center; gap: 3px;
+    font-size: 11px; color: #777;
+    cursor: pointer; padding: 3px 6px; border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.12s;
+  }
+  .action-icon:hover { background: #f0f0ed; color: #333; }
+  .action-icon svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .action-count { font-size: 10px; color: #aaa; }
+
+  /* AI icon states */
+  .ai-icon-active {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; color: #1a6fc4;
+    background: #e8f0fb; border: 1px solid #b3cef0;
+    border-radius: 14px; padding: 3px 9px; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.12s;
+  }
+  .ai-icon-active:hover { background: #d4e5f8; }
+  .ai-icon-active svg { width: 14px; height: 14px; }
+
+  .ai-icon-setup {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; color: #999;
+    border: 1px dashed #bbb;
+    border-radius: 14px; padding: 3px 9px; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+  }
+  .ai-icon-setup:hover { background: #f5f4f1; border-color: #888; color: #555; }
+  .ai-icon-setup svg { width: 14px; height: 14px; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; gap: 20px; margin-top: 12px; padding: 0 4px;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; color: #666;
+  }
+
+  /* ── AI Setting screen ── */
+  .screen-header {
+    background: #1a1f2e; padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .screen-header-title {
+    font-size: 16px; font-weight: 600; color: #fff;
+  }
+  .screen-header-sub {
+    font-size: 12px; color: #8fa0b8; margin-top: 2px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: #8fa0b8; text-decoration: none;
+    transition: color 0.12s;
+  }
+  .back-link:hover { color: #fff; }
+  .back-link svg { width: 14px; height: 14px; }
+
+  .screen-body { padding: 24px; background: #f7f6f3; }
+
+  /* ── Status Card ── */
+  .status-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1.5px solid #e0deda;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .status-card.state-active  { border-color: #86efac; }
+  .status-card.state-amber   { border-color: #fcd34d; }
+  .status-card.state-red     { border-color: #fca5a5; }
+
+  .status-card-header {
+    padding: 14px 18px 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .status-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+  }
+  .status-dot {
+    width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-green  { background: #22c55e; }
+  .dot-amber  { background: #f59e0b; }
+  .dot-red    { background: #ef4444; }
+  .color-green { color: #15803d; }
+  .color-amber { color: #b45309; }
+  .color-red   { color: #b91c1c; }
+
+  .tiles {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; padding: 12px 18px;
+  }
+  .tile {
+    background: #f7f6f3; border-radius: 7px; padding: 12px 14px;
+  }
+  .tile-label {
+    font-size: 11px; color: #888; margin-bottom: 5px;
+  }
+  .tile-value {
+    font-size: 22px; font-weight: 700; color: #1a1a18; line-height: 1;
+  }
+  .tile-value.red   { color: #ef4444; }
+  .tile-value.amber { color: #f59e0b; }
+  .tile-value.muted { font-size: 14px; color: #aaa; padding-top: 4px; font-weight: 500; }
+
+  .status-footer {
+    padding: 0 18px 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .status-msg { font-size: 13px; color: #555; }
+
+  .cta-group { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn {
+    font-size: 12px; font-weight: 500; border-radius: 6px;
+    padding: 7px 14px; cursor: pointer; display: inline-flex;
+    align-items: center; gap: 5px; text-decoration: none;
+    border: 1px solid transparent; transition: background 0.12s;
+  }
+  .btn-ghost {
+    background: #fff; color: #555; border-color: #ddd;
+  }
+  .btn-ghost:hover { background: #f5f4f1; }
+  .btn-primary {
+    background: #1a6fc4; color: #fff; border-color: #1a6fc4;
+  }
+  .btn-primary:hover { background: #155fa0; }
+  .btn svg { width: 13px; height: 13px; }
+
+  /* ── Settings form ── */
+  .form-section {
+    background: #fff; border: 1px solid #e0deda;
+    border-radius: 10px; padding: 20px 24px; margin-bottom: 16px;
+  }
+  .form-section-title {
+    font-size: 13px; font-weight: 600; color: #333;
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid #f0efec;
+  }
+  .form-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #f7f6f3;
+  }
+  .form-row:last-child { border-bottom: none; }
+  .form-checkbox {
+    width: 16px; height: 16px; border: 1.5px solid #ccc;
+    border-radius: 4px; flex-shrink: 0; background: #fff;
+  }
+  .form-checkbox.checked {
+    background: #1a6fc4; border-color: #1a6fc4;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .form-checkbox.checked::after {
+    content: ''; width: 8px; height: 5px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+  .form-q-text { font-size: 13px; color: #333; }
+  .form-q-badge {
+    margin-left: auto; font-size: 10px; color: #888;
+    background: #f0efec; padding: 2px 7px; border-radius: 10px;
+  }
+
+  .save-bar {
+    background: #fff; border: 1px solid #e0deda;
+    border-radius: 10px; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .save-bar span { font-size: 13px; color: #666; }
+
+  /* ── State tag ── */
+  .state-tag {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 4px;
+    background: #f0f0ed; color: #888; margin-bottom: 14px;
+  }
+
+  /* ── User role toggle ── */
+  .role-toggle {
+    display: flex; gap: 0; margin-bottom: 20px;
+    border: 1px solid #ddd; border-radius: 7px; overflow: hidden;
+    width: fit-content;
+  }
+  .role-btn {
+    padding: 8px 18px; font-size: 12px; font-weight: 500;
+    cursor: pointer; background: #fff; color: #666; border: none;
+    transition: background 0.12s, color 0.12s;
+  }
+  .role-btn.active { background: #1a1f2e; color: #fff; }
+
+  /* ── SVG icons inline ── */
+  .icon { display: inline-flex; align-items: center; }
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <div class="nav-logo">CHECKER <span>Ai</span></div>
+  <a href="#sets" class="active">sets.php — questionnaire list</a>
+  <a href="#ai-setting-state1">AI-setting — state 1 (active)</a>
+  <a href="#ai-setting-state2">AI-setting — state 2 (incomplete)</a>
+  <a href="#ai-setting-state3">AI-setting — state 3 (no credits)</a>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 — sets.php
+═══════════════════════════════════════════ -->
+<div class="section" id="sets">
+  <div class="section-label">Screen 1 of 2</div>
+  <div class="section-title">sets.php — questionnaire list</div>
+  <div class="section-desc">
+    The AI Questions icon (✦) is added as a persistent action in the existing row alongside Edit, Branches, Users, etc.
+    Configured sets show a blue count pill. Unconfigured sets show a dashed "set up" pill. No banner needed.
+  </div>
+
+  <div class="card">
+    <div class="tbl-head sets-grid">
+      <span>Questionnaire name</span>
+      <span>Code</span>
+      <span>Client</span>
+      <span>Active</span>
+      <span>Actions</span>
+    </div>
+
+    <!-- Row 1 — AI configured -->
+    <div class="tbl-row sets-grid">
+      <div>
+        <div class="set-name">AGH Survey</div>
+      </div>
+      <div class="set-code">AGH01</div>
+      <div class="set-client">AGH Retail</div>
+      <div class="set-active"><span class="dot-active"></span></div>
+      <div class="actions">
+        <a class="action-icon" href="#" title="Edit questionnaire contents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span class="action-count">(65)</span>
+        </a>
+        <a class="action-icon" href="#" title="Branch association">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>
+          <span class="action-count">(3)</span>
+        </a>
+        <a class="action-icon" href="#" title="User access">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span class="action-count">(12)</span>
+        </a>
+        <a class="action-icon" href="#" title="Briefings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </a>
+        <a class="action-icon" href="#" title="Target grades">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </a>
+        <!-- AI QUESTIONS — configured -->
+        <a class="ai-icon-active" href="#ai-setting-state1" title="AI Questions — 3 configured, click to manage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/></svg>
+          3
+        </a>
+      </div>
+    </div>
+
+    <!-- Row 2 — AI not configured -->
+    <div class="tbl-row sets-grid">
+      <div>
+        <div class="set-name">Retail Audit 2026</div>
+      </div>
+      <div class="set-code">RET26</div>
+      <div class="set-client">Metro Group</div>
+      <div class="set-active"><span class="dot-active"></span></div>
+      <div class="actions">
+        <a class="action-icon" href="#" title="Edit questionnaire contents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span class="action-count">(42)</span>
+        </a>
+        <a class="action-icon" href="#" title="Branch association">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>
+          <span class="action-count">(2)</span>
+        </a>
+        <a class="action-icon" href="#" title="User access">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span class="action-count">(8)</span>
+        </a>
+        <a class="action-icon" href="#" title="Briefings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </a>
+        <a class="action-icon" href="#" title="Target grades">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </a>
+        <!-- AI QUESTIONS — not configured -->
+        <a class="ai-icon-setup" href="#ai-setting-state2" title="AI Questions — not configured, click to set up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/></svg>
+          set up
+        </a>
+      </div>
+    </div>
+
+    <!-- Row 3 — AI not configured, inactive set -->
+    <div class="tbl-row sets-grid">
+      <div>
+        <div class="set-name" style="color:#aaa;">Mystery Shop Q4</div>
+      </div>
+      <div class="set-code" style="color:#bbb;">MSQ4</div>
+      <div class="set-client" style="color:#bbb;">Central Stores</div>
+      <div class="set-active"><span class="dot-inactive"></span></div>
+      <div class="actions">
+        <a class="action-icon" href="#" title="Edit questionnaire contents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span class="action-count">(28)</span>
+        </a>
+        <a class="action-icon" href="#" title="Branch association">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>
+          <span class="action-count">(5)</span>
+        </a>
+        <a class="action-icon" href="#" title="User access">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span class="action-count">(4)</span>
+        </a>
+        <a class="action-icon" href="#" title="Briefings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </a>
+        <a class="action-icon" href="#" title="Target grades">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </a>
+        <a class="ai-icon-setup" href="#ai-setting-state2" title="AI Questions — not configured">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/></svg>
+          set up
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend" style="margin-top:14px;">
+    <div class="legend-item">
+      <span class="ai-icon-active" style="pointer-events:none;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/></svg>
+        3
+      </span>
+      <span style="font-size:12px; color:#666;">AI questions configured — click to manage</span>
+    </div>
+    <div class="legend-item">
+      <span class="ai-icon-setup" style="pointer-events:none;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/></svg>
+        set up
+      </span>
+      <span style="font-size:12px; color:#666;">not configured — click to start</span>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 — AI-setting State 1: Active
+═══════════════════════════════════════════ -->
+<div class="section" id="ai-setting-state1">
+  <div class="section-label">Screen 2 of 2 — State 1 of 3</div>
+  <div class="section-title">AI-setting.php — Active</div>
+  <div class="section-desc">Credits available and questions configured. AI Questions will run on review approval.</div>
+
+  <div class="card">
+    <div class="screen-header">
+      <div>
+        <div class="screen-header-title">AGH Survey — AI Questions</div>
+        <div class="screen-header-sub">Configure AI-powered questions for this questionnaire</div>
+      </div>
+      <a class="back-link" href="#sets">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to questionnaire settings
+      </a>
+    </div>
+
+    <div class="screen-body">
+      <div class="state-tag">State 1 — Active</div>
+
+      <!-- Status Card: Active -->
+      <div class="status-card state-active">
+        <div class="status-card-header">
+          <div class="status-label">
+            <span class="status-dot dot-green"></span>
+            <span class="color-green">AI Questions active</span>
+          </div>
+        </div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="tile-label">Credits remaining</div>
+            <div class="tile-value">42</div>
+          </div>
+          <div class="tile">
+            <div class="tile-label">Questions on this set</div>
+            <div class="tile-value">3</div>
+          </div>
+          <div class="tile">
+            <div class="tile-label">Last AI run</div>
+            <div class="tile-value muted">20 Sep 2026</div>
+          </div>
+        </div>
+        <div class="status-footer">
+          <span class="status-msg">Questions will run automatically when reviews are approved.</span>
+        </div>
+      </div>
+
+      <!-- Settings form -->
+      <div class="form-section">
+        <div class="form-section-title">Questions configured for this set</div>
+        <div class="form-row">
+          <div class="form-checkbox checked"></div>
+          <span class="form-q-text">What was the overall cleanliness of the store?</span>
+          <span class="form-q-badge">Custom</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox checked"></div>
+          <span class="form-q-text">Did the staff greet the customer within 30 seconds?</span>
+          <span class="form-q-badge">Custom</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox checked"></div>
+          <span class="form-q-text">Was the product knowledge demonstrated adequately?</span>
+          <span class="form-q-badge">Global</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox"></div>
+          <span class="form-q-text" style="color:#aaa;">Summarise the customer's overall experience</span>
+          <span class="form-q-badge">Global</span>
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <span>Changes will apply to reviews approved after saving.</span>
+        <button class="btn btn-primary">Save settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 — AI-setting State 2: Incomplete
+═══════════════════════════════════════════ -->
+<div class="section" id="ai-setting-state2">
+  <div class="section-label">Screen 2 of 2 — State 2 of 3</div>
+  <div class="section-title">AI-setting.php — Credits available, no questions configured</div>
+  <div class="section-desc">Credits are available but no questions have been selected for this set yet. AI will not run.</div>
+
+  <div class="card">
+    <div class="screen-header">
+      <div>
+        <div class="screen-header-title">Retail Audit 2026 — AI Questions</div>
+        <div class="screen-header-sub">Configure AI-powered questions for this questionnaire</div>
+      </div>
+      <a class="back-link" href="#sets">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to questionnaire settings
+      </a>
+    </div>
+
+    <div class="screen-body">
+      <div class="state-tag">State 2 — Credits available, no questions</div>
+
+      <!-- Status Card: Incomplete -->
+      <div class="status-card state-amber">
+        <div class="status-card-header">
+          <div class="status-label">
+            <span class="status-dot dot-amber"></span>
+            <span class="color-amber">Credits available — no questions configured yet</span>
+          </div>
+        </div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="tile-label">Credits remaining</div>
+            <div class="tile-value">42</div>
+          </div>
+          <div class="tile">
+            <div class="tile-label">Questions on this set</div>
+            <div class="tile-value amber">0</div>
+          </div>
+          <div class="tile">
+            <div class="tile-label">Last AI run</div>
+            <div class="tile-value muted">Never</div>
+          </div>
+        </div>
+        <div class="status-footer">
+          <span class="status-msg">You have credits ready. Select questions below and save to activate AI Questions for this set.</span>
+        </div>
+      </div>
+
+      <!-- Settings form -->
+      <div class="form-section">
+        <div class="form-section-title">Select questions to configure</div>
+        <div class="form-row">
+          <div class="form-checkbox"></div>
+          <span class="form-q-text">What was the overall cleanliness of the store?</span>
+          <span class="form-q-badge">Custom</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox"></div>
+          <span class="form-q-text">Did the staff greet the customer within 30 seconds?</span>
+          <span class="form-q-badge">Custom</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox"></div>
+          <span class="form-q-text">Summarise the customer's overall experience</span>
+          <span class="form-q-badge">Global</span>
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <span>Select at least one question and save to activate.</span>
+        <button class="btn btn-primary">Save settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 — AI-setting State 3: No credits
+═══════════════════════════════════════════ -->
+<div class="section" id="ai-setting-state3">
+  <div class="section-label">Screen 2 of 2 — State 3 of 3</div>
+  <div class="section-title">AI-setting.php — No credits remaining</div>
+  <div class="section-desc">
+    Credit balance is zero. AI will not run. CTA shown differs by user role — toggle below to see both views.
+  </div>
+
+  <!-- Role toggle -->
+  <div class="role-toggle" id="roleToggle">
+    <button class="role-btn active" onclick="setRole('master')">Checker Master</button>
+    <button class="role-btn" onclick="setRole('other')">Other user</button>
+  </div>
+
+  <div class="card">
+    <div class="screen-header">
+      <div>
+        <div class="screen-header-title">AGH Survey — AI Questions</div>
+        <div class="screen-header-sub">Configure AI-powered questions for this questionnaire</div>
+      </div>
+      <a class="back-link" href="#sets">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to questionnaire settings
+      </a>
+    </div>
+
+    <div class="screen-body">
+      <div class="state-tag">State 3 — No credits</div>
+
+      <!-- Status Card: No credits -->
+      <div class="status-card state-red">
+        <div class="status-card-header">
+          <div class="status-label">
+            <span class="status-dot dot-red"></span>
+            <span class="color-red">No AI credits remaining</span>
+          </div>
+        </div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="tile-label">Credits remaining</div>
+            <div class="tile-value red">0</div>
+          </div>
+          <div class="tile">
+            <div class="tile-label">Questions on this set</div>
+            <div class="tile-value">3</div>
+          </div>
+          <div class="tile">
+            <div class="tile-label">Last AI run</div>
+            <div class="tile-value muted">18 Sep 2026</div>
+          </div>
+        </div>
+        <div class="status-footer">
+          <span class="status-msg">AI Questions won't run until credits are topped up.</span>
+          <!-- CTA — changes based on role -->
+          <div class="cta-group" id="ctaGroup">
+            <!-- Checker Master view (default) -->
+            <button class="btn btn-ghost">Contact administrator</button>
+            <a class="btn btn-primary" href="#">
+              Buy AI credits
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings form (still accessible) -->
+      <div class="form-section">
+        <div class="form-section-title">Questions configured for this set</div>
+        <div class="form-row">
+          <div class="form-checkbox checked"></div>
+          <span class="form-q-text">What was the overall cleanliness of the store?</span>
+          <span class="form-q-badge">Custom</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox checked"></div>
+          <span class="form-q-text">Did the staff greet the customer within 30 seconds?</span>
+          <span class="form-q-badge">Custom</span>
+        </div>
+        <div class="form-row">
+          <div class="form-checkbox checked"></div>
+          <span class="form-q-text">Was the product knowledge demonstrated adequately?</span>
+          <span class="form-q-badge">Global</span>
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <span>Settings saved. AI will resume automatically once credits are available.</span>
+        <button class="btn btn-primary">Save settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height: 60px;"></div>
+
+<script>
+  function setRole(role) {
+    var btns = document.querySelectorAll('.role-btn');
+    btns[0].classList.toggle('active', role === 'master');
+    btns[1].classList.toggle('active', role === 'other');
+
+    var cta = document.getElementById('ctaGroup');
+    if (role === 'master') {
+      cta.innerHTML = '<button class="btn btn-ghost">Contact administrator</button>' +
+        '<a class="btn btn-primary" href="#">Buy AI credits <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>';
+    } else {
+      cta.innerHTML = '<button class="btn btn-ghost">Contact your administrator</button>';
+    }
+  }
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Active nav highlight on scroll
+  var sections = ['sets','ai-setting-state1','ai-setting-state2','ai-setting-state3'];
+  var navLinks = document.querySelectorAll('.page-nav a');
+  window.addEventListener('scroll', function() {
+    var scrollY = window.scrollY + 80;
+    var current = sections[0];
+    sections.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) current = id;
+    });
+    navLinks.forEach(function(link) {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+</body>
+</html>
