@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.2.0/highcharts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.2.0/highcharts-more.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.2.0/modules/solid-gauge.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f6fa;padding:16px}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:7px 14px;border-radius:20px;border:1.5px solid #d0d5dd;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#555;transition:all .15s}
+.tab:hover{border-color:#4361ee;color:#4361ee}
+.tab.active{background:#4361ee;border-color:#4361ee;color:#fff}
+.chart-wrap{background:#fff;border-radius:12px;border:1px solid #e5e8ef;padding:20px}
+.rank-badge{display:inline-flex;align-items:center;gap:8px;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:10px;padding:8px 14px;margin-bottom:14px}
+.rank-num{font-size:22px;font-weight:800;color:#c2410c}
+.rank-label{font-size:12px;color:#7c3aed;font-weight:600;line-height:1.4}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600}
+.c-you{background:#eff1ff;color:#4361ee}
+.c-mkt{background:#fffbeb;color:#d97706}
+.c-top{background:#ecfdf5;color:#059669}
+.c-rank{background:#fff7ed;color:#c2410c}
+.note{font-size:12px;color:#888;margin-top:10px;padding-top:10px;border-top:1px solid #eee}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Rank in benchmark charts — showing rank 3 of 3 across 6 chart types</h2>
+
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+  <div class="rank-badge">
+    <div class="rank-num">3 <span style="font-size:14px;color:#9ca3af">/ 3</span></div>
+    <div class="rank-label">Your rank<br>Romania · Aug 2026</div>
+  </div>
+  <div class="chips">
+    <span class="chip c-you">Your score: 54.65</span>
+    <span class="chip c-mkt">Market avg: 86.00</span>
+    <span class="chip c-top">Top performer: 96.88</span>
+    <span class="chip c-rank">Rank: 3 of 3 (last)</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="show(this,'column')">Column</div>
+  <div class="tab" onclick="show(this,'bar')">Bar</div>
+  <div class="tab" onclick="show(this,'stacked-col')">Stacked Column</div>
+  <div class="tab" onclick="show(this,'stacked-bar')">Stacked Bar</div>
+  <div class="tab" onclick="show(this,'line')">Line</div>
+  <div class="tab" onclick="show(this,'gauge')">Half Gauge</div>
+</div>
+
+<div class="chart-wrap">
+  <div id="chart" style="height:370px"></div>
+  <div class="note" id="note"></div>
+</div>
+
+<script>
+const YOUR=54.65, MKT=86.0, TOP=96.88, RANK=3, POOL=3;
+const GAP=(MKT-YOUR).toFixed(1);
+
+const RANK_SUBTITLE = `Rank ${RANK} of ${POOL} · Romania · Aug 2026`;
+
+const plotLinesY = [
+  { value:MKT,  color:'#f59e0b', width:2, zIndex:5,
+    label:{ text:`Market avg: ${MKT}  ▼ −${GAP}`, align:'right', x:-8, style:{color:'#d97706',fontWeight:'600',fontSize:'11px'} } },
+  { value:TOP,  color:'#10b981', width:2, dashStyle:'Dash', zIndex:5,
+    label:{ text:`Top performer: ${TOP}`, align:'right', x:-8, style:{color:'#059669',fontWeight:'600',fontSize:'11px'} } }
+];
+const plotLinesX = [
+  { value:MKT,  color:'#f59e0b', width:2, zIndex:5,
+    label:{ text:`Market avg: ${MKT}`, align:'right', y:-4, style:{color:'#d97706',fontWeight:'600',fontSize:'11px'} } },
+  { value:TOP,  color:'#10b981', width:2, dashStyle:'Dash', zIndex:5,
+    label:{ text:`Top: ${TOP}`, align:'right', y:-4, style:{color:'#059669',fontWeight:'600',fontSize:'11px'} } }
+];
+
+const common = {
+  credits:{enabled:false},
+  title:{text:null},
+  chart:{style:{fontFamily:'-apple-system,sans-serif'},animation:{duration:350}}
+};
+
+function rankColor(r,n){ return r===1?'#f59e0b': r===n?'#e11d48': '#f97316'; }
+
+function rankTitle(r,n){
+  const medal = r===1?'🥇 ':r===2?'🥈 ':r===3&&n===3?'🔴 ':'';
+  return `<span style="font-size:12px;font-weight:700;color:${rankColor(r,n)}">${medal}Rank ${r} of ${n}</span>`;
+}
+
+function show(el, type){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const node = document.getElementById('chart');
+  const note = document.getElementById('note');
+
+  if(type==='column'){
+    note.innerHTML = '📍 Rank shown as a dataLabel inside the bar and in the chart subtitle. Colour-coded: red = last place, gold = first.';
+    Highcharts.chart(node,{
+      ...common,
+      chart:{...common.chart,type:'column'},
+      subtitle:{
+        text: rankTitle(RANK,POOL),
+        useHTML:true, align:'left'
+      },
+      xAxis:{categories:['Romania'],title:{text:'Country'}},
+      yAxis:{min:0,max:100,title:{text:'Grade'},plotLines:plotLinesY},
+      legend:{enabled:false},
+      series:[{
+        name:'Your score',
+        data:[{y:YOUR, color:'#e11d48'}],
+        dataLabels:{
+          enabled:true, useHTML:true, align:'center', verticalAlign:'top', inside:false, y:-52,
+          formatter(){ return `<div style="text-align:center">
+            <span style="font-size:13px;font-weight:700;color:#111">${this.y}</span><br>
+            <span style="font-size:11px;color:#e11d48">▼ −${GAP} vs market</span><br>
+            <span style="font-size:11px;font-weight:700;color:#e11d48">Rank ${RANK}/${POOL}</span>
+          </div>`; }
+        }
+      }]
+    });
+  }
+
+  else if(type==='bar'){
+    note.innerHTML = '📍 Rank shown as a dataLabel to the right of the bar. Clear "Rank X of N" text visible without hovering.';
+    Highcharts.chart(node,{
+      ...common,
+      chart:{...common.chart,type:'bar'},
+      subtitle:{text:rankTitle(RANK,POOL),useHTML:true,align:'left'},
+      xAxis:{categories:['Romania'],title:{text:'Country'}},
+      yAxis:{min:0,max:100,title:{text:'Grade'},plotLines:plotLinesX},
+      legend:{enabled:false},
+      series:[{
+        name:'Your score',
+        data:[{y:YOUR,color:'#e11d48'}],
+        dataLabels:{
+          enabled:true, useHTML:true, align:'left', inside:false, x:6,
+          formatter(){ return `<span style="font-size:12px;font-weight:700">${this.y} &nbsp;<span style="color:#e11d48">▼−${GAP} &nbsp; Rank ${RANK}/${POOL}</span></span>`; }
+        }
+      }]
+    });
+  }
+
+  else if(type==='stacked-col'){
+    note.innerHTML = '📍 Rank shown in subtitle + as a label above the total stack. Each segment labelled so gap to market and top are readable.';
+    Highcharts.chart(node,{
+      ...common,
+      chart:{...common.chart,type:'column'},
+      subtitle:{text:rankTitle(RANK,POOL),useHTML:true,align:'left'},
+      xAxis:{categories:['Romania'],title:{text:'Country'}},
+      yAxis:{min:0,max:100,title:{text:'Grade'},stackLabels:{
+        enabled:true, useHTML:true,
+        formatter(){ return `<span style="font-size:11px;font-weight:700;color:#e11d48">Rank ${RANK}/${POOL}</span>`; },
+        style:{fontWeight:'normal'}
+      }},
+      plotOptions:{column:{stacking:'normal'}},
+      legend:{enabled:true,verticalAlign:'bottom'},
+      series:[
+        {name:'Your score',data:[YOUR],color:'#e11d48',dataLabels:{enabled:true,inside:true,formatter(){return `${this.y}`;},style:{fontWeight:'700',color:'#fff'}}},
+        {name:'Gap to market',data:[parseFloat((MKT-YOUR).toFixed(2))],color:'#fde68a',dataLabels:{enabled:true,inside:true,formatter(){return `+${this.y.toFixed(1)} to avg`;},style:{fontWeight:'600',color:'#92400e',fontSize:'11px'}}},
+        {name:'Gap to top',data:[parseFloat((TOP-MKT).toFixed(2))],color:'#d1fae5',dataLabels:{enabled:true,inside:true,formatter(){return `+${this.y.toFixed(1)} to top`;},style:{fontWeight:'600',color:'#065f46',fontSize:'11px'}}}
+      ]
+    });
+  }
+
+  else if(type==='stacked-bar'){
+    note.innerHTML = '📍 Rank in subtitle. Stack segments fill horizontally — Your Score / Gap to Market / Gap to Top. Rank visible at a glance.';
+    Highcharts.chart(node,{
+      ...common,
+      chart:{...common.chart,type:'bar'},
+      subtitle:{text:rankTitle(RANK,POOL),useHTML:true,align:'left'},
+      xAxis:{categories:['Romania'],title:{text:'Country'}},
+      yAxis:{min:0,max:100,title:{text:'Grade'},plotLines:plotLinesX,stackLabels:{
+        enabled:true, useHTML:true,
+        formatter(){ return `<span style="font-size:11px;font-weight:700;color:#e11d48">Rank ${RANK}/${POOL}</span>`; }
+      }},
+      plotOptions:{bar:{stacking:'normal'}},
+      legend:{enabled:true,verticalAlign:'bottom'},
+      series:[
+        {name:'Your score',data:[YOUR],color:'#e11d48',dataLabels:{enabled:true,inside:true,formatter(){return `${this.y}`;},style:{fontWeight:'700',color:'#fff'}}},
+        {name:'Gap to market',data:[parseFloat((MKT-YOUR).toFixed(2))],color:'#fde68a',dataLabels:{enabled:true,inside:true,formatter(){return `+${(MKT-YOUR).toFixed(1)}`;},style:{fontWeight:'600',color:'#92400e',fontSize:'11px'}}},
+        {name:'Gap to top',data:[parseFloat((TOP-MKT).toFixed(2))],color:'#d1fae5',dataLabels:{enabled:true,inside:true,formatter(){return `+${(TOP-MKT).toFixed(1)}`;},style:{fontWeight:'600',color:'#065f46',fontSize:'11px'}}}
+      ]
+    });
+  }
+
+  else if(type==='line'){
+    note.innerHTML = '📍 Rank shown in tooltip on hover and as an annotation on the final (rightmost) data point. Changes period-over-period if rank changes.';
+    Highcharts.chart(node,{
+      ...common,
+      chart:{...common.chart,type:'line'},
+      subtitle:{text:rankTitle(RANK,POOL)+' <span style="font-size:11px;color:#888;font-weight:400">(Aug 2026)</span>',useHTML:true,align:'left'},
+      xAxis:{categories:['Jun 2026','Jul 2026','Aug 2026'],title:{text:'Period'}},
+      yAxis:{min:0,max:100,title:{text:'Grade'}},
+      tooltip:{shared:true,useHTML:true,formatter(){
+        let s=`<b>${this.x}</b><br>`;
+        this.points.forEach(p=>{ s+=`<span style="color:${p.color}">●</span> ${p.series.name}: <b>${p.y}</b><br>`; });
+        if(this.x==='Aug 2026') s+=`<span style="color:#e11d48;font-weight:700">Rank ${RANK} of ${POOL}</span>`;
+        return s;
+      }},
+      legend:{enabled:true,verticalAlign:'bottom'},
+      series:[
+        {
+          name:'Your score', color:'#4361ee', lineWidth:2.5,
+          data:[48.2,51.0,YOUR],
+          dataLabels:{
+            enabled:true, useHTML:true,
+            formatter(){ if(this.point.index!==2)return ''; return `<div style="text-align:center"><b>${this.y}</b><br><span style="color:#e11d48;font-size:10px;font-weight:700">Rank ${RANK}/${POOL}</span></div>`; }
+          }
+        },
+        {
+          name:'Market avg', color:'#f59e0b', lineWidth:2, dashStyle:'ShortDash',
+          data:[84.5,85.2,MKT], marker:{symbol:'diamond'},
+          dataLabels:{enabled:true,formatter(){return this.point.index===2?`<b>${this.y}</b>`:'';}  }
+        },
+        {
+          name:'Top performer', color:'#10b981', lineWidth:1.5, dashStyle:'Dot',
+          data:[95.0,96.0,TOP], marker:{symbol:'triangle'},
+          dataLabels:{enabled:true,formatter(){return this.point.index===2?`<b>${this.y}</b>`:'';}  }
+        }
+      ]
+    });
+  }
+
+  else if(type==='gauge'){
+    note.innerHTML = '📍 Rank displayed prominently in the central dataLabel. Gauge zones + needle + rank make the position instantly clear with no reading required.';
+    Highcharts.chart(node,{
+      ...common,
+      chart:{...common.chart,type:'gauge',height:370},
+      pane:{
+        startAngle:-90, endAngle:90,
+        background:[{backgroundColor:'#f5f6fa',innerRadius:'60%',outerRadius:'100%',shape:'arc',borderWidth:0}],
+        center:['50%','85%'], size:'140%'
+      },
+      yAxis:{
+        min:0, max:100,
+        lineWidth:0, minorTickInterval:null, tickAmount:2,
+        labels:{y:16,style:{fontSize:'12px',color:'#888'}},
+        plotBands:[
+          {from:0,    to:YOUR, color:'rgba(226,29,72,0.15)',  innerRadius:'60%',outerRadius:'100%'},
+          {from:YOUR, to:MKT,  color:'rgba(245,158,11,0.12)',innerRadius:'60%',outerRadius:'100%'},
+          {from:MKT,  to:TOP,  color:'rgba(16,185,129,0.10)',innerRadius:'60%',outerRadius:'100%'}
+        ],
+        plotLines:[
+          {value:MKT, color:'#f59e0b',width:3,zIndex:5,label:{text:`Mkt ${MKT}`,style:{color:'#d97706',fontWeight:'700',fontSize:'11px'}}},
+          {value:TOP, color:'#10b981',width:2,dashStyle:'Dash',zIndex:5,label:{text:`Top ${TOP}`,style:{color:'#059669',fontWeight:'700',fontSize:'11px'}}}
+        ]
+      },
+      series:[{
+        name:'Your score', data:[YOUR],
+        dial:{radius:'80%',baseWidth:8,baseLength:'0%',rearLength:'0%',backgroundColor:'#e11d48'},
+        pivot:{backgroundColor:'#e11d48',radius:6},
+        dataLabels:{
+          enabled:true, useHTML:true, borderWidth:0, y:-22,
+          formatter(){ return `<div style="text-align:center">
+            <span style="font-size:30px;font-weight:800;color:#e11d48">${this.y}</span><br>
+            <span style="font-size:12px;color:#e11d48">▼ ${GAP} below market</span><br>
+            <span style="font-size:14px;font-weight:800;color:#e11d48">🔴 Rank ${RANK} of ${POOL}</span>
+          </div>`; }
+        }
+      }],
+      tooltip:{enabled:false},legend:{enabled:false}
+    });
+  }
+}
+
+show(document.querySelector('.tab.active'),'column');
+</script>
+</body>
+</html>
