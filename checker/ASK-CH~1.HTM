@@ -1,0 +1,227 @@
+<meta charset="utf-8">
+<div id="abe-root"></div>
+<style>
+#abe-root *{box-sizing:border-box}
+#abe-root{--bg:#eef1f4;--card:#ffffff;--ink:#1f2d3d;--mut:#64748b;--mut2:#94a3b8;--bd:#e2e8f0;--bds:#cbd5e1;
+  --acc:#2b7bbd;--accbg:#e8f1f9;--grn:#3f9142;--grnbg:#e8f3e8;--amb:#b7791f;--ambbg:#fbf3e3;--red:#c0392b;--redbg:#fbeceb;
+  font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);display:block;min-height:620px;padding:24px 16px}
+.pg{max-width:900px;margin:0 auto;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:22px 26px}
+.row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.h1{font-size:20px;font-weight:600}
+.crumb{font-size:12px;color:var(--mut);margin-top:3px}
+.pill{font-size:12px;padding:4px 11px;border-radius:999px;white-space:nowrap;font-weight:500}
+.pill.closed{background:var(--ambbg);color:var(--amb)}
+.pill.open{background:var(--grnbg);color:var(--grn)}
+.meta{font-size:12px;color:var(--mut);margin-top:7px;text-align:right}
+.meta b{color:var(--acc);font-weight:600}
+.sec{border-top:1px solid var(--bd);margin-top:18px;padding-top:16px}
+.st{font-size:15px;font-weight:600}
+.sd{font-size:12.5px;color:var(--mut);margin:3px 0 12px;line-height:1.55}
+.lbl{font-size:12px;color:var(--mut);margin:0 0 5px}
+.mono{font-family:'Consolas','SF Mono',monospace}
+input[type=text],input[type=number],select{font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--bds);border-radius:7px;padding:8px 10px;width:100%}
+input[type=number]{width:100%}
+.btn{font:inherit;font-size:13px;border:1px solid var(--bds);background:#fff;color:var(--ink);border-radius:7px;padding:7px 12px;cursor:pointer}
+.btn:hover{background:#f8fafc}
+.btn.pri{background:var(--grn);border-color:var(--grn);color:#fff}
+.btn.pri:hover{filter:brightness(.96)}
+.tag{font-size:11px;padding:2px 8px;border-radius:6px}
+.tag.ok{background:var(--grnbg);color:var(--grn)}
+.dd{position:relative}
+.dd-sel{border:1px solid var(--bds);border-radius:7px;padding:9px 12px;font-size:14px;color:var(--mut2);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;max-width:420px}
+.dd-sel.has{color:var(--ink)}
+.dd-sel .cv{transition:transform .15s;color:var(--mut)}
+.dd.open .dd-sel{border-color:var(--acc)}
+.dd.open .cv{transform:rotate(180deg)}
+.dd-p{display:none;position:absolute;z-index:5;margin-top:4px;width:420px;max-width:100%;background:#fff;border:1px solid var(--bds);border-radius:8px;box-shadow:0 8px 22px rgba(15,23,42,.12);overflow:hidden}
+.dd.open .dd-p{display:block}
+.dd-s{position:relative;padding:9px}
+.dd-s input{padding-right:30px}
+.dd-s .x{position:absolute;right:19px;top:50%;transform:translateY(-50%);color:var(--mut2);cursor:pointer;font-size:17px;line-height:1}
+.dd-a{display:flex;gap:20px;padding:8px 13px;background:#f1f5f9;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);font-size:13px;color:var(--mut)}
+.dd-a span{cursor:pointer}
+.dd-a span:hover{color:var(--acc)}
+.dd-l{max-height:184px;overflow:auto;padding:5px}
+.dd-l label{display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:6px;cursor:pointer;font-size:14px}
+.dd-l label:hover{background:#f1f5f9}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cap{margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+details.acc>summary{list-style:none;cursor:pointer;font-size:13px;color:var(--mut);display:inline-flex;align-items:center;gap:7px}
+details.acc>summary::-webkit-details-marker{display:none}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-weight:500;color:var(--mut);text-align:left;padding:7px 8px;border-bottom:1px solid var(--bd)}
+td{padding:8px;border-bottom:1px solid var(--bd)}
+.lk{color:var(--acc);cursor:pointer}
+.sx{color:var(--grn)}.sr{color:var(--red)}.so{color:var(--mut)}
+.logbox{border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;border-radius:8px;opacity:0;transition:all .2s;z-index:60}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.backdrop{position:fixed;inset:0;background:rgba(15,23,42,.38);opacity:0;visibility:hidden;transition:.2s;z-index:40}
+.backdrop.show{opacity:1;visibility:visible}
+.peek{position:fixed;top:0;right:0;height:100%;width:460px;max-width:92vw;background:#fff;border-left:1px solid var(--bd);box-shadow:-10px 0 30px rgba(15,23,42,.12);
+  transform:translateX(100%);transition:transform .22s ease;z-index:50;display:flex;flex-direction:column}
+.peek.show{transform:translateX(0)}
+.peek-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--bd)}
+.peek-h .t{font-size:15px;font-weight:600}
+.peek-x{cursor:pointer;color:var(--mut);font-size:22px;line-height:1;background:none;border:none}
+.peek-b{padding:16px 20px;overflow:auto}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:5px 0;border-bottom:1px dashed var(--bd)}
+.kv .k{color:var(--mut)}
+.rc{border:1px solid var(--bd);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px}
+.rc .when{color:var(--mut);font-size:11.5px}
+.auth-badge{font-size:11px;padding:2px 8px;border-radius:6px}
+.auth-fail{background:var(--ambbg);color:var(--amb)}
+.auth-pass{background:var(--grnbg);color:var(--grn)}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('abe-root');
+  var roles=['All','Manager','Analyst','Viewer','Limited Analyst','Operational Manager','Special user'];
+  var users=['Mor Alon','Milan','Orel Fattal','Guy Edwards','Virgiliu','Assaf Shany','Daryna Klochko','Hiep Nguyen'];
+  var msgs=[
+    {id:28,time:'2026-09-29 07:50',dir:'in',from:'mor@checker-soft.com',to:'preproduction@ask.checker-soft.com',user:'mor',subj:'Final grades last 3 months',status:'answered',dkim:'fail',spf:'pass',cr:14,err:'',hist:[]},
+    {id:27,time:'2026-09-25 10:41',dir:'in',from:'orel.sosna1@gmail.com',to:'preproduction@ask.checker-soft.com',user:'Orel Fattal',subj:'your question',status:'answered',dkim:'fail',spf:'fail',cr:10,err:'',hist:[]},
+    {id:26,time:'2026-09-25 10:17',dir:'in',from:'mor@alonfam.com',to:'preproduction@ask.checker-soft.com',user:'—',subj:'dont answer',status:'rejected',dkim:'fail',spf:'fail',cr:null,err:'unknown_sender',hist:[]},
+    {id:25,time:'2026-09-25 10:16',dir:'in',from:'mor.alon@checker-soft.com',to:'preproduction@ask.checker-soft.com',user:'mor.alon',subj:'no need to answer??',status:'other',dkim:'fail',spf:'pass',cr:2,err:'',hist:[]},
+    {id:24,time:'2026-09-25 09:50',dir:'in',from:'mor@checker-soft.com',to:'preproduction@ask.checker-soft.com',user:'mor',subj:'last week grades',status:'answered',dkim:'fail',spf:'pass',cr:3,err:'',hist:[]},
+    {id:23,time:'2026-09-29 13:20',dir:'out',from:'preproduction@ask.checker-soft.com',to:'mor@checker-soft.com',user:'mor',subj:'Re: Report v2',status:'sent',dkim:'',spf:'',cr:null,err:'',hist:[]}
+  ];
+  function sCls(s){return s==='answered'||s==='sent'?'sx':(s==='rejected'?'sr':'so');}
+  function ddHtml(id,g,items){
+    return '<div class="dd" id="'+id+'" data-g="'+g+'">'+
+      '<div class="dd-sel"><span class="sum">Select</span><span class="cv">&#9662;</span></div>'+
+      '<div class="dd-p">'+
+        '<div class="dd-s"><input type="text" class="srch" placeholder="Enter keywords"><span class="x">&times;</span></div>'+
+        '<div class="dd-a"><span class="chkall">&#8853; Check all</span><span class="unall">&#8854; Uncheck all</span></div>'+
+        '<div class="dd-l">'+items.map(function(v){return '<label class="it"><input type="checkbox" class="'+g+'" value="'+v+'"> '+v+'</label>';}).join('')+'</div>'+
+      '</div></div>';
+  }
+  root.innerHTML=''+
+  '<div class="pg">'+
+    '<div class="row">'+
+      '<div><div class="h1">Ask Checker by Email</div><div class="crumb">Reports &#8250; Ask Checker by Email</div></div>'+
+      '<div><div id="pill" class="pill closed">&#128274; Closed</div><div class="meta"><b>Today: 23 credits</b> &middot; balance 54,903 / 590,484</div></div>'+
+    '</div>'+
+    '<details class="acc" style="margin-top:14px"><summary>&#9432; How Ask Checker by Email works</summary>'+
+      '<div style="font-size:12.5px;color:var(--mut);line-height:1.75;padding:9px 0 0;max-width:760px">Allowed users email a question and get an AI report back in minutes, in the same language. The reply goes only to the user&#8217;s registered address; non-users get no reply. Each answer covers only data that user may see. Shared mailbox &#8594; add <span class="mono">user: &lt;name&gt;</span> in the subject. Answers use shared company AI credits.</div>'+
+    '</details>'+
+    '<div class="sec"><div class="st">Setup</div><div class="sd">The inbound address and route. Create the route once before first use.</div>'+
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span class="mono" style="font-size:13px">preproduction@ask.checker-soft.com</span><span class="tag ok">&#10003; route active</span><button class="btn" style="margin-left:auto">&#8635; Repair route</button></div>'+
+      '<label style="display:flex;align-items:center;gap:8px;margin-top:11px;font-size:13px;cursor:pointer"><input type="checkbox"> Require sender authentication (DKIM/SPF) &mdash; off</label>'+
+      '<details class="acc" style="margin-top:8px"><summary>&#9881; Route details</summary><div class="mono" style="font-size:11px;color:var(--mut2);padding:6px 0 0">Route 6ab643ea&#8230; : match_recipient(&#8230;) &#8594; forward("&#8230;/ai-email-receive.php"), stop()</div></details>'+
+    '</div>'+
+    '<div class="sec"><div class="st">Access &mdash; who may ask</div><div class="sd">Closed by default. Open to roles or specific users; every answer stays limited to that user&#8217;s own data permissions.</div>'+
+      '<div style="display:flex;gap:24px;flex-wrap:wrap">'+
+        '<div style="flex:1;min-width:300px"><div class="lbl">Send to roles</div>'+ddHtml('ddRoles','role',roles)+'<div style="font-size:11px;color:var(--mut2);margin-top:4px">Your company&#8217;s defined roles. Only users with branch access are included.</div></div>'+
+        '<div style="flex:1;min-width:300px"><div class="lbl">Specific users</div>'+ddHtml('ddUsers','user',users)+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sec"><div class="st">Limits &mdash; spend ceiling</div><div class="sd">Caps that bound every allowed question.</div>'+
+      '<div class="grid4">'+
+        '<div><div class="lbl">Per sender / hour</div><input type="number" value="10"></div>'+
+        '<div><div class="lbl">Per company / day</div><input type="number" value="200"></div>'+
+        '<div><div class="lbl">Max scope (days)</div><input type="number" value="731"></div>'+
+        '<div><div class="lbl">Max credits / answer</div><input type="number" value="30"></div>'+
+      '</div>'+
+      '<div class="cap"><span class="lbl" style="margin:0">Monthly cap / user</span><label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="noLim" checked> No limit</label><input type="number" id="uCap" value="500" style="width:110px" disabled></div>'+
+    '</div>'+
+    '<div style="margin-top:16px"><button class="btn pri" id="save">&#128190; Save settings</button></div>'+
+    '<div class="sec"><div class="row" style="align-items:center"><div class="st">Recent messages <span style="font-weight:400;font-size:12.5px;color:var(--mut)">&middot; today: 2 answered, 1 rejected</span></div><span class="lk" id="openLog" style="font-size:12.5px">View full log &#8594;</span></div>'+
+      '<div class="logbox" style="margin-top:10px;max-height:188px;overflow:auto"><table><thead><tr><th style="width:18%">User</th><th style="width:40%">Subject</th><th style="width:20%">Status</th><th style="width:22%"></th></tr></thead><tbody id="miniLog"></tbody></table></div>'+
+      '<div style="font-size:11px;color:var(--mut2);margin-top:7px">Open the full log or a message&#8217;s headers in the side peek &#8594;.</div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="backdrop" id="bd"></div>'+
+  '<aside class="peek" id="peek"><div class="peek-h"><span class="t" id="peekT">Message log</span><button class="peek-x" id="peekX">&times;</button></div><div class="peek-b" id="peekB"></div></aside>'+
+  '<div class="toast" id="toast"></div>';
+
+  function dirArrow(d){return d==='in'?'&#8595;':'&#8593;';}
+  document.getElementById('miniLog').innerHTML=msgs.map(function(m){
+    return '<tr><td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+m.user+'</td>'+
+      '<td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+dirArrow(m.dir)+' '+m.subj+'</td>'+
+      '<td class="'+sCls(m.status)+'">'+m.status+'</td>'+
+      '<td><span class="lk hdr" data-id="'+m.id+'">headers</span> &middot; <span class="lk rck" data-id="'+m.id+'">Re-check</span></td></tr>';
+  }).join('');
+
+  var pill=document.getElementById('pill');
+  function render(){
+    var r=root.querySelectorAll('.role:checked').length,u=root.querySelectorAll('.user:checked').length;
+    root.querySelectorAll('.dd').forEach(function(dd){var g=dd.getAttribute('data-g');var n=dd.querySelectorAll('.'+g+':checked').length;var s=dd.querySelector('.sum');s.textContent=n?(n+' selected'):'Select';dd.querySelector('.dd-sel').classList.toggle('has',!!n);});
+    if(!r&&!u){pill.className='pill closed';pill.innerHTML='&#128274; Closed';return;}
+    var p=[];if(r)p.push(r+' role'+(r===1?'':'s'));if(u)p.push(u+' user'+(u===1?'':'s'));
+    pill.className='pill open';pill.innerHTML='&#128275; Open &middot; '+p.join(' &middot; ');
+  }
+  root.querySelectorAll('.dd').forEach(function(dd){
+    var g=dd.getAttribute('data-g');
+    dd.querySelector('.dd-sel').addEventListener('click',function(){dd.classList.toggle('open');});
+    dd.querySelectorAll('.'+g).forEach(function(c){c.addEventListener('change',render);});
+    var se=dd.querySelector('.srch');
+    se.addEventListener('click',function(e){e.stopPropagation();});
+    se.addEventListener('input',function(){var q=se.value.toLowerCase();dd.querySelectorAll('.it').forEach(function(it){it.style.display=it.textContent.toLowerCase().indexOf(q)>-1?'flex':'none';});});
+    dd.querySelector('.x').addEventListener('click',function(){se.value='';dd.querySelectorAll('.it').forEach(function(it){it.style.display='flex';});});
+    dd.querySelector('.chkall').addEventListener('click',function(){dd.querySelectorAll('.'+g).forEach(function(c){if(c.closest('.it').style.display!=='none')c.checked=true;});render();});
+    dd.querySelector('.unall').addEventListener('click',function(){dd.querySelectorAll('.'+g).forEach(function(c){c.checked=false;});render();});
+  });
+  document.addEventListener('click',function(e){root.querySelectorAll('.dd.open').forEach(function(dd){if(!dd.contains(e.target))dd.classList.remove('open');});});
+
+  var nl=document.getElementById('noLim'),uc=document.getElementById('uCap');
+  nl.addEventListener('change',function(){uc.disabled=nl.checked;});
+
+  var toast=document.getElementById('toast');
+  function showToast(t){toast.textContent=t;toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},1600);}
+  document.getElementById('save').addEventListener('click',function(){showToast('Settings saved');});
+
+  var peek=document.getElementById('peek'),bd=document.getElementById('bd'),peekT=document.getElementById('peekT'),peekB=document.getElementById('peekB');
+  function openPeek(){peek.classList.add('show');bd.classList.add('show');}
+  function closePeek(){peek.classList.remove('show');bd.classList.remove('show');}
+  document.getElementById('peekX').addEventListener('click',closePeek);
+  bd.addEventListener('click',closePeek);
+
+  function authBadge(v){if(!v)return '<span class="auth-badge">n/a</span>';return '<span class="auth-badge '+(v==='pass'?'auth-pass':'auth-fail')+'">'+v+'</span>';}
+  function renderFullLog(){
+    peekT.textContent='Message log';
+    peekB.innerHTML='<div class="logbox"><table><thead><tr><th>Time</th><th>User</th><th>Subject</th><th>Status</th><th>Cr</th></tr></thead><tbody>'+
+      msgs.map(function(m){return '<tr><td style="color:var(--mut)">'+m.time.slice(5)+'</td><td>'+m.user+'</td>'+
+        '<td><span class="lk hdr" data-id="'+m.id+'">'+dirArrow(m.dir)+' '+m.subj+'</span></td>'+
+        '<td class="'+sCls(m.status)+'">'+m.status+'</td><td>'+(m.cr==null?'&mdash;':m.cr)+'</td></tr>';}).join('')+
+      '</tbody></table></div>'+
+      '<div style="font-size:11.5px;color:var(--mut2);margin-top:10px">Click a subject to open that message&#8217;s headers and re-check history.</div>';
+    bindHdr();
+    openPeek();
+  }
+  function renderHeaders(id){
+    var m=msgs.filter(function(x){return x.id===id;})[0];if(!m)return;
+    peekT.textContent='Message #'+id+' - headers';
+    var hist=m.hist.map(function(h){return '<div class="rc"><div class="when">'+h.when+' &middot; by '+h.by+'</div>DKIM '+h.dkim+' &middot; SPF '+h.spf+' &middot; decision: <b>'+h.dec+'</b></div>';}).join('')||'<div style="font-size:12.5px;color:var(--mut2)">No re-checks yet.</div>';
+    peekB.innerHTML=''+
+      '<div class="kv"><span class="k">From</span><span>'+m.from+'</span></div>'+
+      '<div class="kv"><span class="k">To</span><span>'+m.to+'</span></div>'+
+      '<div class="kv"><span class="k">User</span><span>'+m.user+'</span></div>'+
+      '<div class="kv"><span class="k">Subject</span><span>'+m.subj+'</span></div>'+
+      '<div class="kv"><span class="k">Received</span><span>'+m.time+'</span></div>'+
+      '<div class="kv"><span class="k">Status</span><span class="'+sCls(m.status)+'">'+m.status+(m.err?' ('+m.err+')':'')+'</span></div>'+
+      '<div style="margin:16px 0 8px;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between">Authentication <button class="btn rckp" data-id="'+id+'">&#8635; Re-check now</button></div>'+
+      '<div style="font-size:13px;margin-bottom:12px">DKIM '+authBadge(m.dkim)+' &nbsp; SPF '+authBadge(m.spf)+' &nbsp; <span style="color:var(--mut)">reply still goes only to the registered address</span></div>'+
+      '<div style="font-weight:600;font-size:13px;margin-bottom:8px">Re-check history</div><div id="histBox">'+hist+'</div>'+
+      '<details class="acc" style="margin-top:14px"><summary>&#9881; Raw headers</summary><div class="mono" style="font-size:11px;color:var(--mut2);line-height:1.6;padding:8px 0 0;white-space:pre-wrap">authentication-results: dkim='+m.dkim+' header.d=checker.onmicrosoft.com; spf='+m.spf+' smtp.mailfrom='+m.from+'; dmarc=pass\nx-mailgun-incoming: Yes\nfrom: '+m.from+'</div></details>';
+    bindReck();
+    openPeek();
+  }
+  function doRecheck(id){
+    var m=msgs.filter(function(x){return x.id===id;})[0];if(!m)return;
+    var dec=(m.dkim==='pass'||m.spf==='pass')?'would deliver':'would hold (auth off: delivered anyway)';
+    m.hist.unshift({when:'just now',by:'vishav',dkim:m.dkim||'n/a',spf:m.spf||'n/a',dec:dec});
+    showToast('Re-checked message #'+id);
+    if(peek.classList.contains('show')&&peekT.textContent.indexOf('#'+id)>-1){renderHeaders(id);}
+  }
+  function bindHdr(){peekB.querySelectorAll('.hdr').forEach(function(e){e.addEventListener('click',function(){renderHeaders(+e.getAttribute('data-id'));});});}
+  function bindReck(){peekB.querySelectorAll('.rckp').forEach(function(e){e.addEventListener('click',function(){doRecheck(+e.getAttribute('data-id'));});});}
+
+  document.getElementById('openLog').addEventListener('click',renderFullLog);
+  root.querySelectorAll('#miniLog .hdr').forEach(function(e){e.addEventListener('click',function(){renderHeaders(+e.getAttribute('data-id'));});});
+  root.querySelectorAll('#miniLog .rck').forEach(function(e){e.addEventListener('click',function(){doRecheck(+e.getAttribute('data-id'));});});
+
+  render();
+})();
+</script>
