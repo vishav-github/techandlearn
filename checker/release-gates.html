@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Checker release procedure: full QA on Testing, partial QA on Preproduction, and what must be done before an update reaches production.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Checker Release Gates</title>
+</head>
+<body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
 
 <style>
@@ -131,14 +132,13 @@ footer{border-top:1px solid var(--line); padding-top:28px; font-size:13.5px; col
 a{color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
 </style>
-</head>
-<body>
+
 <div class="wrap">
 
 <header>
   <p class="eyebrow">Release procedure · effective from the next release</p>
   <h1>Release Gates</h1>
-  <p class="standfirst">Everything is tested on Testing. Preproduction is partially re-tested. Nothing reaches production before the change is documented and the team is briefed.</p>
+  <p class="standfirst">Everything is tested on Testing, then tested again on Preproduction. Nothing reaches production before the change is documented and the team is briefed.</p>
 </header>
 
 <section class="stack">
@@ -151,7 +151,7 @@ a{color:var(--accent)}
   <h2><span class="num">02</span> The path a change takes</h2>
   <figure>
     <div class="scroll">
-      <svg class="flow" viewBox="0 0 1000 400" role="img" aria-label="Flow diagram: a change moves from Develop and PR review to Testing on master2026, passes Gate 1 full QA on Testing, reaches Preproduction Deployment, passes Gate 2 partial QA covering enhancements and changes made directly on Preproduction, then Gate 3 release approval, then goes live to production, and clients are emailed at go-live. Branching from Preproduction, the behaviour-change lane requires documenting the change and briefing the team, both completed before release approval. A change made directly on Preproduction is never released untested; it is covered by Gate 2.">
+      <svg class="flow" viewBox="0 0 1000 400" role="img" aria-label="Flow diagram: a change moves from Develop and PR review to Testing on staging, passes Gate 1 full QA on Testing, reaches Preproduction Deployment, passes Gate 2 full QA on Preproduction including anything applied directly there, then Gate 3 release approval, then goes live to production, and clients are emailed at go-live. Branching from Preproduction, the behaviour-change lane requires documenting the change and briefing the team, both completed before release approval. A change made directly on Preproduction is never released untested; it is covered by Gate 2.">
         <defs>
           <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,1 L9,5 L0,9 z" fill="var(--muted)"></path>
@@ -185,7 +185,7 @@ a{color:var(--accent)}
 
         <rect class="n" x="230" y="158" width="136" height="56" rx="6"></rect>
         <text class="nt nt-b" x="298" y="182">Testing</text>
-        <text class="nt" x="298" y="199">master2026</text>
+        <text class="nt" x="298" y="199">staging</text>
 
         <rect class="n" x="440" y="158" width="136" height="56" rx="6"></rect>
         <text class="nt nt-b" x="508" y="182">Preproduction</text>
@@ -214,7 +214,7 @@ a{color:var(--accent)}
         <circle class="gate" cx="613" cy="186" r="15"></circle>
         <text class="gt" x="613" y="191">2</text>
         <line class="ln" x1="630" y1="186" x2="644" y2="186" marker-end="url(#arw)"></line>
-        <text class="cap" x="613" y="238">Partial QA on</text>
+        <text class="cap" x="613" y="238">Full QA on</text>
         <text class="cap" x="613" y="253">Preproduction</text>
 
         <line class="ln" x1="786" y1="186" x2="854" y2="186" marker-end="url(#arw)"></line>
@@ -249,7 +249,7 @@ a{color:var(--accent)}
         <text class="nt" x="928" y="358">clients</text>
       </svg>
     </div>
-    <figcaption>Enhancements and bug fixes are both fully tested on Testing at Gate 1. Preproduction gets a partial QA at Gate 2, covering enhancements and anything applied directly there. The behaviour-change lane branches from Preproduction and must finish before release approval. Clients are emailed once the update is live.</figcaption>
+    <figcaption>Enhancements and bug fixes are both fully tested on Testing at Gate 1, then tested again in full on Preproduction at Gate 2 — including anything applied directly there. The behaviour-change lane branches from Preproduction and must finish before release approval. Clients are emailed once the update is live.</figcaption>
   </figure>
 </section>
 
@@ -258,11 +258,11 @@ a{color:var(--accent)}
   <div class="rules">
     <div class="rule">
       <span class="id">R1</span>
-      <p><strong>Everything is tested on Testing first.</strong> Enhancements and bug fixes alike pass full QA on master2026 before they move to Preproduction. There is no route to Preproduction that skips this.</p>
+      <p><strong>Everything is tested on Testing first.</strong> Enhancements and bug fixes alike pass full QA on staging before they move to Preproduction. There is no route to Preproduction that skips this.</p>
     </div>
     <div class="rule">
       <span class="id">R2</span>
-      <p><strong>Preproduction gets a partial QA before release.</strong> Gate 2 covers the enhancements in the release and any fix applied directly on Preproduction. A change made straight on Preproduction is never released untested because it was already there.</p>
+      <p><strong>Preproduction is tested in full before release.</strong> Gate 2 covers the whole release scope every time — every enhancement, every fix, and anything applied directly on Preproduction. A change made straight on Preproduction is never released untested because it was already there.</p>
     </div>
     <div class="rule">
       <span class="id">R3</span>
@@ -297,7 +297,7 @@ a{color:var(--accent)}
       </thead>
       <tbody>
         <tr><td>Full QA on Testing — Gate 1</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
-        <tr><td>Partial QA on Preproduction — Gate 2</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
+        <tr><td>Full QA on Preproduction — Gate 2</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
         <tr><td>Document the change</td><td><span class="pill pill-opt">May skip</span></td><td><span class="pill pill-req">Required</span> — before approval</td></tr>
         <tr><td>Brief the team</td><td><span class="pill pill-opt">May skip</span></td><td><span class="pill pill-req">Required</span> — before approval</td></tr>
         <tr><td>Email clients at go-live</td><td><span class="pill pill-req">Required</span></td><td><span class="pill pill-req">Required</span></td></tr>
@@ -323,12 +323,12 @@ a{color:var(--accent)}
         <tr>
           <td>Gate 1 — Full QA on Testing</td>
           <td>Product &amp; QA</td>
-          <td>QA report on master2026 covering every enhancement and fix in the release, with no open Critical or High findings.</td>
+          <td>QA report on staging covering every enhancement and fix in the release, with no open Critical or High findings.</td>
         </tr>
         <tr>
-          <td>Gate 2 — Partial QA on Preproduction</td>
+          <td>Gate 2 — Full QA on Preproduction</td>
           <td>Product &amp; QA</td>
-          <td>Targeted re-test on Preproduction covering the enhancements and any fix applied directly there, plus a regression check on adjacent screens. Items already cleared at Gate 1 are not re-tested in full.</td>
+          <td>Full re-test on Preproduction of the entire release scope, including any fix applied directly there, plus a regression check on adjacent screens. Passing Gate 1 does not reduce what is tested here.</td>
         </tr>
         <tr>
           <td>Gate 3 — Release approval</td>
@@ -365,5 +365,7 @@ a{color:var(--accent)}
 </footer>
 
 </div>
+
+
 </body>
 </html>
